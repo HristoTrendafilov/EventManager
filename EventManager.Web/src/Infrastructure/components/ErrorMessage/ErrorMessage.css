@@ -1,0 +1,5 @@
+.system-error-message {
+  font-weight: bold;
+  color: red;
+  white-space: pre-line;
+}

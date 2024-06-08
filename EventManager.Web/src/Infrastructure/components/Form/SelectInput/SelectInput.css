@@ -1,0 +1,24 @@
+.select-input-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 11px;
+}
+
+.select-input-wrapper > .select-input-label {
+  position: absolute;
+  left: 13px;
+  top: -10px;
+  font-size: 15px;
+  color: var(--input-label-color);
+  background: linear-gradient(transparent 34%, white 42%) no-repeat;
+  padding: 0 3px;
+  z-index: 1;
+}
+
+.select-input-wrapper .css-1nmdiq5-menu {
+  z-index: 2;
+}
+
+.select-input-wrapper .css-3w2yfm-ValueContainer {
+  padding-top: 10px;
+}

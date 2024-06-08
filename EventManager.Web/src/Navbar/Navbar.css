@@ -1,0 +1,63 @@
+.navbar-social-network-icon {
+  cursor: pointer;
+  transition: 0.7s;
+}
+
+.navbar-social-network-icon:hover {
+  transform: scale(1.2);
+}
+
+.navbar-social-networks-header {
+  font-weight: bold;
+}
+
+.navbar-brand-logo {
+  width: 110px;
+  height: 100px;
+}
+
+.navbar-top {
+  margin: 0 200px;
+}
+
+.navbar-toggler {
+  background-color: white;
+}
+
+.navbar-logout-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.navbar-logout-actions > .navbar-logout-actions-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  border-radius: 8px;
+  padding: 5px 20px;
+  border: 1px solid black;
+  background-color: white;
+  font-weight: 500;
+  box-shadow:
+    rgba(0, 0, 0, 0.09) 0px 2px 1px,
+    rgba(0, 0, 0, 0.09) 0px 4px 2px,
+    rgba(0, 0, 0, 0.09) 0px 8px 4px,
+    rgba(0, 0, 0, 0.09) 0px 16px 8px,
+    rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
+
+@media (max-width: 880px) {
+  .navbar-top {
+    margin: 0;
+  }
+}
+
+@media (max-width: 450px) {
+  .navbar-social-networks-header {
+    font-size: 0.8rem;
+  }
+  .navbar-logout-actions > .navbar-logout-actions-btn {
+    width: 100%;
+  }
+}

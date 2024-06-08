@@ -1,0 +1,12 @@
+.login-wrapper {
+  padding: 0 8px;
+}
+
+.login-wrapper .card {
+  max-width: 550px;
+  margin: 48px auto;
+}
+
+.login-wrapper .login-btn {
+  width: 150px;
+}

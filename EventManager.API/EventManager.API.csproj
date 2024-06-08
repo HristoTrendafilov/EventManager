@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logs\**" />
+    <Compile Remove="storage\**" />
+    <Content Remove="Logs\**" />
+    <Content Remove="storage\**" />
+    <EmbeddedResource Remove="Logs\**" />
+    <EmbeddedResource Remove="storage\**" />
+    <None Remove="Logs\**" />
+    <None Remove="storage\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\CopyMe.PostgreSQL.tt.txt" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\DataAnnotations.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\DataModel.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\EditableObject.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\Equatable.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\Humanizer.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\LinqToDB.PostgreSQL.Tools.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\LinqToDB.PostgreSQL.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\LinqToDB.Tools.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\LinqToDB.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\MultipleFiles.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\NotifyDataErrorInfo.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\NotifyPropertyChanged.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\ObsoleteAttributes.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\PluralizationService.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\T4Model.ttinclude" />
+    <None Remove="C:\Users\AMD\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\Validation.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\CopyMe.PostgreSQL.tt.txt" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\DataAnnotations.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\DataModel.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\EditableObject.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\Equatable.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\Humanizer.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\LinqToDB.PostgreSQL.Tools.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\LinqToDB.PostgreSQL.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\LinqToDB.Tools.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\LinqToDB.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\MultipleFiles.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\NotifyDataErrorInfo.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\NotifyPropertyChanged.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\ObsoleteAttributes.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\PluralizationService.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\T4Model.ttinclude" />
+    <None Remove="C:\Users\USER\.nuget\packages\linq2db.postgresql\5.4.0\contentFiles\any\any\LinqToDB.Templates\Validation.ttinclude" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="linq2db.AspNet" Version="5.4.0" />
+    <PackageReference Include="linq2db.PostgreSQL" Version="5.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.3" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EventManager.DAL\EventManager.DAL.csproj" />
+    <ProjectReference Include="..\EventManager.Dto\EventManager.DTO.csproj" />
+  </ItemGroup>
+
+</Project>

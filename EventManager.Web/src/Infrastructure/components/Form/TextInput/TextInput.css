@@ -1,0 +1,27 @@
+.text-input-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 11px;
+}
+
+.text-input-wrapper > .text-input {
+  width: 100%;
+  border-radius: 5px;
+  border: var(--input-border-color);
+  padding: 8px 10px;
+}
+
+.text-input-wrapper > .text-input:focus {
+  border-color: var(--input-border-color-focused);
+  outline: var(--input-border-color-focused);
+}
+
+.text-input-wrapper > .text-input-label {
+  position: absolute;
+  left: 13px;
+  top: -10px;
+  font-size: 15px;
+  color: var(--input-label-color);
+  background: linear-gradient(transparent 44%, white 42%) no-repeat;
+  padding: 0 3px;
+}
