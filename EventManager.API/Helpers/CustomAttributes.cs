@@ -25,7 +25,7 @@ namespace EventManager.API.Helpers
     {
         public ClaimAccessAttribute(string claimValue) : base(typeof(ClaimAccessFilter))
         {
-            Arguments = [new Claim(ClaimTypes.Role, claimValue)];
+            Arguments = [new Claim(CustomClaimTypes.Role, claimValue)];
         }
     }
 
@@ -42,7 +42,7 @@ namespace EventManager.API.Helpers
         {
             var user = context.HttpContext.User;
 
-            var isAdmin = user.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == ClaimTypeValues.Admin);
+            var isAdmin = user.HasClaim(x => x.Type == CustomClaimTypes.Role && x.Value == ClaimTypeValues.Admin);
             if (!isAdmin)
             {
                 var hasClaim = user.HasClaim(x => x.Type == _claim.Type && x.Value == _claim.Value);

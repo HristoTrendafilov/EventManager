@@ -12,7 +12,7 @@ namespace EventManager.API.Helpers
                 return null;
             }
 
-            var userId = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var userId = user.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserId)?.Value;
             if (string.IsNullOrWhiteSpace(userId))
             {
                 return null;
@@ -29,7 +29,7 @@ namespace EventManager.API.Helpers
                 return false;
             }
 
-            var isAdmin = user.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == ClaimTypeValues.Admin);
+            var isAdmin = user.HasClaim(c => c.Type == CustomClaimTypes.Role && c.Value == ClaimTypeValues.Admin);
             if (isAdmin || currentUserId == entityUserCreatorId)
             {
                 return true;

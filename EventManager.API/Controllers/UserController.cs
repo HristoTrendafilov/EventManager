@@ -95,24 +95,13 @@ namespace EventManager.API.Controllers
 
             var claimsForToken = new List<Claim>
             {
-                new (ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new (CustomClaimTypes.UserId, user.UserId.ToString()),
             };
 
             var userClaims = await _userService.GetAllUserClaimsAsync(user.UserId);
             foreach (var claim in userClaims)
             {
-                var claimTypeProperty = typeof(ClaimTypes).GetFields(BindingFlags.Static | BindingFlags.Public)
-                    .FirstOrDefault(x => x.Name == claim.ClaimType);
-
-                if (claimTypeProperty != null)
-                {
-                    var claimType = (string)claimTypeProperty.GetValue(null);
-                    claimsForToken.Add(new Claim(claimType, claim.ClaimName));
-                }
-                else
-                {
-                    claimsForToken.Add(new Claim(claim.ClaimType, claim.ClaimName));
-                }
+                claimsForToken.Add(new Claim(claim.ClaimType, claim.ClaimName));
             }
 
             var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(_configuration["Authentication:SecretForKey"]));
