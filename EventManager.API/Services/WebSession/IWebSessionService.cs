@@ -8,7 +8,7 @@ namespace EventManager.API.Services.WebSession
     {
         Task<WebSessionPoco> GetWebSessionAsync(Expression<Func<WebSessionPoco, bool>> predicate);
         Task<long> CreateWebSession(WebSessionNewDto webSession);
-        Task UpdateWebSessionAsync(long webSessionId, WebSessionUpdateDto webSession, long? currentUserId);
+        Task CloseWebSessionAsync(long webSessionId, long? currentUserId);
         Task<bool> WebSessionExistsAsync(Expression<Func<WebSessionPoco, bool>> predicate);
     }
 }

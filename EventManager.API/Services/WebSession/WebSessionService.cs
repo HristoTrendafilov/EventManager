@@ -24,9 +24,12 @@ namespace EventManager.API.Services.WebSession
             return _db.WebSessions.AnyAsync(predicate);
         }
 
-        public async Task UpdateWebSessionAsync(long webSessionId, WebSessionUpdateDto webSession, long? currentUserId)
+        public async Task CloseWebSessionAsync(long webSessionId, long? currentUserId)
         {
-            await _db.WebSessions.X_UpdateAsync(webSessionId, webSession, currentUserId);
+            var webSessionPoco = await _db.WebSessions.FirstOrDefaultAsync(x => x.WebSessionId == webSessionId);
+            webSessionPoco.ExpireOnDateTime = DateTime.Now;
+
+            await _db.WebSessions.X_UpdateAsync(webSessionId, webSessionPoco, currentUserId);
         }
 
         public Task<WebSessionPoco> GetWebSessionAsync(Expression<Func<WebSessionPoco, bool>> predicate)

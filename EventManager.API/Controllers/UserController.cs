@@ -229,11 +229,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            var webSessionPoco = await _webSessionService.GetWebSessionAsync(x => x.WebSessionId == logout.WebSessionId);
-            var webSessionUpdate = _mapper.CreateObject<WebSessionUpdateDto>(webSessionPoco);
-            webSessionUpdate.LogoutDateTime = DateTime.Now;
-
-            await _webSessionService.UpdateWebSessionAsync(logout.WebSessionId, webSessionUpdate, currentUserId);
+            await _webSessionService.CloseWebSessionAsync(logout.WebSessionId, currentUserId);
 
             return NoContent();
         }
