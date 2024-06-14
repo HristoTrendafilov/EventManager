@@ -15,13 +15,11 @@ namespace EventManager.API.Controllers
     {
         private readonly IRegionService _regionService;
         private readonly Mapper _mapper;
-        private readonly PostgresConnection _db;
 
         public RegionController(IRegionService regionService, Mapper mapper, PostgresConnection db)
         {
             _regionService = regionService;
             _mapper = mapper;
-            _db = db;
         }
 
         [HttpGet]
@@ -57,10 +55,7 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече съществува регион: {region.RegionName}");
             }
 
-            var regionId = await _db.WithTransactionAsync(async () =>
-            {
-                return await _regionService.CreateRegionAsync(region, User.X_GetCurrentUserId());
-            });
+            var regionId = await _regionService.CreateRegionAsync(region, User.X_GetCurrentUserId());
 
             var regionPoco = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
             var regionToReturn = _mapper.CreateObject<RegionDto>(regionPoco);

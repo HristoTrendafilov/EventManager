@@ -17,35 +17,46 @@ namespace EventManager.API.Services.User
 
         public async Task<long> CreateUserAsync(UserNewDto user, long? currentUserId)
         {
-            var userId = await _db.Users.X_CreateAsync(user, currentUserId);
-
-            foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
+            var userId = await _db.WithTransactionAsync(async () =>
             {
-                var userRegionHelping = new UserRegionHelpingNewDto { UserId = userId, RegionId = userRegionHelpingId };
-                await this.CreateUserRegionHelpingAsync(userRegionHelping, currentUserId);
-            }
+                var userId = await _db.Users.X_CreateAsync(user, currentUserId);
+
+                foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
+                {
+                    var userRegionHelping = new UserRegionHelpingNewDto { UserId = userId, RegionId = userRegionHelpingId };
+                    await this.CreateUserRegionHelpingAsync(userRegionHelping, currentUserId);
+                }
+
+                return userId;
+            });
 
             return userId;
         }
 
         public async Task DeleteUserAsync(long userId, long? currentUserId)
         {
-            await DeleteUserClaimAsync(x => x.UserId == userId, currentUserId);
-            await DeleteUserRegionHelpingAsync(x => x.UserId == userId, currentUserId);
+            await _db.WithTransactionAsync(async () =>
+            {
+                await DeleteUserClaimAsync(x => x.UserId == userId, currentUserId);
+                await DeleteUserRegionHelpingAsync(x => x.UserId == userId, currentUserId);
 
-            await _db.Users.X_DeleteAsync(x => x.UserId == userId, currentUserId);
+                await _db.Users.X_DeleteAsync(x => x.UserId == userId, currentUserId);
+            });
         }
 
         public async Task UpdateUserAsync(long userId, UserUpdateDto user, long? currentUserId)
         {
-            await this.DeleteUserRegionHelpingAsync(x => x.UserId == userId, currentUserId);
-            foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
+            await _db.WithTransactionAsync(async () =>
             {
-                var userRegionHelping = new UserRegionHelpingNewDto { UserId = userId, RegionId = userRegionHelpingId };
-                await this.CreateUserRegionHelpingAsync(userRegionHelping, currentUserId);
-            }
+                await this.DeleteUserRegionHelpingAsync(x => x.UserId == userId, currentUserId);
+                foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
+                {
+                    var userRegionHelping = new UserRegionHelpingNewDto { UserId = userId, RegionId = userRegionHelpingId };
+                    await this.CreateUserRegionHelpingAsync(userRegionHelping, currentUserId);
+                }
 
-            await _db.Users.X_UpdateAsync(userId, user, currentUserId);
+                await _db.Users.X_UpdateAsync(userId, user, currentUserId);
+            });
         }
 
         public async Task<(List<UserPoco> users, PaginationMetadata metadata)> GetAllUsersAsync

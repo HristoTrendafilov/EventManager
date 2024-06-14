@@ -2,9 +2,7 @@
 using EventManager.API.Helpers;
 using EventManager.API.Services.Event;
 using EventManager.BOL;
-using EventManager.DAL;
 using EventManager.DTO.Event;
-using EventManager.DTO.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,13 +17,11 @@ namespace EventManager.API.Controllers
 
         private readonly IEventService _eventService;
         private readonly Mapper _mapper;
-        private readonly PostgresConnection _db;
 
-        public EventController(IEventService eventService, Mapper mapper, PostgresConnection db)
+        public EventController(IEventService eventService, Mapper mapper)
         {
             _eventService = eventService;
             _mapper = mapper;
-            _db = db;
         }
 
         [HttpGet]
@@ -69,13 +65,10 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече съществува събитие с име: {eventNew.EventName}");
             }
 
-            var eventId = await _db.WithTransactionAsync(async () =>
-            {
-                var currentUserId = User.X_GetCurrentUserId();
-                eventNew.CreatedByUserId = currentUserId.Value;
+            var currentUserId = User.X_GetCurrentUserId();
+            eventNew.CreatedByUserId = currentUserId.Value;
 
-                return await _eventService.CreateEventAsync(eventNew, currentUserId);
-            });
+            var eventId = await _eventService.CreateEventAsync(eventNew, currentUserId);
 
             var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
             var eventToReturn = _mapper.CreateObject<EventDto>(eventPoco);
@@ -103,10 +96,7 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече съществува събитие с име: {eventUpdate.EventName}");
             }
 
-            await _db.WithTransactionAsync(async () =>
-            {
-                await _eventService.UpdateEventAsync(eventId, eventUpdate, User.X_GetCurrentUserId());
-            });
+            await _eventService.UpdateEventAsync(eventId, eventUpdate, User.X_GetCurrentUserId());
 
             return NoContent();
         }
@@ -128,10 +118,7 @@ namespace EventManager.API.Controllers
                 return Unauthorized();
             }
 
-            await _db.WithTransactionAsync(async () =>
-            {
-                await _eventService.DeleteEventAsync(eventId, User.X_GetCurrentUserId());
-            });
+            await _eventService.DeleteEventAsync(eventId, User.X_GetCurrentUserId());
 
             return NoContent();
         }
@@ -152,10 +139,7 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече е записан потребител с ID: {currentUserId.Value}");
             }
 
-            await _db.WithTransactionAsync(async () =>
-            {
-                return await _eventService.SubscribeUser(eventId, currentUserId);
-            });
+            await _eventService.SubscribeUser(eventId, currentUserId);
 
             return NoContent();
         }
@@ -169,10 +153,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            await _db.WithTransactionAsync(async () =>
-            {
-                await _eventService.UnsubscribeUser(userEventId, User.X_GetCurrentUserId());
-            });
+            await _eventService.UnsubscribeUser(userEventId, User.X_GetCurrentUserId());
 
             return NoContent();
         }

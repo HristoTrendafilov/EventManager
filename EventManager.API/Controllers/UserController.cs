@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
 using System.Security.Claims;
 
 namespace EventManager.API.Controllers
@@ -28,7 +27,6 @@ namespace EventManager.API.Controllers
         private readonly IEmailService _emailService;
         private readonly IWebSessionService _webSessionService;
         private readonly IConfiguration _configuration;
-        private readonly PostgresConnection _db;
         private readonly Mapper _mapper;
 
         public UserController(
@@ -36,14 +34,12 @@ namespace EventManager.API.Controllers
             IEmailService emailService,
             IWebSessionService webSessionService,
             IConfiguration configuration,
-            PostgresConnection db,
             Mapper mapper)
         {
             _userService = userService;
             _emailService = emailService;
             _webSessionService = webSessionService;
             _configuration = configuration;
-            _db = db;
             _mapper = mapper;
         }
 
@@ -168,13 +164,9 @@ namespace EventManager.API.Controllers
                 }
             }
 
-            var userId = await _db.WithTransactionAsync(async () =>
-            {
-                var currentUser = User.X_GetCurrentUserId();
-
-                userNew.CreatedByUserId = currentUser;
-                return await _userService.CreateUserAsync(userNew, currentUser);
-            });
+            var currentUser = User.X_GetCurrentUserId();
+            userNew.CreatedByUserId = currentUser;
+            var userId = await _userService.CreateUserAsync(userNew, currentUser);
 
             var user = await _userService.GetUserAsync(x => x.UserId == userId);
             var userResponse = _mapper.CreateObject<UserDto>(user);
@@ -193,10 +185,6 @@ namespace EventManager.API.Controllers
             {
                 return Unauthorized();
             }
-
-            user.Username = user.Username.Trim();
-            user.Email = user.Email.Trim();
-            user.PhoneNumber = user.PhoneNumber?.Trim();
 
             if (!await _userService.UserExistsAsync(x => x.UserId == userId))
             {
@@ -220,10 +208,7 @@ namespace EventManager.API.Controllers
                 }
             }
 
-            await _db.WithTransactionAsync(async () =>
-            {
-                await _userService.UpdateUserAsync(userId, user, User.X_GetCurrentUserId());
-            });
+            await _userService.UpdateUserAsync(userId, user, User.X_GetCurrentUserId());
 
             return NoContent();
         }
@@ -248,10 +233,7 @@ namespace EventManager.API.Controllers
             var webSessionUpdate = _mapper.CreateObject<WebSessionUpdateDto>(webSessionPoco);
             webSessionUpdate.LogoutDateTime = DateTime.Now;
 
-            await _db.WithTransactionAsync(async () =>
-            {
-                await _webSessionService.UpdateWebSessionAsync(logout.WebSessionId, webSessionUpdate, currentUserId);
-            });
+            await _webSessionService.UpdateWebSessionAsync(logout.WebSessionId, webSessionUpdate, currentUserId);
 
             return NoContent();
         }
@@ -271,10 +253,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            await _db.WithTransactionAsync(async () =>
-            {
-                await _userService.DeleteUserAsync(userId, User.X_GetCurrentUserId());
-            });
+            await _userService.DeleteUserAsync(userId, User.X_GetCurrentUserId());
 
             return NoContent();
         }
@@ -289,10 +268,7 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече съществува това право за потребител с ID: {claim.UserId}");
             }
 
-            await _db.WithTransactionAsync(async () =>
-            {
-                return await _userService.CreateUserClaimAsync(claim, User.X_GetCurrentUserId());
-            });
+            await _userService.CreateUserClaimAsync(claim, User.X_GetCurrentUserId());
 
             return NoContent();
         }
