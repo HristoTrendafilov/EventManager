@@ -3,6 +3,25 @@ import { reportError } from './utils';
 const apiBaseUrl = '/api';
 const apiWaitTimeout = 5000;
 
+async function extractApiMessage(apiResponse: Response) {
+  const apiMessage = await apiResponse.text();
+  if (apiMessage) {
+    throw new Error(apiMessage);
+  }
+
+  const { status } = apiResponse;
+
+  if (status >= 500) {
+    throw new Error('Грешка на сървъра. Моля, опитайте по-късно.');
+  } else if (status === 400) {
+    throw new Error('Грешка в заявката към сървъра.');
+  } else if (status === 401 || status === 403) {
+    throw new Error('Нямате права за достъпване на този ресурс.');
+  } else if (status === 404) {
+    throw new Error('Ресурсът, който търсите, не може да бъде намерен.');
+  }
+}
+
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export async function callApi<T>(
   endPoint: string,
@@ -16,9 +35,6 @@ export async function callApi<T>(
   };
 
   const { userToken } = window;
-  /* eslint-disable no-console */
-  console.log(`token: ${userToken}`);
-  /* eslint-enable no-console */
   if (userToken) {
     fetchOptions.headers = {
       ...fetchOptions.headers,
@@ -42,11 +58,7 @@ export async function callApi<T>(
   }
 
   if (!apiResponse.ok) {
-    if (apiResponse.status === 502) {
-      throw new Error('Грешка при свързване към сървъра.');
-    }
-
-    throw new Error(await apiResponse.text());
+    await extractApiMessage(apiResponse);
   }
 
   if (apiResponse.status === 204) {
