@@ -4,7 +4,6 @@ using EventManager.API.Services.Email;
 using EventManager.API.Services.User;
 using EventManager.API.Services.WebSession;
 using EventManager.BOL;
-using EventManager.DAL;
 using EventManager.DTO.Region;
 using EventManager.DTO.User;
 using EventManager.DTO.WebSession;
@@ -131,7 +130,6 @@ namespace EventManager.API.Controllers
                 Username = user.Username,
                 Token = token,
                 WebSessionId = webSessionId,
-                IsLoggedIn = true,
                 IsAdmin = userClaims.Any(x => x.ClaimId == (int)UserClaimType.Admin),
                 IsEventCreator = userClaims.Any(x => x.ClaimId == (int)UserClaimType.EventCreator),
             };

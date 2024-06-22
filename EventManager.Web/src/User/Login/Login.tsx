@@ -1,22 +1,23 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { type ZodType, z } from 'zod';
+import { z } from 'zod';
 
-import { loginUser } from '~Infrastructure/api-client';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+import { loginUserThunk } from '~Infrastructure/redux/session-slice';
 import { useAppDispatch } from '~Infrastructure/redux/store';
-import { addUser } from '~Infrastructure/redux/user-slice';
 import { getClientErrorMessage } from '~Infrastructure/utils';
 
 import './Login.css';
 
-export interface UserLoginDto {
-  username: string;
-  password: string;
-}
+const schema = z.object({
+  username: z.string(),
+  password: z.string(),
+});
+
+export type UserLoginDto = z.infer<typeof schema>;
 
 export function Login() {
   const navigate = useNavigate();
@@ -27,8 +28,7 @@ export function Login() {
   const handleLogin = useCallback(
     async (data: UserLoginDto) => {
       try {
-        const user = await loginUser(data);
-        dispatch(addUser(user));
+        await dispatch(loginUserThunk(data)).unwrap();
         navigate('/');
       } catch (err) {
         setError(getClientErrorMessage(err));
@@ -37,12 +37,7 @@ export function Login() {
     [dispatch, navigate]
   );
 
-  const form = useZodForm({
-    schema: z.object({
-      username: z.string(),
-      password: z.string(),
-    }) satisfies ZodType<UserLoginDto>,
-  });
+  const form = useZodForm({ schema });
 
   return (
     <div className="login-wrapper">

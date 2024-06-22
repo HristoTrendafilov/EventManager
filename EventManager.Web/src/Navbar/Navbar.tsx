@@ -8,10 +8,12 @@ import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { logoutUser } from '~Infrastructure/api-client';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+import {
+  logoutUserThunk,
+  sessionSelector,
+} from '~Infrastructure/redux/session-slice';
 import { useAppDispatch } from '~Infrastructure/redux/store';
-import { removeUser, userSelector } from '~Infrastructure/redux/user-slice';
 import { getClientErrorMessage } from '~Infrastructure/utils';
 import logo from '~asset/project-logo.png';
 
@@ -21,21 +23,17 @@ export function Navbar() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const user = useSelector(userSelector);
+  const { user, logoutUserLoading } = useSelector(sessionSelector);
   const [error, setError] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const handleLogout = useCallback(async () => {
     try {
-      await logoutUser({ webSessionId: user.webSessionId });
-      dispatch(removeUser());
+      await dispatch(logoutUserThunk()).unwrap();
       navigate('/');
     } catch (err) {
       setError(getClientErrorMessage(err));
-    } finally {
-      setLoading(false);
     }
-  }, [dispatch, navigate, user]);
+  }, [dispatch, navigate]);
 
   return (
     <>
@@ -124,7 +122,7 @@ export function Navbar() {
                   <button
                     type="button"
                     onClick={handleLogout}
-                    disabled={loading}
+                    disabled={logoutUserLoading}
                   >
                     Изход
                   </button>

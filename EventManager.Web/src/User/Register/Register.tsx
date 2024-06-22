@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { type ZodType, z } from 'zod';
 
-import { registerUser } from '~Infrastructure/api-client';
+import { registerUser } from '~Infrastructure/api-requests';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';

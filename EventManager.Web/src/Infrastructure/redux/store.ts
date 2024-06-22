@@ -1,17 +1,13 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 
-import { userReducer } from './user-slice';
+import { sessionSlice } from './session-slice';
 
-const rootReducer = combineReducers({
-  user: userReducer,
-});
-
-export type ApplicationState = ReturnType<typeof rootReducer>;
-
-export function createStore(preloadedState?: Partial<ApplicationState>) {
+export function createStore(preloadedState: unknown) {
   const store = configureStore({
-    reducer: rootReducer,
+    reducer: {
+      [sessionSlice.name]: sessionSlice.reducer,
+    },
     preloadedState,
   });
 
@@ -19,9 +15,11 @@ export function createStore(preloadedState?: Partial<ApplicationState>) {
 }
 
 export type Store = ReturnType<typeof createStore>;
-
+export type ApplicationState = ReturnType<Store['getState']>;
 export type ApplicationDispatch = Store['dispatch'];
 
 export const useAppDispatch: () => ApplicationDispatch = useDispatch;
 
-export const store = createStore();
+export function createStoreWithState(state: Partial<ApplicationState>) {
+  return createStore(state);
+}

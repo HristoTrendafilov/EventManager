@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 import type { SelectInstance } from 'react-select';
 
-import { getRegions } from '~Infrastructure/api-client';
+import { getRegions } from '~Infrastructure/api-requests';
 import { CustomMultiSelect } from '~Infrastructure/components/Form/CustomForm/CustomMultiSelect';
 import type {
   CustomMultiSelectInputProps,
