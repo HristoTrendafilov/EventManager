@@ -19,6 +19,8 @@ async function extractApiMessage(apiResponse: Response) {
     throw new Error('Нямате права за достъпване на този ресурс.');
   } else if (status === 404) {
     throw new Error('Ресурсът, който търсите, не може да бъде намерен.');
+  } else if (status === 422) {
+    throw new Error('Грешка в данните, които са изпратени към сървъра.');
   }
 }
 
