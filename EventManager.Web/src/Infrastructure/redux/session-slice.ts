@@ -85,6 +85,8 @@ export const sessionSlice = createSlice({
       state.user = action.payload;
       state.user.isLoggedIn = true;
 
+      window.userToken = action.payload.token;
+
       state.loginUserLoading = false;
     });
     builder.addCase(loginUserThunk.pending, (state) => {
@@ -93,8 +95,12 @@ export const sessionSlice = createSlice({
     builder.addCase(loginUserThunk.rejected, (state) => {
       state.loginUserLoading = false;
     });
+
     // logoutUserThunk
-    builder.addCase(logoutUserThunk.fulfilled, () => initialSessionState);
+    builder.addCase(logoutUserThunk.fulfilled, () => {
+      window.userToken = undefined;
+      return initialSessionState;
+    });
     builder.addCase(logoutUserThunk.pending, (state) => {
       state.logoutUserLoading = true;
     });

@@ -15,15 +15,16 @@ export async function callApi<T>(
     signal: AbortSignal.timeout(apiWaitTimeout),
   };
 
-  // Set it to the window variable
-  // TODO: Get the token form redux state
-  // const state = store.getState();
-  // if (state.user.token) {
-  //   fetchOptions.headers = {
-  //     ...fetchOptions.headers,
-  //     Authorization: `Bearer ${state.user.token}`,
-  //   };
-  // }
+  const { userToken } = window;
+  /* eslint-disable no-console */
+  console.log(`token: ${userToken}`);
+  /* eslint-enable no-console */
+  if (userToken) {
+    fetchOptions.headers = {
+      ...fetchOptions.headers,
+      Authorization: `Bearer ${userToken}`,
+    };
+  }
 
   if (body) {
     fetchOptions.headers = {
