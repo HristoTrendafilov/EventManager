@@ -1,3 +1,5 @@
+import { store } from './redux/store';
+import { removeUser } from './redux/user-slice';
 import { reportError } from './utils';
 
 const apiBaseUrl = '/api';
@@ -5,11 +7,12 @@ const apiWaitTimeout = 5000;
 
 async function handleApiError(apiResponse: Response) {
   const apiMessage = await apiResponse.text();
-  const { status } = apiResponse;
 
   if (apiMessage) {
     throw new Error(apiMessage);
   }
+
+  const { status } = apiResponse;
 
   switch (status) {
     case 500:
@@ -61,6 +64,12 @@ export async function callApi<T>(
   } catch (err) {
     reportError(err);
     throw new Error(`Network error. Please try again later.`);
+  }
+
+  const tokenExpired = apiResponse.headers.get('TokenExpired');
+  if (tokenExpired) {
+    store.dispatch(removeUser());
+    window.location.href = '/';
   }
 
   if (!apiResponse.ok) {
