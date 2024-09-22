@@ -3,10 +3,7 @@ import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { Home } from '~Home/Home';
-import {
-  type UserState,
-  sessionSelector,
-} from '~Infrastructure/redux/user-slice';
+import { type UserState, userSelector } from '~Infrastructure/redux/user-slice';
 
 import { type RouteTable, routes } from './routes';
 
@@ -44,7 +41,7 @@ interface UserAccessBoundaryProps {
 function UserAccessBoundary(props: UserAccessBoundaryProps) {
   const { routeTable, children } = props;
 
-  const user = useSelector(sessionSelector);
+  const user = useSelector(userSelector);
 
   if (canUserAccessComponent(routeTable, user)) {
     return children;

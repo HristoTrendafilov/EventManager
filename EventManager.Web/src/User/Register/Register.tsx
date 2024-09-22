@@ -55,7 +55,7 @@ export function Register() {
       phoneNumber: z.string().nullable(),
       regionId: z.number(),
       userRegionsHelpingIds: z.number().array(),
-    }),
+    }) satisfies z.ZodType<UserNewDto>,
   });
 
   return (

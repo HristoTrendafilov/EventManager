@@ -58,8 +58,8 @@ export function Login() {
             <CustomInput
               {...form.register('password')}
               label="Парола"
-              required
               type="password"
+              required
             />
 
             <div className="d-flex justify-content-center">

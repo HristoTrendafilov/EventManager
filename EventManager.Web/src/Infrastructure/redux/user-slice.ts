@@ -50,9 +50,9 @@ export const userSlice = createSlice({
       state.userId = payload.userId;
       state.username = payload.username;
       state.webSessionId = payload.webSessionId;
-      state.isLoggedIn = true;
       state.isAdmin = payload.isAdmin;
       state.isEventCreator = payload.isEventCreator;
+      state.isLoggedIn = true;
 
       window.userToken = action.payload.token;
       localStorage.setItem(localStorageKey, JSON.stringify(state));
@@ -66,5 +66,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const sessionSelector = (state: ApplicationState) => state.user;
+export const userSelector = (state: ApplicationState) => state.user;
 export const { setUser, removeUser } = userSlice.actions;

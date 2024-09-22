@@ -17,8 +17,8 @@ using System.Security.Claims;
 
 namespace EventManager.API.Controllers
 {
-    [Route("api/users")]
     [ApiController]
+    [Route("api/users")]
     public class UserController : ControllerBase
     {
         const int _maxUsersPageCount = 20;
@@ -173,8 +173,8 @@ namespace EventManager.API.Controllers
             return Ok(userResponse);
         }
 
-        [HttpPut("{userId}")]
         [Authorize]
+        [HttpPut("{userId}")]
         public async Task<ActionResult> UpdateUser(long userId, UserUpdateDto user)
         {
             if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
@@ -209,8 +209,8 @@ namespace EventManager.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("logout")]
         [Authorize]
+        [HttpPost("logout")]
         public async Task<ActionResult> LogoutUser(UserLogoutDto logout)
         {
             var currentUserId = User.X_CurrentUserId();
@@ -230,8 +230,8 @@ namespace EventManager.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{userId}")]
         [Authorize]
+        [HttpDelete("{userId}")]
         [Role(UserRole.Admin)]
         public async Task<ActionResult> DeleteUser(long userId)
         {

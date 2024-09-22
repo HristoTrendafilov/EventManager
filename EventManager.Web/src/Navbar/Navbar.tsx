@@ -11,7 +11,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { logoutUser } from '~Infrastructure/api-requests';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { useAppDispatch } from '~Infrastructure/redux/store';
-import { removeUser, sessionSelector } from '~Infrastructure/redux/user-slice';
+import { removeUser, userSelector } from '~Infrastructure/redux/user-slice';
 import { getClientErrorMessage } from '~Infrastructure/utils';
 import logo from '~asset/project-logo.png';
 
@@ -21,7 +21,7 @@ export function Navbar() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const user = useSelector(sessionSelector);
+  const user = useSelector(userSelector);
   const [error, setError] = useState<string>();
   const [logoutLoading, setLogoutLoading] = useState<boolean>(false);
 
