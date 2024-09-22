@@ -64,10 +64,6 @@ namespace EventManager.API.Helpers
                     return;
                 }
             }
-
-            // Allow the request to proceed if the user has the required role
-            await Task.CompletedTask;
         }
     }
-
 }

@@ -1,8 +1,13 @@
-import type { UserLoginDto } from '~User/Login/Login';
 import type { UserNewDto } from '~User/Register/Register';
 
 import { callApi } from './api-client';
-import type { EventDto, LogoutUserDto, RegionDto, UserDto } from './api-types';
+import type {
+  EventDto,
+  LogoutUserDto,
+  RegionDto,
+  UserDto,
+  UserLoginDto,
+} from './api-types';
 import type { UserState } from './redux/session-slice';
 
 export function loginUser(req: UserLoginDto) {

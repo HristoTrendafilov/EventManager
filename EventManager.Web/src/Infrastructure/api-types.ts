@@ -39,3 +39,8 @@ export interface EventDto {
   regionId: number;
   image?: ImageDto;
 }
+
+export interface UserLoginDto {
+  username: string;
+  password: string | null;
+}

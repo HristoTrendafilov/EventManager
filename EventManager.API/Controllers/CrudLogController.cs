@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventManager.API.Controllers
 {
-    [Route("api/crud-logs")]
     [ApiController]
     [Role(UserRole.Admin)]
+    [Route("api/crud-logs")]
     public class CrudLogController : ControllerBase
     {
         private readonly ICrudLogService _crudLogService;

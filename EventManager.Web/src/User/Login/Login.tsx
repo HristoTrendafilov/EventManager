@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
 
+import type { UserLoginDto } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
@@ -15,9 +16,7 @@ import './Login.css';
 const schema = z.object({
   username: z.string(),
   password: z.string(),
-});
-
-export type UserLoginDto = z.infer<typeof schema>;
+}) satisfies z.ZodType<UserLoginDto>;
 
 export function Login() {
   const navigate = useNavigate();

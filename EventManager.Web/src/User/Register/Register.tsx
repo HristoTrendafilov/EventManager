@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { type ZodType, z } from 'zod';
+import { z } from 'zod';
 
 import { registerUser } from '~Infrastructure/api-requests';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
@@ -44,27 +44,18 @@ export function Register() {
   );
 
   const form = useZodForm({
-    schema: z
-      .object({
-        username: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
-        password: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
-        passwordRepeated: z.string(),
-        firstName: z.string(),
-        secondName: z.string().nullable(),
-        lastName: z.string(),
-        email: z.string().email('Неправилен имейл'),
-        phoneNumber: z.string().nullable(),
-        regionId: z.number(),
-        userRegionsHelpingIds: z.number().array(),
-      })
-      .refine((schema) => schema.password === schema.passwordRepeated, {
-        message: 'Паролите не съвпадат',
-        path: ['passwordRepeated'],
-      }) satisfies ZodType<UserNewDto>,
-    defaultValues: {
-      secondName: null,
-      phoneNumber: null,
-    },
+    schema: z.object({
+      username: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
+      password: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
+      passwordRepeated: z.string(),
+      firstName: z.string(),
+      secondName: z.string().nullable(),
+      lastName: z.string(),
+      email: z.string().email('Неправилен имейл'),
+      phoneNumber: z.string().nullable(),
+      regionId: z.number(),
+      userRegionsHelpingIds: z.number().array(),
+    }),
   });
 
   return (

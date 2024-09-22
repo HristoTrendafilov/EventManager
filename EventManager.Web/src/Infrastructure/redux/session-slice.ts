@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { loginUser, logoutUser } from '~Infrastructure/api-requests';
-import type { UserLoginDto } from '~User/Login/Login';
+import type { UserLoginDto } from '~Infrastructure/api-types';
 
 import type { ApplicationState } from './store';
 import { createAppAsyncThunk } from './store-utils';

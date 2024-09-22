@@ -1,6 +1,11 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type ChangeEvent, type ComponentProps, forwardRef } from 'react';
+import {
+  type ChangeEvent,
+  type ComponentProps,
+  forwardRef,
+  useCallback,
+} from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import '~Infrastructure/components/Form/SharedForm.css';
@@ -16,10 +21,12 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
     const { getFieldState, formState, setValue } = useFormContext();
     const state = getFieldState(props.name, formState);
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value === '' ? null : event.target.value;
-      setValue(props.name, value);
-    };
+    const handleChange = useCallback(
+      (event: ChangeEvent<HTMLInputElement>) => {
+        setValue(props.name, event.target.value);
+      },
+      [props.name, setValue]
+    );
 
     return (
       <div className="text-input-wrapper">
