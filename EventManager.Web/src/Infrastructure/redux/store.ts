@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 
-import { sessionSlice } from './session-slice';
+import { userSlice } from './user-slice';
 
 export function createStore(preloadedState: unknown) {
   const store = configureStore({
     reducer: {
-      [sessionSlice.name]: sessionSlice.reducer,
+      [userSlice.name]: userSlice.reducer,
     },
     preloadedState,
   });

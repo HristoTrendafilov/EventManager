@@ -7,11 +7,15 @@ import type {
   RegionDto,
   UserDto,
   UserLoginDto,
+  UserLoginResponseDto,
 } from './api-types';
-import type { UserState } from './redux/session-slice';
 
 export function loginUser(req: UserLoginDto) {
-  return callApi<UserState>('/users/login', 'POST', JSON.stringify(req));
+  return callApi<UserLoginResponseDto>(
+    '/users/login',
+    'POST',
+    JSON.stringify(req)
+  );
 }
 
 export function registerUser(req: UserNewDto) {

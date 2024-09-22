@@ -3,24 +3,28 @@ import { reportError } from './utils';
 const apiBaseUrl = '/api';
 const apiWaitTimeout = 5000;
 
-async function extractApiMessage(apiResponse: Response) {
+async function handleApiError(apiResponse: Response) {
   const apiMessage = await apiResponse.text();
+  const { status } = apiResponse;
+
   if (apiMessage) {
     throw new Error(apiMessage);
   }
 
-  const { status } = apiResponse;
-
-  if (status >= 500) {
-    throw new Error('Грешка на сървъра. Моля, опитайте по-късно.');
-  } else if (status === 400) {
-    throw new Error('Грешка в заявката към сървъра.');
-  } else if (status === 401 || status === 403) {
-    throw new Error('Нямате права за достъпване на този ресурс.');
-  } else if (status === 404) {
-    throw new Error('Ресурсът, който търсите, не може да бъде намерен.');
-  } else if (status === 422) {
-    throw new Error('Грешка в данните, които са изпратени към сървъра.');
+  switch (status) {
+    case 500:
+      throw new Error('Server error. Please try again later.');
+    case 400:
+      throw new Error('Bad request to the server.');
+    case 401:
+    case 403:
+      throw new Error('You do not have permission to access this resource.');
+    case 404:
+      throw new Error('The resource you are looking for could not be found.');
+    case 422:
+      throw new Error('There was an error with the data sent to the server.');
+    default:
+      throw new Error(`Unexpected error: ${status}`);
   }
 }
 
@@ -56,11 +60,11 @@ export async function callApi<T>(
     apiResponse = await fetch(`${apiBaseUrl}${endPoint}`, fetchOptions);
   } catch (err) {
     reportError(err);
-    throw new Error(`Мрежови проблем. Mоля опитайте по-късно.`);
+    throw new Error(`Network error. Please try again later.`);
   }
 
   if (!apiResponse.ok) {
-    await extractApiMessage(apiResponse);
+    await handleApiError(apiResponse);
   }
 
   if (apiResponse.status === 204) {
@@ -71,6 +75,6 @@ export async function callApi<T>(
     return (await apiResponse.json()) as T;
   } catch (err) {
     reportError(err);
-    throw new Error(`Възникна грешка при четенето на резултат от сървъра.`);
+    throw new Error(`Error while reading data from the server.`);
   }
 }

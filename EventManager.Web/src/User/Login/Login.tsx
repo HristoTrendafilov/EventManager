@@ -2,13 +2,14 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
 
+import { loginUser } from '~Infrastructure/api-requests';
 import type { UserLoginDto } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { loginUserThunk } from '~Infrastructure/redux/session-slice';
 import { useAppDispatch } from '~Infrastructure/redux/store';
+import { setUser } from '~Infrastructure/redux/user-slice';
 import { getClientErrorMessage } from '~Infrastructure/utils';
 
 import './Login.css';
@@ -29,13 +30,10 @@ export function Login() {
       setError(undefined);
 
       try {
-        await dispatch(loginUserThunk(data)).unwrap();
+        const userState = await loginUser(data);
+        dispatch(setUser(userState));
         navigate('/');
       } catch (err) {
-        /* eslint-disable no-console */
-        console.log(err instanceof DOMException);
-        console.log(err);
-        /* eslint-enable no-console */
         setError(getClientErrorMessage(err));
       }
     },

@@ -3,7 +3,7 @@ import type { CSSProperties } from 'react';
 import './ErrorMessage.css';
 
 interface ErrorMessageProps {
-  error: string | Error;
+  error: unknown;
   style?: CSSProperties;
 }
 

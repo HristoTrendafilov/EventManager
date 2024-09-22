@@ -1,3 +1,5 @@
+import type { UserState } from './redux/user-slice';
+
 export interface LogoutUserDto {
   webSessionId: number;
 }
@@ -42,5 +44,9 @@ export interface EventDto {
 
 export interface UserLoginDto {
   username: string;
-  password: string | null;
+  password: string;
+}
+
+export interface UserLoginResponseDto extends UserState {
+  token: string;
 }

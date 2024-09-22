@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Event } from '~Event/Event';
-import type { UserRole } from '~Infrastructure/redux/session-slice';
+import type { UserRole } from '~Infrastructure/redux/user-slice';
 import { Login } from '~User/Login/Login';
 import { Register } from '~User/Register/Register';
 
