@@ -36,8 +36,8 @@ namespace EventManager.API.Core.Exceptions
                     Exception = ex.ToString(),
                     ExceptionMessage = ex.Message,
                     ExceptionDateTime = DateTime.Now,
-                    UserId = context.User.X_GetCurrentUserId()
-                }, null);
+                    UserId = context.User.X_CurrentUserId()
+                }, context.User.X_CurrentUserId());
 
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";

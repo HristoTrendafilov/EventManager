@@ -1,6 +1,7 @@
 ﻿using EventManager.API.Core;
 using EventManager.API.Helpers;
 using EventManager.API.Services.Email;
+using EventManager.API.Services.Shared;
 using EventManager.API.Services.User;
 using EventManager.API.Services.WebSession;
 using EventManager.BOL;
@@ -25,6 +26,7 @@ namespace EventManager.API.Controllers
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
         private readonly IWebSessionService _webSessionService;
+        private readonly ISharedService _sharedService;
         private readonly IConfiguration _configuration;
         private readonly Mapper _mapper;
 
@@ -32,17 +34,20 @@ namespace EventManager.API.Controllers
             IUserService userService,
             IEmailService emailService,
             IWebSessionService webSessionService,
+            ISharedService sharedService,
             IConfiguration configuration,
             Mapper mapper)
         {
             _userService = userService;
             _emailService = emailService;
             _webSessionService = webSessionService;
+            _sharedService = sharedService;
             _configuration = configuration;
             _mapper = mapper;
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult> GetAllUsers(int pageNumber = 1, int pageSize = 10)
         {
             if (pageSize > _maxUsersPageCount)
@@ -74,11 +79,9 @@ namespace EventManager.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> LoginUser(UserLoginDto login)
+        public async Task<ActionResult> LoginUser(UserLoginDto userLogin)
         {
-            Thread.Sleep(2000);
-
-            var user = await _userService.GetUserAsync(x => x.Username == login.Username && x.Password == login.Password);
+            var user = await _userService.GetUserAsync(x => x.Username == userLogin.Username && x.Password == userLogin.Password);
             if (user == null)
             {
                 return BadRequest("Неправилно потребителско име или парола.");
@@ -93,25 +96,19 @@ namespace EventManager.API.Controllers
                 new (CustomClaimTypes.UserId, user.UserId.ToString()),
             };
 
-            var userClaims = await _userService.GetAllUserClaimsAsync(user.UserId);
-            foreach (var claim in userClaims)
-            {
-                claimsForToken.Add(new Claim(claim.ClaimType, claim.ClaimName));
-            }
-
             var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(_configuration["Authentication:SecretForKey"]));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var now = DateTime.Now;
-            var expiresOn = DateTime.Now.AddHours(1);
+            var expiresOn = now.AddHours(1);
 
             var jwtSecurityToken = new JwtSecurityToken(
-                _configuration["Authentication:Issuer"],
-                _configuration["Authentication:Audience"],
-                claimsForToken,
-                now,
-                expiresOn,
-                signingCredentials);
+                issuer: _configuration["Authentication:Issuer"],
+                audience: _configuration["Authentication:Audience"],
+                claims: claimsForToken,
+                notBefore: now,
+                expires: expiresOn,
+                signingCredentials: signingCredentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
 
@@ -123,6 +120,7 @@ namespace EventManager.API.Controllers
             };
 
             var webSessionId = await _webSessionService.CreateWebSession(webSession);
+            var userRoles = await _userService.GetAllUserRolesAsync(user.UserId);
 
             var response = new UserForWebDto
             {
@@ -130,8 +128,8 @@ namespace EventManager.API.Controllers
                 Username = user.Username,
                 Token = token,
                 WebSessionId = webSessionId,
-                IsAdmin = userClaims.Any(x => x.ClaimId == (int)UserClaimType.Admin),
-                IsEventCreator = userClaims.Any(x => x.ClaimId == (int)UserClaimType.EventCreator),
+                IsAdmin = userRoles.Any(x => x.RoleId == (int)UserRole.Admin),
+                IsEventCreator = userRoles.Any(x => x.RoleId == (int)UserRole.EventCreator),
             };
 
             return Ok(response);
@@ -162,7 +160,7 @@ namespace EventManager.API.Controllers
                 }
             }
 
-            var currentUser = User.X_GetCurrentUserId();
+            var currentUser = User.X_CurrentUserId();
             userNew.CreatedByUserId = currentUser;
             var userId = await _userService.CreateUserAsync(userNew, currentUser);
 
@@ -179,7 +177,7 @@ namespace EventManager.API.Controllers
         [Authorize]
         public async Task<ActionResult> UpdateUser(long userId, UserUpdateDto user)
         {
-            if (!User.X_IsAuthorizedToEdit(userId))
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
             {
                 return Unauthorized();
             }
@@ -206,7 +204,7 @@ namespace EventManager.API.Controllers
                 }
             }
 
-            await _userService.UpdateUserAsync(userId, user, User.X_GetCurrentUserId());
+            await _userService.UpdateUserAsync(userId, user, User.X_CurrentUserId());
 
             return NoContent();
         }
@@ -215,7 +213,7 @@ namespace EventManager.API.Controllers
         [Authorize]
         public async Task<ActionResult> LogoutUser(UserLogoutDto logout)
         {
-            var currentUserId = User.X_GetCurrentUserId();
+            var currentUserId = User.X_CurrentUserId();
 
             if (!await _userService.UserExistsAsync(x => x.UserId == currentUserId.Value))
             {
@@ -234,10 +232,10 @@ namespace EventManager.API.Controllers
 
         [HttpDelete("{userId}")]
         [Authorize]
-        [ClaimAccess(ClaimTypeValues.Admin)]
+        [Role(UserRole.Admin)]
         public async Task<ActionResult> DeleteUser(long userId)
         {
-            if (!User.X_IsAuthorizedToEdit(userId))
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
             {
                 return Unauthorized();
             }
@@ -247,22 +245,22 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            await _userService.DeleteUserAsync(userId, User.X_GetCurrentUserId());
+            await _userService.DeleteUserAsync(userId, User.X_CurrentUserId());
 
             return NoContent();
         }
 
         [Authorize]
-        [HttpPost("claims")]
-        [ClaimAccess(ClaimTypeValues.Admin)]
-        public async Task<ActionResult> AddClaimToUser(UserClaimNewDto claim)
+        [HttpPost("roles")]
+        [Role(UserRole.Admin)]
+        public async Task<ActionResult> AddRoleToUser(UserRoleNewDto role)
         {
-            if (!await _userService.ClaimExistsAsync(x => x.UserId == claim.UserId && x.ClaimId == claim.ClaimId))
+            if (!await _userService.UserRoleExistsAsync(x => x.UserId == role.UserId && x.RoleId == role.RoleId))
             {
-                return BadRequest($"Вече съществува това право за потребител с ID: {claim.UserId}");
+                return BadRequest($"Вече съществува това право за потребител с ID: {role.UserId}");
             }
 
-            await _userService.CreateUserClaimAsync(claim, User.X_GetCurrentUserId());
+            await _userService.CreateUserRoleAsync(role, User.X_CurrentUserId());
 
             return NoContent();
         }

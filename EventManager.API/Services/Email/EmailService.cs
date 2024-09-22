@@ -42,11 +42,11 @@ namespace EventManager.API.Services.Email
 
             if (email == SendFromEmail.Official)
             {
-                this.EmailFrom = StartUpHelper.Configuration["SmtpEmailConfig:OfficialEmail"];
+                this.EmailFrom = StartUpHelper._configuration["SmtpEmailConfig:OfficialEmail"];
             }
             else if (email == SendFromEmail.Noreply)
             {
-                this.EmailFrom = StartUpHelper.Configuration["SmtpEmailConfig:NoReplyEmail"];
+                this.EmailFrom = StartUpHelper._configuration["SmtpEmailConfig:NoReplyEmail"];
             }
 
             this.IsBodyHtml = true;

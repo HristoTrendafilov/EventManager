@@ -18,22 +18,23 @@ using Microsoft.OpenApi.Models;
 using EventManager.API.Core.Exceptions;
 using EventManager.API.Services.Exception;
 using System.Text;
-using EventManager.API.Helpers;
 using EventManager.API.Services.Event;
 using EventManager.API.Services.Log;
 using EventManager.API.Services.CrudLog;
 using EventManager.API.Services.WebSession;
 using EventManager.API.Services.Region;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using EventManager.API.Services.Shared;
 
 namespace EventManager.API
 {
     public static class StartUpHelper
     {
-        public static IConfiguration Configuration;
+        public static IConfiguration _configuration;
 
         public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder)
         {
-            Configuration = builder.Configuration;
+            _configuration = builder.Configuration;
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -61,7 +62,7 @@ namespace EventManager.API
                     Name = "Authorization",
                     Type = SecuritySchemeType.Http,
                     BearerFormat = "JWT",
-                    Scheme = "Bearer"
+                    Scheme = "Bearer",
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -97,6 +98,7 @@ namespace EventManager.API
             services.AddScoped<IExceptionService, ExceptionService>();
             services.AddScoped<ICrudLogService, CrudLogService>();
             services.AddScoped<IWebSessionService, WebSessionService>();
+            services.AddScoped<ISharedService, SharedService>();
 
             return builder;
         }
@@ -194,11 +196,32 @@ namespace EventManager.API
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
                         ValidIssuer = builder.Configuration["Authentication:Issuer"],
                         ValidAudience = builder.Configuration["Authentication:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(
-                           Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"] ?? ""))
+                           Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"] ?? "")),
+                        // ClockSkew is the leeway for the expiration validation (default is 5 minutes)
+                        ClockSkew = TimeSpan.Zero // Set to zero to avoid any extra time after token expiration
                     };
+
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception is SecurityTokenExpiredException)
+                            {
+                                context.Response.OnStarting(() =>
+                                {
+                                    context.Response.Headers.Append("TokenExpired", "true");
+                                    return Task.CompletedTask;
+                                });
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
+
                 });
 
             return builder;

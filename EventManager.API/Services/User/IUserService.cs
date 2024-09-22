@@ -14,15 +14,16 @@ namespace EventManager.API.Services.User
         Task UpdateUserAsync(long userId, UserUpdateDto user, long? currentUserId);
         Task DeleteUserAsync(long userId, long? currentUserId);
         Task<bool> UserExistsAsync(Expression<Func<UserPoco, bool>> predicate);
+        Task<bool> IsUserAdmin(long userId);
 
         Task<List<RegionPoco>> GetAllUserRegionsHelping(long userId);
         Task CreateUserRegionHelpingAsync(UserRegionHelpingNewDto userRegionHelping, long? currentUserId);
         Task DeleteUserRegionHelpingAsync(Expression<Func<UserRegionHelpingPoco, bool>> predicate, long? currentUserId);
 
-        Task<List<ClaimPoco>> GetAllUserClaimsAsync(long userId);
-        Task<UserClaimPoco> GetUserClaimAsync(Expression<Func<UserClaimPoco, bool>> predicate);
-        Task<long> CreateUserClaimAsync(UserClaimNewDto userClaim, long? currentUserId);
-        Task DeleteUserClaimAsync(Expression<Func<UserClaimPoco, bool>> predicate, long? currentUserId);
-        Task<bool> ClaimExistsAsync(Expression<Func<UserClaimPoco, bool>> predicate);
+        Task<List<RolePoco>> GetAllUserRolesAsync(long userId);
+        Task<UserRolePoco> GetUserRoleAsync(Expression<Func<UserRolePoco, bool>> predicate);
+        Task<long> CreateUserRoleAsync(UserRoleNewDto userClaim, long? currentUserId);
+        Task DeleteUserRoleAsync(Expression<Func<UserRolePoco, bool>> predicate, long? currentUserId);
+        Task<bool> UserRoleExistsAsync(Expression<Func<UserRolePoco, bool>> predicate);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using EventManager.API.Core;
 using EventManager.API.Helpers;
 using EventManager.API.Services.Event;
+using EventManager.API.Services.Shared;
 using EventManager.BOL;
 using EventManager.DTO.Event;
 using Microsoft.AspNetCore.Authorization;
@@ -16,11 +17,13 @@ namespace EventManager.API.Controllers
         const int _maxEventsPageCount = 20;
 
         private readonly IEventService _eventService;
+        private readonly ISharedService _sharedService;
         private readonly Mapper _mapper;
 
-        public EventController(IEventService eventService, Mapper mapper)
+        public EventController(IEventService eventService, ISharedService sharedService, Mapper mapper)
         {
             _eventService = eventService;
+            _sharedService = sharedService;
             _mapper = mapper;
         }
 
@@ -57,18 +60,18 @@ namespace EventManager.API.Controllers
 
         [HttpPost]
         [Authorize]
-        [ClaimAccess(ClaimTypeValues.EventCreator)]
-        public async Task<ActionResult> CreateEvent(EventNew eventNew)
+        [Role(UserRole.EventCreator)]
+        public async Task<ActionResult> CreateEvent(EventNew @event)
         {
-            if (await _eventService.EventExistsAsync(x => x.EventName == eventNew.EventName))
+            if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName))
             {
-                return BadRequest($"Вече съществува събитие с име: {eventNew.EventName}");
+                return BadRequest($"Вече съществува събитие с име: {@event.EventName}");
             }
 
-            var currentUserId = User.X_GetCurrentUserId();
-            eventNew.CreatedByUserId = currentUserId.Value;
+            var currentUserId = User.X_CurrentUserId();
+            @event.CreatedByUserId = currentUserId.Value;
 
-            var eventId = await _eventService.CreateEventAsync(eventNew, currentUserId);
+            var eventId = await _eventService.CreateEventAsync(@event, currentUserId);
 
             var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
             var eventToReturn = _mapper.CreateObject<EventDto>(eventPoco);
@@ -76,12 +79,12 @@ namespace EventManager.API.Controllers
             return Ok(eventToReturn);
         }
 
-        [HttpPut("{eventId}")]
         [Authorize]
-        [ClaimAccess(ClaimTypeValues.EventCreator)]
-        public async Task<ActionResult> UpdateEvent(long eventId, EventUpdate eventUpdate)
+        [HttpPut("{eventId}")]
+        [Role(UserRole.EventCreator)]
+        public async Task<ActionResult> UpdateEvent(long eventId, EventUpdate @event)
         {
-            if (!User.X_IsAuthorizedToEdit(eventUpdate.CreatedByUserId))
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, @event.CreatedByUserId))
             {
                 return Unauthorized();
             }
@@ -91,19 +94,19 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            if (await _eventService.EventExistsAsync(x => x.EventName == eventUpdate.EventName && x.EventId != eventId))
+            if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName && x.EventId != eventId))
             {
-                return BadRequest($"Вече съществува събитие с име: {eventUpdate.EventName}");
+                return BadRequest($"Вече съществува събитие с име: {@event.EventName}");
             }
 
-            await _eventService.UpdateEventAsync(eventId, eventUpdate, User.X_GetCurrentUserId());
+            await _eventService.UpdateEventAsync(eventId, @event, User.X_CurrentUserId());
 
             return NoContent();
         }
 
         [HttpDelete("{eventId}")]
         [Authorize]
-        [ClaimAccess(ClaimTypeValues.Admin)]
+        [Role(UserRole.Admin)]
         public async Task<ActionResult> DeleteEvent(long eventId)
         {
             if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
@@ -113,12 +116,12 @@ namespace EventManager.API.Controllers
 
             var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
 
-            if (!User.X_IsAuthorizedToEdit(eventPoco.CreatedByUserId))
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.CreatedByUserId))
             {
                 return Unauthorized();
             }
 
-            await _eventService.DeleteEventAsync(eventId, User.X_GetCurrentUserId());
+            await _eventService.DeleteEventAsync(eventId, User.X_CurrentUserId());
 
             return NoContent();
         }
@@ -132,7 +135,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            var currentUserId = User.X_GetCurrentUserId();
+            var currentUserId = User.X_CurrentUserId();
 
             if (await _eventService.UserSubscriptionExists(x => x.UserId == currentUserId.Value && x.EventId == eventId))
             {
@@ -153,7 +156,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            await _eventService.UnsubscribeUser(userEventId, User.X_GetCurrentUserId());
+            await _eventService.UnsubscribeUser(userEventId, User.X_CurrentUserId());
 
             return NoContent();
         }

@@ -9,7 +9,7 @@ namespace EventManager.API.Controllers
 {
     [Route("api/crud-logs")]
     [ApiController]
-    [ClaimAccess(ClaimTypeValues.Admin)]
+    [Role(UserRole.Admin)]
     public class CrudLogController : ControllerBase
     {
         private readonly ICrudLogService _crudLogService;
@@ -45,14 +45,14 @@ namespace EventManager.API.Controllers
         }
 
         [HttpDelete("{crudLogId}")]
-        public async Task<ActionResult> DeleteException(long crudLogId)
+        public async Task<ActionResult> DeleteCrudLog(long crudLogId)
         {
             if (!await _crudLogService.CrudLogExistsAsync(x => x.CrudLogId == crudLogId))
             {
                 return NotFound();
             }
 
-            await _crudLogService.DeleteCrudLogAsync(crudLogId, User.X_GetCurrentUserId());
+            await _crudLogService.DeleteCrudLogAsync(crudLogId, User.X_CurrentUserId());
 
             return NoContent();
         }

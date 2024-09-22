@@ -1,9 +1,9 @@
 ﻿using EventManager.API.Core;
+using EventManager.API.Services.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Collections;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
 
 namespace EventManager.API.Helpers
 {
@@ -21,36 +21,53 @@ namespace EventManager.API.Helpers
         }
     }
 
-    public class ClaimAccessAttribute : TypeFilterAttribute
+    public class RoleAttribute : TypeFilterAttribute
     {
-        public ClaimAccessAttribute(string claimValue) : base(typeof(ClaimAccessFilter))
+        public RoleAttribute(UserRole role) : base(typeof(RoleAccessFilter))
         {
-            Arguments = [new Claim(CustomClaimTypes.Role, claimValue)];
+            Arguments = [role];
         }
     }
 
-    public class ClaimAccessFilter : IAuthorizationFilter
+    public class RoleAccessFilter : IAsyncAuthorizationFilter
     {
-        private readonly Claim _claim;
+        private readonly UserRole _role;  // Role is passed through the constructor
+        private readonly IUserService _userService;
 
-        public ClaimAccessFilter(Claim claim)
+        // Constructor accepts the UserRole directly and the user service for user role fetching
+        public RoleAccessFilter(UserRole role, IUserService userService)
         {
-            _claim = claim;
+            _role = role;
+            _userService = userService;
         }
 
-        public void OnAuthorization(AuthorizationFilterContext context)
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            var user = context.HttpContext.User;
+            // Extract the user ID from the JWT claims
+            var userIdClaim = context.HttpContext.User.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.UserId)?.Value;
+            if (string.IsNullOrWhiteSpace(userIdClaim))
+            {
+                context.Result = new ForbidResult();  // Deny access if user ID is missing
+                return;
+            }
 
-            var isAdmin = user.HasClaim(x => x.Type == CustomClaimTypes.Role && x.Value == ClaimTypeValues.Admin);
+            // Fetch user roles from the database or service
+            var userRoles = await _userService.GetAllUserRolesAsync(long.Parse(userIdClaim));
+
+            var isAdmin = userRoles.Any(x => x.RoleId == (int)UserRole.Admin);
             if (!isAdmin)
             {
-                var hasClaim = user.HasClaim(x => x.Type == _claim.Type && x.Value == _claim.Value);
-                if (!hasClaim)
+                // Check if the user has the required role (which was passed through the constructor)
+                if (!userRoles.Any(x => x.RoleId == (int)_role))
                 {
-                    context.Result = new ForbidResult();
+                    context.Result = new ForbidResult();  // Deny access if the user doesn't have the required role
+                    return;
                 }
             }
+
+            // Allow the request to proceed if the user has the required role
+            await Task.CompletedTask;
         }
     }
+
 }

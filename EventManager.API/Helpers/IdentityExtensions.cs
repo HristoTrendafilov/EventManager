@@ -5,7 +5,7 @@ namespace EventManager.API.Helpers
 {
     public static class IdentityExtensions
     {
-        public static long? X_GetCurrentUserId(this ClaimsPrincipal user)
+        public static long? X_CurrentUserId(this ClaimsPrincipal user)
         {
             if (user == null)
             {
@@ -19,23 +19,6 @@ namespace EventManager.API.Helpers
             }
 
             return long.Parse(userId);
-        }
-
-        public static bool X_IsAuthorizedToEdit(this ClaimsPrincipal user, long entityUserCreatorId)
-        {
-            var currentUserId = user.X_GetCurrentUserId();
-            if (currentUserId == null)
-            {
-                return false;
-            }
-
-            var isAdmin = user.HasClaim(c => c.Type == CustomClaimTypes.Role && c.Value == ClaimTypeValues.Admin);
-            if (isAdmin || currentUserId == entityUserCreatorId)
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }

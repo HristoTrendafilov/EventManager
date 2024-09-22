@@ -13,20 +13,6 @@ namespace EventManager.DAL
 		public string RegionName { get; set; }
 	}
 
-	[Table(Name = "claims")]
-	public class ClaimPoco
-	{
-		[PrimaryKey, Identity]
-		[Column(Name = "claim_id")]
-		public long ClaimId { get; set; }
-
-		[Column(Name = "claim_name")]
-		public string ClaimName { get; set; }
-
-		[Column(Name = "claim_type")]
-		public string ClaimType { get; set; }
-	}
-
 	[Table(Name = "users")]
 	public class UserPoco
 	{
@@ -85,18 +71,18 @@ namespace EventManager.DAL
 		public long RegionId { get; set; }
 	}
 
-	[Table(Name = "users_claims")]
-	public class UserClaimPoco
+	[Table(Name = "users_roles")]
+	public class UserRolePoco
 	{
 		[PrimaryKey, Identity]
-		[Column(Name = "user_claim_id")]
-		public long UserClaimId { get; set; }
+		[Column(Name = "user_role_id")]
+		public long UserRoleId { get; set; }
 
 		[Column(Name = "user_id")]
 		public long UserId { get; set; }
 
-		[Column(Name = "claim_id")]
-		public long ClaimId { get; set; }
+		[Column(Name = "role_id")]
+		public long RoleId { get; set; }
 	}
 
 	[Table(Name = "users_events")]
@@ -137,6 +123,17 @@ namespace EventManager.DAL
 
 		[Column(Name = "event_id")]
 		public long EventId { get; set; }
+	}
+
+	[Table(Name = "roles")]
+	public class RolePoco
+	{
+		[PrimaryKey, Identity]
+		[Column(Name = "role_id")]
+		public long RoleId { get; set; }
+
+		[Column(Name = "role_name")]
+		public string RoleName { get; set; }
 	}
 
 	[Table(Name = "crud_logs")]

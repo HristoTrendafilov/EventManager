@@ -6,13 +6,12 @@
         public const string EventCreator = "EventCreator";
     }
 
-    public static class CustomClaimTypes
+    public class CustomClaimTypes
     {
-        public const string Role = "Role";
         public const string UserId = "UserId";
     }
 
-    public enum UserClaimType
+    public enum UserRole
     {
         None = 0,
         Admin = 1,

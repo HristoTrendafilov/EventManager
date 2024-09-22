@@ -9,7 +9,7 @@ namespace EventManager.API.Controllers
 {
     [Route("api/exceptions")]
     [ApiController]
-    [ClaimAccess(ClaimTypeValues.Admin)]
+    [Role(UserRole.Admin)]
     public class ExceptionController : ControllerBase
     {
         private readonly IExceptionService _exceptionService;
@@ -52,7 +52,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            await _exceptionService.ResolveException(exceptionId, User.X_GetCurrentUserId());
+            await _exceptionService.ResolveException(exceptionId, User.X_CurrentUserId());
 
             return NoContent();
         }
@@ -65,7 +65,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            await _exceptionService.DeleteExceptionAsync(exceptionId, User.X_GetCurrentUserId());
+            await _exceptionService.DeleteExceptionAsync(exceptionId, User.X_CurrentUserId());
 
             return NoContent();
         }

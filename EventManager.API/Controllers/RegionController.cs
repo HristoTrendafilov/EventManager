@@ -47,7 +47,7 @@ namespace EventManager.API.Controllers
 
         [HttpPost]
         [Authorize]
-        [ClaimAccess(ClaimTypeValues.Admin)]
+        [Role(UserRole.Admin)]
         public async Task<ActionResult> CreateRegion(RegionNew region)
         {
             if (await _regionService.RegionExistsAsync(x => x.RegionName == region.RegionName))
@@ -55,7 +55,7 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече съществува регион: {region.RegionName}");
             }
 
-            var regionId = await _regionService.CreateRegionAsync(region, User.X_GetCurrentUserId());
+            var regionId = await _regionService.CreateRegionAsync(region, User.X_CurrentUserId());
 
             var regionPoco = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
             var regionToReturn = _mapper.CreateObject<RegionDto>(regionPoco);

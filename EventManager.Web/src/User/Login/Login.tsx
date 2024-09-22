@@ -27,10 +27,16 @@ export function Login() {
 
   const handleLogin = useCallback(
     async (data: UserLoginDto) => {
+      setError(undefined);
+
       try {
         await dispatch(loginUserThunk(data)).unwrap();
         navigate('/');
       } catch (err) {
+        /* eslint-disable no-console */
+        console.log(err instanceof DOMException);
+        console.log(err);
+        /* eslint-enable no-console */
         setError(getClientErrorMessage(err));
       }
     },
