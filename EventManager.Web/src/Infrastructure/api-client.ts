@@ -70,6 +70,8 @@ export async function callApi<T>(
   if (tokenExpired) {
     store.dispatch(removeUser());
     window.location.href = '/';
+
+    return {} as T;
   }
 
   if (!apiResponse.ok) {

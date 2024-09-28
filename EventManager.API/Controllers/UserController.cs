@@ -1,5 +1,6 @@
 ﻿using EventManager.API.Core;
 using EventManager.API.Helpers;
+using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Email;
 using EventManager.API.Services.Shared;
 using EventManager.API.Services.User;

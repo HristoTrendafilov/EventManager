@@ -1,10 +1,4 @@
-import {
-  faFacebook,
-  faInstagram,
-  faLinkedin,
-} from '@fortawesome/free-brands-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -13,17 +7,50 @@ import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessa
 import { useAppDispatch } from '~Infrastructure/redux/store';
 import { removeUser, userSelector } from '~Infrastructure/redux/user-slice';
 import { getClientErrorMessage } from '~Infrastructure/utils';
-import logo from '~asset/project-logo.png';
 
 import './Navbar.css';
 
 export function Navbar() {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-
   const user = useSelector(userSelector);
-  const [error, setError] = useState<string>();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [logoutLoading, setLogoutLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>();
+
+  const offcanvasRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (window.innerWidth >= 767) {
+      return undefined;
+    }
+
+    const offcanvasElement = offcanvasRef.current;
+    if (!offcanvasElement) {
+      return undefined;
+    }
+
+    const closeOffcanvas = () => {
+      document.body.removeAttribute('style');
+
+      const btn = document.getElementById('offcanvasBtn');
+      btn?.click();
+    };
+
+    // Select all <a> and <button> elements within the offcanvas
+    const anchorAndButtons = offcanvasElement.querySelectorAll('a, button');
+
+    // Add event listeners to close the offcanvas on click
+    anchorAndButtons.forEach((element) => {
+      element.addEventListener('click', closeOffcanvas);
+    });
+
+    return () => {
+      anchorAndButtons.forEach((element) => {
+        element.removeEventListener('click', closeOffcanvas);
+      });
+    };
+  }, []);
 
   const handleLogout = useCallback(async () => {
     setLogoutLoading(true);
@@ -40,135 +67,101 @@ export function Navbar() {
   }, [dispatch, navigate, user.webSessionId]);
 
   return (
-    <>
-      <nav className="navbar navbar-expand-md white">
-        <div className="container-fluid navbar-top flex-nowrap">
-          <Link className="navbar-brand" to="/">
-            <img className="navbar-brand-logo" src={logo} alt="..." />
-          </Link>
+    <nav className="navbar bg-light sticky-top navbar-expand-md">
+      <div className="container-fluid">
+        <a className="navbar-brand" href="/">
+          EventManager
+        </a>
+        <button
+          id="offcanvasBtn"
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#offcanvasNavbar"
+          aria-controls="offcanvasNavbar"
+          aria-label="offcanvas"
+        >
+          <span className="navbar-toggler-icon" />
+        </button>
+        <div
+          className="offcanvas offcanvas-end"
+          tabIndex={-1}
+          ref={offcanvasRef}
+          id="offcanvasNavbar"
+          aria-labelledby="offcanvasNavbarLabel"
+        >
+          <div className="offcanvas-header pb-0">
+            <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
+              {user.isLoggedIn ? (
+                <Link to={`/user/${user.userId}/profile`}>{user.username}</Link>
+              ) : (
+                <div>EventManager</div>
+              )}
+            </h5>
 
-          <div className="social-networks">
-            <div className="navbar-social-networks-header">
-              Посетете ни в социалните мрежи
-            </div>
-            <div className="d-flex gap-2 justify-content-center">
-              <FontAwesomeIcon
-                className="navbar-social-network-icon"
-                icon={faFacebook}
-                color="blue"
-                size="2x"
-              />
-              <FontAwesomeIcon
-                className="navbar-social-network-icon"
-                icon={faInstagram}
-                color="red"
-                size="2x"
-              />
-              <FontAwesomeIcon
-                className="navbar-social-network-icon"
-                icon={faLinkedin}
-                color="blue"
-                size="2x"
-              />
-            </div>
+            <button type="button" className="btn-close" aria-label="Close" />
           </div>
-        </div>
-      </nav>
-
-      <nav className="navbar navbar-expand-sm bg-danger bg-gradient sticky-top px-sm-2">
-        <div className="container-fluid">
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon" />
-          </button>
-
-          <div className="order-sm-last">
-            {user.isLoggedIn ? (
-              <div className="nav-logged-actions">
-                <button
-                  type="button"
-                  className="nav-link dropdown-toggle text-white"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  {user.username}
-                </button>
-
-                <ul
-                  className="dropdown-menu dropdown-menu-end"
-                  aria-labelledby="navbarDropdown"
-                >
-                  <li>
-                    <Link
-                      className="nav-link"
-                      to={`/user/profile/${user.userId}`}
-                    >
-                      Профил
-                    </Link>
-                  </li>
-                  {user.isAdmin && (
-                    <li>
-                      <Link className="nav-link" to="/admin-panel">
-                        Админ панел
-                      </Link>
-                    </li>
-                  )}
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    disabled={logoutLoading}
-                  >
-                    Изход
-                  </button>
-                </ul>
-              </div>
-            ) : (
-              <div className="navbar-logout-actions">
-                <Link
-                  to="/register"
-                  className="nav-link navbar-logout-actions-btn"
-                >
+          <div className="gap-4 p-1 d-md-none d-flex">
+            {!user.isLoggedIn && (
+              <>
+                <Link to="/register" className="btn btn-sm btn-warning w-100">
                   Регистрация
                 </Link>
-                <Link
-                  to="/login"
-                  className="nav-link navbar-logout-actions-btn"
-                >
+                <Link to="/login" className="btn btn-sm btn-warning w-100">
                   Вход
                 </Link>
-              </div>
+              </>
             )}
           </div>
-
-          <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div className="navbar-nav">
-              <Link className="nav-link text-white" to="/">
-                Начало
-              </Link>
-
-              {(user.isEventCreator || user.isAdmin) && (
-                <Link className="nav-link text-white" to="/event/new">
-                  Създай събитие
+          <hr className="d-md-none mt-1" />
+          <div className="offcanvas-body pt-0">
+            <ul className="navbar-nav flex-grow-1 pe-3">
+              <li className="nav-item">
+                <Link className="nav-link" to="/">
+                  Начало
                 </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/events/list">
+                  Събития
+                </Link>
+              </li>
+            </ul>
+            {user.isLoggedIn && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={logoutLoading}
+                className="btn btn-danger w-100 d-md-none"
+              >
+                Изход
+              </button>
+            )}
+            <div className="gap-4 justify-content-end d-none d-md-flex">
+              {user.isLoggedIn ? (
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={logoutLoading}
+                  className="btn btn-danger"
+                >
+                  Изход
+                </button>
+              ) : (
+                <>
+                  <Link to="/register" className="btn btn-warning w-100">
+                    Регистрация
+                  </Link>
+                  <Link to="/login" className="btn btn-warning w-100">
+                    Вход
+                  </Link>
+                </>
               )}
-              <Link className="nav-link text-white" to="/events/page/1">
-                Събития
-              </Link>
             </div>
           </div>
         </div>
-        {error && <ErrorMessage error={error} />}
-      </nav>
-    </>
+      </div>
+      {error && <ErrorMessage error={error} />}
+    </nav>
   );
 }

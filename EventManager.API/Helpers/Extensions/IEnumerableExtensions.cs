@@ -1,7 +1,7 @@
 ﻿using System.Dynamic;
 using System.Reflection;
 
-namespace EventManager.API.Helpers
+namespace EventManager.API.Helpers.Extensions
 {
     public static class IEnumerableExtensions
     {

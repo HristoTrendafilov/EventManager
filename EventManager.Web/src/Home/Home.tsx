@@ -22,7 +22,7 @@ export function Home() {
       className="home-wrapper"
     >
       <button onClick={fetchData} type="button" className="btn btn-warning">
-        2xaax
+        xaax
       </button>
     </div>
   );

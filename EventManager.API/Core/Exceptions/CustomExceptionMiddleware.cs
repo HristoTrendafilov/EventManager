@@ -1,4 +1,4 @@
-﻿using EventManager.API.Helpers;
+﻿using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Exception;
 using EventManager.DTO.Exception;
 using System.Net;

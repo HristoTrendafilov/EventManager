@@ -1,7 +1,7 @@
 ﻿using EventManager.API.Core;
 using System.Security.Claims;
 
-namespace EventManager.API.Helpers
+namespace EventManager.API.Helpers.Extensions
 {
     public static class IdentityExtensions
     {
