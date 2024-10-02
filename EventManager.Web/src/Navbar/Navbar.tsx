@@ -1,14 +1,76 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { logoutUser } from '~Infrastructure/api-requests';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { useAppDispatch } from '~Infrastructure/redux/store';
-import { removeUser, userSelector } from '~Infrastructure/redux/user-slice';
+import {
+  type UserState,
+  removeUser,
+  userSelector,
+} from '~Infrastructure/redux/user-slice';
 import { getClientErrorMessage } from '~Infrastructure/utils';
 
 import './Navbar.css';
+
+interface NavUserDropdownProps {
+  user: UserState;
+  loading: boolean;
+  isInOffcanvas: boolean;
+  handleLogout: () => void;
+  handleNavClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+}
+
+function NavUserDropdown(props: NavUserDropdownProps) {
+  const { user, loading, isInOffcanvas, handleLogout, handleNavClick } = props;
+
+  return (
+    <div className={`dropdown ${!isInOffcanvas && 'd-none d-md-flex'}`}>
+      <button
+        className="btn btn-secondary dropdown-toggle"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        {user.username}
+      </button>
+      <ul className="dropdown-menu dropdown-menu-start dropdown-menu-md-end p-2">
+        <li>
+          <Link
+            to={`/user/${user.userId}/profile`}
+            data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
+            onClick={handleNavClick}
+          >
+            Към профила
+          </Link>
+        </li>
+        {(user.isAdmin || user.isEventCreator) && (
+          <li>
+            <Link
+              to="/events/new"
+              data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
+              onClick={handleNavClick}
+            >
+              Създай събитие
+            </Link>
+          </li>
+        )}
+        <hr className="m-2" />
+        <li>
+          <button
+            type="button"
+            onClick={handleLogout}
+            disabled={loading}
+            className="btn btn-sm btn-danger w-100"
+          >
+            Изход
+          </button>
+        </li>
+      </ul>
+    </div>
+  );
+}
 
 export function Navbar() {
   const user = useSelector(userSelector);
@@ -18,39 +80,17 @@ export function Navbar() {
   const [logoutLoading, setLogoutLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>();
 
-  const offcanvasRef = useRef<HTMLDivElement | null>(null);
+  const handleLinkClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      const path = event.currentTarget.getAttribute('href');
 
-  useEffect(() => {
-    if (window.innerWidth >= 767) {
-      return undefined;
-    }
-
-    const offcanvasElement = offcanvasRef.current;
-    if (!offcanvasElement) {
-      return undefined;
-    }
-
-    const closeOffcanvas = () => {
-      document.body.removeAttribute('style');
-
-      const btn = document.getElementById('offcanvasBtn');
-      btn?.click();
-    };
-
-    // Select all <a> and <button> elements within the offcanvas
-    const anchorAndButtons = offcanvasElement.querySelectorAll('a, button');
-
-    // Add event listeners to close the offcanvas on click
-    anchorAndButtons.forEach((element) => {
-      element.addEventListener('click', closeOffcanvas);
-    });
-
-    return () => {
-      anchorAndButtons.forEach((element) => {
-        element.removeEventListener('click', closeOffcanvas);
-      });
-    };
-  }, []);
+      if (path) {
+        navigate(path);
+      }
+    },
+    [navigate]
+  );
 
   const handleLogout = useCallback(async () => {
     setLogoutLoading(true);
@@ -69,12 +109,9 @@ export function Navbar() {
   return (
     <nav className="navbar bg-light sticky-top navbar-expand-md">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">
-          EventManager
-        </a>
         <button
           id="offcanvasBtn"
-          className="navbar-toggler"
+          className="navbar-toggler me-3"
           type="button"
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasNavbar"
@@ -83,81 +120,78 @@ export function Navbar() {
         >
           <span className="navbar-toggler-icon" />
         </button>
+        <a className="navbar-brand me-auto" href="/">
+          EventManager
+        </a>
+
+        <div className="d-flex gap-2 order-0 order-md-1">
+          {!user.isLoggedIn ? (
+            <Link to="/login" className="btn btn-warning">
+              Вход
+            </Link>
+          ) : (
+            <NavUserDropdown
+              user={user}
+              loading={logoutLoading}
+              isInOffcanvas={false}
+              handleLogout={handleLogout}
+              handleNavClick={handleLinkClick}
+            />
+          )}
+        </div>
+
         <div
-          className="offcanvas offcanvas-end"
+          className="offcanvas offcanvas-start order-0"
           tabIndex={-1}
-          ref={offcanvasRef}
           id="offcanvasNavbar"
           aria-labelledby="offcanvasNavbarLabel"
         >
           <div className="offcanvas-header pb-0">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
               {user.isLoggedIn ? (
-                <Link to={`/user/${user.userId}/profile`}>{user.username}</Link>
+                <NavUserDropdown
+                  user={user}
+                  loading={logoutLoading}
+                  isInOffcanvas
+                  handleLogout={handleLogout}
+                  handleNavClick={handleLinkClick}
+                />
               ) : (
                 <div>EventManager</div>
               )}
             </h5>
 
-            <button type="button" className="btn-close" aria-label="Close" />
-          </div>
-          <div className="gap-4 p-1 d-md-none d-flex">
-            {!user.isLoggedIn && (
-              <>
-                <Link to="/register" className="btn btn-sm btn-warning w-100">
-                  Регистрация
-                </Link>
-                <Link to="/login" className="btn btn-sm btn-warning w-100">
-                  Вход
-                </Link>
-              </>
-            )}
+            <button
+              type="button"
+              className="btn-close"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            />
           </div>
           <hr className="d-md-none mt-1" />
           <div className="offcanvas-body pt-0">
             <ul className="navbar-nav flex-grow-1 pe-3">
               <li className="nav-item">
-                <Link className="nav-link" to="/">
+                <Link
+                  className="nav-link"
+                  to="/"
+                  data-bs-dismiss="offcanvas"
+                  onClick={handleLinkClick}
+                >
                   Начало
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/events/list">
+                <Link
+                  className="nav-link"
+                  to="/events/list"
+                  data-bs-dismiss="offcanvas"
+                  onClick={handleLinkClick}
+                >
                   Събития
                 </Link>
               </li>
             </ul>
-            {user.isLoggedIn && (
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={logoutLoading}
-                className="btn btn-danger w-100 d-md-none"
-              >
-                Изход
-              </button>
-            )}
-            <div className="gap-4 justify-content-end d-none d-md-flex">
-              {user.isLoggedIn ? (
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  disabled={logoutLoading}
-                  className="btn btn-danger"
-                >
-                  Изход
-                </button>
-              ) : (
-                <>
-                  <Link to="/register" className="btn btn-warning w-100">
-                    Регистрация
-                  </Link>
-                  <Link to="/login" className="btn btn-warning w-100">
-                    Вход
-                  </Link>
-                </>
-              )}
-            </div>
           </div>
         </div>
       </div>
