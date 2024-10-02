@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { registerUser } from '~Infrastructure/api-requests';
+import type { UserNewDto } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
@@ -12,19 +13,6 @@ import { RegionMultiSelect } from '~Shared/SmartSelects/Region/RegionMultiSelect
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 
 import './Register.css';
-
-export interface UserNewDto {
-  username: string;
-  password: string;
-  passwordRepeated: string;
-  firstName: string;
-  secondName: string | null;
-  lastName: string;
-  email: string;
-  phoneNumber: string | null;
-  regionId: number;
-  userRegionsHelpingIds: number[];
-}
 
 export function Register() {
   const navigate = useNavigate();

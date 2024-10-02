@@ -50,3 +50,24 @@ export interface UserLoginDto {
 export interface UserLoginResponseDto extends UserState {
   token: string;
 }
+
+export interface UserNewDto {
+  username: string;
+  password: string;
+  passwordRepeated: string;
+  firstName: string;
+  secondName: string | null;
+  lastName: string;
+  email: string;
+  phoneNumber: string | null;
+  regionId: number;
+  userRegionsHelpingIds: number[];
+}
+
+export interface EventForm {
+  eventName: string;
+  eventDescription: string | null;
+  eventStartDateTime: Date;
+  eventEndDateTime: Date | null;
+  regionId: number;
+}

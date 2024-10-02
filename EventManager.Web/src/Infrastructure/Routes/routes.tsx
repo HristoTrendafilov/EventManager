@@ -28,13 +28,13 @@ export const routes: RouteTable[] = [
   {
     location: '/events/new',
     component: <Event />,
-    requiresLogin: false,
-    role: 'None',
+    requiresLogin: true,
+    role: 'EventCreator',
   },
   {
     location: '/events/:eventId/edit',
     component: <Event />,
-    requiresLogin: false,
-    role: 'None',
+    requiresLogin: true,
+    role: 'EventCreator',
   },
 ];

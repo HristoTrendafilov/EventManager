@@ -1,4 +1,12 @@
 .event-wrapper {
-  max-width: 550px;
+  padding: 0 8px;
+}
+
+.event-wrapper .card {
+  max-width: 700px;
   margin: 48px auto;
+}
+
+.react-datepicker {
+  display: flex !important;
 }

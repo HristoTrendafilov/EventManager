@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import React from 'react';
+import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+import 'react-datepicker/dist/react-datepicker.css';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';

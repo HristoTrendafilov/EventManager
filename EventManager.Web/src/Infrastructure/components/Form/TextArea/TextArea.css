@@ -1,0 +1,28 @@
+.textarea-wrapper {
+  position: relative;
+  margin-bottom: 11px;
+}
+
+.textarea-wrapper > .textarea-input:focus {
+  outline: none;
+  border: 1px solid black;
+}
+
+.textarea-wrapper > .textarea-input {
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  padding: 9px;
+}
+
+.textarea-wrapper > .textarea-label {
+  position: absolute;
+  left: 24px;
+  top: -10px;
+  font-size: 15px;
+  background: white;
+  padding: 0 3px;
+  background: linear-gradient(transparent 44%, white 42%) no-repeat;
+  color: lightslategrey;
+}

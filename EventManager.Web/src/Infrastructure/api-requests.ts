@@ -1,5 +1,3 @@
-import type { UserNewDto } from '~User/Register/Register';
-
 import { callApi } from './api-client';
 import type {
   EventDto,
@@ -8,6 +6,7 @@ import type {
   UserDto,
   UserLoginDto,
   UserLoginResponseDto,
+  UserNewDto,
 } from './api-types';
 
 export function loginUser(req: UserLoginDto) {
