@@ -34,12 +34,12 @@ export interface ImageDto {
 export interface EventDto {
   eventId: number;
   eventName: string;
-  eventDescription?: string;
+  eventDescription: string | null;
   eventStartDateTime: Date;
-  eventEndDateTime?: Date;
+  eventEndDateTime: Date | null;
   createdByUserId: number;
   regionId: number;
-  image?: ImageDto;
+  image: File | null;
 }
 
 export interface UserLoginDto {
@@ -62,12 +62,4 @@ export interface UserNewDto {
   phoneNumber: string | null;
   regionId: number;
   userRegionsHelpingIds: number[];
-}
-
-export interface EventForm {
-  eventName: string;
-  eventDescription: string | null;
-  eventStartDateTime: Date;
-  eventEndDateTime: Date | null;
-  regionId: number;
 }

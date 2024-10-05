@@ -1,10 +1,9 @@
-import bg from 'date-fns/locale/bg';
 import { useCallback, useState } from 'react';
-import DatePicker, { registerLocale } from 'react-datepicker';
 import { z } from 'zod';
 
-import type { EventForm } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomDateInput } from '~Infrastructure/components/Form/CustomForm/CustomDateInput';
+import { CustomFileInput } from '~Infrastructure/components/Form/CustomForm/CustomFileInput';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
@@ -20,20 +19,20 @@ const schema = z.object({
   eventStartDateTime: z.date(),
   eventEndDateTime: z.date().nullable(),
   regionId: z.number(),
-}) satisfies z.ZodType<EventForm>;
+  image: z.instanceof(FileList),
+});
+
+type Test = z.infer<typeof schema>;
 
 export function Event() {
   const [error, setError] = useState<string>();
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
 
-  registerLocale('bg', bg);
-
-  const handleLogin = useCallback((data: EventForm) => {
+  const handleLogin = useCallback((data: Test) => {
     setError(undefined);
 
     try {
       /* eslint-disable no-console */
-      console.log(data.eventDescription);
+      console.log(data);
       /* eslint-enable no-console */
     } catch (err) {
       setError(getClientErrorMessage(err));
@@ -51,8 +50,8 @@ export function Event() {
 
         <div className="card-body">
           <div className="row">
-            <div className="col-md-6">
-              <CustomForm form={form} onSubmit={handleLogin}>
+            <CustomForm form={form} onSubmit={handleLogin}>
+              <div className="col-md-6">
                 <CustomInput
                   {...form.register('eventName')}
                   label="Наименование"
@@ -68,24 +67,27 @@ export function Event() {
                   isNumber
                   required
                 />
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  showTimeSelect
-                  dateFormat="Pp"
-                  locale="bg" // Set locale to Bulgarian
-                  timeFormat="HH:mm" // Use 24-hour time format
-                  timeIntervals={15} // Optional: Set time intervals (e.g., every 15 minutes)
-                  withPortal
-                  showYearDropdown
+                <CustomDateInput
+                  {...form.register('eventStartDateTime')}
+                  label="Начало на събитието"
+                  required
+                />
+                <CustomDateInput
+                  {...form.register('eventEndDateTime')}
+                  label="Край на събитието"
+                />
+                {/* <input type="file" {...form.register('image')} /> */}
+                <CustomFileInput
+                  {...form.register('image')}
+                  label="Главна снимка"
                 />
                 <div className="d-flex justify-content-center">
                   <button type="submit" className="btn btn-primary">
                     Създай
                   </button>
                 </div>
-              </CustomForm>
-            </div>
+              </div>
+            </CustomForm>
           </div>
         </div>
         {error && (

@@ -1,6 +1,11 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type ChangeEvent, type ComponentProps, useCallback } from 'react';
+import {
+  type ChangeEvent,
+  type ComponentProps,
+  forwardRef,
+  useCallback,
+} from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import '~Infrastructure/components/Form/SharedForm.css';
@@ -11,7 +16,10 @@ interface CustomTextAreaProps extends ComponentProps<'textarea'> {
   label: string;
 }
 
-export const CustomTextArea = (props: CustomTextAreaProps) => {
+export const CustomTextArea = forwardRef<
+  HTMLTextAreaElement,
+  CustomTextAreaProps
+>((props, ref) => {
   const { name, label } = props;
 
   const { getFieldState, formState, setValue } = useFormContext();
@@ -31,6 +39,7 @@ export const CustomTextArea = (props: CustomTextAreaProps) => {
       </label>
       <textarea
         {...props}
+        ref={ref}
         className="textarea-input"
         id={name}
         onChange={handleChange}
@@ -43,4 +52,4 @@ export const CustomTextArea = (props: CustomTextAreaProps) => {
       )}
     </div>
   );
-};
+});
