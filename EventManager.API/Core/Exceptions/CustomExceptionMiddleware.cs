@@ -1,6 +1,6 @@
 ﻿using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Exception;
-using EventManager.DTO.Exception;
+using EventManager.Dto.Exception;
 using System.Net;
 
 namespace EventManager.API.Core.Exceptions

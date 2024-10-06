@@ -19,3 +19,42 @@ export function formatDate(date: Date): string {
     year: 'numeric',
   });
 }
+
+function appendToFormData<T extends object>(
+  formData: FormData,
+  obj: T,
+  parentKey?: string
+): void {
+  Object.entries(obj).forEach(([key, value]) => {
+    const formKey = parentKey ? `${parentKey}[${key}]` : key; // Construct the key
+
+    if (value) {
+      if (value instanceof FileList) {
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < value.length; i++) {
+          formData.append(formKey, value[i]);
+        }
+      } else if (Array.isArray(value)) {
+        value.forEach((item) => {
+          // If it's an array, recursively append each item
+          appendToFormData(formData, item, formKey);
+        });
+      } else if (value instanceof Date) {
+        formData.append(formKey, value.toISOString());
+      } else if (typeof value === 'object') {
+        // Recursively append objects
+        appendToFormData(formData, value, formKey);
+      } else {
+        // For primitive types (string, number, etc.)
+        formData.append(formKey, value as string);
+      }
+    }
+  });
+}
+
+// Main function to convert any object to FormData
+export const objectToFormData = <T extends object>(obj: T): FormData => {
+  const formData = new FormData();
+  appendToFormData(formData, obj);
+  return formData;
+};

@@ -33,10 +33,10 @@ export function getEvent(eventId: number) {
   return callApi<EventDto>(`/events/${eventId}`, 'GET');
 }
 
-export function createEvent(eventId: number) {
-  return callApi<EventDto>(`/events/${eventId}`, 'POST');
+export function createEvent(event: FormData) {
+  return callApi<EventDto>(`/events`, 'POST', event);
 }
 
-export function updateEvent(eventId: number) {
-  return callApi<EventDto>(`/events/${eventId}`, 'PUT');
+export function updateEvent(eventId: number, event: FormData) {
+  return callApi<EventDto>(`/events/${eventId}`, 'PUT', event);
 }

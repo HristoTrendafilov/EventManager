@@ -6,9 +6,9 @@ using EventManager.API.Services.Shared;
 using EventManager.API.Services.User;
 using EventManager.API.Services.WebSession;
 using EventManager.BOL;
-using EventManager.DTO.Region;
-using EventManager.DTO.User;
-using EventManager.DTO.WebSession;
+using EventManager.Dto.Region;
+using EventManager.Dto.User;
+using EventManager.Dto.WebSession;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -101,7 +101,7 @@ namespace EventManager.API.Controllers
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
             var now = DateTime.Now;
-            var expiresOn = now.AddHours(1);
+            var expiresOn = now.AddHours(12);
 
             var jwtSecurityToken = new JwtSecurityToken(
                 issuer: _configuration["Authentication:Issuer"],
@@ -210,7 +210,6 @@ namespace EventManager.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
         [HttpPost("logout")]
         public async Task<ActionResult> LogoutUser(UserLogoutDto logout)
         {

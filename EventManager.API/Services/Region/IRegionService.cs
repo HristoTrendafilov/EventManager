@@ -1,5 +1,5 @@
 ﻿using EventManager.DAL;
-using EventManager.DTO.Region;
+using EventManager.Dto.Region;
 using System.Linq.Expressions;
 
 namespace EventManager.API.Services.Region

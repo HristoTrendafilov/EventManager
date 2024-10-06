@@ -35,7 +35,7 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export async function callApi<T>(
   endPoint: string,
   method: HttpMethod,
-  body?: string
+  body?: string | FormData
 ): Promise<T> {
   const fetchOptions: RequestInit = {
     method,
@@ -43,15 +43,16 @@ export async function callApi<T>(
     signal: AbortSignal.timeout(apiWaitTimeout),
   };
 
-  const { userToken } = window;
-  if (userToken) {
+  const state = store.getState();
+
+  if (state.user.token) {
     fetchOptions.headers = {
       ...fetchOptions.headers,
-      Authorization: `Bearer ${userToken}`,
+      Authorization: `Bearer ${state.user.token}`,
     };
   }
 
-  if (body) {
+  if (body && typeof body === 'string') {
     fetchOptions.headers = {
       ...fetchOptions.headers,
       'Content-Type': 'application/json',

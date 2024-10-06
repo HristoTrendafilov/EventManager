@@ -1,7 +1,7 @@
 ﻿using EventManager.API.Core;
 using EventManager.API.Helpers;
 using EventManager.DAL;
-using EventManager.DTO.User;
+using EventManager.Dto.User;
 using LinqToDB;
 using System.Linq.Expressions;
 

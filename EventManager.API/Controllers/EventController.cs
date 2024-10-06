@@ -4,7 +4,7 @@ using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Event;
 using EventManager.API.Services.Shared;
 using EventManager.BOL;
-using EventManager.DTO.Event;
+using EventManager.Dto.Event;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -62,7 +62,7 @@ namespace EventManager.API.Controllers
         [HttpPost]
         [Authorize]
         [Role(UserRole.EventCreator)]
-        public async Task<ActionResult> CreateEvent(EventNew @event)
+        public async Task<ActionResult> CreateEvent([FromForm] EventNew @event)
         {
             if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName))
             {
@@ -80,10 +80,10 @@ namespace EventManager.API.Controllers
             return Ok(eventToReturn);
         }
 
-        [Authorize]
         [HttpPut("{eventId}")]
+        [Authorize]
         [Role(UserRole.EventCreator)]
-        public async Task<ActionResult> UpdateEvent(long eventId, EventUpdate @event)
+        public async Task<ActionResult> UpdateEvent(long eventId, [FromForm] EventUpdate @event)
         {
             if (!await _sharedService.IsUserAuthorizedToEdit(User, @event.CreatedByUserId))
             {

@@ -1,9 +1,10 @@
 ﻿using EventManager.DTO.Event.Image;
+using Microsoft.AspNetCore.Http;
 
 namespace EventManager.DTO.Event
 {
     public class EventNew : EventManipulationDto
     {
-        public ImageNew Image { get; set; }
+        public IFormFile Image { get; set; }
     }
 }

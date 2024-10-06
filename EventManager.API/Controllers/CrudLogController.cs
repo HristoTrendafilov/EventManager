@@ -3,7 +3,7 @@ using EventManager.API.Helpers;
 using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Log;
 using EventManager.BOL;
-using EventManager.DTO.CrudLog;
+using EventManager.Dto.CrudLog;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManager.API.Controllers

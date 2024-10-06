@@ -1,5 +1,5 @@
 ﻿using EventManager.DAL;
-using EventManager.DTO.Region;
+using EventManager.Dto.Region;
 using LinqToDB;
 using System.Linq.Expressions;
 

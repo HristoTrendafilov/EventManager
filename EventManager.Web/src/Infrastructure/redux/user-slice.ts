@@ -11,6 +11,7 @@ export interface UserState {
   isLoggedIn: boolean;
   isAdmin: boolean;
   isEventCreator: boolean;
+  token: string;
 }
 
 const initialUserState: UserState = {
@@ -20,6 +21,7 @@ const initialUserState: UserState = {
   isLoggedIn: false,
   isAdmin: false,
   isEventCreator: false,
+  token: '',
 };
 
 export type UserRole = 'None' | 'Admin' | 'EventCreator';
@@ -53,12 +55,11 @@ export const userSlice = createSlice({
       state.isAdmin = payload.isAdmin;
       state.isEventCreator = payload.isEventCreator;
       state.isLoggedIn = true;
+      state.token = payload.token;
 
-      window.userToken = action.payload.token;
       localStorage.setItem(localStorageKey, JSON.stringify(state));
     },
     removeUser: () => {
-      window.userToken = undefined;
       localStorage.removeItem(localStorageKey);
 
       return initialUserState;

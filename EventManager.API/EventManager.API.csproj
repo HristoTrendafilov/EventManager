@@ -76,7 +76,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventManager.DAL\EventManager.DAL.csproj" />
-    <ProjectReference Include="..\EventManager.Dto\EventManager.DTO.csproj" />
   </ItemGroup>
 
 </Project>

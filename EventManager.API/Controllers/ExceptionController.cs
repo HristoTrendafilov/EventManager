@@ -3,7 +3,7 @@ using EventManager.API.Helpers;
 using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Exception;
 using EventManager.BOL;
-using EventManager.DTO.Exception;
+using EventManager.Dto.Exception;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManager.API.Controllers

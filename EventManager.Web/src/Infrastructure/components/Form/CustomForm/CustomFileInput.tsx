@@ -12,25 +12,32 @@ import { useFormContext } from 'react-hook-form';
 import '~Infrastructure/components/Form/FileInput/FileInput.css';
 import '~Infrastructure/components/Form/SharedForm.css';
 
-interface CustomFileInputProps extends ComponentProps<'input'> {
+export interface CustomFileInputProps extends ComponentProps<'input'> {
   name: string;
   label: string;
+  wrapperClassName?: string;
+  onFileChosen?: (file: File) => void;
+  onFileRemoved?: () => void;
 }
 
 export const CustomFileInput = forwardRef<
   HTMLInputElement,
   CustomFileInputProps
 >((props, ref) => {
-  const { name, label } = props;
+  const { wrapperClassName, onFileChosen, onFileRemoved, ...rest } = props;
 
   const [selectedFileName, setSelectedFileName] = useState<string | null>();
 
-  const { getFieldState, formState } = useFormContext();
-  const state = getFieldState(name, formState);
+  const { getFieldState, formState, resetField } = useFormContext();
+  const state = getFieldState(props.name, formState);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const { files } = event.target;
+
+      if (props.onChange) {
+        props.onChange(event);
+      }
 
       if (files && files.length > 0) {
         const fileNames = Array.from(files)
@@ -39,32 +46,36 @@ export const CustomFileInput = forwardRef<
 
         setSelectedFileName(fileNames);
 
-        if (props.onChange) {
-          props.onChange(event);
+        if (onFileChosen) {
+          onFileChosen(files[0]);
         }
       }
     },
-    [props]
+    [props, onFileChosen]
   );
 
   const handleClearInput = useCallback(() => {
+    resetField(props.name);
     setSelectedFileName(null);
-  }, []);
+
+    if (onFileRemoved) {
+      onFileRemoved();
+    }
+  }, [resetField, onFileRemoved, props]);
 
   return (
-    <div className="file-input-wrapper">
-      <label className="file-input-label" htmlFor={name}>
-        {label}
+    <div className={`file-input-wrapper ${wrapperClassName ?? ''}`}>
+      <label className="file-input-label" htmlFor={props.name}>
+        {props.label}
       </label>
       <div className="file-input">
         <div className="file-input-names">{selectedFileName}</div>
         <input
-          {...props}
+          {...rest}
           ref={ref}
-          id={name}
+          id={props.name}
           type="file"
           onChange={handleChange}
-          multiple
         />
         <div className="clear-button-wrapper">
           <button

@@ -1,5 +1,5 @@
 ﻿using EventManager.DAL;
-using EventManager.DTO.Exception;
+using EventManager.Dto.Exception;
 using System.Linq.Expressions;
 
 namespace EventManager.API.Services.Exception

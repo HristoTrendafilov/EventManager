@@ -39,7 +39,7 @@ export interface EventDto {
   eventEndDateTime: Date | null;
   createdByUserId: number;
   regionId: number;
-  image: File | null;
+  image: FileList | undefined | null;
 }
 
 export interface UserLoginDto {
