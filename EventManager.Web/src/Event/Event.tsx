@@ -24,8 +24,8 @@ const schema = z.object({
   eventId: z.number(),
   eventName: z.string(),
   eventDescription: z.string().nullable(),
-  eventStartDateTime: z.date(),
-  eventEndDateTime: z.date().nullable(),
+  eventStartDateTime: z.coerce.date(),
+  eventEndDateTime: z.coerce.date().nullable(),
   regionId: z.number(),
   createdByUserId: z.number(),
   image: z.instanceof(FileList).nullable(),
@@ -50,14 +50,12 @@ export function Event() {
 
   const form = useZodForm({
     schema,
-    defaultValues: defaultEvent,
   });
 
   const loadEvent = useCallback(
     async (paramEventId: number) => {
       try {
         const eventDto = await getEvent(paramEventId);
-        eventDto.eventStartDateTime = new Date(eventDto.eventStartDateTime);
         form.reset(eventDto);
       } catch (err) {
         setError(getClientErrorMessage(err));
@@ -69,8 +67,10 @@ export function Event() {
   useEffect(() => {
     if (eventId) {
       void loadEvent(Number(eventId));
+    } else {
+      form.reset(defaultEvent);
     }
-  }, [eventId, loadEvent]);
+  }, [eventId, loadEvent, form]);
 
   const onMainImageChosen = (file: File) => {
     setMainImage(URL.createObjectURL(file));
