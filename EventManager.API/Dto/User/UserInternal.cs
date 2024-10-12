@@ -1,4 +1,4 @@
-﻿namespace EventManager.Dto.User
+﻿namespace EventManager.API.Dto.User
 {
     public class UserInternal
     {

@@ -1,9 +1,6 @@
-﻿using EventManager.Dto.Event.Image;
-
-namespace EventManager.Dto.Event
+﻿namespace EventManager.API.Dto.Event
 {
     public class EventUpdate : EventManipulationDto
     {
-        public ImageUpdate Image { get; set; }
     }
 }

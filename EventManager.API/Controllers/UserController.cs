@@ -6,9 +6,9 @@ using EventManager.API.Services.Shared;
 using EventManager.API.Services.User;
 using EventManager.API.Services.WebSession;
 using EventManager.BOL;
-using EventManager.Dto.Region;
-using EventManager.Dto.User;
-using EventManager.Dto.WebSession;
+using EventManager.API.Dto.Region;
+using EventManager.API.Dto.User;
+using EventManager.API.Dto.WebSession;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -92,16 +92,27 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Моля, потвърдете имейла си, за да може да достъпите сайта.");
             }
 
+            var now = DateTime.Now;
+            //var expiresOn = now.AddHours(12);
+            var expiresOn = now.AddSeconds(6);
+
+            var webSession = new WebSessionNewDto
+            {
+                LoginDateTime = now,
+                ExpireOnDateTime = expiresOn,
+                UserId = user.UserId,
+            };
+
+            var webSessionId = await _webSessionService.CreateWebSession(webSession);
+
             var claimsForToken = new List<Claim>
             {
                 new (CustomClaimTypes.UserId, user.UserId.ToString()),
+                new (CustomClaimTypes.WebSessionId, webSessionId.ToString()),
             };
 
             var securityKey = new SymmetricSecurityKey(Convert.FromBase64String(_configuration["Authentication:SecretForKey"]));
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var now = DateTime.Now;
-            var expiresOn = now.AddHours(12);
 
             var jwtSecurityToken = new JwtSecurityToken(
                 issuer: _configuration["Authentication:Issuer"],
@@ -112,15 +123,7 @@ namespace EventManager.API.Controllers
                 signingCredentials: signingCredentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-
-            var webSession = new WebSessionNewDto
-            {
-                LoginDateTime = now,
-                ExpireOnDateTime = expiresOn,
-                UserId = user.UserId,
-            };
-
-            var webSessionId = await _webSessionService.CreateWebSession(webSession);
+            
             var userRoles = await _userService.GetAllUserRolesAsync(user.UserId);
 
             var response = new UserForWebDto
@@ -211,6 +214,7 @@ namespace EventManager.API.Controllers
         }
 
         [HttpPost("logout")]
+        [Authorize]
         public async Task<ActionResult> LogoutUser(UserLogoutDto logout)
         {
             var currentUserId = User.X_CurrentUserId();

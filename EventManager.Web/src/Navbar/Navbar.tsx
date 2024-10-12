@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { logoutUser } from '~Infrastructure/api-requests';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+import { ErrorModal } from '~Infrastructure/components/ErrorModal/ErrorModal';
 import { useAppDispatch } from '~Infrastructure/redux/store';
 import {
   type UserState,
@@ -195,7 +195,9 @@ export function Navbar() {
           </div>
         </div>
       </div>
-      {error && <ErrorMessage error={error} />}
+      {error && (
+        <ErrorModal error={error} onClose={() => setError(undefined)} />
+      )}
     </nav>
   );
 }

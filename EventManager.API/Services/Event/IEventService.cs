@@ -1,6 +1,6 @@
 ﻿using EventManager.API.Helpers;
 using EventManager.DAL;
-using EventManager.Dto.Event;
+using EventManager.API.Dto.Event;
 using System.Linq.Expressions;
 
 namespace EventManager.API.Services.Event
@@ -14,6 +14,7 @@ namespace EventManager.API.Services.Event
         Task UpdateEventAsync(long eventId, EventUpdate updateEvent, long? currentUserId);
         Task DeleteEventAsync(long eventId, long? currentUserId);
         Task<bool> EventExistsAsync(Expression<Func<EventPoco, bool>> predicate);
+        Task<byte[]> GetEventMainImageAsync(long eventId);
 
         Task<long> SubscribeUser(long eventId, long? currentUserId);
         Task UnsubscribeUser(long userEventId, long? currentUserId);

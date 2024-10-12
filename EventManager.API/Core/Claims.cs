@@ -9,6 +9,7 @@
     public class CustomClaimTypes
     {
         public const string UserId = "UserId";
+        public const string WebSessionId = "WebSessionId";
     }
 
     public enum UserRole

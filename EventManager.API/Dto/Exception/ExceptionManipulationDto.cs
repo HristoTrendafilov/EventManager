@@ -1,4 +1,4 @@
-﻿namespace EventManager.Dto.Exception
+﻿namespace EventManager.API.Dto.Exception
 {
     public abstract class ExceptionManipulationDto
     {

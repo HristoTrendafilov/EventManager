@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventManager.Dto.Event
+namespace EventManager.API.Dto.Event
 {
     public abstract class EventManipulationDto
     {
@@ -19,5 +19,7 @@ namespace EventManager.Dto.Event
 
         [Range(1, long.MaxValue, ErrorMessage = "Регионът на събитието е задължителен.")]
         public long RegionId { get; set; }
+
+        public IFormFile MainImage { get; set; }
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace EventManager.Dto.Event
+﻿namespace EventManager.API.Dto.Event
 {
     public class EventNew : EventManipulationDto
     {
-        public IFormFile Image { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿using EventManager.Dto.Region;
+﻿using EventManager.API.Dto.Region;
 
-namespace EventManager.Dto.User
+namespace EventManager.API.Dto.User
 {
     public class UserDto
     {

@@ -20,5 +20,21 @@ namespace EventManager.API.Helpers.Extensions
 
             return long.Parse(userId);
         }
+
+        public static long? X_WebSessionId(this ClaimsPrincipal user)
+        {
+            if (user == null)
+            {
+                return null;
+            }
+
+            var webSessionId = user.Claims.FirstOrDefault(x => x.Type == CustomClaimTypes.WebSessionId)?.Value;
+            if (string.IsNullOrWhiteSpace(webSessionId))
+            {
+                return null;
+            }
+
+            return long.Parse(webSessionId);
+        }
     }
 }

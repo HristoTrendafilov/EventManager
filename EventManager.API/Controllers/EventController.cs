@@ -4,7 +4,7 @@ using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Event;
 using EventManager.API.Services.Shared;
 using EventManager.BOL;
-using EventManager.Dto.Event;
+using EventManager.API.Dto.Event;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -57,6 +57,23 @@ namespace EventManager.API.Controllers
             var eventToReturn = _mapper.CreateObject<EventDto>(eventPoco);
 
             return Ok(eventToReturn);
+        }
+
+        [HttpGet("{eventId}/main-image")]
+        public async Task<ActionResult> GetEventMainImage(long eventId)
+        {
+            if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
+            {
+                return NotFound();
+            }
+
+            var mainImage = await _eventService.GetEventMainImageAsync(eventId);
+            if (mainImage == null)
+            {
+                return NotFound();
+            }
+
+            return File(mainImage, "application/octet-stream");
         }
 
         [HttpPost]

@@ -1,6 +1,4 @@
-﻿using EventManager.Dto.Event.Image;
-
-namespace EventManager.Dto.Event
+﻿namespace EventManager.API.Dto.Event
 {
     public class EventDto
     {
@@ -17,7 +15,5 @@ namespace EventManager.Dto.Event
         public long CreatedByUserId { get; set; }
 
         public long RegionId { get; set; }
-
-        public IFormFile Image { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using EventManager.BOL;
 using EventManager.DAL;
-using EventManager.Dto.Exception;
+using EventManager.API.Dto.Exception;
 using LinqToDB;
 using System.Linq.Expressions;
 

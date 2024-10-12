@@ -1,5 +1,5 @@
 ﻿using EventManager.DAL;
-using EventManager.Dto.WebSession;
+using EventManager.API.Dto.WebSession;
 using System.Linq.Expressions;
 
 namespace EventManager.API.Services.WebSession

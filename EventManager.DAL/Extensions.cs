@@ -45,7 +45,8 @@ namespace EventManager.DAL
             var mapper = new Mapper();
 
             var primaryKeyPropertyName = GetPrimaryKeyPropertyName<T>();
-            var poco = await table.FirstOrDefaultAsync(BuildPredicate<T>(primaryKeyPropertyName, primaryKey));
+            var predicate = BuildPredicate<T>(primaryKeyPropertyName, primaryKey);
+            var poco = await linqToDbTable.FirstOrDefaultAsync(predicate);
 
             var crudLog = new CrudLogPoco
             {

@@ -40,7 +40,10 @@ function appendToFormData<T extends object>(
           appendToFormData(formData, item, formKey);
         });
       } else if (value instanceof Date) {
-        formData.append(formKey, value.toISOString());
+        formData.append(
+          formKey,
+          value.toLocaleString('bg-BG', { timeZone: 'Europe/Sofia' })
+        );
       } else if (typeof value === 'object') {
         // Recursively append objects
         appendToFormData(formData, value, formKey);

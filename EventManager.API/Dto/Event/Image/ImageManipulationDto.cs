@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventManager.Dto.Event.Image
+namespace EventManager.API.Dto.Event.Image
 {
     public abstract class ImageManipulationDto
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventManager.Dto.Region
+namespace EventManager.API.Dto.Region
 {
     public abstract class RegionManipulationDto
     {

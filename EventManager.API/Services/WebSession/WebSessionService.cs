@@ -1,5 +1,5 @@
 ﻿using EventManager.DAL;
-using EventManager.Dto.WebSession;
+using EventManager.API.Dto.WebSession;
 using LinqToDB;
 using System.Linq.Expressions;
 
@@ -27,7 +27,7 @@ namespace EventManager.API.Services.WebSession
         public async Task CloseWebSessionAsync(long webSessionId, long? currentUserId)
         {
             var webSessionPoco = await _db.WebSessions.FirstOrDefaultAsync(x => x.WebSessionId == webSessionId);
-            webSessionPoco.ExpireOnDateTime = DateTime.Now;
+            webSessionPoco.LogoutDateTime = DateTime.Now;
 
             await _db.WebSessions.X_UpdateAsync(webSessionId, webSessionPoco, currentUserId);
         }

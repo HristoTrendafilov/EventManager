@@ -5,9 +5,9 @@ import { z } from 'zod';
 import {
   createEvent,
   getEvent,
+  getEventMainImage,
   updateEvent,
 } from '~Infrastructure/api-requests';
-import type { EventDto } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomDateInput } from '~Infrastructure/components/Form/CustomForm/CustomDateInput';
@@ -21,25 +21,25 @@ import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 import './Event.css';
 
 const schema = z.object({
-  eventId: z.number(),
   eventName: z.string(),
   eventDescription: z.string().nullable(),
   eventStartDateTime: z.coerce.date(),
   eventEndDateTime: z.coerce.date().nullable(),
   regionId: z.number(),
+  mainImage: z.instanceof(FileList).nullable(),
   createdByUserId: z.number(),
-  image: z.instanceof(FileList).nullable(),
-}) satisfies z.ZodType<EventDto>;
+});
 
-const defaultEvent: EventDto = {
-  eventId: 0,
+type EventForm = z.infer<typeof schema>;
+
+const defaultValues: EventForm = {
   eventName: '',
   eventDescription: null,
   eventStartDateTime: new Date(),
   eventEndDateTime: null,
   regionId: 0,
+  mainImage: null,
   createdByUserId: 0,
-  image: undefined,
 };
 
 export function Event() {
@@ -48,15 +48,16 @@ export function Event() {
 
   const { eventId } = useParams();
 
-  const form = useZodForm({
-    schema,
-  });
+  const form = useZodForm({ schema });
 
   const loadEvent = useCallback(
     async (paramEventId: number) => {
       try {
         const eventDto = await getEvent(paramEventId);
         form.reset(eventDto);
+
+        const eventMainImage = await getEventMainImage(paramEventId);
+        setMainImage(URL.createObjectURL(eventMainImage));
       } catch (err) {
         setError(getClientErrorMessage(err));
       }
@@ -68,7 +69,8 @@ export function Event() {
     if (eventId) {
       void loadEvent(Number(eventId));
     } else {
-      form.reset(defaultEvent);
+      form.reset(defaultValues);
+      setMainImage(undefined);
     }
   }, [eventId, loadEvent, form]);
 
@@ -77,11 +79,11 @@ export function Event() {
   };
 
   const handleSubmit = useCallback(
-    async (eventDto: EventDto) => {
+    async (event: EventForm) => {
       setError(undefined);
 
       try {
-        const formData = objectToFormData(eventDto);
+        const formData = objectToFormData(event);
         if (eventId) {
           await updateEvent(Number(eventId), formData);
         } else {
@@ -94,15 +96,11 @@ export function Event() {
     [eventId]
   );
 
-  /* eslint-disable no-console */
-  console.log(form.watch());
-  /* eslint-enable no-console */
-
   return (
     <div className="event-wrapper">
       <div className="card main-card border-1 border-danger">
         <h2 className="card-header text-white bg-danger bg-gradient">
-          Ново събитие
+          {eventId ? 'Редакция на събитие' : 'Ново събитие'}
         </h2>
 
         <div className="card-body">
@@ -127,18 +125,20 @@ export function Event() {
                 <CustomDateInput
                   {...form.register('eventStartDateTime')}
                   label="Начало на събитието"
+                  showTime
                   required
                 />
                 <CustomDateInput
                   {...form.register('eventEndDateTime')}
                   label="Край на събитието"
+                  showTime
                 />
               </div>
               <div className="col-md-6">
                 <div className="card">
                   <div className="card-header p-1 d-flex justify-content-center">
                     <CustomButtonFileInput
-                      {...form.register('image')}
+                      {...form.register('mainImage')}
                       label="Главна снимка"
                       onFileChosen={onMainImageChosen}
                     />
@@ -152,7 +152,7 @@ export function Event() {
               </div>
               <div className="d-flex justify-content-center mt-3">
                 <button type="submit" className="btn btn-primary">
-                  Създай
+                  {eventId ? 'Обнови' : 'Създай'}
                 </button>
               </div>
             </div>

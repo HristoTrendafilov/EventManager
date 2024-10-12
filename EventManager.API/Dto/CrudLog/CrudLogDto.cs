@@ -1,4 +1,4 @@
-﻿namespace EventManager.Dto.CrudLog
+﻿namespace EventManager.API.Dto.CrudLog
 {
     public class CrudLogDto
     {

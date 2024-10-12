@@ -4,7 +4,7 @@ using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Region;
 using EventManager.BOL;
 using EventManager.DAL;
-using EventManager.Dto.Region;
+using EventManager.API.Dto.Region;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

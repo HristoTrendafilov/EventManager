@@ -53,7 +53,7 @@ class ErrorBoundaryImpl extends Component<WithRouterProps, WithRouterState> {
     if (hasError) {
       return (
         <Modal ariaLabel="Error">
-          <div className="error-modal-wrapper mx-2">
+          <div className="error-boundary-wrapper mx-2">
             <div className="card">
               <h2 className="card-header">Грешка</h2>
               <div className="card-body">

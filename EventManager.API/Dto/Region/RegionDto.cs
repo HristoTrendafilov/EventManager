@@ -1,4 +1,4 @@
-﻿namespace EventManager.Dto.Region
+﻿namespace EventManager.API.Dto.Region
 {
     public class RegionDto
     {

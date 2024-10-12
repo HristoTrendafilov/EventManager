@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.ComponentModel.DataAnnotations;
 
-namespace EventManager.Dto
+namespace EventManager.API.Dto
 {
     public class NotEmptyCollection : ValidationAttribute
     {

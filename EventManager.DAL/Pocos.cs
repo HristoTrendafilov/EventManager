@@ -237,4 +237,30 @@ namespace EventManager.DAL
 		public DateTime? LogoutDateTime { get; set; }
 	}
 
+	[Table(Name = "files")]
+	public class FilePoco
+	{
+		[PrimaryKey, Identity]
+		[Column(Name = "file_id")]
+		public long FileId { get; set; }
+
+		[Column(Name = "file_name")]
+		public string FileName { get; set; }
+
+		[Column(Name = "file_type")]
+		public string FileType { get; set; }
+
+		[Column(Name = "file_size")]
+		public long FileSize { get; set; }
+
+		[Column(Name = "file_path")]
+		public string FilePath { get; set; }
+
+		[Column(Name = "created_at")]
+		public DateTime? CreatedAt { get; set; }
+
+		[Column(Name = "updated_at")]
+		public DateTime? UpdatedAt { get; set; }
+	}
+
 }

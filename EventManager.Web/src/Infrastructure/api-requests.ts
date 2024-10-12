@@ -40,3 +40,7 @@ export function createEvent(event: FormData) {
 export function updateEvent(eventId: number, event: FormData) {
   return callApi<EventDto>(`/events/${eventId}`, 'PUT', event);
 }
+
+export function getEventMainImage(eventId: number) {
+  return callApi<Blob>(`/events/${eventId}/main-image`, 'GET', undefined, true);
+}

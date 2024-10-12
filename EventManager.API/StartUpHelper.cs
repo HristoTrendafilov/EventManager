@@ -25,6 +25,13 @@ using EventManager.API.Services.WebSession;
 using EventManager.API.Services.Region;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EventManager.API.Services.Shared;
+using EventManager.API.Helpers;
+using Microsoft.AspNetCore.Http.HttpResults;
+using EventManager.API.Helpers.Extensions;
+using Newtonsoft.Json.Linq;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 
 namespace EventManager.API
 {
@@ -153,16 +160,16 @@ namespace EventManager.API
                         validationProblemDetails.Status = StatusCodes.Status422UnprocessableEntity;
                         validationProblemDetails.Title = "One or more validation errors occurred.";
 
-                        var clientMessageSb = new StringBuilder();
+                        var clientMessage = string.Empty;
                         foreach (var errors in validationProblemDetails.Errors.Values)
                         {
-                            clientMessageSb.AppendLine(string.Join(Environment.NewLine, errors));
+                            foreach (var error in errors)
+                            {
+                                clientMessage += $"{error}\n";
+                            }
                         }
 
-                        return new UnprocessableEntityObjectResult(clientMessageSb.ToString())
-                        {
-                            ContentTypes = { "application/problem+json" }
-                        };
+                        return new UnprocessableEntityObjectResult(clientMessage);
 
                         //return new UnprocessableEntityObjectResult(validationProblemDetails)
                         //{
@@ -202,23 +209,38 @@ namespace EventManager.API
                         IssuerSigningKey = new SymmetricSecurityKey(
                            Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"] ?? "")),
                         // ClockSkew is the leeway for the expiration validation (default is 5 minutes)
-                        ClockSkew = TimeSpan.Zero // Set to zero to avoid any extra time after token expiration
+                        ClockSkew = TimeSpan.Zero, // Set to zero to avoid any extra time after token expiration
                     };
 
                     options.Events = new JwtBearerEvents
                     {
-                        OnAuthenticationFailed = context =>
+                        OnAuthenticationFailed = async context =>
                         {
                             if (context.Exception is SecurityTokenExpiredException)
                             {
+                                var authorization = context.Request.Headers.Authorization;
+
+                                if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
+                                {
+                                    var handler = new JwtSecurityTokenHandler();
+                                    var jsonToken = handler.ReadToken(headerValue.Parameter);
+                                    var tokenS = handler.ReadToken(headerValue.Parameter) as JwtSecurityToken;
+                                    var webSessionId =  tokenS.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.WebSessionId)?.Value;
+                                    var userId = tokenS.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.UserId)?.Value;
+
+                                    if (!string.IsNullOrWhiteSpace(webSessionId) && !string.IsNullOrWhiteSpace(userId))
+                                    {
+                                        var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
+                                        await webSessionService.CloseWebSessionAsync(long.Parse(webSessionId), long.Parse(userId));
+                                    }
+                                }
+
                                 context.Response.OnStarting(() =>
                                 {
                                     context.Response.Headers.Append("TokenExpired", "true");
                                     return Task.CompletedTask;
                                 });
                             }
-
-                            return Task.CompletedTask;
                         }
                     };
 

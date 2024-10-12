@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventManager.Dto.User
+namespace EventManager.API.Dto.User
 {
     public class UserLoginDto
     {

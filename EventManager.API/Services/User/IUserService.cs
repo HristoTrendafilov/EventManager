@@ -1,6 +1,6 @@
 ﻿using EventManager.API.Helpers;
 using EventManager.DAL;
-using EventManager.Dto.User;
+using EventManager.API.Dto.User;
 using System.Linq.Expressions;
 
 namespace EventManager.API.Services.User

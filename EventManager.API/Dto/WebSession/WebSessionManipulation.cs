@@ -1,4 +1,4 @@
-﻿namespace EventManager.Dto.WebSession
+﻿namespace EventManager.API.Dto.WebSession
 {
     public abstract class WebSessionManipulation
     {

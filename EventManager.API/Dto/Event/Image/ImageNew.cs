@@ -1,4 +1,4 @@
-﻿namespace EventManager.Dto.Event.Image
+﻿namespace EventManager.API.Dto.Event.Image
 {
     public class ImageNew : ImageManipulationDto
     {

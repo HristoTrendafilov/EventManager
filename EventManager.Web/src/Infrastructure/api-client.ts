@@ -6,13 +6,16 @@ const apiBaseUrl = '/api';
 const apiWaitTimeout = 5000;
 
 async function handleApiError(apiResponse: Response) {
-  const apiMessage = await apiResponse.text();
+  const { status } = apiResponse;
 
+  if (status === 502) {
+    throw new Error('Unable to connect to server.');
+  }
+
+  const apiMessage = await apiResponse.text();
   if (apiMessage) {
     throw new Error(apiMessage);
   }
-
-  const { status } = apiResponse;
 
   switch (status) {
     case 500:
@@ -35,7 +38,8 @@ type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export async function callApi<T>(
   endPoint: string,
   method: HttpMethod,
-  body?: string | FormData
+  body?: string | FormData,
+  isBlob?: boolean
 ): Promise<T> {
   const fetchOptions: RequestInit = {
     method,
@@ -84,6 +88,10 @@ export async function callApi<T>(
   }
 
   try {
+    if (isBlob) {
+      return (await apiResponse.blob()) as T;
+    }
+
     return (await apiResponse.json()) as T;
   } catch (err) {
     reportError(err);
