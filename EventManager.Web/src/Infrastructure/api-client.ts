@@ -5,42 +5,26 @@ import { reportError } from './utils';
 const apiBaseUrl = '/api';
 const apiWaitTimeout = 5000;
 
-async function handleApiError(apiResponse: Response) {
-  const { status } = apiResponse;
-
-  if (status === 502) {
-    throw new Error('Unable to connect to server.');
-  }
-
-  const apiMessage = await apiResponse.text();
-  if (apiMessage) {
-    throw new Error(apiMessage);
-  }
-
-  switch (status) {
-    case 500:
-      throw new Error('Server error. Please try again later.');
-    case 400:
-      throw new Error('Bad request to the server.');
-    case 401:
-    case 403:
-      throw new Error('You do not have permission to access this resource.');
-    case 404:
-      throw new Error('The resource you are looking for could not be found.');
-    case 422:
-      throw new Error('There was an error with the data sent to the server.');
-    default:
-      throw new Error(`Unexpected error: ${status}`);
-  }
+export interface ValidationPropertyError {
+  propertyName: string;
+  errorMessage: string;
 }
+
+type ApiResponse<T = undefined> =
+  | { data: T; success: true }
+  | {
+      success: false;
+      errorMessage: string;
+      validationPropertyErrors: ValidationPropertyError[];
+      hasValidationErrors: boolean;
+    };
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 export async function callApi<T>(
   endPoint: string,
   method: HttpMethod,
-  body?: string | FormData,
-  isBlob?: boolean
-): Promise<T> {
+  body?: string | FormData
+): Promise<ApiResponse<T>> {
   const fetchOptions: RequestInit = {
     method,
     body,
@@ -63,38 +47,39 @@ export async function callApi<T>(
     };
   }
 
-  let apiResponse: Response;
+  let fetchResponse: Response;
   try {
-    apiResponse = await fetch(`${apiBaseUrl}${endPoint}`, fetchOptions);
+    fetchResponse = await fetch(`${apiBaseUrl}${endPoint}`, fetchOptions);
   } catch (err) {
     reportError(err);
-    throw new Error(`Network error. Please try again later.`);
+
+    return {
+      success: false,
+      errorMessage: 'Network error. Please try again later.',
+    } as ApiResponse<T>;
   }
 
-  const tokenExpired = apiResponse.headers.get('TokenExpired');
+  const tokenExpired = fetchResponse.headers.get('TokenExpired');
   if (tokenExpired) {
     store.dispatch(removeUser());
     window.location.href = '/';
 
-    return {} as T;
+    return {
+      success: false,
+      errorMessage: 'Session expired. Please log in again.',
+    } as ApiResponse<T>;
   }
 
-  if (!apiResponse.ok) {
-    await handleApiError(apiResponse);
-  }
-
-  if (apiResponse.status === 204) {
-    return {} as T;
-  }
-
+  let jsonData: ApiResponse<T>;
   try {
-    if (isBlob) {
-      return (await apiResponse.blob()) as T;
-    }
-
-    return (await apiResponse.json()) as T;
+    jsonData = (await fetchResponse.json()) as ApiResponse<T>;
   } catch (err) {
     reportError(err);
-    throw new Error(`Error while reading data from the server.`);
+    return {
+      success: false,
+      errorMessage: 'Error while reading data from the server.',
+    } as ApiResponse<T>;
   }
+
+  return jsonData;
 }

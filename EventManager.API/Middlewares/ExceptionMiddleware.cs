@@ -2,18 +2,19 @@
 using EventManager.API.Services.Exception;
 using EventManager.API.Dto.Exception;
 using System.Net;
+using EventManager.API.Dto;
 
-namespace EventManager.API.Core.Exceptions
+namespace EventManager.API.Middlewares
 {
-    public class CustomExceptionMiddleware
+    public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger<CustomExceptionMiddleware> _logger;
+        private readonly ILogger<ExceptionMiddleware> _logger;
         private readonly IExceptionService _exceptionService;
 
-        public CustomExceptionMiddleware(
+        public ExceptionMiddleware(
             RequestDelegate next,
-            ILogger<CustomExceptionMiddleware> logger,
+            ILogger<ExceptionMiddleware> logger,
             IExceptionService exceptionService)
         {
             _next = next;
@@ -41,6 +42,9 @@ namespace EventManager.API.Core.Exceptions
 
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.ContentType = "application/json";
+
+                var apiErrorResponse = new ApiResponse<object>(null, "An error occurred on the server.");
+                await context.Response.WriteAsJsonAsync(apiErrorResponse);
             }
         }
     }

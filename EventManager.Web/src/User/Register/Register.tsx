@@ -3,48 +3,49 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { registerUser } from '~Infrastructure/api-requests';
-import type { UserNewDto } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { getClientErrorMessage } from '~Infrastructure/utils';
 import { RegionMultiSelect } from '~Shared/SmartSelects/Region/RegionMultiSelect';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 
 import './Register.css';
+
+const schema = z.object({
+  username: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
+  password: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
+  passwordRepeated: z.string(),
+  firstName: z.string(),
+  secondName: z.string().nullable(),
+  lastName: z.string(),
+  email: z.string().email('Неправилен имейл'),
+  phoneNumber: z.string().nullable(),
+  regionId: z.number(),
+  userRegionsHelpingIds: z.number().array(),
+});
+
+export type NewUser = z.infer<typeof schema>;
 
 export function Register() {
   const navigate = useNavigate();
 
   const [error, setError] = useState<string>();
 
+  const form = useZodForm({ schema });
+
   const handleRegister = useCallback(
-    async (data: UserNewDto) => {
-      try {
-        await registerUser(data);
-        navigate('/login');
-      } catch (err) {
-        setError(getClientErrorMessage(err));
+    async (data: NewUser) => {
+      const response = await registerUser(data);
+      if (!response.success) {
+        setError(response.errorMessage);
+        return;
       }
+
+      navigate('/login');
     },
     [navigate]
   );
-
-  const form = useZodForm({
-    schema: z.object({
-      username: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
-      password: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
-      passwordRepeated: z.string(),
-      firstName: z.string(),
-      secondName: z.string().nullable(),
-      lastName: z.string(),
-      email: z.string().email('Неправилен имейл'),
-      phoneNumber: z.string().nullable(),
-      regionId: z.number(),
-      userRegionsHelpingIds: z.number().array(),
-    }) satisfies z.ZodType<UserNewDto>,
-  });
 
   return (
     <div className="register-wrapper">

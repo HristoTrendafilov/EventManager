@@ -93,8 +93,7 @@ namespace EventManager.API.Controllers
             }
 
             var now = DateTime.Now;
-            //var expiresOn = now.AddHours(12);
-            var expiresOn = now.AddSeconds(6);
+            var expiresOn = now.AddHours(12);
 
             var webSession = new WebSessionNewDto
             {
@@ -215,7 +214,7 @@ namespace EventManager.API.Controllers
 
         [HttpPost("logout")]
         [Authorize]
-        public async Task<ActionResult> LogoutUser(UserLogoutDto logout)
+        public async Task<ActionResult> LogoutUser()
         {
             var currentUserId = User.X_CurrentUserId();
 
@@ -224,12 +223,18 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            if (!await _webSessionService.WebSessionExistsAsync(x => x.WebSessionId == logout.WebSessionId))
+            var webSessionId = User.X_WebSessionId();
+            if (!webSessionId.HasValue)
             {
                 return NotFound();
             }
 
-            await _webSessionService.CloseWebSessionAsync(logout.WebSessionId, currentUserId);
+            if (!await _webSessionService.WebSessionExistsAsync(x => x.WebSessionId == webSessionId.Value))
+            {
+                return NotFound();
+            }
+
+            await _webSessionService.CloseWebSessionAsync(webSessionId.Value, currentUserId);
 
             return NoContent();
         }

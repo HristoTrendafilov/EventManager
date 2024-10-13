@@ -7,7 +7,6 @@ import type {
   CustomSelectInputProps,
   SelectInputOption,
 } from '~Infrastructure/components/Form/SelectInput/selectInputUtils';
-import { getClientErrorMessage } from '~Infrastructure/utils';
 
 export const RegionSelect = forwardRef<
   SelectInstance<SelectInputOption>,
@@ -20,19 +19,19 @@ export const RegionSelect = forwardRef<
   const fetchRegions = useCallback(async () => {
     setLoading(true);
 
-    try {
-      const regions = await getRegions();
-      const regionOptions: SelectInputOption[] = regions.map((region) => ({
-        value: region.regionId.toString(),
-        label: region.regionName,
-      }));
-
-      setOptions(regionOptions);
-    } catch (err) {
-      setError(getClientErrorMessage(err));
-    } finally {
-      setLoading(false);
+    const response = await getRegions();
+    if (!response.success) {
+      setError(response.errorMessage);
+      return;
     }
+
+    const regionOptions: SelectInputOption[] = response.data.map((region) => ({
+      value: region.regionId.toString(),
+      label: region.regionName,
+    }));
+
+    setOptions(regionOptions);
+    setLoading(false);
   }, []);
 
   useEffect(() => {

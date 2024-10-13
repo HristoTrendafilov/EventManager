@@ -52,15 +52,21 @@ export function Event() {
 
   const loadEvent = useCallback(
     async (paramEventId: number) => {
-      try {
-        const eventDto = await getEvent(paramEventId);
-        form.reset(eventDto);
-
-        const eventMainImage = await getEventMainImage(paramEventId);
-        setMainImage(URL.createObjectURL(eventMainImage));
-      } catch (err) {
-        setError(getClientErrorMessage(err));
+      const eventResponse = await getEvent(paramEventId);
+      if (!eventResponse.success) {
+        setError(eventResponse.errorMessage);
+        return;
       }
+
+      form.reset(eventResponse.data);
+
+      const imageResponse = await getEventMainImage(paramEventId);
+      if (!imageResponse.success) {
+        setError(imageResponse.errorMessage);
+        return;
+      }
+
+      setMainImage(URL.createObjectURL(imageResponse.data));
     },
     [form]
   );

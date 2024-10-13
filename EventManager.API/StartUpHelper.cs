@@ -15,9 +15,7 @@ using EventManager.API.Services.PropertyChecker;
 using EventManager.API.Services.Email;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
-using EventManager.API.Core.Exceptions;
 using EventManager.API.Services.Exception;
-using System.Text;
 using EventManager.API.Services.Event;
 using EventManager.API.Services.Log;
 using EventManager.API.Services.CrudLog;
@@ -25,13 +23,11 @@ using EventManager.API.Services.WebSession;
 using EventManager.API.Services.Region;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using EventManager.API.Services.Shared;
-using EventManager.API.Helpers;
-using Microsoft.AspNetCore.Http.HttpResults;
-using EventManager.API.Helpers.Extensions;
-using Newtonsoft.Json.Linq;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
-using System.Security.Claims;
+using EventManager.API.Middlewares;
+using EventManager.API.Helpers;
+using EventManager.API.Dto;
 
 namespace EventManager.API
 {
@@ -139,11 +135,6 @@ namespace EventManager.API
 
         public static WebApplicationBuilder ConfigureErrorHandling(this WebApplicationBuilder builder)
         {
-            builder.Services.AddControllers(options =>
-            {
-                options.Filters.Add<ExceptionFilter>();
-            });
-
             builder.Services.AddControllers()
                 .ConfigureApiBehaviorOptions(setupAction =>
                 {
@@ -160,16 +151,29 @@ namespace EventManager.API
                         validationProblemDetails.Status = StatusCodes.Status422UnprocessableEntity;
                         validationProblemDetails.Title = "One or more validation errors occurred.";
 
+                        var apiErrorResponse = new ApiResponse<object>(null);
+
                         var clientMessage = string.Empty;
-                        foreach (var errors in validationProblemDetails.Errors.Values)
+                        foreach (var error in validationProblemDetails.Errors)
                         {
-                            foreach (var error in errors)
+                            var validationPropertyError = new ValidationPropertyError
                             {
-                                clientMessage += $"{error}\n";
+                                PropertyName = $"{error.Key[0].ToString().ToLower()}{error.Key.Substring(1)}"
+                            };
+
+                            foreach (var value in error.Value)
+                            {
+                                var message = $"{value}\n";
+                                clientMessage += message;
+                                validationPropertyError.ErrorMessage += message;
                             }
+
+                            apiErrorResponse.ValidationPropertyErrors.Add(validationPropertyError);
                         }
 
-                        return new UnprocessableEntityObjectResult(clientMessage);
+                        apiErrorResponse.ErrorMessage = clientMessage;
+
+                        return new UnprocessableEntityObjectResult(apiErrorResponse);
 
                         //return new UnprocessableEntityObjectResult(validationProblemDetails)
                         //{
@@ -186,6 +190,7 @@ namespace EventManager.API
             builder.Services.AddControllers(options =>
             {
                 options.ReturnHttpNotAcceptable = true;
+                options.Filters.Add<ApiResponseActionFilter>();
             })
             .AddNewtonsoftJson()
             .AddXmlDataContractSerializerFormatters();
@@ -261,7 +266,7 @@ namespace EventManager.API
             }
             else
             {
-                app.UseMiddleware<CustomExceptionMiddleware>();
+                app.UseMiddleware<ExceptionMiddleware>();
             }
 
             app.UseHttpsRedirection();

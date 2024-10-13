@@ -42,24 +42,6 @@ export interface EventDto {
   image: FileList | undefined | null;
 }
 
-export interface UserLoginDto {
-  username: string;
-  password: string;
-}
-
 export interface UserLoginResponseDto extends UserState {
   token: string;
-}
-
-export interface UserNewDto {
-  username: string;
-  password: string;
-  passwordRepeated: string;
-  firstName: string;
-  secondName: string | null;
-  lastName: string;
-  email: string;
-  phoneNumber: string | null;
-  regionId: number;
-  userRegionsHelpingIds: number[];
 }

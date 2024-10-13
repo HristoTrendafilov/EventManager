@@ -1,15 +1,15 @@
+import type { UserLogin } from '~User/Login/Login';
+import type { NewUser } from '~User/Register/Register';
+
 import { callApi } from './api-client';
 import type {
   EventDto,
-  LogoutUserDto,
   RegionDto,
   UserDto,
-  UserLoginDto,
   UserLoginResponseDto,
-  UserNewDto,
 } from './api-types';
 
-export function loginUser(req: UserLoginDto) {
+export function loginUser(req: UserLogin) {
   return callApi<UserLoginResponseDto>(
     '/users/login',
     'POST',
@@ -17,12 +17,12 @@ export function loginUser(req: UserLoginDto) {
   );
 }
 
-export function registerUser(req: UserNewDto) {
+export function registerUser(req: NewUser) {
   return callApi<UserDto>('/users', 'POST', JSON.stringify(req));
 }
 
-export function logoutUser(req: LogoutUserDto) {
-  return callApi('/users/logout', 'POST', JSON.stringify(req));
+export function logoutUser() {
+  return callApi('/users/logout', 'POST');
 }
 
 export function getRegions() {
@@ -42,5 +42,5 @@ export function updateEvent(eventId: number, event: FormData) {
 }
 
 export function getEventMainImage(eventId: number) {
-  return callApi<Blob>(`/events/${eventId}/main-image`, 'GET', undefined, true);
+  return callApi<Blob>(`/events/${eventId}/main-image`, 'GET');
 }

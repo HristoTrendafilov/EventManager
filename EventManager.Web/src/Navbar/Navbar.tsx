@@ -10,7 +10,6 @@ import {
   removeUser,
   userSelector,
 } from '~Infrastructure/redux/user-slice';
-import { getClientErrorMessage } from '~Infrastructure/utils';
 
 import './Navbar.css';
 
@@ -95,16 +94,17 @@ export function Navbar() {
   const handleLogout = useCallback(async () => {
     setLogoutLoading(true);
 
-    try {
-      await logoutUser({ webSessionId: user.webSessionId });
-      dispatch(removeUser());
-      navigate('/');
-    } catch (err) {
-      setError(getClientErrorMessage(err));
-    } finally {
+    const response = await logoutUser();
+    if (!response.success) {
+      setError(response.errorMessage);
       setLogoutLoading(false);
+      return;
     }
-  }, [dispatch, navigate, user.webSessionId]);
+
+    dispatch(removeUser());
+    navigate('/');
+    setLogoutLoading(false);
+  }, [dispatch, navigate]);
 
   return (
     <nav className="navbar bg-light sticky-top navbar-expand-md">
