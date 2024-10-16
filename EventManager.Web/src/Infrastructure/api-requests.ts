@@ -4,6 +4,7 @@ import type { NewUser } from '~User/Register/Register';
 import { callApi } from './api-client';
 import type {
   EventDto,
+  FileObject,
   RegionDto,
   UserDto,
   UserLoginResponseDto,
@@ -42,5 +43,5 @@ export function updateEvent(eventId: number, event: FormData) {
 }
 
 export function getEventMainImage(eventId: number) {
-  return callApi<Blob>(`/events/${eventId}/main-image`, 'GET');
+  return callApi<FileObject>(`/events/${eventId}/main-image`, 'GET');
 }

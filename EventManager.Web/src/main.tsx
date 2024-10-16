@@ -7,8 +7,10 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
+import { NavigatorSetter } from '~Infrastructure/NavigationSetter';
 import { RenderRouteTable } from '~Infrastructure/Routes/RouteTable';
 import { ErrorBoundary } from '~Infrastructure/components/ErrorBoundary/ErrorBoundary';
+import { ToastWrapper } from '~Infrastructure/components/ToastMessages/ToastWrapper';
 import { store } from '~Infrastructure/redux/store';
 import { Navbar } from '~Navbar/Navbar';
 
@@ -21,7 +23,9 @@ root.render(
   <React.StrictMode>
     <Provider store={store}>
       <BrowserRouter>
+        <NavigatorSetter />
         <ErrorBoundary>
+          <ToastWrapper />
           <Navbar />
           <RenderRouteTable />
         </ErrorBoundary>

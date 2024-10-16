@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 
@@ -15,7 +16,11 @@ import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomFor
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { getClientErrorMessage, objectToFormData } from '~Infrastructure/utils';
+import {
+  fileToBase64,
+  getClientErrorMessage,
+  objectToFormData,
+} from '~Infrastructure/utils';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 
 import './Event.css';
@@ -66,7 +71,10 @@ export function Event() {
         return;
       }
 
-      setMainImage(URL.createObjectURL(imageResponse.data));
+      setMainImage(imageResponse.data.fileContents);
+      toast.success(
+        'Successfully created! Successfully created! Successfully created! Successfully created!'
+      );
     },
     [form]
   );
@@ -80,8 +88,8 @@ export function Event() {
     }
   }, [eventId, loadEvent, form]);
 
-  const onMainImageChosen = (file: File) => {
-    setMainImage(URL.createObjectURL(file));
+  const onMainImageChosen = async (file: File) => {
+    setMainImage(await fileToBase64(file));
   };
 
   const handleSubmit = useCallback(
@@ -151,7 +159,11 @@ export function Event() {
                   </div>
                   <div className="card-body p-1 main-image-wrapper">
                     {mainImage && (
-                      <img alt="main" className="main-image" src={mainImage} />
+                      <img
+                        alt="main"
+                        className="main-image"
+                        src={`data:image/png;base64, ${mainImage}`}
+                      />
                     )}
                   </div>
                 </div>

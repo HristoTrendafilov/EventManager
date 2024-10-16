@@ -45,3 +45,12 @@ export interface EventDto {
 export interface UserLoginResponseDto extends UserState {
   token: string;
 }
+
+export interface FileObject {
+  fileContents: string;
+  contentType: string;
+  fileDownloadName: string;
+  lastModified: Date;
+  entityTag: string;
+  enableRangeProcessing: boolean;
+}

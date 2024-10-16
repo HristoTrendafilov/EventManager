@@ -120,9 +120,9 @@ export function Navbar() {
         >
           <span className="navbar-toggler-icon" />
         </button>
-        <a className="navbar-brand me-auto" href="/">
+        <Link className="navbar-brand me-auto" to="/">
           EventManager
-        </a>
+        </Link>
 
         <div className="d-flex gap-2 order-0 order-md-1">
           {!user.isLoggedIn ? (

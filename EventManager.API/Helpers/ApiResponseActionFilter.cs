@@ -22,6 +22,15 @@ public class ApiResponseActionFilter : IActionFilter
                 StatusCode = StatusCodes.Status200OK  // Set the status code to 204
             };
         }
+        else if (context.Result is FileResult fileResult)
+        {
+            var apiResponse = new ApiResponse<object>(fileResult);
+
+            context.Result = new JsonResult(apiResponse)
+            {
+                StatusCode = StatusCodes.Status200OK
+            };
+        }
         else if (context.Result is UnauthorizedResult unauthorizedResult)
         {
             var apiErrorResponse = new ApiResponse<object>(null, "You do not have the rights to access this resource.");

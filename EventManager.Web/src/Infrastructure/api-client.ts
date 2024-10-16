@@ -1,3 +1,5 @@
+import toast from 'react-hot-toast';
+
 import { store } from './redux/store';
 import { removeUser } from './redux/user-slice';
 import { reportError } from './utils';
@@ -62,7 +64,13 @@ export async function callApi<T>(
   const tokenExpired = fetchResponse.headers.get('TokenExpired');
   if (tokenExpired) {
     store.dispatch(removeUser());
-    window.location.href = '/';
+
+    toast.error('Сесията ви изтече. Моля, влезте отново в профила си.');
+
+    const { navigate } = state.navigation; // Access the navigate function
+    if (navigate) {
+      navigate('/'); // Use the navigate function from Redux
+    }
 
     return {
       success: false,
