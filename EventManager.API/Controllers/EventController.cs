@@ -45,8 +45,9 @@ namespace EventManager.API.Controllers
             return Ok(eventsToReturn);
         }
 
-        [HttpGet("{eventId}")]
-        public async Task<ActionResult> GetEvent(long eventId)
+        [HttpGet("{eventId}/edit")]
+        [Authorize]
+        public async Task<ActionResult> GetEventForEdit(long eventId)
         {
             if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
             {
@@ -54,6 +55,12 @@ namespace EventManager.API.Controllers
             }
 
             var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
+
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.CreatedByUserId))
+            {
+                return Unauthorized();
+            }
+
             var eventToReturn = _mapper.CreateObject<EventDto>(eventPoco);
 
             return Ok(eventToReturn);

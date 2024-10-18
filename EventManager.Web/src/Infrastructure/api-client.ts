@@ -61,24 +61,32 @@ export async function callApi<T>(
     } as ApiResponse<T>;
   }
 
+  const { navigate } = state.navigation;
+
+  if (fetchResponse.status === 401 || fetchResponse.status === 403) {
+    toast.error('Нямате право на достъп до този ресурс.');
+
+    if (navigate) {
+      navigate('/');
+    }
+
+    return {} as ApiResponse<T>;
+  }
+
   const tokenExpired = fetchResponse.headers.get('TokenExpired');
   if (tokenExpired) {
     store.dispatch(removeUser());
 
     toast.error('Сесията ви изтече. Моля, влезте отново в профила си.');
 
-    const { navigate } = state.navigation; // Access the navigate function
     if (navigate) {
-      navigate('/'); // Use the navigate function from Redux
+      navigate('/');
     }
 
-    return {
-      success: false,
-      errorMessage: 'Session expired. Please log in again.',
-    } as ApiResponse<T>;
+    return {} as ApiResponse<T>;
   }
 
-  let jsonData: ApiResponse<T>;
+  let jsonData;
   try {
     jsonData = (await fetchResponse.json()) as ApiResponse<T>;
   } catch (err) {

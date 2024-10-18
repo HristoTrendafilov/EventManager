@@ -93,8 +93,7 @@ namespace EventManager.API.Controllers
             }
 
             var now = DateTime.Now;
-            //var expiresOn = now.AddHours(12);
-            var expiresOn = now.AddSeconds(5);
+            var expiresOn = now.AddHours(12);
 
             var webSession = new WebSessionNewDto
             {

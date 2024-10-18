@@ -30,8 +30,8 @@ export function getRegions() {
   return callApi<RegionDto[]>('/regions', 'GET');
 }
 
-export function getEvent(eventId: number) {
-  return callApi<EventDto>(`/events/${eventId}`, 'GET');
+export function getEventForEdit(eventId: number) {
+  return callApi<EventDto>(`/events/${eventId}/edit`, 'GET');
 }
 
 export function createEvent(event: FormData) {

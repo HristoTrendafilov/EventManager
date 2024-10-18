@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import { useParams } from 'react-router';
 import { z } from 'zod';
 
 import {
   createEvent,
-  getEvent,
+  getEventForEdit,
   getEventMainImage,
   updateEvent,
 } from '~Infrastructure/api-requests';
@@ -57,7 +56,7 @@ export function Event() {
 
   const loadEvent = useCallback(
     async (paramEventId: number) => {
-      const eventResponse = await getEvent(paramEventId);
+      const eventResponse = await getEventForEdit(paramEventId);
       if (!eventResponse.success) {
         setError(eventResponse.errorMessage);
         return;
@@ -72,9 +71,6 @@ export function Event() {
       }
 
       setMainImage(imageResponse.data.fileContents);
-      toast.success(
-        'Successfully created! Successfully created! Successfully created! Successfully created!'
-      );
     },
     [form]
   );
