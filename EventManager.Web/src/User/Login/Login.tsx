@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
 import { loginUser } from '~Infrastructure/api-requests';
@@ -69,6 +70,11 @@ export function Login() {
               </button>
             </div>
           </CustomForm>
+
+          <div className="mt-3">
+            <span className="me-2">Все още нямате регистрация?</span>
+            <Link to="/users/register">Регистрирай ме!</Link>
+          </div>
         </div>
 
         {error && (

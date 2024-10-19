@@ -6,7 +6,7 @@ namespace EventManager.API.Dto.User
     {
         public UserNewDto()
         {
-            CreatedOn = DateTime.Now;
+            CreatedOnDateTime = DateTime.Now;
             EmailVerificationSecret = Guid.NewGuid().ToString();
         }
 
@@ -16,8 +16,10 @@ namespace EventManager.API.Dto.User
         [Required(ErrorMessage = "Моля, повторете отново паролата")]
         public string PasswordRepeated { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOnDateTime { get; set; }
 
         public string EmailVerificationSecret { get; set; }
+
+        public IFormFile ProfilePicture { get; set; }
     }
 }

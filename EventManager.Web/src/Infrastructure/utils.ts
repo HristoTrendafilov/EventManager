@@ -34,12 +34,14 @@ function appendToFormData<T extends object>(
         for (let i = 0; i < value.length; i++) {
           formData.append(formKey, value[i]);
         }
-      } else if (Array.isArray(value)) {
-        value.forEach((item) => {
-          // If it's an array, recursively append each item
-          appendToFormData(formData, item, formKey);
-        });
-      } else if (value instanceof Date) {
+      }
+      // else if (Array.isArray(value)) {
+      //   value.forEach((item) => {
+      //     // If it's an array, recursively append each item
+      //     appendToFormData(formData, item, formKey);
+      //   });
+      // }
+      else if (value instanceof Date) {
         formData.append(
           formKey,
           value.toLocaleString('bg-BG', { timeZone: 'Europe/Sofia' })

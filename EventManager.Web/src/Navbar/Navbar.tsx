@@ -37,7 +37,7 @@ function NavUserDropdown(props: NavUserDropdownProps) {
       <ul className="dropdown-menu dropdown-menu-start dropdown-menu-md-end p-2">
         <li>
           <Link
-            to={`/user/${user.userId}/profile`}
+            to={`/users/${user.userId}/profile`}
             data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
             onClick={handleNavClick}
           >
@@ -126,7 +126,7 @@ export function Navbar() {
 
         <div className="d-flex gap-2 order-0 order-md-1">
           {!user.isLoggedIn ? (
-            <Link to="/login" className="btn btn-warning">
+            <Link to="users/login" className="btn btn-warning">
               Вход
             </Link>
           ) : (

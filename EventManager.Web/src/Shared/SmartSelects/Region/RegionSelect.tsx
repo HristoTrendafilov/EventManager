@@ -22,6 +22,7 @@ export const RegionSelect = forwardRef<
     const response = await getRegions();
     if (!response.success) {
       setError(response.errorMessage);
+      setLoading(false);
       return;
     }
 

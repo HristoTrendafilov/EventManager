@@ -11,10 +11,10 @@ function canUserAccessComponent(
   routeTable: RouteTable,
   user: UserState
 ): boolean {
-  if (routeTable.location === '/login' && user.isLoggedIn) {
+  if (routeTable.location === 'users/login' && user.isLoggedIn) {
     return false;
   }
-  if (routeTable.location === '/register' && user.isLoggedIn) {
+  if (routeTable.location === 'users/register' && user.isLoggedIn) {
     return false;
   }
 

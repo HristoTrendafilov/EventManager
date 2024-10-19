@@ -28,6 +28,7 @@ using System.Net.Http.Headers;
 using EventManager.API.Middlewares;
 using EventManager.API.Helpers;
 using EventManager.API.Dto;
+using EventManager.API.Services.FileStorage;
 
 namespace EventManager.API
 {
@@ -102,6 +103,7 @@ namespace EventManager.API
             services.AddScoped<ICrudLogService, CrudLogService>();
             services.AddScoped<IWebSessionService, WebSessionService>();
             services.AddScoped<ISharedService, SharedService>();
+            services.AddScoped<IFileStorageService, FileStorageService>();
 
             return builder;
         }
@@ -242,6 +244,7 @@ namespace EventManager.API
 
                                 context.Response.OnStarting(() =>
                                 {
+                                    context.Response.StatusCode = StatusCodes.Status204NoContent;
                                     context.Response.Headers.Append("TokenExpired", "true");
                                     return Task.CompletedTask;
                                 });

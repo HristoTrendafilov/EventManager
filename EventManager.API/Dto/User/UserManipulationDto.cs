@@ -33,5 +33,7 @@ namespace EventManager.API.Dto.User
         public List<long> UserRegionsHelpingIds { get; set; }
 
         public long? CreatedByUserId { get; set; }
+
+        public string ProfilePicturePath { get; set; }
     }
 }

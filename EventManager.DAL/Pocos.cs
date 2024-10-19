@@ -13,50 +13,6 @@ namespace EventManager.DAL
 		public string RegionName { get; set; }
 	}
 
-	[Table(Name = "users")]
-	public class UserPoco
-	{
-		[PrimaryKey, Identity]
-		[Column(Name = "user_id")]
-		public long UserId { get; set; }
-
-		[Column(Name = "username")]
-		public string Username { get; set; }
-
-		[Column(Name = "password")]
-		public string Password { get; set; }
-
-		[Column(Name = "first_name")]
-		public string FirstName { get; set; }
-
-		[Column(Name = "second_name")]
-		public string SecondName { get; set; }
-
-		[Column(Name = "last_name")]
-		public string LastName { get; set; }
-
-		[Column(Name = "email")]
-		public string Email { get; set; }
-
-		[Column(Name = "phone_number")]
-		public string PhoneNumber { get; set; }
-
-		[Column(Name = "email_verification_secret")]
-		public string EmailVerificationSecret { get; set; }
-
-		[Column(Name = "is_email_verified")]
-		public bool IsEmailVerified { get; set; }
-
-		[Column(Name = "region_id")]
-		public long? RegionId { get; set; }
-
-		[Column(Name = "created_on_date_time")]
-		public DateTime CreatedOnDateTime { get; set; }
-
-		[Column(Name = "created_by_user_id")]
-		public long? CreatedByUserId { get; set; }
-	}
-
 	[Table(Name = "users_regions_helping")]
 	public class UserRegionHelpingPoco
 	{
@@ -134,6 +90,53 @@ namespace EventManager.DAL
 
 		[Column(Name = "role_name")]
 		public string RoleName { get; set; }
+	}
+
+	[Table(Name = "users")]
+	public class UserPoco
+	{
+		[PrimaryKey, Identity]
+		[Column(Name = "user_id")]
+		public long UserId { get; set; }
+
+		[Column(Name = "username")]
+		public string Username { get; set; }
+
+		[Column(Name = "password")]
+		public string Password { get; set; }
+
+		[Column(Name = "first_name")]
+		public string FirstName { get; set; }
+
+		[Column(Name = "second_name")]
+		public string SecondName { get; set; }
+
+		[Column(Name = "last_name")]
+		public string LastName { get; set; }
+
+		[Column(Name = "email")]
+		public string Email { get; set; }
+
+		[Column(Name = "phone_number")]
+		public string PhoneNumber { get; set; }
+
+		[Column(Name = "email_verification_secret")]
+		public string EmailVerificationSecret { get; set; }
+
+		[Column(Name = "is_email_verified")]
+		public bool IsEmailVerified { get; set; }
+
+		[Column(Name = "region_id")]
+		public long RegionId { get; set; }
+
+		[Column(Name = "created_on_date_time")]
+		public DateTime CreatedOnDateTime { get; set; }
+
+		[Column(Name = "created_by_user_id")]
+		public long? CreatedByUserId { get; set; }
+
+		[Column(Name = "profile_picture_path")]
+		public string ProfilePicturePath { get; set; }
 	}
 
 	[Table(Name = "crud_logs")]

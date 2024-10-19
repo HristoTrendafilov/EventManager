@@ -5,6 +5,8 @@ import {
   type ComponentProps,
   forwardRef,
   useCallback,
+  useEffect,
+  useRef,
 } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -21,6 +23,8 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
     const { getFieldState, formState, setValue } = useFormContext();
     const state = getFieldState(props.name, formState);
 
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
     const handleChange = useCallback(
       (event: ChangeEvent<HTMLInputElement>) => {
         setValue(props.name, event.target.value);
@@ -28,8 +32,17 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
       [props.name, setValue]
     );
 
+    useEffect(() => {
+      if (state.error && wrapperRef.current) {
+        wrapperRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, [state.error]);
+
     return (
-      <div className="text-input-wrapper">
+      <div className="text-input-wrapper" ref={wrapperRef}>
         <label className="text-input-label" htmlFor={props.name}>
           {props.label}
         </label>

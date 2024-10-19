@@ -3,6 +3,7 @@ import React from 'react';
 import { Event } from '~Event/Event';
 import type { UserRole } from '~Infrastructure/redux/user-slice';
 import { Login } from '~User/Login/Login';
+import { UserProfile } from '~User/Profile/UserProfile';
 import { Register } from '~User/Register/Register';
 
 export interface RouteTable {
@@ -14,14 +15,20 @@ export interface RouteTable {
 
 export const routes: RouteTable[] = [
   {
-    location: '/login',
+    location: 'users/login',
     component: <Login />,
     requiresLogin: false,
     role: 'None',
   },
   {
-    location: '/register',
+    location: 'users/register',
     component: <Register />,
+    requiresLogin: false,
+    role: 'None',
+  },
+  {
+    location: 'users/:userId/profile',
+    component: <UserProfile />,
     requiresLogin: false,
     role: 'None',
   },

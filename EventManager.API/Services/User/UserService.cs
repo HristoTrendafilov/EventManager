@@ -4,22 +4,30 @@ using EventManager.DAL;
 using EventManager.API.Dto.User;
 using LinqToDB;
 using System.Linq.Expressions;
+using EventManager.API.Services.FileStorage;
 
 namespace EventManager.API.Services.User
 {
     public class UserService : IUserService
     {
         private readonly PostgresConnection _db;
+        private readonly IFileStorageService _fileStorageService;
 
-        public UserService(PostgresConnection db)
+        public UserService(PostgresConnection db, IFileStorageService fileStorageService)
         {
             _db = db;
+            _fileStorageService = fileStorageService;
         }
 
         public async Task<long> CreateUserAsync(UserNewDto user, long? currentUserId)
         {
             var userId = await _db.WithTransactionAsync(async () =>
             {
+                if (user.ProfilePicture != null)
+                {
+                    user.ProfilePicturePath = await _fileStorageService.SaveFileToStorage(user.ProfilePicture);
+                }
+
                 var userId = await _db.Users.X_CreateAsync(user, currentUserId);
 
                 foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)

@@ -22,6 +22,7 @@ export const RegionMultiSelect = forwardRef<
     const response = await getRegions();
     if (!response.success) {
       setError(response.errorMessage);
+      setLoading(false);
       return;
     }
 
@@ -31,6 +32,7 @@ export const RegionMultiSelect = forwardRef<
     }));
 
     setOptions(regionOptions);
+    setLoading(false);
   }, []);
 
   useEffect(() => {

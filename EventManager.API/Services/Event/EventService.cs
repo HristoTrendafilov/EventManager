@@ -4,17 +4,20 @@ using EventManager.API.Dto.Event;
 using EventManager.API.Dto.User;
 using LinqToDB;
 using System.Linq.Expressions;
+using EventManager.API.Services.FileStorage;
 
 namespace EventManager.API.Services.Event
 {
     public class EventService : IEventService
     {
         private readonly PostgresConnection _db;
+        private readonly IFileStorageService _fileStorageService;
         private readonly IConfiguration _config;
 
-        public EventService(PostgresConnection db, IConfiguration config)
+        public EventService(PostgresConnection db, IFileStorageService fileStorageService, IConfiguration config)
         {
             _db = db;
+            _fileStorageService = fileStorageService;
             _config = config;
         }
 
@@ -49,21 +52,13 @@ namespace EventManager.API.Services.Event
 
         private async Task CreateEventImageAsync(IFormFile file, long eventId, long? currentUserId)
         {
-            var imageFolder = Path.Combine(_config["FolderPaths:EventImagesFolder"], DateTime.Now.ToString("yyyy-MM-dd"));
-            Directory.CreateDirectory(imageFolder);
-
-            var imageFilePath = Path.Combine(imageFolder, Guid.NewGuid().ToString());
-
-            using (Stream fileStream = new FileStream(imageFilePath, FileMode.Create))
-            {
-                await file.CopyToAsync(fileStream);
-            }
+            var imagePath = await _fileStorageService.SaveFileToStorage(file);
 
             var image = new ImagePoco
             {
                 EventId = eventId,
                 ImageExtension = Path.GetExtension(file.FileName),
-                ImageFilePath = imageFilePath,
+                ImageFilePath = imagePath,
                 ImageIsMain = true,
                 ImageName = file.FileName
             };

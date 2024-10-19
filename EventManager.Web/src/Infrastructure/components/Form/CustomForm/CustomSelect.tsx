@@ -1,6 +1,6 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type ComponentProps, forwardRef } from 'react';
+import { type ComponentProps, forwardRef, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import Select, {
   type ActionMeta,
@@ -41,8 +41,19 @@ export const CustomSelect = forwardRef<
   const { control, getFieldState } = useFormContext();
   const state = getFieldState(name);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (state.error && wrapperRef.current) {
+      wrapperRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [state.error]);
+
   return (
-    <div className="select-input-wrapper">
+    <div className="select-input-wrapper" ref={wrapperRef}>
       <label className="select-input-label" htmlFor={name}>
         {label}
       </label>

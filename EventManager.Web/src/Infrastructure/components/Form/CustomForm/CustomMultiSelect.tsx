@@ -55,6 +55,7 @@ export const CustomMultiSelect = forwardRef<
             name={name}
             required={props.required}
             isLoading={loading}
+            blurInputOnSelect={false}
             isDisabled={disabled}
             value={options.filter((x) => {
               if (isNumber) {

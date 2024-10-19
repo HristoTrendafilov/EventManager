@@ -1,5 +1,4 @@
 import type { UserLogin } from '~User/Login/Login';
-import type { NewUser } from '~User/Register/Register';
 
 import { callApi } from './api-client';
 import type {
@@ -18,8 +17,8 @@ export function loginUser(req: UserLogin) {
   );
 }
 
-export function registerUser(req: NewUser) {
-  return callApi<UserDto>('/users', 'POST', JSON.stringify(req));
+export function registerUser(user: FormData) {
+  return callApi<UserDto>('/users', 'POST', user);
 }
 
 export function logoutUser() {

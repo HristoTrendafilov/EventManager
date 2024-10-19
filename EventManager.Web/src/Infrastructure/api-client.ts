@@ -77,7 +77,9 @@ export async function callApi<T>(
   if (tokenExpired) {
     store.dispatch(removeUser());
 
-    toast.error('Сесията ви изтече. Моля, влезте отново в профила си.');
+    if (endPoint !== '/users/logout') {
+      toast.error('Сесията ви изтече. Моля, влезте отново в профила си.');
+    }
 
     if (navigate) {
       navigate('/');

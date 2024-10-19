@@ -139,7 +139,7 @@ namespace EventManager.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> RegisterUser(UserNewDto userNew)
+        public async Task<ActionResult> RegisterUser([FromForm] UserNewDto userNew)
         {
             if (userNew.Password != userNew.PasswordRepeated)
             {
