@@ -4,9 +4,9 @@ import { callApi } from './api-client';
 import type {
   EventDto,
   FileObject,
-  RegionDto,
-  UserDto,
+  RegionView,
   UserLoginResponseDto,
+  UserView,
 } from './api-types';
 
 export function loginUser(req: UserLogin) {
@@ -18,7 +18,7 @@ export function loginUser(req: UserLogin) {
 }
 
 export function registerUser(user: FormData) {
-  return callApi<UserDto>('/users', 'POST', user);
+  return callApi<UserView>('/users', 'POST', user);
 }
 
 export function logoutUser() {
@@ -26,7 +26,7 @@ export function logoutUser() {
 }
 
 export function getRegions() {
-  return callApi<RegionDto[]>('/regions', 'GET');
+  return callApi<RegionView[]>('/regions', 'GET');
 }
 
 export function getEventForEdit(eventId: number) {
@@ -43,4 +43,8 @@ export function updateEvent(eventId: number, event: FormData) {
 
 export function getEventMainImage(eventId: number) {
   return callApi<FileObject>(`/events/${eventId}/main-image`, 'GET');
+}
+
+export function getUserView(userId: number) {
+  return callApi<UserView>(`/users/${userId}/view`, 'GET');
 }

@@ -1,15 +1,11 @@
 import type { UserState } from './redux/user-slice';
 
-export interface LogoutUserDto {
-  webSessionId: number;
-}
-
-export interface RegionDto {
+export interface RegionView {
   regionId: number;
   regionName: string;
 }
 
-export interface UserDto {
+export interface UserView {
   userId: number;
   createdOnDateTime: Date;
   username: string;
@@ -19,16 +15,11 @@ export interface UserDto {
   phoneNumber: string;
   email: string;
   regionId: number;
-  regionsHelping: RegionDto[];
-}
-
-export interface ImageDto {
-  imageId: number;
-  imageName: string;
-  imageExtension: string;
-  imageFilePath: string;
-  imageIsMain: boolean;
-  eventId: number;
+  regionName: string;
+  profilePictureBase64: string;
+  shortDescription: string;
+  canEdit: boolean;
+  regionsHelping: RegionView[];
 }
 
 export interface EventDto {

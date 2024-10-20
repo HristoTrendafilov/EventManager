@@ -8,6 +8,7 @@ import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessa
 import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
+import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
 import { objectToFormData } from '~Infrastructure/utils';
 import { RegionMultiSelect } from '~Shared/SmartSelects/Region/RegionMultiSelect';
@@ -27,6 +28,7 @@ const schema = z.object({
   phoneNumber: z.string().nullable(),
   regionId: z.number(),
   userRegionsHelpingIds: z.number().array(),
+  shortDescription: z.string().nullable(),
   profilePicture: z.instanceof(FileList).nullable(),
 });
 
@@ -111,6 +113,11 @@ export function Register() {
                           label="Повторете паролата"
                           type="password"
                           required
+                        />
+                        <CustomTextArea
+                          {...form.register('shortDescription')}
+                          label="Кратко описание"
+                          rows={3}
                         />
                       </div>
                     </div>

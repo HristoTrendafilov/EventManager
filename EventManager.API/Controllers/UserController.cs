@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using EventManager.API.Services.Region;
 
 namespace EventManager.API.Controllers
 {
@@ -29,6 +30,7 @@ namespace EventManager.API.Controllers
         private readonly IWebSessionService _webSessionService;
         private readonly ISharedService _sharedService;
         private readonly IConfiguration _configuration;
+        private readonly IRegionService _regionService;
         private readonly Mapper _mapper;
 
         public UserController(
@@ -37,6 +39,7 @@ namespace EventManager.API.Controllers
             IWebSessionService webSessionService,
             ISharedService sharedService,
             IConfiguration configuration,
+            IRegionService regionService,
             Mapper mapper)
         {
             _userService = userService;
@@ -44,6 +47,7 @@ namespace EventManager.API.Controllers
             _webSessionService = webSessionService;
             _sharedService = sharedService;
             _configuration = configuration;
+            _regionService = regionService;
             _mapper = mapper;
         }
 
@@ -60,7 +64,7 @@ namespace EventManager.API.Controllers
 
             Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
 
-            var usersToReturn = _mapper.CreateList<UserDto>(users);
+            var usersToReturn = _mapper.CreateList<UserView>(users);
 
             return Ok(usersToReturn);
         }
@@ -74,7 +78,34 @@ namespace EventManager.API.Controllers
             }
 
             var user = await _userService.GetUserAsync(x => x.UserId == userId);
-            var userToReturn = _mapper.CreateObject<UserDto>(user);
+            var userToReturn = _mapper.CreateObject<UserView>(user);
+
+            return Ok(userToReturn);
+        }
+
+        [HttpGet("{userId}/view")]
+        public async Task<ActionResult> GetUserView(long userId)
+        {
+            if (!await _userService.UserExistsAsync(x => x.UserId == userId))
+            {
+                return NotFound();
+            }
+
+            var user = await _userService.GetUserAsync(x => x.UserId == userId);
+            var userToReturn = _mapper.CreateObject<UserView>(user);
+            userToReturn.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
+
+            if (!string.IsNullOrWhiteSpace(user.ProfilePicturePath) && System.IO.File.Exists(user.ProfilePicturePath))
+            {
+                var profilePicureBytes = await System.IO.File.ReadAllBytesAsync(user.ProfilePicturePath);
+                userToReturn.ProfilePictureBase64 = Convert.ToBase64String(profilePicureBytes);
+            }
+
+            var userRegion = await _regionService.GetUserRegion(userId);
+            userToReturn.RegionName = userRegion.RegionName;
+
+            var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
+            userToReturn.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);
 
             return Ok(userToReturn);
         }
@@ -122,7 +153,7 @@ namespace EventManager.API.Controllers
                 signingCredentials: signingCredentials);
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-            
+
             var userRoles = await _userService.GetAllUserRolesAsync(user.UserId);
 
             var response = new UserForWebDto
@@ -168,10 +199,10 @@ namespace EventManager.API.Controllers
             var userId = await _userService.CreateUserAsync(userNew, currentUser);
 
             var user = await _userService.GetUserAsync(x => x.UserId == userId);
-            var userResponse = _mapper.CreateObject<UserDto>(user);
+            var userResponse = _mapper.CreateObject<UserView>(user);
 
             var userRegionsHelping = await _userService.GetAllUserRegionsHelping(userId);
-            userResponse.RegionsHelping = _mapper.CreateList<RegionDto>(userRegionsHelping);
+            userResponse.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);
 
             return Ok(userResponse);
         }

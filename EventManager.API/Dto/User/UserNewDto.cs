@@ -20,6 +20,8 @@ namespace EventManager.API.Dto.User
 
         public string EmailVerificationSecret { get; set; }
 
+        public string ShortDescription { get; set; }
+
         public IFormFile ProfilePicture { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace EventManager.API.Controllers
         public async Task<ActionResult> GetAllRegions()
         {
             var regions = await _regionService.GetAllRegionsAsync(x => true);
-            var regionToReturn = _mapper.CreateList<RegionDto>(regions);
+            var regionToReturn = _mapper.CreateList<RegionView>(regions);
 
             return Ok(regionToReturn);
         }
@@ -41,7 +41,7 @@ namespace EventManager.API.Controllers
             }
 
             var region = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
-            var regionToReturn = _mapper.CreateObject<RegionDto>(region);
+            var regionToReturn = _mapper.CreateObject<RegionView>(region);
 
             return Ok(regionToReturn);
         }
@@ -59,7 +59,7 @@ namespace EventManager.API.Controllers
             var regionId = await _regionService.CreateRegionAsync(region, User.X_CurrentUserId());
 
             var regionPoco = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
-            var regionToReturn = _mapper.CreateObject<RegionDto>(regionPoco);
+            var regionToReturn = _mapper.CreateObject<RegionView>(regionPoco);
 
             return Ok(regionToReturn);
         }

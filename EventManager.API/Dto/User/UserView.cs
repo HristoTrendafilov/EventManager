@@ -2,11 +2,11 @@
 
 namespace EventManager.API.Dto.User
 {
-    public class UserDto
+    public class UserView
     {
-        public UserDto()
+        public UserView()
         {
-            RegionsHelping = new List<RegionDto>();
+            RegionsHelping = new List<RegionView>();
         }
 
         public long UserId { get; set; }
@@ -18,7 +18,11 @@ namespace EventManager.API.Dto.User
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public long RegionId { get; set; }
+        public string RegionName { get; set; }
+        public string ProfilePictureBase64 { get; set; }
+        public string ShortDescription { get; set; }
+        public bool CanEdit { get; set; }
 
-        public List<RegionDto> RegionsHelping { get; set; }
+        public List<RegionView> RegionsHelping { get; set; }
     }
 }

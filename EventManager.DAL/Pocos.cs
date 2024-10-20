@@ -137,6 +137,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "profile_picture_path")]
 		public string ProfilePicturePath { get; set; }
+
+		[Column(Name = "short_description")]
+		public string ShortDescription { get; set; }
 	}
 
 	[Table(Name = "crud_logs")]

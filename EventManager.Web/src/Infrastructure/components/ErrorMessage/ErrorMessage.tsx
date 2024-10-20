@@ -1,3 +1,5 @@
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { CSSProperties } from 'react';
 
 import './ErrorMessage.css';
@@ -20,6 +22,7 @@ export function ErrorMessage(props: ErrorMessageProps) {
 
   return (
     <div role="alert" className="system-error-message" style={style}>
+      <FontAwesomeIcon className="me-3" icon={faExclamationCircle} size="xl" />
       {isError(error) && <div>{error.message}</div>}
       {isString(error) && <div>{error}</div>}
     </div>

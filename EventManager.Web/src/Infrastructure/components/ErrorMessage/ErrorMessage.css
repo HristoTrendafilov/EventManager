@@ -1,5 +1,9 @@
 .system-error-message {
-  font-weight: bold;
-  color: red;
+  width: 100%;
+  background-color: red;
+  color: white;
+  padding: 10px 5px;
   white-space: pre-line;
+  margin: 7px 0;
+  display: flex;
 }

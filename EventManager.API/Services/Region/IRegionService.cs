@@ -12,5 +12,7 @@ namespace EventManager.API.Services.Region
         Task UpdateRegionAsync(long regionId, RegionUpdate region, long? currentUserId);
         Task DeleteRegionAsync(long regionId, long? currentUserId);
         Task<bool> RegionExistsAsync(Expression<Func<RegionPoco, bool>> predicate);
+        Task<RegionPoco> GetUserRegion(long userId);
+        Task<List<RegionPoco>> GetUserRegionsHelping(long userId);
     }
 }

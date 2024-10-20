@@ -43,5 +43,19 @@ namespace EventManager.API.Services.Region
         {
             return _db.Regions.X_UpdateAsync(regionId, region, currentUserId);
         }
+
+        public async Task<RegionPoco> GetUserRegion(long userId)
+        {
+            var userRegionId = await _db.Users.Where(x => x.UserId == userId).Select(x => x.RegionId).FirstOrDefaultAsync();
+
+            return await _db.Regions.FirstOrDefaultAsync(x => x.RegionId == userRegionId);
+        }
+
+        public Task<List<RegionPoco>> GetUserRegionsHelping(long userId)
+        {
+            return (from regionsHelping in _db.UsersRegionsHelping.Where(x => x.UserId == userId)
+                    join regions in _db.Regions on regionsHelping.RegionId equals regions.RegionId
+                    select regions).ToListAsync();
+        }
     }
 }
