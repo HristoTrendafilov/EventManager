@@ -89,6 +89,11 @@ namespace EventManager.API.Services.User
             return _db.Users.FirstOrDefaultAsync(predicate);
         }
 
+        public Task<VUserPoco> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate)
+        {
+            return _db.VUsers.FirstOrDefaultAsync(predicate);
+        }
+
         public Task<bool> UserExistsAsync(Expression<Func<UserPoco, bool>> predicate)
         {
             return _db.Users.AnyAsync(predicate);

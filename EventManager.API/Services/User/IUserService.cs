@@ -10,6 +10,7 @@ namespace EventManager.API.Services.User
         Task<(List<UserPoco> users, PaginationMetadata metadata)> GetAllUsersAsync
             (Expression<Func<UserPoco, bool>> predicate, int pageNumber, int pageSize);
         Task<UserPoco> GetUserAsync(Expression<Func<UserPoco, bool>> predicate);
+        Task<VUserPoco> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate);
         Task<long> CreateUserAsync(UserNewDto user, long? currentUserId);
         Task UpdateUserAsync(long userId, UserUpdateDto user, long? currentUserId);
         Task DeleteUserAsync(long userId, long? currentUserId);

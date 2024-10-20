@@ -91,7 +91,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            var user = await _userService.GetUserAsync(x => x.UserId == userId);
+            var user = await _userService.GetUserViewAsync(x => x.UserId == userId);
             var userToReturn = _mapper.CreateObject<UserView>(user);
             userToReturn.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
 
@@ -100,9 +100,6 @@ namespace EventManager.API.Controllers
                 var profilePicureBytes = await System.IO.File.ReadAllBytesAsync(user.ProfilePicturePath);
                 userToReturn.ProfilePictureBase64 = Convert.ToBase64String(profilePicureBytes);
             }
-
-            var userRegion = await _regionService.GetUserRegion(userId);
-            userToReturn.RegionName = userRegion.RegionName;
 
             var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
             userToReturn.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);

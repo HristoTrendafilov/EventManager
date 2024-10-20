@@ -269,4 +269,56 @@ namespace EventManager.DAL
 		public DateTime? UpdatedAt { get; set; }
 	}
 
+	[Table(Name = "v_users")]
+	public class VUserPoco
+	{
+		[Column(Name = "user_id")]
+		public long? UserId { get; set; }
+
+		[Column(Name = "username")]
+		public string Username { get; set; }
+
+		[Column(Name = "password")]
+		public string Password { get; set; }
+
+		[Column(Name = "first_name")]
+		public string FirstName { get; set; }
+
+		[Column(Name = "second_name")]
+		public string SecondName { get; set; }
+
+		[Column(Name = "last_name")]
+		public string LastName { get; set; }
+
+		[Column(Name = "email")]
+		public string Email { get; set; }
+
+		[Column(Name = "phone_number")]
+		public string PhoneNumber { get; set; }
+
+		[Column(Name = "email_verification_secret")]
+		public string EmailVerificationSecret { get; set; }
+
+		[Column(Name = "is_email_verified")]
+		public bool? IsEmailVerified { get; set; }
+
+		[Column(Name = "region_id")]
+		public long? RegionId { get; set; }
+
+		[Column(Name = "created_on_date_time")]
+		public DateTime? CreatedOnDateTime { get; set; }
+
+		[Column(Name = "created_by_user_id")]
+		public long? CreatedByUserId { get; set; }
+
+		[Column(Name = "profile_picture_path")]
+		public string ProfilePicturePath { get; set; }
+
+		[Column(Name = "short_description")]
+		public string ShortDescription { get; set; }
+
+		[Column(Name = "region_name")]
+		public string RegionName { get; set; }
+	}
+
 }
