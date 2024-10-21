@@ -1,0 +1,11 @@
+.user-edit-wrapper .nav-button {
+  border: none;
+  background-color: white;
+  text-align: start;
+  display: flex;
+  align-items: center;
+}
+
+.user-edit-wrapper .nav-button:active {
+  color: orange;
+}

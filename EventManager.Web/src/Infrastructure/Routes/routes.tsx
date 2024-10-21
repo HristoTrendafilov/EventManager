@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Event } from '~Event/Event';
 import type { UserRole } from '~Infrastructure/redux/user-slice';
+import { UserEdit } from '~User/Edit/UserEdit';
 import { Login } from '~User/Login/Login';
 import { UserProfile } from '~User/Profile/UserProfile';
 import { Register } from '~User/Register/Register';
@@ -27,9 +28,15 @@ export const routes: RouteTable[] = [
     role: 'None',
   },
   {
-    location: 'users/:userId/profile',
+    location: 'users/:userId/view',
     component: <UserProfile />,
     requiresLogin: false,
+    role: 'None',
+  },
+  {
+    location: 'users/:userId/edit',
+    component: <UserEdit />,
+    requiresLogin: true,
     role: 'None',
   },
   {

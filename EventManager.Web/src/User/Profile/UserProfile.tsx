@@ -77,7 +77,7 @@ export function UserProfile() {
               </div>
             </div>
             <div className="col-md-8">
-              <div className="card mb-3 h-100">
+              <div className="card mb-3">
                 <div className="card-body">
                   <div className="row">
                     <div className="col-sm-3">

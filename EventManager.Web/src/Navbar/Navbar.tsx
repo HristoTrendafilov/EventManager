@@ -37,7 +37,7 @@ function NavUserDropdown(props: NavUserDropdownProps) {
       <ul className="dropdown-menu dropdown-menu-start dropdown-menu-md-end p-2">
         <li>
           <Link
-            to={`/users/${user.userId}/profile`}
+            to={`/users/${user.userId}/view`}
             data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
             onClick={handleNavClick}
           >
