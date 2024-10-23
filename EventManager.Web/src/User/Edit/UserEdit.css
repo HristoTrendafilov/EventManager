@@ -4,8 +4,20 @@
   text-align: start;
   display: flex;
   align-items: center;
+  padding: 6px;
+  color: #4a5568;
 }
 
-.user-edit-wrapper .nav-button:active {
-  color: orange;
+.user-edit-wrapper .nav-link {
+  color: #4a5568;
+}
+
+.user-edit-wrapper .nav-item .active {
+  color: #007bff;
+}
+
+.user-edit-wrapper .nav .active {
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
 }

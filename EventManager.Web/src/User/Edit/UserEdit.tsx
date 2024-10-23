@@ -1,6 +1,6 @@
 import { faGear, faShield, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react'; // Import useState for managing active state
+import { useCallback, useState } from 'react'; // Import useState for managing active state
 
 import './UserEdit.css';
 
@@ -12,12 +12,20 @@ const UserEditTabNames = {
 
 type UserEditTabName = keyof typeof UserEditTabNames;
 
+function EditProfileDate() {
+  return (
+    <div>
+      <div>axxa</div>
+    </div>
+  );
+}
+
 export function UserEdit() {
   const [activeTab, setActiveTab] = useState<UserEditTabName>('profile');
 
-  const handleTabClick = (tab: UserEditTabName) => {
+  const handleTabClick = useCallback((tab: UserEditTabName) => {
     setActiveTab(tab);
-  };
+  }, []);
 
   return (
     <div className="user-edit-wrapper mt-3">
@@ -25,8 +33,8 @@ export function UserEdit() {
         <div className="row gutters-sm">
           <div className="col-md-4 d-none d-md-block">
             <div className="card">
-              <div className="card-body">
-                <nav className="nav flex-column gap-2 ps-2">
+              <div className="card-body p-2">
+                <nav className="nav flex-column ps-2">
                   <button
                     type="button"
                     className={`nav-button ${
@@ -108,6 +116,11 @@ export function UserEdit() {
                 />
               </li>
             </ul>
+            <div className="card mt-2">
+              <div className="card-body">
+                <EditProfileDate />
+              </div>
+            </div>
           </div>
         </div>
       </div>
