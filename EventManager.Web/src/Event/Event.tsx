@@ -15,7 +15,7 @@ import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomFor
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { fileToBase64, objectToFormData } from '~Infrastructure/utils';
+import { objectToFormData } from '~Infrastructure/utils';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 
 import './Event.css';
@@ -66,7 +66,7 @@ export function Event() {
         return;
       }
 
-      setMainImage(imageResponse.data.fileContents);
+      setMainImage(URL.createObjectURL(imageResponse.data));
     },
     [form]
   );
@@ -80,8 +80,8 @@ export function Event() {
     }
   }, [eventId, loadEvent, form]);
 
-  const onMainImageChosen = async (file: File) => {
-    setMainImage(await fileToBase64(file));
+  const onMainImageChosen = (file: File) => {
+    setMainImage(URL.createObjectURL(file));
   };
 
   const handleSubmit = useCallback(
@@ -153,11 +153,7 @@ export function Event() {
                   </div>
                   <div className="card-body p-1 main-image-wrapper">
                     {mainImage && (
-                      <img
-                        alt="main"
-                        className="main-image"
-                        src={`data:image/png;base64, ${mainImage}`}
-                      />
+                      <img alt="main" className="main-image" src={mainImage} />
                     )}
                   </div>
                 </div>

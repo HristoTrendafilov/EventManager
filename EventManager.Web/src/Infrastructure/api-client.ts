@@ -22,6 +22,7 @@ type ApiResponse<T = undefined> =
     };
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+
 export async function callApi<T>(
   endPoint: string,
   method: HttpMethod,
@@ -88,9 +89,21 @@ export async function callApi<T>(
     return {} as ApiResponse<T>;
   }
 
-  let jsonData;
+  const contentType = fetchResponse.headers.get('Content-Type');
+
   try {
-    jsonData = (await fetchResponse.json()) as ApiResponse<T>;
+    if (contentType === 'application/octet-stream') {
+      // If the content type is application/octet-stream, return Blob as the data property
+      const blobData = await fetchResponse.blob();
+      return {
+        data: blobData as unknown as T, // Cast Blob to T, assuming the caller knows T is Blob
+        success: true,
+      } as ApiResponse<T>;
+    }
+
+    // Otherwise, handle JSON response
+    const jsonData = (await fetchResponse.json()) as ApiResponse<T>;
+    return jsonData;
   } catch (err) {
     reportError(err);
     return {
@@ -98,6 +111,4 @@ export async function callApi<T>(
       errorMessage: 'Error while reading data from the server.',
     } as ApiResponse<T>;
   }
-
-  return jsonData;
 }

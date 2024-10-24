@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { getUserView } from '~Infrastructure/api-requests';
+import {
+  getUserProfilePicture,
+  getUserView,
+} from '~Infrastructure/api-requests';
 import type { UserView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import noUserLogo from '~asset/no-user-logo.png';
@@ -16,19 +19,21 @@ export function UserProfile() {
   const { userId } = useParams();
 
   const fetchUserView = useCallback(async () => {
-    const response = await getUserView(Number(userId));
-    if (!response.success) {
-      setError(response.errorMessage);
+    const userViewResponse = await getUserView(Number(userId));
+    if (!userViewResponse.success) {
+      setError(userViewResponse.errorMessage);
       return;
     }
 
-    if (response.data.profilePictureBase64) {
-      setProfilePicture(
-        `data:image/png;base64, ${response.data.profilePictureBase64}`
-      );
+    setUserView(userViewResponse.data);
+
+    const profilePictureResponse = await getUserProfilePicture(Number(userId));
+    if (!profilePictureResponse.success) {
+      setError(profilePictureResponse.errorMessage);
+      return;
     }
 
-    setUserView(response.data);
+    setProfilePicture(URL.createObjectURL(profilePictureResponse.data));
   }, [userId]);
 
   useEffect(() => {

@@ -68,7 +68,7 @@ function UserUpdateData(props: UpdateUserDataProps) {
 
   useEffect(() => {
     if (userProfilePicture) {
-      setProfilePicture(`data:image/png;base64, ${userProfilePicture}`);
+      setProfilePicture(userProfilePicture);
     }
 
     form.reset(user);
@@ -174,7 +174,7 @@ export function UserUpdate() {
       return;
     }
 
-    setUserProfilePicture(profilePictureResponse.data.fileContents);
+    setUserProfilePicture(URL.createObjectURL(profilePictureResponse.data));
   }, [userId]);
 
   useEffect(() => {

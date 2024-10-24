@@ -4,7 +4,6 @@ import type { UserUpdatePersonalData } from '~User/Update/UserUpdate';
 import { callApi } from './api-client';
 import type {
   EventDto,
-  FileObject,
   RegionView,
   UserLoginResponseDto,
   UserView,
@@ -43,7 +42,7 @@ export function updateEvent(eventId: number, event: FormData) {
 }
 
 export function getEventMainImage(eventId: number) {
-  return callApi<FileObject>(`/events/${eventId}/main-image`, 'GET');
+  return callApi<Blob>(`/events/${eventId}/main-image`, 'GET');
 }
 
 export function getUserView(userId: number) {
@@ -66,5 +65,5 @@ export function updateUserPersonalData(userId: number, user: FormData) {
 }
 
 export function getUserProfilePicture(userId: number) {
-  return callApi<FileObject>(`/users/${userId}/profile-picture`, 'GET');
+  return callApi<Blob>(`/users/${userId}/profile-picture`, 'GET');
 }
