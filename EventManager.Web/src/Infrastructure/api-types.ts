@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import type { UserState } from './redux/user-slice';
 
 export interface RegionView {
@@ -45,3 +47,14 @@ export interface FileObject {
   entityTag: string;
   enableRangeProcessing: boolean;
 }
+
+export const userManipulationSchema = z.object({
+  firstName: z.string(),
+  secondName: z.string().nullable(),
+  lastName: z.string(),
+  phoneNumber: z.string().nullable(),
+  regionId: z.number(),
+  shortDescription: z.string().nullable(),
+  userRegionsHelpingIds: z.number().array(),
+  profilePicture: z.instanceof(FileList).nullable(),
+});

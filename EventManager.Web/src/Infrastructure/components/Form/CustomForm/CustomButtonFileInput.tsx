@@ -6,7 +6,7 @@ export const CustomButtonFileInput = forwardRef<
   HTMLInputElement,
   CustomFileInputProps
 >((props, ref) => {
-  const { name, label, onFileChosen, onFileRemoved } = props;
+  const { name, label, className, onFileChosen, onFileRemoved } = props;
 
   const handleButtonClick = useCallback(() => {
     const fileInput = document.querySelector(`#${name}`) as HTMLInputElement;
@@ -17,7 +17,7 @@ export const CustomButtonFileInput = forwardRef<
   }, [name]);
 
   return (
-    <>
+    <div className={className}>
       <button
         type="button"
         className="btn btn-success"
@@ -34,6 +34,6 @@ export const CustomButtonFileInput = forwardRef<
         onFileChosen={onFileChosen}
         onFileRemoved={onFileRemoved}
       />
-    </>
+    </div>
   );
 });

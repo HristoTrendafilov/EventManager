@@ -1,4 +1,5 @@
 import type { UserLogin } from '~User/Login/Login';
+import type { UserUpdatePersonalData } from '~User/Update/UserUpdate';
 
 import { callApi } from './api-client';
 import type {
@@ -18,7 +19,7 @@ export function loginUser(req: UserLogin) {
 }
 
 export function registerUser(user: FormData) {
-  return callApi<UserView>('/users', 'POST', user);
+  return callApi('/users', 'POST', user);
 }
 
 export function logoutUser() {
@@ -47,4 +48,23 @@ export function getEventMainImage(eventId: number) {
 
 export function getUserView(userId: number) {
   return callApi<UserView>(`/users/${userId}/view`, 'GET');
+}
+
+export function getUserPersonalData(userId: number) {
+  return callApi<UserUpdatePersonalData>(
+    `/users/${userId}/update/personal-data`,
+    'GET'
+  );
+}
+
+export function updateUserPersonalData(userId: number, user: FormData) {
+  return callApi<UserView>(
+    `/users/${userId}/update/personal-data`,
+    'PUT',
+    user
+  );
+}
+
+export function getUserProfilePicture(userId: number) {
+  return callApi<FileObject>(`/users/${userId}/profile-picture`, 'GET');
 }

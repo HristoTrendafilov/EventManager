@@ -1,5 +1,4 @@
-﻿using EventManager.API.Helpers;
-using EventManager.DAL;
+﻿using EventManager.DAL;
 using EventManager.API.Dto.User;
 using System.Linq.Expressions;
 
@@ -7,15 +6,14 @@ namespace EventManager.API.Services.User
 {
     public interface IUserService
     {
-        Task<(List<UserPoco> users, PaginationMetadata metadata)> GetAllUsersAsync
-            (Expression<Func<UserPoco, bool>> predicate, int pageNumber, int pageSize);
         Task<UserPoco> GetUserAsync(Expression<Func<UserPoco, bool>> predicate);
         Task<VUserPoco> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate);
-        Task<long> CreateUserAsync(UserNewDto user, long? currentUserId);
-        Task UpdateUserAsync(long userId, UserUpdateDto user, long? currentUserId);
+        Task<long> CreateUserAsync(UserNew user, long? currentUserId);
+        Task UpdateUserPersonalDataAsync(long userId, UserUpdatePersonalData user, long? currentUserId);
         Task DeleteUserAsync(long userId, long? currentUserId);
         Task<bool> UserExistsAsync(Expression<Func<UserPoco, bool>> predicate);
         Task<bool> IsUserAdmin(long userId);
+        Task<byte[]> GetUserProfilePictureAsync(long userId);
 
         Task<List<RegionPoco>> GetAllUserRegionsHelping(long userId);
         Task CreateUserRegionHelpingAsync(UserRegionHelpingNewDto userRegionHelping, long? currentUserId);

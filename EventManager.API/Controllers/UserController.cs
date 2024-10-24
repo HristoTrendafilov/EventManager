@@ -23,8 +23,6 @@ namespace EventManager.API.Controllers
     [Route("api/users")]
     public class UserController : ControllerBase
     {
-        const int _maxUsersPageCount = 20;
-
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
         private readonly IWebSessionService _webSessionService;
@@ -69,46 +67,71 @@ namespace EventManager.API.Controllers
             return Ok(usersToReturn);
         }
 
-        [HttpGet("{userId}")]
-        public async Task<ActionResult> GetUser(long userId)
-        {
-            if (!await _userService.UserExistsAsync(x => x.UserId == userId))
-            {
-                return NotFound();
-            }
-
-            var user = await _userService.GetUserAsync(x => x.UserId == userId);
-            var userToReturn = _mapper.CreateObject<UserView>(user);
-
-            return Ok(userToReturn);
-        }
-
         [HttpGet("{userId}/view")]
         public async Task<ActionResult> GetUserView(long userId)
         {
+            var user = await _userService.GetUserViewAsync(x => x.UserId == userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userView = _mapper.CreateObject<UserView>(user);
+            userView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
+
+            var profilePicture = await _userService.GetUserProfilePictureAsync(userId);
+            if (profilePicture != null)
+            {
+                userView.ProfilePictureBase64 = Convert.ToBase64String(profilePicture);
+            }
+
+            var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
+            userView.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);
+
+            return Ok(userView);
+        }
+
+        [HttpGet("{userId}/profile-picture")]
+        public async Task<ActionResult> GetUserProfilePicture(long userId)
+        {
             if (!await _userService.UserExistsAsync(x => x.UserId == userId))
             {
                 return NotFound();
             }
 
-            var user = await _userService.GetUserViewAsync(x => x.UserId == userId);
-            var userToReturn = _mapper.CreateObject<UserView>(user);
-            userToReturn.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
-
-            if (!string.IsNullOrWhiteSpace(user.ProfilePicturePath) && System.IO.File.Exists(user.ProfilePicturePath))
+            var profilePicture = await _userService.GetUserProfilePictureAsync(userId);
+            if (profilePicture == null)
             {
-                var profilePicureBytes = await System.IO.File.ReadAllBytesAsync(user.ProfilePicturePath);
-                userToReturn.ProfilePictureBase64 = Convert.ToBase64String(profilePicureBytes);
+                return NotFound();
             }
 
-            var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
-            userToReturn.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);
+            return File(profilePicture, "application/octet-stream");
+        }
 
-            return Ok(userToReturn);
+        [HttpGet("{userId}/update/personal-data")]
+        public async Task<ActionResult> GetUserPersonalData(long userId)
+        {
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userService.GetUserAsync(x => x.UserId == userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var personalData = _mapper.CreateObject<UserUpdatePersonalData>(user);
+
+            var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
+            personalData.UserRegionsHelpingIds = userRegionsHelping.Select(x => x.RegionId).ToList();
+
+            return Ok(personalData);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> LoginUser(UserLoginDto userLogin)
+        public async Task<ActionResult> LoginUser(UserLogin userLogin)
         {
             var user = await _userService.GetUserAsync(x => x.Username == userLogin.Username && x.Password == userLogin.Password);
             if (user == null)
@@ -167,7 +190,7 @@ namespace EventManager.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> RegisterUser([FromForm] UserNewDto userNew)
+        public async Task<ActionResult> RegisterUser([FromForm] UserNew userNew)
         {
             if (userNew.Password != userNew.PasswordRepeated)
             {
@@ -191,22 +214,17 @@ namespace EventManager.API.Controllers
                 }
             }
 
-            var currentUser = User.X_CurrentUserId();
-            userNew.CreatedByUserId = currentUser;
-            var userId = await _userService.CreateUserAsync(userNew, currentUser);
+            var currentUserId = User.X_CurrentUserId();
 
-            var user = await _userService.GetUserAsync(x => x.UserId == userId);
-            var userResponse = _mapper.CreateObject<UserView>(user);
+            userNew.CreatedByUserId = currentUserId;
+            await _userService.CreateUserAsync(userNew, currentUserId);
 
-            var userRegionsHelping = await _userService.GetAllUserRegionsHelping(userId);
-            userResponse.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);
-
-            return Ok(userResponse);
+            return NoContent();
         }
 
         [Authorize]
-        [HttpPut("{userId}")]
-        public async Task<ActionResult> UpdateUser(long userId, UserUpdateDto user)
+        [HttpPut("{userId}/update/personal-data")]
+        public async Task<ActionResult> UpdateUserPersonalData(long userId, [FromForm] UserUpdatePersonalData user)
         {
             if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
             {
@@ -218,15 +236,6 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            if (await _userService.UserExistsAsync(x => x.Username == user.Username && x.UserId != userId))
-            {
-                return BadRequest($"Вече съществува потребителското име: {user.Username}");
-            }
-            if (await _userService.UserExistsAsync(x => x.Email == user.Email && x.UserId != userId))
-            {
-                return BadRequest($"Вече съществува потребител с имейл: {user.Email}");
-            }
-
             if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
             {
                 if (await _userService.UserExistsAsync(x => x.PhoneNumber == user.PhoneNumber && x.UserId != userId))
@@ -235,7 +244,7 @@ namespace EventManager.API.Controllers
                 }
             }
 
-            await _userService.UpdateUserAsync(userId, user, User.X_CurrentUserId());
+            await _userService.UpdateUserPersonalDataAsync(userId, user, User.X_CurrentUserId());
 
             return NoContent();
         }

@@ -46,42 +46,44 @@ export function Login() {
 
   return (
     <div className="login-wrapper">
-      <div className="card border-1 border-danger">
-        <h2 className="card-header text-white bg-danger bg-gradient">
-          Потребителски вход
-        </h2>
-        <div className="card-body">
-          <CustomForm form={form} onSubmit={handleLogin}>
-            <CustomInput
-              {...form.register('username')}
-              label="Потребителско име"
-              required
-            />
-            <CustomInput
-              {...form.register('password')}
-              label="Парола"
-              type="password"
-              required
-            />
+      <div className="container">
+        <div className="card border-1 border-danger">
+          <h2 className="card-header text-white bg-danger bg-gradient">
+            Потребителски вход
+          </h2>
+          <div className="card-body">
+            <CustomForm form={form} onSubmit={handleLogin}>
+              <CustomInput
+                {...form.register('username')}
+                label="Потребителско име"
+                required
+              />
+              <CustomInput
+                {...form.register('password')}
+                label="Парола"
+                type="password"
+                required
+              />
 
-            <div className="d-flex justify-content-center">
-              <button type="submit" className="btn btn-primary login-btn">
-                Вход
-              </button>
+              <div className="d-flex justify-content-center">
+                <button type="submit" className="btn btn-primary login-btn">
+                  Вход
+                </button>
+              </div>
+            </CustomForm>
+
+            <div className="mt-3">
+              <span className="me-2">Все още нямате регистрация?</span>
+              <Link to="/users/register">Регистрирай ме!</Link>
             </div>
-          </CustomForm>
-
-          <div className="mt-3">
-            <span className="me-2">Все още нямате регистрация?</span>
-            <Link to="/users/register">Регистрирай ме!</Link>
           </div>
+
+          {error && (
+            <div className="card-footer">
+              <ErrorMessage error={error} />
+            </div>
+          )}
         </div>
-
-        {error && (
-          <div className="card-footer">
-            <ErrorMessage error={error} />
-          </div>
-        )}
       </div>
     </div>
   );

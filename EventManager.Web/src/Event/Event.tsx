@@ -15,11 +15,7 @@ import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomFor
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import {
-  fileToBase64,
-  getClientErrorMessage,
-  objectToFormData,
-} from '~Infrastructure/utils';
+import { fileToBase64, objectToFormData } from '~Infrastructure/utils';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 
 import './Event.css';
@@ -92,15 +88,17 @@ export function Event() {
     async (event: EventForm) => {
       setError(undefined);
 
-      try {
-        const formData = objectToFormData(event);
-        if (eventId) {
-          await updateEvent(Number(eventId), formData);
-        } else {
-          await createEvent(formData);
-        }
-      } catch (err) {
-        setError(getClientErrorMessage(err));
+      const formData = objectToFormData(event);
+
+      let response;
+      if (eventId) {
+        response = await updateEvent(Number(eventId), formData);
+      } else {
+        response = await createEvent(formData);
+      }
+
+      if (!response.success) {
+        setError(response.errorMessage);
       }
     },
     [eventId]

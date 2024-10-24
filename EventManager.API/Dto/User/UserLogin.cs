@@ -2,7 +2,7 @@
 
 namespace EventManager.API.Dto.User
 {
-    public class UserLoginDto
+    public class UserLogin
     {
         [Required(ErrorMessage = "Потребителско име е задължително.")]
         public string Username { get; set; }

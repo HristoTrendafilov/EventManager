@@ -1,5 +1,4 @@
 ﻿using EventManager.API.Core;
-using EventManager.API.Helpers;
 using EventManager.DAL;
 using EventManager.API.Dto.User;
 using LinqToDB;
@@ -19,7 +18,7 @@ namespace EventManager.API.Services.User
             _fileStorageService = fileStorageService;
         }
 
-        public async Task<long> CreateUserAsync(UserNewDto user, long? currentUserId)
+        public async Task<long> CreateUserAsync(UserNew user, long? currentUserId)
         {
             var userId = await _db.WithTransactionAsync(async () =>
             {
@@ -53,10 +52,25 @@ namespace EventManager.API.Services.User
             });
         }
 
-        public async Task UpdateUserAsync(long userId, UserUpdateDto user, long? currentUserId)
+        public async Task UpdateUserPersonalDataAsync(long userId, UserUpdatePersonalData user, long? currentUserId)
         {
             await _db.WithTransactionAsync(async () =>
             {
+                var userProfilePictureFilePath = await _db.Users.Where(x => x.UserId == userId)
+                      .Select(x => x.ProfilePicturePath).FirstOrDefaultAsync();
+
+                if (user.ProfilePicture != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(userProfilePictureFilePath) && File.Exists(userProfilePictureFilePath))
+                    {
+                        File.Delete(userProfilePictureFilePath);
+                    }
+
+                    userProfilePictureFilePath = await _fileStorageService.SaveFileToStorage(user.ProfilePicture);
+                }
+
+                user.ProfilePicturePath = userProfilePictureFilePath;
+
                 await this.DeleteUserRegionHelpingAsync(x => x.UserId == userId, currentUserId);
                 foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
                 {
@@ -66,22 +80,6 @@ namespace EventManager.API.Services.User
 
                 await _db.Users.X_UpdateAsync(userId, user, currentUserId);
             });
-        }
-
-        public async Task<(List<UserPoco> users, PaginationMetadata metadata)> GetAllUsersAsync
-            (Expression<Func<UserPoco, bool>> predicate, int pageNumber, int pageSize)
-        {
-            var users = await PagedList<UserPoco>.CreateAsync(_db.Users.Where(predicate), pageNumber, pageSize);
-
-            var paginationMetadata = new PaginationMetadata
-            {
-                TotalCount = users.TotalCount,
-                PageSize = users.PageSize,
-                CurrentPage = users.CurrentPage,
-                TotalPages = users.TotalPages,
-            };
-
-            return (users, paginationMetadata);
         }
 
         public Task<UserPoco> GetUserAsync(Expression<Func<UserPoco, bool>> predicate)
@@ -151,6 +149,22 @@ namespace EventManager.API.Services.User
         public Task<UserRolePoco> GetUserRoleAsync(Expression<Func<UserRolePoco, bool>> predicate)
         {
             return _db.UsersRoles.FirstOrDefaultAsync(predicate);
+        }
+
+        public async Task<byte[]> GetUserProfilePictureAsync(long userId)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            if (user == null)
+            {
+                return null;
+            }
+
+            if (!File.Exists(user.ProfilePicturePath))
+            {
+                return null;
+            }
+
+            return await File.ReadAllBytesAsync(user.ProfilePicturePath);
         }
     }
 }

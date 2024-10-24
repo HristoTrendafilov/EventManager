@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 
 import { getUserView } from '~Infrastructure/api-requests';
 import type { UserView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { userSelector } from '~Infrastructure/redux/user-slice';
 import noUserLogo from '~asset/no-user-logo.png';
 
 import './UserProfile.css';
@@ -14,8 +12,6 @@ export function UserProfile() {
   const [userView, setUserView] = useState<UserView | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [profilePicture, setProfilePicture] = useState<string>(noUserLogo);
-
-  const user = useSelector(userSelector);
 
   const { userId } = useParams();
 
@@ -37,7 +33,7 @@ export function UserProfile() {
 
   useEffect(() => {
     void fetchUserView();
-  }, [fetchUserView, user.userId, userId]);
+  }, [fetchUserView]);
 
   return (
     <div className="user-profile-wrapper">

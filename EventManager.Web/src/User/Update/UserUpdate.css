@@ -1,0 +1,36 @@
+.user-update-wrapper .nav-button {
+  border: none;
+  background-color: white;
+  text-align: start;
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  color: #4a5568;
+  width: 100%;
+}
+
+.user-update-wrapper .nav-link {
+  color: #4a5568;
+  cursor: pointer;
+}
+
+.user-update-wrapper .nav-item .active {
+  color: #007bff;
+}
+
+.user-update-wrapper .nav-buttons .active {
+  background-color: #007bff;
+  color: white;
+}
+
+.user-data-wrapper .profile-picture-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.user-data-wrapper .profile-picture {
+  border-radius: 50%;
+  height: 120px;
+  width: 120px;
+  object-fit: cover;
+}
