@@ -49,24 +49,6 @@ namespace EventManager.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<ActionResult> GetAllUsers(int pageNumber = 1, int pageSize = 10)
-        {
-            if (pageSize > _maxUsersPageCount)
-            {
-                pageSize = _maxUsersPageCount;
-            }
-
-            var (users, paginationMetadata) = await _userService.GetAllUsersAsync(x => true, pageNumber, pageSize);
-
-            Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
-
-            var usersToReturn = _mapper.CreateList<UserView>(users);
-
-            return Ok(usersToReturn);
-        }
-
         [HttpGet("{userId}/view")]
         public async Task<ActionResult> GetUserView(long userId)
         {
