@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventManager.API.Controllers
 {
-    [Route("api/regions")]
     [ApiController]
+    [Route("api/regions")]
     public class RegionController : ControllerBase
     {
         private readonly IRegionService _regionService;
@@ -32,8 +32,8 @@ namespace EventManager.API.Controllers
             return Ok(regionToReturn);
         }
 
-        [HttpGet("{regionId}")]
-        public async Task<ActionResult> GetRegion(long regionId)
+        [HttpGet("{regionId}/view")]
+        public async Task<ActionResult> GetRegionView(long regionId)
         {
             if (!await _regionService.RegionExistsAsync(x => x.RegionId == regionId))
             {
@@ -46,9 +46,9 @@ namespace EventManager.API.Controllers
             return Ok(regionToReturn);
         }
 
-        [HttpPost]
         [Authorize]
         [Role(UserRole.Admin)]
+        [HttpPost]
         public async Task<ActionResult> CreateRegion(RegionNew region)
         {
             if (await _regionService.RegionExistsAsync(x => x.RegionName == region.RegionName))

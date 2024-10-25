@@ -1,4 +1,4 @@
-﻿namespace EventManager.API.Dto
+﻿namespace EventManager.API.Core
 {
     public class ApiResponse<T>
     {

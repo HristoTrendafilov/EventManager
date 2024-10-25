@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventManager.API.Controllers
 {
-    [Route("api/exceptions")]
     [ApiController]
     [Role(UserRole.Admin)]
+    [Route("api/exceptions")]
     public class ExceptionController : ControllerBase
     {
         private readonly IExceptionService _exceptionService;

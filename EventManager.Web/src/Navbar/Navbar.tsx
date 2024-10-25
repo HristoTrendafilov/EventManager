@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { logoutUser } from '~Infrastructure/api-requests';
+import { logoutUser } from '~Infrastructure/ApiRequests/users-requests';
 import { ErrorModal } from '~Infrastructure/components/ErrorModal/ErrorModal';
 import { useAppDispatch } from '~Infrastructure/redux/store';
 import {

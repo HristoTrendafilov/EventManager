@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
-import { loginUser } from '~Infrastructure/api-requests';
+import { loginUser } from '~Infrastructure/ApiRequests/users-requests';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';

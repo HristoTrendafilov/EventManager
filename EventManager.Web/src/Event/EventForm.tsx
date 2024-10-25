@@ -4,10 +4,10 @@ import { z } from 'zod';
 
 import {
   createEvent,
-  getEventForEdit,
+  getEventForUpdate,
   getEventMainImage,
   updateEvent,
-} from '~Infrastructure/api-requests';
+} from '~Infrastructure/ApiRequests/events-requests';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomDateInput } from '~Infrastructure/components/Form/CustomForm/CustomDateInput';
@@ -18,7 +18,7 @@ import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedFor
 import { objectToFormData } from '~Infrastructure/utils';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 
-import './Event.css';
+import './EventForm.css';
 
 const schema = z.object({
   eventName: z.string(),
@@ -52,7 +52,7 @@ export function Event() {
 
   const loadEvent = useCallback(
     async (paramEventId: number) => {
-      const eventResponse = await getEventForEdit(paramEventId);
+      const eventResponse = await getEventForUpdate(paramEventId);
       if (!eventResponse.success) {
         setError(eventResponse.errorMessage);
         return;

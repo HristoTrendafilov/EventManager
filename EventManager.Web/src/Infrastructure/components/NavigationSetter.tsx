@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { setNavigate } from './redux/navigate-slice';
+import { setNavigate } from '~Infrastructure/redux/navigate-slice';
 
 export const NavigatorSetter = () => {
   const dispatch = useDispatch();

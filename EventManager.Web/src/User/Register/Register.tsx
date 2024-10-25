@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
-import { registerUser } from '~Infrastructure/api-requests';
+import { registerUser } from '~Infrastructure/ApiRequests/users-requests';
 import { userManipulationSchema } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';

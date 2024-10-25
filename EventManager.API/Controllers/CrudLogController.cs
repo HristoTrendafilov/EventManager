@@ -45,7 +45,7 @@ namespace EventManager.API.Controllers
             return Ok(crudLogToReturn);
         }
 
-        [HttpDelete("{crudLogId}")]
+        [HttpDelete("{crudLogId}/delete")]
         public async Task<ActionResult> DeleteCrudLog(long crudLogId)
         {
             if (!await _crudLogService.CrudLogExistsAsync(x => x.CrudLogId == crudLogId))

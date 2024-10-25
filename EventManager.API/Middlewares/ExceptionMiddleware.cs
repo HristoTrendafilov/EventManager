@@ -2,7 +2,7 @@
 using EventManager.API.Services.Exception;
 using EventManager.API.Dto.Exception;
 using System.Net;
-using EventManager.API.Dto;
+using EventManager.API.Core;
 
 namespace EventManager.API.Middlewares
 {

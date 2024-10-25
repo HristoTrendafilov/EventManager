@@ -112,6 +112,33 @@ namespace EventManager.API.Controllers
             return Ok(personalData);
         }
 
+        [Authorize]
+        [HttpPut("{userId}/update/personal-data")]
+        public async Task<ActionResult> UpdateUserPersonalData(long userId, [FromForm] UserUpdatePersonalData user)
+        {
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
+            {
+                return Unauthorized();
+            }
+
+            if (!await _userService.UserExistsAsync(x => x.UserId == userId))
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
+            {
+                if (await _userService.UserExistsAsync(x => x.PhoneNumber == user.PhoneNumber && x.UserId != userId))
+                {
+                    return BadRequest($"Вече съществува потребител с телефонен номер: {user.PhoneNumber}");
+                }
+            }
+
+            await _userService.UpdateUserPersonalDataAsync(userId, user, User.X_CurrentUserId());
+
+            return NoContent();
+        }
+
         [HttpPost("login")]
         public async Task<ActionResult> LoginUser(UserLogin userLogin)
         {
@@ -205,34 +232,7 @@ namespace EventManager.API.Controllers
         }
 
         [Authorize]
-        [HttpPut("{userId}/update/personal-data")]
-        public async Task<ActionResult> UpdateUserPersonalData(long userId, [FromForm] UserUpdatePersonalData user)
-        {
-            if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
-            {
-                return Unauthorized();
-            }
-
-            if (!await _userService.UserExistsAsync(x => x.UserId == userId))
-            {
-                return NotFound();
-            }
-
-            if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
-            {
-                if (await _userService.UserExistsAsync(x => x.PhoneNumber == user.PhoneNumber && x.UserId != userId))
-                {
-                    return BadRequest($"Вече съществува потребител с телефонен номер: {user.PhoneNumber}");
-                }
-            }
-
-            await _userService.UpdateUserPersonalDataAsync(userId, user, User.X_CurrentUserId());
-
-            return NoContent();
-        }
-
         [HttpPost("logout")]
-        [Authorize]
         public async Task<ActionResult> LogoutUser()
         {
             var currentUserId = User.X_CurrentUserId();
@@ -259,8 +259,8 @@ namespace EventManager.API.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{userId}")]
         [Role(UserRole.Admin)]
+        [HttpDelete("{userId}/delete")]
         public async Task<ActionResult> DeleteUser(long userId)
         {
             if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
@@ -279,8 +279,8 @@ namespace EventManager.API.Controllers
         }
 
         [Authorize]
-        [HttpPost("roles")]
         [Role(UserRole.Admin)]
+        [HttpPost("roles")]
         public async Task<ActionResult> AddRoleToUser(UserRoleNewDto role)
         {
             if (!await _userService.UserRoleExistsAsync(x => x.UserId == role.UserId && x.RoleId == role.RoleId))

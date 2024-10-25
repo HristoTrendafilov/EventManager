@@ -45,9 +45,9 @@ namespace EventManager.API.Controllers
             return Ok(eventsToReturn);
         }
 
-        [HttpGet("{eventId}/edit")]
         [Authorize]
-        public async Task<ActionResult> GetEventForEdit(long eventId)
+        [HttpGet("{eventId}/update")]
+        public async Task<ActionResult> GetEventForUpdate(long eventId)
         {
             if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
             {
@@ -66,47 +66,9 @@ namespace EventManager.API.Controllers
             return Ok(eventToReturn);
         }
 
-        [HttpGet("{eventId}/main-image")]
-        public async Task<ActionResult> GetEventMainImage(long eventId)
-        {
-            if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
-            {
-                return NotFound();
-            }
-
-            var mainImage = await _eventService.GetEventMainImageAsync(eventId);
-            if (mainImage == null)
-            {
-                return NotFound();
-            }
-
-            return File(mainImage, "application/octet-stream");
-        }
-
-        [HttpPost]
         [Authorize]
         [Role(UserRole.EventCreator)]
-        public async Task<ActionResult> CreateEvent([FromForm] EventNew @event)
-        {
-            if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName))
-            {
-                return BadRequest($"Вече съществува събитие с име: {@event.EventName}");
-            }
-
-            var currentUserId = User.X_CurrentUserId();
-            @event.CreatedByUserId = currentUserId.Value;
-
-            var eventId = await _eventService.CreateEventAsync(@event, currentUserId);
-
-            var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
-            var eventToReturn = _mapper.CreateObject<EventDto>(eventPoco);
-
-            return Ok(eventToReturn);
-        }
-
-        [HttpPut("{eventId}")]
-        [Authorize]
-        [Role(UserRole.EventCreator)]
+        [HttpPut("{eventId}/update")]
         public async Task<ActionResult> UpdateEvent(long eventId, [FromForm] EventUpdate @event)
         {
             if (!await _sharedService.IsUserAuthorizedToEdit(User, @event.CreatedByUserId))
@@ -129,9 +91,47 @@ namespace EventManager.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{eventId}")]
+        [HttpGet("{eventId}/main-image")]
+        public async Task<ActionResult> GetEventMainImage(long eventId)
+        {
+            if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
+            {
+                return NotFound();
+            }
+
+            var mainImage = await _eventService.GetEventMainImageAsync(eventId);
+            if (mainImage == null)
+            {
+                return NotFound();
+            }
+
+            return File(mainImage, "application/octet-stream");
+        }
+
+        [Authorize]
+        [Role(UserRole.EventCreator)]
+        [HttpPost("new")]
+        public async Task<ActionResult> CreateEvent([FromForm] EventNew @event)
+        {
+            if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName))
+            {
+                return BadRequest($"Вече съществува събитие с име: {@event.EventName}");
+            }
+
+            var currentUserId = User.X_CurrentUserId();
+            @event.CreatedByUserId = currentUserId.Value;
+
+            var eventId = await _eventService.CreateEventAsync(@event, currentUserId);
+
+            var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
+            var eventToReturn = _mapper.CreateObject<EventDto>(eventPoco);
+
+            return Ok(eventToReturn);
+        }
+
         [Authorize]
         [Role(UserRole.Admin)]
+        [HttpDelete("{eventId}/delete")]
         public async Task<ActionResult> DeleteEvent(long eventId)
         {
             if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))

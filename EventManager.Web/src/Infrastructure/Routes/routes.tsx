@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { Event } from '~Event/Event';
+import { Event } from '~Event/EventForm';
 import type { UserRole } from '~Infrastructure/redux/user-slice';
 import { Login } from '~User/Login/Login';
-import { UserProfile } from '~User/Profile/UserProfile';
 import { Register } from '~User/Register/Register';
-import { UserUpdate } from '~User/Update/UserUpdate';
+import { UserProfile } from '~User/UserProfile/UserProfile';
+import { UserUpdate } from '~User/UserUpdate/UserUpdate';
 
 export interface RouteTable {
   location: string;

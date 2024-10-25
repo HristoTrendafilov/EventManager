@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import {
   getUserProfilePicture,
   getUserView,
-} from '~Infrastructure/api-requests';
+} from '~Infrastructure/ApiRequests/users-requests';
 import type { UserView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import noUserLogo from '~asset/no-user-logo.png';

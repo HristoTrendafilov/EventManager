@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { getRegions } from '~Infrastructure/api-requests';
+import { getRegions } from '~Infrastructure/ApiRequests/regions-request';
 
 import './Home.css';
 

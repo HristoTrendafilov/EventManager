@@ -1,6 +1,6 @@
-﻿using EventManager.API.Dto;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using EventManager.API.Core;
 
 public class ApiResponseActionFilter : IActionFilter
 {
@@ -24,7 +24,7 @@ public class ApiResponseActionFilter : IActionFilter
         }
         else if (context.Result is UnauthorizedResult unauthorizedResult)
         {
-            var apiErrorResponse = new ApiResponse<object>(null, "You do not have the rights to access this resource.");
+            var apiErrorResponse = new ApiResponse<object>(null, "Нямате право на достъп до този ресурс.");
 
             context.Result = new JsonResult(apiErrorResponse)
             {
@@ -33,7 +33,7 @@ public class ApiResponseActionFilter : IActionFilter
         }
         else if (context.Result is NotFoundResult notFound)
         {
-            var apiErrorResponse = new ApiResponse<object>(null, "The resource you are looking for is not found.");
+            var apiErrorResponse = new ApiResponse<object>(null, "Ресурсът, който търсите, не може да бъде намерен.");
 
             context.Result = new JsonResult(apiErrorResponse)
             {
