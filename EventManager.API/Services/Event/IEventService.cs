@@ -7,6 +7,7 @@ namespace EventManager.API.Services.Event
 {
     public interface IEventService
     {
+        Task<VEventPoco> GetEventViewAsync(Expression<Func<VEventPoco, bool>> predicate);
         Task<(List<EventPoco> events, PaginationMetadata metadata)> GetAllEventsAsync
             (Expression<Func<EventPoco, bool>> predicate, int pageNumber, int pageSize);
         Task<EventPoco> GetEventAsync(Expression<Func<EventPoco, bool>> predicate);
@@ -17,7 +18,8 @@ namespace EventManager.API.Services.Event
         Task<byte[]> GetEventMainImageAsync(long eventId);
 
         Task<long> SubscribeUser(long eventId, long? currentUserId);
-        Task UnsubscribeUser(long userEventId, long? currentUserId);
+        Task UnsubscribeUser(long userId, long eventId, long? currentUserId);
         Task<bool> UserSubscriptionExists(Expression<Func<UserEventPoco, bool>> predicate);
+        Task<List<VUserEventPoco>> GetEventSubscribersAsync(long eventId);
     }
 }

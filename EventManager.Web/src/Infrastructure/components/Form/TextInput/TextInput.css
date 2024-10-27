@@ -16,6 +16,11 @@
   outline: var(--input-border-color-focused);
 }
 
+.text-input-wrapper > .text-input:read-only {
+  cursor: not-allowed;
+  background-color: bisque;
+}
+
 .text-input-wrapper > .text-input-label {
   position: absolute;
   left: 13px;

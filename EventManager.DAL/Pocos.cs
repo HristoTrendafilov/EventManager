@@ -321,4 +321,54 @@ namespace EventManager.DAL
 		public string RegionName { get; set; }
 	}
 
+	[Table(Name = "v_events")]
+	public class VEventPoco
+	{
+		[Column(Name = "event_id")]
+		public long? EventId { get; set; }
+
+		[Column(Name = "event_name")]
+		public string EventName { get; set; }
+
+		[Column(Name = "event_description")]
+		public string EventDescription { get; set; }
+
+		[Column(Name = "event_start_date_time")]
+		public DateTime? EventStartDateTime { get; set; }
+
+		[Column(Name = "event_end_date_time")]
+		public DateTime? EventEndDateTime { get; set; }
+
+		[Column(Name = "region_id")]
+		public long? RegionId { get; set; }
+
+		[Column(Name = "created_by_user_id")]
+		public long? CreatedByUserId { get; set; }
+
+		[Column(Name = "region_name")]
+		public string RegionName { get; set; }
+
+		[Column(Name = "username")]
+		public string Username { get; set; }
+	}
+
+	[Table(Name = "v_users_events")]
+	public class VUserEventPoco
+	{
+		[Column(Name = "user_event_id")]
+		public long? UserEventId { get; set; }
+
+		[Column(Name = "user_id")]
+		public long? UserId { get; set; }
+
+		[Column(Name = "user_subscribed_on_date_time")]
+		public DateTime? UserSubscribedOnDateTime { get; set; }
+
+		[Column(Name = "event_id")]
+		public long? EventId { get; set; }
+
+		[Column(Name = "username")]
+		public string Username { get; set; }
+	}
+
 }

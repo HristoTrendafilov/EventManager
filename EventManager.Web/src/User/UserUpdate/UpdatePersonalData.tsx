@@ -3,7 +3,10 @@ import toast from 'react-hot-toast';
 import type { z } from 'zod';
 
 import { updateUserPersonalData } from '~Infrastructure/ApiRequests/users-requests';
-import { userManipulationSchema } from '~Infrastructure/api-types';
+import {
+  type UserView,
+  userManipulationSchema,
+} from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
@@ -24,7 +27,7 @@ export type UpdatePersonalDataForm = z.infer<
 interface UpdatePersonalDataProps {
   userId: number;
   userProfilePicture: string | undefined;
-  user: UpdatePersonalDataForm;
+  user: UserView;
 }
 
 export function UpdatePersonalData(props: UpdatePersonalDataProps) {

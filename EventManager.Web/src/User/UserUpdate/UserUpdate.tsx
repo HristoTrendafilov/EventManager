@@ -4,43 +4,44 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
-  getUserPersonalData,
   getUserProfilePicture,
+  getUserView,
 } from '~Infrastructure/ApiRequests/users-requests';
+import type { UserView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 
 import { UserAccountSettings } from './AccountSettings';
-import {
-  UpdatePersonalData,
-  type UpdatePersonalDataForm,
-} from './UpdatePersonalData';
+import { UpdatePersonalData } from './UpdatePersonalData';
+import { UserSecurity } from './UserSecurity';
 
 import './UserUpdate.css';
 
-const UserEditTabNames = {
+const UserUpdateTabNames = {
   profile: 'Профил',
   settings: 'Настройки',
   security: 'Сигурност',
-} as const;
+};
 
-type UserEditTabName = keyof typeof UserEditTabNames;
+type UserUpdateTabName = keyof typeof UserUpdateTabNames;
 
 export function UserUpdate() {
-  const [activeTab, setActiveTab] = useState<UserEditTabName>('profile');
+  const [activeTab, setActiveTab] = useState<UserUpdateTabName>('profile');
   const [error, setError] = useState<string | undefined>();
-  const [user, setUser] = useState<UpdatePersonalDataForm | undefined>();
+  const [user, setUser] = useState<UserView | undefined>();
   const [userProfilePicture, setUserProfilePicture] = useState<
     string | undefined
   >();
 
   const { userId } = useParams();
 
-  const handleTabClick = useCallback((tab: UserEditTabName) => {
+  const handleTabClick = useCallback((tab: UserUpdateTabName) => {
     setActiveTab(tab);
   }, []);
 
   const loadUser = useCallback(async () => {
-    const userResponse = await getUserPersonalData(Number(userId));
+    setError(undefined);
+
+    const userResponse = await getUserView(Number(userId));
     if (!userResponse.success) {
       setError(userResponse.errorMessage);
       return;
@@ -82,7 +83,7 @@ export function UserUpdate() {
                         icon={faUser}
                         size="xl"
                       />
-                      {UserEditTabNames.profile}
+                      {UserUpdateTabNames.profile}
                     </button>
 
                     <button
@@ -97,7 +98,7 @@ export function UserUpdate() {
                         icon={faGear}
                         size="xl"
                       />
-                      {UserEditTabNames.settings}
+                      {UserUpdateTabNames.settings}
                     </button>
 
                     <button
@@ -112,7 +113,7 @@ export function UserUpdate() {
                         icon={faShield}
                         size="xl"
                       />
-                      {UserEditTabNames.security}
+                      {UserUpdateTabNames.security}
                     </button>
                   </div>
                 </nav>
@@ -163,7 +164,15 @@ export function UserUpdate() {
                     userProfilePicture={userProfilePicture}
                   />
                 )}
-                {activeTab === 'settings' && <UserAccountSettings />}
+                {user && activeTab === 'settings' && (
+                  <UserAccountSettings
+                    userId={Number(userId)}
+                    username={user.username}
+                  />
+                )}
+                {activeTab === 'security' && (
+                  <UserSecurity userId={Number(userId)} />
+                )}
               </div>
             </div>
           </div>

@@ -18,10 +18,28 @@ export interface UserView {
   email: string;
   regionId: number;
   regionName: string;
-  profilePictureBase64: string;
   shortDescription: string;
   canEdit: boolean;
   regionsHelping: RegionView[];
+}
+
+export interface EventSubscribedUser {
+  userId: number;
+  username: string;
+  userSubscribedOnDateTime: Date;
+}
+
+export interface EventView {
+  eventId: number;
+  eventName: string;
+  eventDescription: string | null;
+  eventStartDateTime: Date;
+  eventEndDateTime: Date | null;
+  regionId: number;
+  createdByUserId: number;
+  regionName: string;
+  username: string;
+  isUserSubscribed: boolean;
 }
 
 export interface EventDto {
@@ -46,6 +64,10 @@ export interface FileObject {
   lastModified: Date;
   entityTag: string;
   enableRangeProcessing: boolean;
+}
+
+export interface SaveEventResponse {
+  eventId: number;
 }
 
 export const userManipulationSchema = z.object({

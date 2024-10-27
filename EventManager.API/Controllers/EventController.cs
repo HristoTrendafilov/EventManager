@@ -8,6 +8,7 @@ using EventManager.API.Dto.Event;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 
 namespace EventManager.API.Controllers
 {
@@ -26,6 +27,39 @@ namespace EventManager.API.Controllers
             _eventService = eventService;
             _sharedService = sharedService;
             _mapper = mapper;
+        }
+
+        [HttpGet("{eventId}/view")]
+        public async Task<ActionResult> GetEventView(long eventId)
+        {
+            var eventViewPoco = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
+            if (eventViewPoco == null)
+            {
+                return NotFound();
+            }
+
+            var eventView = _mapper.CreateObject<EventView>(eventViewPoco);
+
+            var currentUserId = User.X_CurrentUserId();
+            if (currentUserId.HasValue)
+            {
+                eventView.IsUserSubscribed = await _eventService.UserSubscriptionExists(x => x.EventId == eventId && x.UserId == currentUserId.Value);
+            }
+
+            return Ok(eventView);
+        }
+
+        [HttpGet("{eventId}/subscribers")]
+        public async Task<ActionResult> GetEventSubscribers(long eventId)
+        {
+            if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
+            {
+                return NotFound();
+            }
+
+            var subscribers = await _eventService.GetEventSubscribersAsync(eventId);
+
+            return Ok(subscribers);
         }
 
         [HttpGet]
@@ -88,7 +122,7 @@ namespace EventManager.API.Controllers
 
             await _eventService.UpdateEventAsync(eventId, @event, User.X_CurrentUserId());
 
-            return NoContent();
+            return Ok(new SaveEventResponse { EventId = eventId });
         }
 
         [HttpGet("{eventId}/main-image")]
@@ -123,10 +157,7 @@ namespace EventManager.API.Controllers
 
             var eventId = await _eventService.CreateEventAsync(@event, currentUserId);
 
-            var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
-            var eventToReturn = _mapper.CreateObject<EventDto>(eventPoco);
-
-            return Ok(eventToReturn);
+            return Ok(new SaveEventResponse { EventId = eventId });
         }
 
         [Authorize]
@@ -152,7 +183,7 @@ namespace EventManager.API.Controllers
         }
 
         [Authorize]
-        [HttpPost("subscription/{eventId}")]
+        [HttpPost("{eventId}/subscription")]
         public async Task<ActionResult> SubscribeUserForEvent(long eventId)
         {
             if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
@@ -173,15 +204,12 @@ namespace EventManager.API.Controllers
         }
 
         [Authorize]
-        [HttpDelete("subscription/{userEventId}")]
-        public async Task<ActionResult> UnsubscribeUserFromEvent(long userEventId)
+        [HttpDelete("{eventId}/subscription")]
+        public async Task<ActionResult> UnsubscribeUserFromEvent(long eventId)
         {
-            if (!await _eventService.UserSubscriptionExists(x => x.UserEventId == userEventId))
-            {
-                return NotFound();
-            }
+            var currentUserId = User.X_CurrentUserId();
 
-            await _eventService.UnsubscribeUser(userEventId, User.X_CurrentUserId());
+            await _eventService.UnsubscribeUser(currentUserId.Value, eventId, currentUserId);
 
             return NoContent();
         }

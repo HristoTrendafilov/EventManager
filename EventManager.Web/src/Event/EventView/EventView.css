@@ -1,0 +1,15 @@
+.main-image-wrapper {
+  display: flex;
+  height: 400px;
+}
+
+.main-image-wrapper img {
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.subscribers {
+  height: 480px;
+  overflow-y: scroll;
+}

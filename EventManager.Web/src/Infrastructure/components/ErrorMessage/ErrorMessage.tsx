@@ -2,15 +2,13 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { CSSProperties } from 'react';
 
+import { isString } from '~Infrastructure/utils';
+
 import './ErrorMessage.css';
 
 interface ErrorMessageProps {
   error: unknown;
   style?: CSSProperties;
-}
-
-function isString(value: unknown): value is string {
-  return typeof value === 'string';
 }
 
 function isError(value: unknown): value is Error {

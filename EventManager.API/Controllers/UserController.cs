@@ -52,20 +52,14 @@ namespace EventManager.API.Controllers
         [HttpGet("{userId}/view")]
         public async Task<ActionResult> GetUserView(long userId)
         {
-            var user = await _userService.GetUserViewAsync(x => x.UserId == userId);
-            if (user == null)
+            var userViewPoco = await _userService.GetUserViewAsync(x => x.UserId == userId);
+            if (userViewPoco == null)
             {
                 return NotFound();
             }
 
-            var userView = _mapper.CreateObject<UserView>(user);
+            var userView = _mapper.CreateObject<UserView>(userViewPoco);
             userView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
-
-            var profilePicture = await _userService.GetUserProfilePictureAsync(userId);
-            if (profilePicture != null)
-            {
-                userView.ProfilePictureBase64 = Convert.ToBase64String(profilePicture);
-            }
 
             var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
             userView.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);
@@ -88,28 +82,6 @@ namespace EventManager.API.Controllers
             }
 
             return File(profilePicture, "application/octet-stream");
-        }
-
-        [HttpGet("{userId}/update/personal-data")]
-        public async Task<ActionResult> GetUserPersonalData(long userId)
-        {
-            if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
-            {
-                return Unauthorized();
-            }
-
-            var user = await _userService.GetUserAsync(x => x.UserId == userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var personalData = _mapper.CreateObject<UserUpdatePersonalData>(user);
-
-            var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
-            personalData.UserRegionsHelpingIds = userRegionsHelping.Select(x => x.RegionId).ToList();
-
-            return Ok(personalData);
         }
 
         [Authorize]
@@ -135,6 +107,63 @@ namespace EventManager.API.Controllers
             }
 
             await _userService.UpdateUserPersonalDataAsync(userId, user, User.X_CurrentUserId());
+
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPut("{userId}/update/username")]
+        public async Task<ActionResult> UpdateUserUsername(long userId, string username)
+        {
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
+            {
+                return Unauthorized();
+            }
+
+            if (await _userService.UserExistsAsync(x => x.Username == username && x.UserId != userId))
+            {
+                return BadRequest($"Вече съществува потребителското име: {username}");
+            }
+
+            var user = await _userService.GetUserAsync(x => x.UserId == userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Username = username;
+            await _userService.UpdateUserAsync(userId, user, User.X_CurrentUserId());
+
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpPut("{userId}/update/password")]
+        public async Task<ActionResult> UpdateUserPassword(long userId, UserUpdatePassword password)
+        {
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
+            {
+                return Unauthorized();
+            }
+
+            if (password.NewPassword != password.NewPasswordRepeated)
+            {
+                return BadRequest("Паролите не съвпадат");
+            }
+
+            var user = await _userService.GetUserAsync(x => x.UserId == userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (user.Password != password.OldPassword)
+            {
+                return BadRequest("Неправилна парола");
+            }
+
+            user.Password = password.NewPassword;
+            await _userService.UpdateUserAsync(userId, user, User.X_CurrentUserId());
 
             return NoContent();
         }

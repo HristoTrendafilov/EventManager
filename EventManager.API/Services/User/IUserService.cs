@@ -9,6 +9,7 @@ namespace EventManager.API.Services.User
         Task<UserPoco> GetUserAsync(Expression<Func<UserPoco, bool>> predicate);
         Task<VUserPoco> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate);
         Task<long> CreateUserAsync(UserNew user, long? currentUserId);
+        Task UpdateUserAsync(long userId, UserPoco user, long? currentUserId);
         Task UpdateUserPersonalDataAsync(long userId, UserUpdatePersonalData user, long? currentUserId);
         Task DeleteUserAsync(long userId, long? currentUserId);
         Task<bool> UserExistsAsync(Expression<Func<UserPoco, bool>> predicate);

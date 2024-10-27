@@ -4,6 +4,10 @@ export function reportError(error: unknown) {
   /* eslint-enable no-console */
 }
 
+export function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
 export function getClientErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     return error.message;
@@ -12,11 +16,29 @@ export function getClientErrorMessage(error: unknown): string {
   return 'Системна грешка. Миля, опитайте по-късно или се свържете със системния администратор.';
 }
 
-export function formatDate(date: Date): string {
+export function formatDate(date: Date | string): string {
+  if (isString(date)) {
+    date = new Date(date);
+  }
+
   return date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
+    day: '2-digit',
+    month: '2-digit',
     year: 'numeric',
+  });
+}
+
+export function formatDateTime(date: Date | string): string {
+  if (isString(date)) {
+    date = new Date(date);
+  }
+
+  return date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 }
 

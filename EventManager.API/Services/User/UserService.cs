@@ -52,6 +52,11 @@ namespace EventManager.API.Services.User
             });
         }
 
+        public Task UpdateUserAsync(long userId, UserPoco user, long? currentUserId)
+        {
+            return _db.Users.X_UpdateAsync(userId, user, currentUserId);
+        }
+
         public async Task UpdateUserPersonalDataAsync(long userId, UserUpdatePersonalData user, long? currentUserId)
         {
             await _db.WithTransactionAsync(async () =>

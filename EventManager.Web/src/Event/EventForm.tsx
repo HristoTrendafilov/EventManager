@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { z } from 'zod';
 
 import {
@@ -47,6 +47,7 @@ export function Event() {
   const [mainImage, setMainImage] = useState<string | undefined>();
 
   const { eventId } = useParams();
+  const navigate = useNavigate();
 
   const form = useZodForm({ schema });
 
@@ -99,9 +100,12 @@ export function Event() {
 
       if (!response.success) {
         setError(response.errorMessage);
+        return;
       }
+
+      navigate(`/events/${response.data.eventId}/view`);
     },
-    [eventId]
+    [eventId, navigate]
   );
 
   return (

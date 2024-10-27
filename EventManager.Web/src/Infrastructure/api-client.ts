@@ -13,12 +13,13 @@ export interface ValidationPropertyError {
 }
 
 type ApiResponse<T = undefined> =
-  | { data: T; success: true }
+  | { data: T; success: true; statusCode: number }
   | {
       success: false;
       errorMessage: string;
       validationPropertyErrors: ValidationPropertyError[];
       hasValidationErrors: boolean;
+      statusCode: number;
     };
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -98,11 +99,13 @@ export async function callApi<T>(
       return {
         data: blobData as unknown as T, // Cast Blob to T, assuming the caller knows T is Blob
         success: true,
+        statusCode: fetchResponse.status,
       } as ApiResponse<T>;
     }
 
     // Otherwise, handle JSON response
     const jsonData = (await fetchResponse.json()) as ApiResponse<T>;
+    jsonData.statusCode = fetchResponse.status;
     return jsonData;
   } catch (err) {
     reportError(err);

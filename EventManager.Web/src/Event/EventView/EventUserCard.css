@@ -1,0 +1,12 @@
+.event-user-card-wrapper {
+  all: unset;
+  cursor: pointer;
+}
+
+.event-user-card-wrapper img {
+  height: 45px;
+  width: 45px;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+}
