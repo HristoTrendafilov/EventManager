@@ -18,8 +18,9 @@ namespace EventManager.API.Services.Event
         Task<byte[]> GetEventMainImageAsync(long eventId);
 
         Task<long> SubscribeUser(long eventId, long? currentUserId);
-        Task UnsubscribeUser(long userId, long eventId, long? currentUserId);
+        Task<long> UnsubscribeUser(long userId, long eventId, long? currentUserId);
         Task<bool> UserSubscriptionExists(Expression<Func<UserEventPoco, bool>> predicate);
-        Task<List<VUserEventPoco>> GetEventSubscribersAsync(long eventId);
+        Task<List<VUserEventPoco>> GetAllEventSubscribersViewAsync(long eventId);
+        Task<VUserEventPoco> GetEventSubscriberViewAsync(Expression<Func<VUserEventPoco, bool>> predicate);
     }
 }

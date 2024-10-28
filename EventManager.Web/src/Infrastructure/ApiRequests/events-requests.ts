@@ -1,9 +1,10 @@
 import { callApi } from '~Infrastructure/api-client';
 import type {
   EventDto,
-  EventSubscribedUser,
   EventView,
+  PrimaryKeyResponse,
   SaveEventResponse,
+  UserEventView,
 } from '~Infrastructure/api-types';
 
 export function getEventView(eventId: number) {
@@ -27,16 +28,16 @@ export function getEventMainImage(eventId: number) {
 }
 
 export function subscribeUserToEvent(eventId: number) {
-  return callApi(`/events/${eventId}/subscription`, 'POST');
+  return callApi<UserEventView>(`/events/${eventId}/subscription`, 'POST');
 }
 
 export function unsubscribeUserFromEvent(eventId: number) {
-  return callApi(`/events/${eventId}/subscription`, 'DELETE');
+  return callApi<PrimaryKeyResponse>(
+    `/events/${eventId}/subscription`,
+    'DELETE'
+  );
 }
 
 export function getEventSubscribers(eventId: number) {
-  return callApi<EventSubscribedUser[]>(
-    `/events/${eventId}/subscribers`,
-    'GET'
-  );
+  return callApi<UserEventView[]>(`/events/${eventId}/subscribers`, 'GET');
 }

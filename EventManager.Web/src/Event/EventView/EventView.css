@@ -10,6 +10,18 @@
 }
 
 .subscribers {
-  height: 480px;
+  height: 600px;
   overflow-y: scroll;
+}
+
+@media (max-width: 991px) {
+  .subscribers {
+    height: 350px;
+  }
+}
+
+@media (max-width: 486px) {
+  .main-image-wrapper {
+    height: 200px;
+  }
 }

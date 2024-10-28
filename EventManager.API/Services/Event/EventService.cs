@@ -143,13 +143,12 @@ namespace EventManager.API.Services.Event
             return _db.UsersEvents.X_CreateAsync(userEvent, currentUserId);
         }
 
-        public async Task UnsubscribeUser(long userId, long eventId, long? currentUserId)
+        public async Task<long> UnsubscribeUser(long userId, long eventId, long? currentUserId)
         {
             var userEvent = await _db.UsersEvents.FirstOrDefaultAsync(x => x.UserId == userId && x.EventId == eventId);
-            if (userEvent != null)
-            {
-                await _db.UsersEvents.X_DeleteAsync(x => x.UserEventId == userEvent.UserEventId, currentUserId);
-            }
+            await _db.UsersEvents.X_DeleteAsync(x => x.UserEventId == userEvent.UserEventId, currentUserId);
+
+            return userEvent.UserEventId;
         }
 
         public Task<bool> UserSubscriptionExists(Expression<Func<UserEventPoco, bool>> predicate)
@@ -157,9 +156,15 @@ namespace EventManager.API.Services.Event
             return _db.UsersEvents.AnyAsync(predicate);
         }
 
-        public Task<List<VUserEventPoco>> GetEventSubscribersAsync(long eventId)
+        public Task<List<VUserEventPoco>> GetAllEventSubscribersViewAsync(long eventId)
         {
-            return _db.VUsersEvents.Where(x => x.EventId == eventId).OrderByDescending(x => x.UserSubscribedOnDateTime).ToListAsync();
+            return _db.VUsersEvents.Where(x => x.EventId == eventId)
+                .OrderByDescending(x => x.UserSubscribedOnDateTime).ToListAsync();
+        }
+
+        public Task<VUserEventPoco> GetEventSubscriberViewAsync(Expression<Func<VUserEventPoco, bool>> predicate)
+        {
+            return _db.VUsersEvents.FirstOrDefaultAsync(predicate);
         }
 
         public async Task<byte[]> GetEventMainImageAsync(long eventId)

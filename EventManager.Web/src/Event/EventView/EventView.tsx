@@ -1,5 +1,9 @@
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import {
   getEventMainImage,
@@ -8,8 +12,11 @@ import {
   subscribeUserToEvent,
   unsubscribeUserFromEvent,
 } from '~Infrastructure/ApiRequests/events-requests';
-import type { EventSubscribedUser, EventView } from '~Infrastructure/api-types';
+import type { EventView, UserEventView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+import { userSelector } from '~Infrastructure/redux/user-slice';
+import { formatDateTime } from '~Infrastructure/utils';
+import noImage from '~asset/no-image.png';
 
 import { EventUserCard } from './EventUserCard';
 
@@ -21,9 +28,11 @@ export function EventViewComponent() {
     string | undefined
   >();
   const [event, setEvent] = useState<EventView | undefined>();
-  const [mainImage, setMainImage] = useState<string | undefined>();
+  const [mainImage, setMainImage] = useState<string>(noImage);
   const [isUserSubscribed, setIsUserSubscribed] = useState<boolean>(false);
-  const [subscribers, setSubscribers] = useState<EventSubscribedUser[]>([]);
+  const [subscribers, setSubscribers] = useState<UserEventView[]>([]);
+
+  const user = useSelector(userSelector);
 
   const { eventId } = useParams();
 
@@ -45,8 +54,8 @@ export function EventViewComponent() {
     }
 
     setIsUserSubscribed(true);
-    await loadSubscribers();
-  }, [eventId, loadSubscribers]);
+    subscribers.unshift(response.data);
+  }, [eventId, subscribers]);
 
   const unsubscribeUser = useCallback(async () => {
     const response = await unsubscribeUserFromEvent(Number(eventId));
@@ -56,8 +65,12 @@ export function EventViewComponent() {
     }
 
     setIsUserSubscribed(false);
-    await loadSubscribers();
-  }, [eventId, loadSubscribers]);
+    setSubscribers((prevSubscribers) =>
+      prevSubscribers.filter(
+        (subscriber) => subscriber.userEventId !== response.data.primaryKey
+      )
+    );
+  }, [eventId]);
 
   const loadEvent = useCallback(async () => {
     const eventViewResponse = await getEventView(Number(eventId));
@@ -71,13 +84,15 @@ export function EventViewComponent() {
 
     await loadSubscribers();
 
-    const mainImageResponse = await getEventMainImage(Number(eventId));
-    if (!mainImageResponse.success) {
-      setError(mainImageResponse.errorMessage);
-      return;
-    }
+    if (eventViewResponse.data.hasMainImage) {
+      const mainImageResponse = await getEventMainImage(Number(eventId));
+      if (!mainImageResponse.success) {
+        setError(mainImageResponse.errorMessage);
+        return;
+      }
 
-    setMainImage(URL.createObjectURL(mainImageResponse.data));
+      setMainImage(URL.createObjectURL(mainImageResponse.data));
+    }
   }, [eventId, loadSubscribers]);
 
   useEffect(() => {
@@ -87,7 +102,7 @@ export function EventViewComponent() {
   return (
     <div className="event-view-wrapper">
       {event && (
-        <div className="container mt-3">
+        <div className="container mt-3 mb-2">
           <h1 className="d-flex justify-content-center">{event.eventName}</h1>
           <div className="row g-2">
             <div className="col-lg-8">
@@ -95,34 +110,74 @@ export function EventViewComponent() {
                 <img src={mainImage} alt="main" />
               </div>
               <div className="card mt-2">
-                <div className="card-header">Описание</div>
-                <p className="card-body">{event.eventDescription}</p>
+                <h5 className="card-header d-flex justify-content-between align-items-center">
+                  <div>Описание</div>
+                  {event.canEdit && (
+                    <Link
+                      to={`/events/${eventId}/update`}
+                      className="btn btn-primary"
+                    >
+                      Редакция
+                    </Link>
+                  )}
+                </h5>
+                <div className="card-body">
+                  <div>Начало: {formatDateTime(event.eventStartDateTime)}</div>
+                  <div>
+                    Край:{' '}
+                    {event.eventEndDateTime
+                      ? formatDateTime(event.eventEndDateTime)
+                      : '-'}
+                  </div>
+                  <div>Регион: {event.regionName}</div>
+                  <div>
+                    Създаден от:{' '}
+                    <Link to={`/users/${event.createdByUserId}/view`}>
+                      {event.username}
+                    </Link>
+                  </div>
+                  <hr />
+                  <div className="d-flex justify-content-center">
+                    {event.eventDescription}
+                  </div>
+                </div>
               </div>
             </div>
             <div className="col-lg-4">
               <div className="card">
                 <div className="card-header">
                   <div className="d-flex justify-content-between align-items-center">
-                    <div>Участници ({subscribers.length})</div>
-                    {!isUserSubscribed && (
-                      <button
-                        type="button"
-                        className="btn btn-success"
-                        onClick={subscribeUser}
-                      >
-                        Запиши се
-                      </button>
-                    )}
-                    {isUserSubscribed && (
-                      <button
-                        type="button"
-                        className="btn btn-warning"
-                        onClick={unsubscribeUser}
-                      >
-                        Отпиши ме
-                      </button>
+                    <h5>Участници ({subscribers.length})</h5>
+                    {user.isLoggedIn && (
+                      <div>
+                        {!isUserSubscribed ? (
+                          <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={subscribeUser}
+                          >
+                            Запиши се
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn btn-warning"
+                            onClick={unsubscribeUser}
+                          >
+                            Отпиши ме
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
+                  {!user.isLoggedIn && (
+                    <div className="d-flex align-items-center gap-1">
+                      <FontAwesomeIcon icon={faInfoCircle} color="blue" />
+                      <div className="fst-italic">
+                        Моля, влезте в акаунта си, за да се запишете.
+                      </div>
+                    </div>
+                  )}
                   {error && <ErrorMessage error={subscriptionError} />}
                 </div>
                 <div className="card-body subscribers">

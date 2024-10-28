@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { getUserProfilePicture } from '~Infrastructure/ApiRequests/users-requests';
-import type { EventSubscribedUser } from '~Infrastructure/api-types';
+import type { UserEventView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { formatDateTime } from '~Infrastructure/utils';
 import noUserLogo from '~asset/no-user-logo.png';
@@ -10,7 +10,7 @@ import noUserLogo from '~asset/no-user-logo.png';
 import './EventUserCard.css';
 
 interface EventUserCardProps {
-  user: EventSubscribedUser;
+  user: UserEventView;
 }
 
 export function EventUserCard(props: EventUserCardProps) {
@@ -22,9 +22,7 @@ export function EventUserCard(props: EventUserCardProps) {
   const loadProfilePicture = useCallback(async () => {
     const response = await getUserProfilePicture(user.userId);
     if (!response.success) {
-      if (response.statusCode !== 404) {
-        setError(response.errorMessage);
-      }
+      setError(response.errorMessage);
       return;
     }
 
@@ -32,8 +30,10 @@ export function EventUserCard(props: EventUserCardProps) {
   }, [user.userId]);
 
   useEffect(() => {
-    void loadProfilePicture();
-  }, [loadProfilePicture, user.userSubscribedOnDateTime]);
+    if (user.hasProfilePicture) {
+      void loadProfilePicture();
+    }
+  }, [loadProfilePicture, user.hasProfilePicture]);
 
   return (
     <Link to={`/users/${user.userId}/view`} className="event-user-card-wrapper">
@@ -41,7 +41,9 @@ export function EventUserCard(props: EventUserCardProps) {
         <img src={profilePicture} alt="profile" />
         <div className="d-flex flex-column ms-2">
           <div>{user.username}</div>
-          <div>{formatDateTime(user.userSubscribedOnDateTime)}</div>
+          <div className="fst-italic">
+            {formatDateTime(user.userSubscribedOnDateTime)}
+          </div>
         </div>
       </div>
       {error && <ErrorMessage error={error} />}

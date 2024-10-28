@@ -66,7 +66,7 @@ export function UserProfile() {
                       </p>
                       {userView.canEdit && (
                         <Link
-                          to={`/users/${userId}/edit`}
+                          to={`/users/${userId}/update`}
                           className="btn btn-primary w-100 mt-2"
                         >
                           Редакция

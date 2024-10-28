@@ -6,10 +6,12 @@ namespace EventManager.API.Dto.Event
     {
         public EventView()
         {
-            Subscribers = new List<VUserEventPoco>();
+            Subscribers = new List<UserEventView>();
         }
 
-        public List<VUserEventPoco> Subscribers { get; set; }
+        public bool CanEdit { get; set; }
+        public List<UserEventView> Subscribers { get; set; }
         public bool IsUserSubscribed { get; set; }
+        public bool HasMainImage => MainImageId != null;
     }
 }

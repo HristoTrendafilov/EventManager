@@ -35,7 +35,7 @@ export const routes: RouteTable[] = [
     role: 'None',
   },
   {
-    location: 'users/:userId/edit',
+    location: 'users/:userId/update',
     component: <UserUpdate />,
     requiresLogin: true,
     role: 'None',
@@ -47,7 +47,7 @@ export const routes: RouteTable[] = [
     role: 'EventCreator',
   },
   {
-    location: '/events/:eventId/edit',
+    location: '/events/:eventId/update',
     component: <Event />,
     requiresLogin: true,
     role: 'EventCreator',

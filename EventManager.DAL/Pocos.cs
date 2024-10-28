@@ -321,6 +321,28 @@ namespace EventManager.DAL
 		public string RegionName { get; set; }
 	}
 
+	[Table(Name = "v_users_events")]
+	public class VUserEventPoco
+	{
+		[Column(Name = "user_event_id")]
+		public long? UserEventId { get; set; }
+
+		[Column(Name = "user_id")]
+		public long? UserId { get; set; }
+
+		[Column(Name = "user_subscribed_on_date_time")]
+		public DateTime? UserSubscribedOnDateTime { get; set; }
+
+		[Column(Name = "event_id")]
+		public long? EventId { get; set; }
+
+		[Column(Name = "username")]
+		public string Username { get; set; }
+
+		[Column(Name = "profile_picture_path")]
+		public string ProfilePicturePath { get; set; }
+	}
+
 	[Table(Name = "v_events")]
 	public class VEventPoco
 	{
@@ -350,25 +372,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "username")]
 		public string Username { get; set; }
-	}
 
-	[Table(Name = "v_users_events")]
-	public class VUserEventPoco
-	{
-		[Column(Name = "user_event_id")]
-		public long? UserEventId { get; set; }
-
-		[Column(Name = "user_id")]
-		public long? UserId { get; set; }
-
-		[Column(Name = "user_subscribed_on_date_time")]
-		public DateTime? UserSubscribedOnDateTime { get; set; }
-
-		[Column(Name = "event_id")]
-		public long? EventId { get; set; }
-
-		[Column(Name = "username")]
-		public string Username { get; set; }
+		[Column(Name = "main_image_id")]
+		public long? MainImageId { get; set; }
 	}
 
 }

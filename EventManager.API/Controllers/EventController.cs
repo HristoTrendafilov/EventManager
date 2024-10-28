@@ -8,7 +8,7 @@ using EventManager.API.Dto.Event;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.DataProtection.XmlEncryption;
+using EventManager.API.Dto;
 
 namespace EventManager.API.Controllers
 {
@@ -39,6 +39,7 @@ namespace EventManager.API.Controllers
             }
 
             var eventView = _mapper.CreateObject<EventView>(eventViewPoco);
+            eventView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, eventView.CreatedByUserId.Value);
 
             var currentUserId = User.X_CurrentUserId();
             if (currentUserId.HasValue)
@@ -57,9 +58,10 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            var subscribers = await _eventService.GetEventSubscribersAsync(eventId);
+            var subscribers = await _eventService.GetAllEventSubscribersViewAsync(eventId);
+            var subscribersToReturn = _mapper.CreateList<UserEventView>(subscribers);
 
-            return Ok(subscribers);
+            return Ok(subscribersToReturn);
         }
 
         [HttpGet]
@@ -198,9 +200,11 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече е записан потребител с ID: {currentUserId.Value}");
             }
 
-            await _eventService.SubscribeUser(eventId, currentUserId);
+            var userEventId = await _eventService.SubscribeUser(eventId, currentUserId);
+            var userEvent = await _eventService.GetEventSubscriberViewAsync(x => x.UserEventId == userEventId);
+            var userEventToReturn = _mapper.CreateObject<UserEventView>(userEvent);
 
-            return NoContent();
+            return Ok(userEventToReturn);
         }
 
         [Authorize]
@@ -208,10 +212,9 @@ namespace EventManager.API.Controllers
         public async Task<ActionResult> UnsubscribeUserFromEvent(long eventId)
         {
             var currentUserId = User.X_CurrentUserId();
+            var userEventId = await _eventService.UnsubscribeUser(currentUserId.Value, eventId, currentUserId);
 
-            await _eventService.UnsubscribeUser(currentUserId.Value, eventId, currentUserId);
-
-            return NoContent();
+            return Ok(new PrimaryKeyResponse { PrimaryKey = userEventId });
         }
     }
 }

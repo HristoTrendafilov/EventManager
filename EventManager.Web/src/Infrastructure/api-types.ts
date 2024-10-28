@@ -21,12 +21,16 @@ export interface UserView {
   shortDescription: string;
   canEdit: boolean;
   regionsHelping: RegionView[];
+  hasProfilePicture: boolean;
 }
 
-export interface EventSubscribedUser {
+export interface UserEventView {
+  userEventId: number;
   userId: number;
   username: string;
+  eventId: number;
   userSubscribedOnDateTime: Date;
+  hasProfilePicture: boolean;
 }
 
 export interface EventView {
@@ -40,6 +44,8 @@ export interface EventView {
   regionName: string;
   username: string;
   isUserSubscribed: boolean;
+  hasMainImage: boolean;
+  canEdit: boolean;
 }
 
 export interface EventDto {
@@ -51,6 +57,10 @@ export interface EventDto {
   createdByUserId: number;
   regionId: number;
   image: FileList | undefined | null;
+}
+
+export interface PrimaryKeyResponse {
+  primaryKey: number;
 }
 
 export interface UserLoginResponseDto extends UserState {

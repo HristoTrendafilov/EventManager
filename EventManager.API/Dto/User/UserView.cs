@@ -11,6 +11,7 @@ namespace EventManager.API.Dto.User
         }
 
         public bool CanEdit { get; set; }
+        public bool HasProfilePicture => !string.IsNullOrWhiteSpace(ProfilePicturePath);
 
         public List<RegionView> RegionsHelping { get; set; }
         public List<long> UserRegionsHelpingIds => RegionsHelping.Select(x => x.RegionId).ToList();
