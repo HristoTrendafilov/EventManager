@@ -24,12 +24,17 @@ import './EventView.css';
 
 export function EventViewComponent() {
   const [error, setError] = useState<string | undefined>();
+
   const [subscriptionError, setSubscriptionError] = useState<
     string | undefined
   >();
+
   const [event, setEvent] = useState<EventView | undefined>();
+
   const [mainImage, setMainImage] = useState<string>(noImage);
+
   const [isUserSubscribed, setIsUserSubscribed] = useState<boolean>(false);
+
   const [subscribers, setSubscribers] = useState<UserEventView[]>([]);
 
   const user = useSelector(userSelector);
@@ -38,8 +43,10 @@ export function EventViewComponent() {
 
   const loadSubscribers = useCallback(async () => {
     const subscribersResponse = await getEventSubscribers(Number(eventId));
+
     if (!subscribersResponse.success) {
       setError(subscribersResponse.errorMessage);
+
       return;
     }
 
@@ -48,23 +55,29 @@ export function EventViewComponent() {
 
   const subscribeUser = useCallback(async () => {
     const response = await subscribeUserToEvent(Number(eventId));
+
     if (!response.success) {
       setSubscriptionError(response.errorMessage);
+
       return;
     }
 
     setIsUserSubscribed(true);
+
     subscribers.unshift(response.data);
   }, [eventId, subscribers]);
 
   const unsubscribeUser = useCallback(async () => {
     const response = await unsubscribeUserFromEvent(Number(eventId));
+
     if (!response.success) {
       setSubscriptionError(response.errorMessage);
+
       return;
     }
 
     setIsUserSubscribed(false);
+
     setSubscribers((prevSubscribers) =>
       prevSubscribers.filter(
         (subscriber) => subscriber.userEventId !== response.data.primaryKey
@@ -74,20 +87,25 @@ export function EventViewComponent() {
 
   const loadEvent = useCallback(async () => {
     const eventViewResponse = await getEventView(Number(eventId));
+
     if (!eventViewResponse.success) {
       setError(eventViewResponse.errorMessage);
+
       return;
     }
 
     setEvent(eventViewResponse.data);
+
     setIsUserSubscribed(eventViewResponse.data.isUserSubscribed);
 
     await loadSubscribers();
 
     if (eventViewResponse.data.hasMainImage) {
       const mainImageResponse = await getEventMainImage(Number(eventId));
+
       if (!mainImageResponse.success) {
         setError(mainImageResponse.errorMessage);
+
         return;
       }
 
@@ -104,14 +122,17 @@ export function EventViewComponent() {
       {event && (
         <div className="container mt-3 mb-2">
           <h1 className="d-flex justify-content-center">{event.eventName}</h1>
+
           <div className="row g-2">
             <div className="col-lg-8">
               <div className="main-image-wrapper">
                 <img src={mainImage} alt="main" />
               </div>
+
               <div className="card mt-2">
                 <h5 className="card-header d-flex justify-content-between align-items-center">
                   <div>Описание</div>
+
                   {event.canEdit && (
                     <Link
                       to={`/events/${eventId}/update`}
@@ -121,33 +142,41 @@ export function EventViewComponent() {
                     </Link>
                   )}
                 </h5>
+
                 <div className="card-body">
                   <div>Начало: {formatDateTime(event.eventStartDateTime)}</div>
+
                   <div>
                     Край:{' '}
                     {event.eventEndDateTime
                       ? formatDateTime(event.eventEndDateTime)
                       : '-'}
                   </div>
+
                   <div>Регион: {event.regionName}</div>
+
                   <div>
                     Създаден от:{' '}
                     <Link to={`/users/${event.createdByUserId}/view`}>
                       {event.username}
                     </Link>
                   </div>
+
                   <hr />
+
                   <div className="d-flex justify-content-center">
                     {event.eventDescription}
                   </div>
                 </div>
               </div>
             </div>
+
             <div className="col-lg-4">
               <div className="card">
                 <div className="card-header">
                   <div className="d-flex justify-content-between align-items-center">
                     <h5>Участници ({subscribers.length})</h5>
+
                     {user.isLoggedIn && (
                       <div>
                         {!isUserSubscribed ? (
@@ -170,18 +199,22 @@ export function EventViewComponent() {
                       </div>
                     )}
                   </div>
+
                   {!user.isLoggedIn && (
                     <div className="d-flex align-items-center gap-1">
                       <FontAwesomeIcon icon={faInfoCircle} color="blue" />
+
                       <div className="fst-italic">
                         Моля, влезте в акаунта си, за да се запишете.
                       </div>
                     </div>
                   )}
+
                   {error && <ErrorMessage error={subscriptionError} />}
                 </div>
-                <div className="card-body subscribers">
-                  <div className="d-flex flex-column gap-1">
+
+                <div className="card-body">
+                  <div className="d-flex flex-column gap-1 subscribers ">
                     {subscribers.map((x) => (
                       <EventUserCard key={x.userId} user={x} />
                     ))}
@@ -192,6 +225,7 @@ export function EventViewComponent() {
           </div>
         </div>
       )}
+
       {error && <ErrorMessage error={error} />}
     </div>
   );
