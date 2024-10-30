@@ -64,15 +64,15 @@ namespace EventManager.API.Controllers
             return Ok(subscribersToReturn);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetAllEvents(int pageNumber = 1, int pageSize = 10)
+        [HttpPost("search/{pageNumber}")]
+        public async Task<ActionResult> GetAllEvents(int pageNumber, EventSearchFilter filter)
         {
-            if (pageSize > _maxEventsPageCount)
+            if (filter.PageSize > _maxEventsPageCount)
             {
-                pageSize = _maxEventsPageCount;
+                filter.PageSize = _maxEventsPageCount;
             }
 
-            var (events, paginationMetadata) = await _eventService.GetAllEventsAsync(x => true, pageNumber, pageSize);
+            var (events, paginationMetadata) = await _eventService.GetAllEventsAsync(x => true, pageNumber, filter.PageSize);
 
             Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
 

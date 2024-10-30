@@ -184,7 +184,7 @@ export function Navbar() {
               <li className="nav-item">
                 <Link
                   className="nav-link"
-                  to="/events/list"
+                  to="/events/search/1"
                   data-bs-dismiss="offcanvas"
                   onClick={handleLinkClick}
                 >
