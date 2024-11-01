@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using EventManager.API.Dto;
+using Newtonsoft.Json.Serialization;
 
 namespace EventManager.API.Controllers
 {
@@ -72,11 +73,14 @@ namespace EventManager.API.Controllers
                 filter.PageSize = _maxEventsPageCount;
             }
 
-            var (events, paginationMetadata) = await _eventService.GetAllEventsAsync(x => true, pageNumber, filter.PageSize);
+            var (events, paginationMetadata) = await _eventService.GetPaginationEventsAsync(x => true, pageNumber, filter.PageSize);
 
-            Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
+            Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(paginationMetadata, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            }));
 
-            var eventsToReturn = _mapper.CreateList<EventDto>(events);
+            var eventsToReturn = _mapper.CreateList<EventView>(events);
 
             return Ok(eventsToReturn);
         }

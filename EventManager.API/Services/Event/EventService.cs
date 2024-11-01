@@ -106,10 +106,10 @@ namespace EventManager.API.Services.Event
             });
         }
 
-        public async Task<(List<EventPoco> events, PaginationMetadata metadata)> GetAllEventsAsync
-            (Expression<Func<EventPoco, bool>> predicate, int pageNumber, int pageSize)
+        public async Task<(List<VEventPoco> events, PaginationMetadata metadata)> GetPaginationEventsAsync
+            (Expression<Func<VEventPoco, bool>> predicate, int pageNumber, int pageSize)
         {
-            var events = await PagedList<EventPoco>.CreateAsync(_db.Events.Where(predicate), pageNumber, pageSize);
+            var events = await PagedList<VEventPoco>.CreateAsync(_db.VEvents.Where(predicate), pageNumber, pageSize);
 
             var paginationMetadata = new PaginationMetadata
             {

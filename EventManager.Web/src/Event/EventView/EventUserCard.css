@@ -1,12 +1,17 @@
-.event-user-card-wrapper {
-  all: unset;
-  cursor: pointer;
-}
-
 .event-user-card-wrapper img {
   height: 45px;
   width: 45px;
   object-fit: cover;
   object-position: center;
   border-radius: 50%;
+}
+
+.desc {
+  display: -webkit-box; /* Create a flexible box container */
+  -webkit-box-orient: vertical; /* Set the box orientation to vertical */
+  overflow: hidden; /* Hide the overflowed content */
+  text-overflow: ellipsis; /* Show ellipsis if text overflows */
+  line-height: 1.5em; /* Set line height */
+  max-height: 9em; /* Set max height (e.g., 3 lines * 1.5em line-height) */
+  -webkit-line-clamp: 6; /* Limit text to 3 lines */
 }

@@ -16,3 +16,12 @@
   --input-border-color-focused: #0d6efd;
   --input-label-color: lightslategrey;
 }
+
+.object-pos-center {
+  object-position: center;
+}
+
+.unset-anchor {
+  all: unset;
+  cursor: pointer;
+}

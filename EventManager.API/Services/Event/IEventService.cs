@@ -8,8 +8,8 @@ namespace EventManager.API.Services.Event
     public interface IEventService
     {
         Task<VEventPoco> GetEventViewAsync(Expression<Func<VEventPoco, bool>> predicate);
-        Task<(List<EventPoco> events, PaginationMetadata metadata)> GetAllEventsAsync
-            (Expression<Func<EventPoco, bool>> predicate, int pageNumber, int pageSize);
+        Task<(List<VEventPoco> events, PaginationMetadata metadata)> GetPaginationEventsAsync
+            (Expression<Func<VEventPoco, bool>> predicate, int pageNumber, int pageSize);
         Task<EventPoco> GetEventAsync(Expression<Func<EventPoco, bool>> predicate);
         Task<long> CreateEventAsync(EventNew newEvent, long? currentUserId);
         Task UpdateEventAsync(long eventId, EventUpdate updateEvent, long? currentUserId);

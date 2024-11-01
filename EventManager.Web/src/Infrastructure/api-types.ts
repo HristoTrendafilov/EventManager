@@ -48,6 +48,13 @@ export interface EventView {
   canEdit: boolean;
 }
 
+export interface PaginationHeader {
+  totalCount: number;
+  pageSize: number;
+  currentPage: number;
+  totalPages: number;
+}
+
 export interface EventDto {
   eventId: number;
   eventName: string;

@@ -27,9 +27,14 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
 
     const handleChange = useCallback(
       (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(props.name, event.target.value);
+        if (props.type === 'number') {
+          const value = Number(event.target.value);
+          setValue(props.name, value);
+        } else {
+          setValue(props.name, event.target.value);
+        }
       },
-      [props.name, setValue]
+      [props.name, props.type, setValue]
     );
 
     useEffect(() => {

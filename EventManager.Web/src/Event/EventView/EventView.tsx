@@ -30,11 +30,8 @@ export function EventViewComponent() {
   >();
 
   const [event, setEvent] = useState<EventView | undefined>();
-
   const [mainImage, setMainImage] = useState<string>(noImage);
-
   const [isUserSubscribed, setIsUserSubscribed] = useState<boolean>(false);
-
   const [subscribers, setSubscribers] = useState<UserEventView[]>([]);
 
   const user = useSelector(userSelector);
@@ -43,10 +40,8 @@ export function EventViewComponent() {
 
   const loadSubscribers = useCallback(async () => {
     const subscribersResponse = await getEventSubscribers(Number(eventId));
-
     if (!subscribersResponse.success) {
       setError(subscribersResponse.errorMessage);
-
       return;
     }
 
@@ -55,24 +50,19 @@ export function EventViewComponent() {
 
   const subscribeUser = useCallback(async () => {
     const response = await subscribeUserToEvent(Number(eventId));
-
     if (!response.success) {
       setSubscriptionError(response.errorMessage);
-
       return;
     }
 
     setIsUserSubscribed(true);
-
     subscribers.unshift(response.data);
   }, [eventId, subscribers]);
 
   const unsubscribeUser = useCallback(async () => {
     const response = await unsubscribeUserFromEvent(Number(eventId));
-
     if (!response.success) {
       setSubscriptionError(response.errorMessage);
-
       return;
     }
 
@@ -87,25 +77,20 @@ export function EventViewComponent() {
 
   const loadEvent = useCallback(async () => {
     const eventViewResponse = await getEventView(Number(eventId));
-
     if (!eventViewResponse.success) {
       setError(eventViewResponse.errorMessage);
-
       return;
     }
 
     setEvent(eventViewResponse.data);
-
     setIsUserSubscribed(eventViewResponse.data.isUserSubscribed);
 
     await loadSubscribers();
 
     if (eventViewResponse.data.hasMainImage) {
       const mainImageResponse = await getEventMainImage(Number(eventId));
-
       if (!mainImageResponse.success) {
         setError(mainImageResponse.errorMessage);
-
         return;
       }
 

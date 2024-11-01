@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Event } from '~Event/EventForm';
-import { EventSearch } from '~Event/EventSearch';
+import { EventSearch } from '~Event/EventSearch/EventSearch';
 import { EventViewComponent } from '~Event/EventView/EventView';
 import type { UserRole } from '~Infrastructure/redux/user-slice';
 import { Login } from '~User/Login/Login';
@@ -60,7 +60,7 @@ export const routes: RouteTable[] = [
     role: 'None',
   },
   {
-    location: '/events/search/:page',
+    location: '/events/search',
     component: <EventSearch />,
     requiresLogin: false,
     role: 'None',

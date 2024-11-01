@@ -1,4 +1,4 @@
-import type { EventSearchFilter } from '~Event/EventSearch';
+import type { EventSearchFilter } from '~Event/EventSearch/EventSearch';
 import { callApi } from '~Infrastructure/api-client';
 import type {
   EventDto,
@@ -44,7 +44,7 @@ export function getEventSubscribers(eventId: number) {
 }
 
 export function getEventSearch(pageNumber: number, filter: EventSearchFilter) {
-  return callApi<EventDto[]>(
+  return callApi<EventView[]>(
     `/events/search/${pageNumber}`,
     'POST',
     JSON.stringify(filter)

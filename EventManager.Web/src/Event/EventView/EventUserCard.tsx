@@ -36,7 +36,10 @@ export function EventUserCard(props: EventUserCardProps) {
   }, [loadProfilePicture, user.hasProfilePicture]);
 
   return (
-    <Link to={`/users/${user.userId}/view`} className="event-user-card-wrapper">
+    <Link
+      to={`/users/${user.userId}/view`}
+      className="event-user-card-wrapper unset-anchor"
+    >
       <div className="d-flex border border-1 align-items-center p-1">
         <img src={profilePicture} alt="profile" />
         <div className="d-flex flex-column ms-2">

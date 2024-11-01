@@ -13,14 +13,14 @@ export interface ValidationPropertyError {
 }
 
 type ApiResponse<T = undefined> =
-  | { data: T; success: true; statusCode: number; headers: HeadersInit }
+  | { data: T; success: true; statusCode: number; headers: Headers }
   | {
       success: false;
       errorMessage: string;
       validationPropertyErrors: ValidationPropertyError[];
       hasValidationErrors: boolean;
       statusCode: number;
-      headers: HeadersInit;
+      headers: Headers;
     };
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
