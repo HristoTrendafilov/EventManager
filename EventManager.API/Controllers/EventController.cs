@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using EventManager.API.Dto;
 using Newtonsoft.Json.Serialization;
+using EventManager.DAL;
 
 namespace EventManager.API.Controllers
 {
@@ -66,14 +67,21 @@ namespace EventManager.API.Controllers
         }
 
         [HttpPost("search/{pageNumber}")]
-        public async Task<ActionResult> GetAllEvents(int pageNumber, EventSearchFilter filter)
+        public async Task<ActionResult> GetPaginationEvents(int pageNumber, EventSearchFilter filter)
         {
             if (filter.PageSize > _maxEventsPageCount)
             {
                 filter.PageSize = _maxEventsPageCount;
             }
 
-            var (events, paginationMetadata) = await _eventService.GetPaginationEventsAsync(x => true, pageNumber, filter.PageSize);
+            var predicate = PredicateBuilder.True<VEventPoco>();
+
+            if (!string.IsNullOrWhiteSpace(filter.EventName))
+            {
+                predicate = predicate.And(x => x.EventName.StartsWith(filter.EventName) || x.EventName.Contains(filter.EventName));
+            }
+
+            var (events, paginationMetadata) = await _eventService.GetPaginationEventsAsync(predicate, pageNumber, filter.PageSize);
 
             Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(paginationMetadata, new JsonSerializerSettings
             {

@@ -41,7 +41,7 @@ export function EventSearchCard(props: EventSearchCardProps) {
       <div className="container">
         <Link to={`/events/${event.eventId}/view`} className=" unset-anchor">
           <div className="row border">
-            <div className="col-md-3 p-0 d-flex">
+            <div className="col-md-5 col-lg-3 p-0 d-flex">
               {mainImage && (
                 <img
                   className="object-fit-cover object-pos-center w-100"
@@ -50,7 +50,7 @@ export function EventSearchCard(props: EventSearchCardProps) {
                 />
               )}
             </div>
-            <div className="col-md-9">
+            <div className="col-md-7 col-lg-9">
               <div className="d-flex flex-column p-1">
                 <h4>{event.eventName}</h4>
                 <p className="desc">{event.eventDescription}</p>

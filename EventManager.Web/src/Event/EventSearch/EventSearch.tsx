@@ -125,7 +125,7 @@ export function EventSearch() {
                 className={`page-link ${
                   pagination.currentPage === 1 ? 'disabled' : ''
                 }`}
-                onClick={() => loadEvents(pagination.currentPage + 1)}
+                onClick={() => loadEvents(pagination.currentPage - 1)}
               >
                 Предишна
               </button>
@@ -156,7 +156,7 @@ export function EventSearch() {
                     ? 'disabled'
                     : ''
                 }`}
-                onClick={() => loadEvents(pagination.currentPage - 1)}
+                onClick={() => loadEvents(pagination.currentPage + 1)}
               >
                 Следваща
               </button>
