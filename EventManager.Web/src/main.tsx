@@ -28,7 +28,9 @@ root.render(
         <ErrorBoundary>
           <ToastWrapper />
           <Navbar />
-          <RenderRouteTable />
+          <div id="main">
+            <RenderRouteTable />
+          </div>
           <Footer />
         </ErrorBoundary>
       </BrowserRouter>

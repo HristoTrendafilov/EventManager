@@ -47,8 +47,12 @@ export function Home() {
           ))}
         </div>
         <div className="carousel-inner">
-          {incomingEvents.map((event) => (
-            <CarouselEvent key={event.eventId} event={event} />
+          {incomingEvents.map((event, i) => (
+            <CarouselEvent
+              key={event.eventId}
+              event={event}
+              isActive={i === 0}
+            />
           ))}
         </div>
         <button
