@@ -31,7 +31,11 @@ export function Home() {
   return (
     <div className="home-wrapper">
       {error && <ErrorMessage error={error} />}
-      <div id="carouselExampleCaptions" className="carousel slide">
+      <div
+        id="carouselExampleCaptions"
+        className="carousel slide"
+        data-bs-ride="carousel"
+      >
         <div className="carousel-indicators">
           {incomingEvents.map((x, i) => (
             <button

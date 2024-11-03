@@ -87,6 +87,7 @@ export function AdminPanelCrudLogs() {
                   {...form.register('actionType')}
                   options={crudLogSelectOptions}
                   isNumber
+                  searchable={false}
                   label="Тип"
                 />
                 <CustomDateInput

@@ -16,6 +16,7 @@ import '~Infrastructure/components/Form/SelectInput/SelectInput.css';
 export interface CustomSelectProps extends ComponentProps<'select'> {
   name: string;
   label: string;
+  searchable?: boolean;
   loading?: boolean;
   placeholder?: string;
   options: SelectInputOption[];
@@ -30,6 +31,7 @@ export const CustomSelect = forwardRef<
   const {
     name,
     label,
+    searchable,
     loading,
     placeholder,
     options,
@@ -79,7 +81,7 @@ export const CustomSelect = forwardRef<
             }
             options={options}
             noOptionsMessage={() => 'Няма повече елементи за избор'}
-            isSearchable
+            isSearchable={searchable}
             placeholder={<div>{placeholder ?? 'Избор...'}</div>}
             onChange={(
               newSelections: SingleValue<SelectInputOption>,
