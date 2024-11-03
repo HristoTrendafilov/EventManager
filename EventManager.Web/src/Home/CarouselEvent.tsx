@@ -6,14 +6,13 @@ import type { EventView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import noImage from '~asset/no-image.png';
 
-import './EventSearchCard.css';
-
-interface EventSearchCardProps {
+interface CarouselEventProps {
   event: EventView;
+  isActive: boolean;
 }
 
-export function EventSearchCard(props: EventSearchCardProps) {
-  const { event } = props;
+export function CarouselEvent(props: CarouselEventProps) {
+  const { event, isActive } = props;
 
   const [error, setError] = useState<string | undefined>();
   const [mainImage, setMainImage] = useState<string | undefined>();
@@ -37,29 +36,34 @@ export function EventSearchCard(props: EventSearchCardProps) {
   }, [event.hasMainImage, loadMainImage]);
 
   return (
-    <div className="event-search-card-wrapper mt-3">
-      <div className="container">
-        <Link to={`/events/${event.eventId}/view`} className=" unset-anchor">
-          <div className="row border">
-            <div className="col-md-5 col-lg-3 p-0 d-flex">
-              {mainImage && (
-                <img
-                  className="object-fit-cover object-pos-center w-100"
-                  src={mainImage}
-                  alt="main"
-                />
-              )}
-            </div>
-            <div className="col-md-7 col-lg-9">
-              <div className="d-flex flex-column p-1">
-                <h4>{event.eventName}</h4>
-                <p className="event-description text-muted">
-                  {event.eventDescription}
-                </p>
-              </div>
-            </div>
+    <div className={`carousel-item ${isActive ? 'active' : ''}`}>
+      <div className="home-carousel-img-wrapper">
+        {mainImage && (
+          <img
+            src={mainImage}
+            className="d-block w-100 object-fit-cover object-pos-center"
+            alt="Event"
+          />
+        )}
+      </div>
+
+      <div className="carousel-caption">
+        <h5>{event.eventName}</h5>
+        <div className="row carousel-description">
+          <div className="col-md-10 d-none d-sm-block">
+            <p className="event-carousel-description">
+              {event.eventDescription}
+            </p>
           </div>
-        </Link>
+          <div className="col-md-2">
+            <Link
+              to={`/events/${event.eventId}/view`}
+              className="btn z-4 mb-4 btn-primary"
+            >
+              Към събитието
+            </Link>
+          </div>
+        </div>
       </div>
       {error && <ErrorMessage error={error} />}
     </div>

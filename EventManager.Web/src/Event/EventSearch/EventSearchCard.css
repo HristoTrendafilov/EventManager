@@ -1,4 +1,4 @@
-.desc {
+.event-description {
   display: -webkit-box; /* Create a flexible box container */
   -webkit-box-orient: vertical; /* Set the box orientation to vertical */
   overflow: hidden; /* Hide the overflowed content */

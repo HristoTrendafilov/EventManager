@@ -1,0 +1,216 @@
+import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { z } from 'zod';
+
+import {
+  createRegion,
+  getRegions,
+  updateRegion,
+} from '~Infrastructure/ApiRequests/regions-request';
+import type { RegionView } from '~Infrastructure/api-types';
+import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
+import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+import { TextInput } from '~Infrastructure/components/Form/TextInput/TextInput';
+import { Modal } from '~Infrastructure/components/Modal/Modal';
+
+import './AdminPanelRegions.css';
+
+const schema = z.object({
+  regionName: z.string(),
+});
+
+export type RegionForm = z.infer<typeof schema>;
+
+const defaultValues: RegionForm = {
+  regionName: '',
+};
+
+export function AdminPanelRegions() {
+  const [regions, setRegions] = useState<RegionView[]>([]);
+  const [filteredRegions, setFilteredRegions] = useState<RegionView[]>([]);
+  const [error, setError] = useState<string | undefined>();
+  const [submitError, setSubmitError] = useState<string | undefined>();
+
+  const [regionIdForEdit, setRegionIdForEdit] = useState<number | undefined>();
+  const [showFormModal, setShowFormModal] = useState<boolean>(false);
+
+  const form = useZodForm({ schema });
+
+  const handleCloseFormModal = useCallback(() => {
+    setSubmitError(undefined);
+    setRegionIdForEdit(undefined);
+    setShowFormModal(false);
+  }, []);
+
+  const handleShowFormModal = useCallback(
+    (regionId?: number) => {
+      if (regionId) {
+        setRegionIdForEdit(regionId);
+        const selectedRegion = filteredRegions.find(
+          (x) => x.regionId === regionId
+        );
+        form.reset(selectedRegion);
+      } else {
+        form.reset(defaultValues);
+      }
+
+      setShowFormModal(true);
+    },
+    [filteredRegions, form]
+  );
+
+  const loadRegions = useCallback(async () => {
+    const response = await getRegions();
+    if (!response.success) {
+      setError(response.errorMessage);
+      return;
+    }
+
+    setRegions(response.data);
+    setFilteredRegions(response.data);
+  }, []);
+
+  const handleFilterNameChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      if (value) {
+        const newFilteredRegions = regions.filter((x) =>
+          x.regionName.toLowerCase().startsWith(value.toLowerCase())
+        );
+        setFilteredRegions(newFilteredRegions);
+      } else {
+        setFilteredRegions(regions);
+      }
+    },
+    [regions]
+  );
+
+  const handleFormSubmit = useCallback(
+    async (region: RegionForm) => {
+      setSubmitError(undefined);
+
+      let response;
+      if (regionIdForEdit) {
+        response = await updateRegion(regionIdForEdit, region);
+      } else {
+        response = await createRegion(region);
+      }
+
+      if (!response.success) {
+        setSubmitError(response.errorMessage);
+        return;
+      }
+
+      const { data } = response;
+
+      if (regionIdForEdit) {
+        const newRegions = regions.map((r) =>
+          r.regionId === regionIdForEdit ? data : r
+        );
+        setFilteredRegions(newRegions);
+      } else {
+        setFilteredRegions([data, ...regions]);
+      }
+
+      toast.success(
+        `Успешно ${regionIdForEdit ? 'редактиран' : 'създаден'} регион: ${
+          response.data.regionName
+        }`
+      );
+      handleCloseFormModal();
+    },
+    [handleCloseFormModal, regionIdForEdit, regions]
+  );
+
+  useEffect(() => {
+    void loadRegions();
+  }, [loadRegions]);
+
+  return (
+    <div className="admin-panel-regions-wrapper">
+      <div className="d-flex justify-content-end">
+        <button
+          type="button"
+          className="btn btn-success mb-3"
+          onClick={() => handleShowFormModal()}
+        >
+          Нов регион
+        </button>
+      </div>
+      <TextInput
+        name="filterName"
+        label="Търси"
+        onChange={handleFilterNameChange}
+      />
+      <table className="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col" className="col-1">
+              #
+            </th>
+            <th scope="col">Име</th>
+            <th scope="col" className="col-auto text-nowrap">
+              Действия
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredRegions.length > 0 &&
+            filteredRegions.map((x) => (
+              <tr key={x.regionId}>
+                <th scope="row">{x.regionId}</th>
+                <td>{x.regionName}</td>
+                <td>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-primary"
+                    onClick={() => handleShowFormModal(x.regionId)}
+                  >
+                    Редакция
+                  </button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+      {error && <ErrorMessage error={error} />}
+
+      {showFormModal && (
+        <Modal onBackdropClick={handleCloseFormModal}>
+          <div className="region-form-wrapper container">
+            <div className="card mt-4">
+              <h3 className="card-header">
+                {regionIdForEdit
+                  ? `Редакция на регион (#${regionIdForEdit})`
+                  : 'Нов регион'}
+              </h3>
+              <div className="card-body">
+                <CustomForm form={form} onSubmit={handleFormSubmit}>
+                  <CustomInput
+                    label="Наименование"
+                    {...form.register('regionName')}
+                  />
+                  <div className="d-flex gap-2">
+                    <button type="submit" className="btn btn-primary w-100">
+                      Запис
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-warning w-100"
+                      onClick={handleCloseFormModal}
+                    >
+                      Изход
+                    </button>
+                  </div>
+                </CustomForm>
+                {submitError && <ErrorMessage error={submitError} />}
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </div>
+  );
+}

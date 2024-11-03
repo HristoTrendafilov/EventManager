@@ -26,6 +26,11 @@ namespace EventManager.API.Services.Event
             return _db.VEvents.FirstOrDefaultAsync(predicate);
         }
 
+        public Task<List<VEventPoco>> GetAllEventsViewAsync(Expression<Func<VEventPoco, bool>> predicate)
+        {
+            return _db.VEvents.Where(predicate).ToListAsync();
+        }
+
         public async Task<long> CreateEventAsync(EventNew @event, long? currentUserId)
         {
             return await _db.WithTransactionAsync(async () =>

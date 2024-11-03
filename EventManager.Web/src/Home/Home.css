@@ -1,0 +1,49 @@
+.home-carousel-img-wrapper {
+  display: flex;
+  height: 600px;
+}
+
+.home-wrapper .carousel-caption {
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.6);
+  color: black;
+  padding: 5px;
+}
+
+.home-wrapper .carousel-indicators {
+  margin-bottom: 0;
+}
+
+.carousel-description {
+  margin-left: 15%;
+  margin-right: 15%;
+}
+
+.home-wrapper .carousel-indicators button {
+  background-color: red;
+  padding: 2px;
+}
+
+.event-carousel-description {
+  display: -webkit-box; /* Create a flexible box container */
+  -webkit-box-orient: vertical; /* Set the box orientation to vertical */
+  overflow: hidden; /* Hide the overflowed content */
+  text-overflow: ellipsis; /* Show ellipsis if text overflows */
+  line-height: 1.5em; /* Set line height */
+  max-height: 6em; /* Set max height (e.g., 3 lines * 1.5em line-height) */
+  -webkit-line-clamp: 3; /* Limit text to 3 lines */
+}
+
+@media (max-width: 1000px) {
+  .home-carousel-img-wrapper {
+    height: 400px;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-carousel-img-wrapper {
+    height: 300px;
+  }
+}

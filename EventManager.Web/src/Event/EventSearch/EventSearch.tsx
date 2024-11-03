@@ -95,7 +95,7 @@ export function EventSearch() {
                     label="Име на събитието"
                   />
                   <CustomInput
-                    {...form.register('pageSize', { valueAsNumber: true })}
+                    {...form.register('pageSize')}
                     label="Брой"
                     type="number"
                   />

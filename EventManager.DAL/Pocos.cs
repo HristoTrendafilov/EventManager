@@ -269,6 +269,37 @@ namespace EventManager.DAL
 		public DateTime? UpdatedAt { get; set; }
 	}
 
+	[Table(Name = "v_crud_logs")]
+	public class VCrudLogPoco
+	{
+		[Column(Name = "crud_log_id")]
+		public long? CrudLogId { get; set; }
+
+		[Column(Name = "action_type")]
+		public int? ActionType { get; set; }
+
+		[Column(Name = "table_affected")]
+		public string TableAffected { get; set; }
+
+		[Column(Name = "table_affected_primary_key")]
+		public long? TableAffectedPrimaryKey { get; set; }
+
+		[Column(Name = "poco_before_action")]
+		public string PocoBeforeAction { get; set; }
+
+		[Column(Name = "poco_after_action")]
+		public string PocoAfterAction { get; set; }
+
+		[Column(Name = "created_by_user_id")]
+		public long? CreatedByUserId { get; set; }
+
+		[Column(Name = "action_date_time")]
+		public DateTime? ActionDateTime { get; set; }
+
+		[Column(Name = "username")]
+		public string Username { get; set; }
+	}
+
 	[Table(Name = "v_users")]
 	public class VUserPoco
 	{

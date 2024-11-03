@@ -11,6 +11,7 @@ namespace EventManager.API.Services.Event
         Task<(List<VEventPoco> events, PaginationMetadata metadata)> GetPaginationEventsAsync
             (Expression<Func<VEventPoco, bool>> predicate, int pageNumber, int pageSize);
         Task<EventPoco> GetEventAsync(Expression<Func<EventPoco, bool>> predicate);
+        Task<List<VEventPoco>> GetAllEventsViewAsync(Expression<Func<VEventPoco, bool>> predicate);
         Task<long> CreateEventAsync(EventNew newEvent, long? currentUserId);
         Task UpdateEventAsync(long eventId, EventUpdate updateEvent, long? currentUserId);
         Task DeleteEventAsync(long eventId, long? currentUserId);

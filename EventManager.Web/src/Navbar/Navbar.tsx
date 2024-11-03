@@ -55,6 +55,17 @@ function NavUserDropdown(props: NavUserDropdownProps) {
             </Link>
           </li>
         )}
+        {user.isAdmin && (
+          <li>
+            <Link
+              to="/users/admin-panel"
+              data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
+              onClick={handleNavClick}
+            >
+              Админ панел
+            </Link>
+          </li>
+        )}
         <hr className="m-2" />
         <li>
           <button

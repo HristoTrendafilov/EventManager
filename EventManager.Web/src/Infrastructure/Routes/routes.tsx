@@ -4,6 +4,9 @@ import { Event } from '~Event/EventForm';
 import { EventSearch } from '~Event/EventSearch/EventSearch';
 import { EventViewComponent } from '~Event/EventView/EventView';
 import type { UserRole } from '~Infrastructure/redux/user-slice';
+import { AdminPanel } from '~User/AdminPanel/AdminPanel';
+import { AdminPanelCrudLogs } from '~User/AdminPanel/AdminPanelCrudLogs';
+import { AdminPanelRegions } from '~User/AdminPanel/AdminPanelRegions';
 import { Login } from '~User/Login/Login';
 import { Register } from '~User/Register/Register';
 import { UserProfile } from '~User/UserProfile/UserProfile';
@@ -28,6 +31,24 @@ export const routes: RouteTable[] = [
     component: <Register />,
     requiresLogin: false,
     role: 'None',
+  },
+  {
+    location: 'users/admin-panel',
+    component: <AdminPanel />,
+    requiresLogin: true,
+    role: 'Admin',
+  },
+  {
+    location: 'users/admin-panel/regions',
+    component: <AdminPanelRegions />,
+    requiresLogin: true,
+    role: 'Admin',
+  },
+  {
+    location: 'users/admin-panel/action-logs',
+    component: <AdminPanelCrudLogs />,
+    requiresLogin: true,
+    role: 'Admin',
   },
   {
     location: 'users/:userId/view',

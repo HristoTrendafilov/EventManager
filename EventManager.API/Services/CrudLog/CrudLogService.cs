@@ -24,9 +24,9 @@ namespace EventManager.API.Services.CrudLog
             await _db.CrudLogs.X_DeleteAsync(x => x.CrudLogId == crudLogId, currentUserId);
         }
 
-        public Task<List<CrudLogPoco>> GetAllCrudLogsAsync(Expression<Func<CrudLogPoco, bool>> predicate)
+        public Task<List<VCrudLogPoco>> GetAllCrudLogsViewAsync(Expression<Func<VCrudLogPoco, bool>> predicate)
         {
-            return _db.CrudLogs.Where(predicate).ToListAsync();
+            return _db.VCrudLogs.Where(predicate).ToListAsync();
         }
 
         public Task<CrudLogPoco> GetCrudLogAsync(Expression<Func<CrudLogPoco, bool>> predicate)

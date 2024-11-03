@@ -5,10 +5,13 @@ using EventManager.API.Services.Log;
 using EventManager.BOL;
 using EventManager.API.Dto.CrudLog;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using EventManager.DAL;
 
 namespace EventManager.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Role(UserRole.Admin)]
     [Route("api/crud-logs")]
     public class CrudLogController : ControllerBase
@@ -22,17 +25,25 @@ namespace EventManager.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetAllCrudLogs()
+        [HttpPost]
+        public async Task<ActionResult> GetAllCrudLogs(CrudLogFilter filter)
         {
-            var crudLogs = await _crudLogService.GetAllCrudLogsAsync(x => true);
-            var crudLogsToReturn = _mapper.CreateList<CrudLogDto>(crudLogs);
+            var predicate = PredicateBuilder.True<VCrudLogPoco>()
+                .And(x => x.ActionDateTime.Value.Date == filter.ActionDateTime.Date);
+
+            if (filter.ActionType != 0)
+            {
+                predicate = predicate.And(x => x.ActionType.Value == filter.ActionType);
+            }
+
+            var crudLogs = await _crudLogService.GetAllCrudLogsViewAsync(predicate);
+            var crudLogsToReturn = _mapper.CreateList<CrudLogView>(crudLogs);
 
             return Ok(crudLogsToReturn);
         }
 
-        [HttpGet("{crudLogId}")]
-        public async Task<ActionResult> GetCrudLog(long crudLogId)
+        [HttpGet("{crudLogId}/view")]
+        public async Task<ActionResult> GetCrudLogView(long crudLogId)
         {
             if (!await _crudLogService.CrudLogExistsAsync(x => x.CrudLogId == crudLogId))
             {
@@ -40,7 +51,7 @@ namespace EventManager.API.Controllers
             }
 
             var crudLog = await _crudLogService.GetCrudLogAsync(x => x.CrudLogId == crudLogId);
-            var crudLogToReturn = _mapper.CreateObject<CrudLogDto>(crudLog);
+            var crudLogToReturn = _mapper.CreateObject<CrudLogView>(crudLog);
 
             return Ok(crudLogToReturn);
         }

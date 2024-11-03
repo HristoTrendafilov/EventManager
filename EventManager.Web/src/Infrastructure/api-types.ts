@@ -48,6 +48,22 @@ export interface EventView {
   canEdit: boolean;
 }
 
+export interface CrudLogView {
+  crudLogId: number;
+  actionType: number;
+  tableAffected: string;
+  tableAffectedPrimaryKey: number;
+  pocoBeforeAction: string;
+  pocoAfterAction: string;
+  createdByUserId: number | null;
+  actionDateTime: Date;
+  username: string;
+}
+
+export interface HomeView {
+  incommingEvents: EventView[];
+}
+
 export interface PaginationHeader {
   totalCount: number;
   pageSize: number;
