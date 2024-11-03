@@ -8,11 +8,10 @@ import noImage from '~asset/no-image.png';
 
 interface CarouselEventProps {
   event: EventView;
-  isActive: boolean;
 }
 
 export function CarouselEvent(props: CarouselEventProps) {
-  const { event, isActive } = props;
+  const { event } = props;
 
   const [error, setError] = useState<string | undefined>();
   const [mainImage, setMainImage] = useState<string | undefined>();
@@ -36,7 +35,7 @@ export function CarouselEvent(props: CarouselEventProps) {
   }, [event.hasMainImage, loadMainImage]);
 
   return (
-    <div className={`carousel-item ${isActive ? 'active' : ''}`}>
+    <div className="carousel-item active">
       <div className="home-carousel-img-wrapper">
         {mainImage && (
           <img

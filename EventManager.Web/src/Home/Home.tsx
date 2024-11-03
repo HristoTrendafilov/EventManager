@@ -31,11 +31,7 @@ export function Home() {
   return (
     <div className="home-wrapper">
       {error && <ErrorMessage error={error} />}
-      <div
-        id="carouselExampleCaptions"
-        className="carousel slide"
-        data-bs-ride="carousel"
-      >
+      <div id="carouselExampleCaptions" className="carousel slide">
         <div className="carousel-indicators">
           {incomingEvents.map((x, i) => (
             <button
@@ -51,12 +47,8 @@ export function Home() {
           ))}
         </div>
         <div className="carousel-inner">
-          {incomingEvents.map((event, i) => (
-            <CarouselEvent
-              key={event.eventId}
-              event={event}
-              isActive={i === activeIndex}
-            />
+          {incomingEvents.map((event) => (
+            <CarouselEvent key={event.eventId} event={event} />
           ))}
         </div>
         <button
