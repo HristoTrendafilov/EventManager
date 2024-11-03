@@ -7,6 +7,7 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
+import { Footer } from '~Footer/Footer';
 import { RenderRouteTable } from '~Infrastructure/Routes/RouteTable';
 import { ErrorBoundary } from '~Infrastructure/components/ErrorBoundary/ErrorBoundary';
 import { NavigatorSetter } from '~Infrastructure/components/NavigationSetter';
@@ -28,6 +29,7 @@ root.render(
           <ToastWrapper />
           <Navbar />
           <RenderRouteTable />
+          <Footer />
         </ErrorBoundary>
       </BrowserRouter>
     </Provider>
