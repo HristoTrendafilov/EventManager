@@ -184,7 +184,7 @@ namespace EventManager.API.Controllers
             var now = DateTime.Now;
             var expiresOn = now.AddHours(12);
 
-            var webSession = new WebSessionNewDto
+            var webSession = new WebSessionNew
             {
                 LoginDateTime = now,
                 ExpireOnDateTime = expiresOn,
@@ -310,7 +310,7 @@ namespace EventManager.API.Controllers
         [Authorize]
         [Role(UserRole.Admin)]
         [HttpPost("roles")]
-        public async Task<ActionResult> AddRoleToUser(UserRoleNewDto role)
+        public async Task<ActionResult> AddRoleToUser(UserRoleNew role)
         {
             if (!await _userService.UserRoleExistsAsync(x => x.UserId == role.UserId && x.RoleId == role.RoleId))
             {

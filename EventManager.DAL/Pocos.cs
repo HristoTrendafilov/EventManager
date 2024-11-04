@@ -13,6 +13,23 @@ namespace EventManager.DAL
 		public string RegionName { get; set; }
 	}
 
+	[Table(Name = "users_events")]
+	public class UserEventPoco
+	{
+		[PrimaryKey, Identity]
+		[Column(Name = "user_event_id")]
+		public long UserEventId { get; set; }
+
+		[Column(Name = "user_id")]
+		public long UserId { get; set; }
+
+		[Column(Name = "user_subscribed_on_date_time")]
+		public DateTime UserSubscribedOnDateTime { get; set; }
+
+		[Column(Name = "event_id")]
+		public long EventId { get; set; }
+	}
+
 	[Table(Name = "users_regions_helping")]
 	public class UserRegionHelpingPoco
 	{
@@ -41,25 +58,19 @@ namespace EventManager.DAL
 		public long RoleId { get; set; }
 	}
 
-	[Table(Name = "users_events")]
-	public class UserEventPoco
+	[Table(Name = "roles")]
+	public class RolePoco
 	{
 		[PrimaryKey, Identity]
-		[Column(Name = "user_event_id")]
-		public long UserEventId { get; set; }
+		[Column(Name = "role_id")]
+		public long RoleId { get; set; }
 
-		[Column(Name = "user_id")]
-		public long UserId { get; set; }
-
-		[Column(Name = "user_subscribed_on_date_time")]
-		public DateTime UserSubscribedOnDateTime { get; set; }
-
-		[Column(Name = "event_id")]
-		public long EventId { get; set; }
+		[Column(Name = "role_name")]
+		public string RoleName { get; set; }
 	}
 
-	[Table(Name = "images")]
-	public class ImagePoco
+	[Table(Name = "event_images")]
+	public class EventImagePoco
 	{
 		[PrimaryKey, Identity]
 		[Column(Name = "image_id")]
@@ -79,17 +90,6 @@ namespace EventManager.DAL
 
 		[Column(Name = "event_id")]
 		public long EventId { get; set; }
-	}
-
-	[Table(Name = "roles")]
-	public class RolePoco
-	{
-		[PrimaryKey, Identity]
-		[Column(Name = "role_id")]
-		public long RoleId { get; set; }
-
-		[Column(Name = "role_name")]
-		public string RoleName { get; set; }
 	}
 
 	[Table(Name = "users")]
@@ -218,6 +218,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "created_by_user_id")]
 		public long CreatedByUserId { get; set; }
+
+		[Column(Name = "event_created_at_date_time")]
+		public DateTime EventCreatedAtDateTime { get; set; }
 	}
 
 	[Table(Name = "web_sessions")]
@@ -243,37 +246,11 @@ namespace EventManager.DAL
 		public DateTime? LogoutDateTime { get; set; }
 	}
 
-	[Table(Name = "files")]
-	public class FilePoco
-	{
-		[PrimaryKey, Identity]
-		[Column(Name = "file_id")]
-		public long FileId { get; set; }
-
-		[Column(Name = "file_name")]
-		public string FileName { get; set; }
-
-		[Column(Name = "file_type")]
-		public string FileType { get; set; }
-
-		[Column(Name = "file_size")]
-		public long FileSize { get; set; }
-
-		[Column(Name = "file_path")]
-		public string FilePath { get; set; }
-
-		[Column(Name = "created_at")]
-		public DateTime? CreatedAt { get; set; }
-
-		[Column(Name = "updated_at")]
-		public DateTime? UpdatedAt { get; set; }
-	}
-
 	[Table(Name = "v_crud_logs")]
 	public class VCrudLogPoco
 	{
 		[Column(Name = "crud_log_id")]
-		public long? CrudLogId { get; set; }
+		public long CrudLogId { get; set; }
 
 		[Column(Name = "action_type")]
 		public int? ActionType { get; set; }
@@ -309,9 +286,6 @@ namespace EventManager.DAL
 		[Column(Name = "username")]
 		public string Username { get; set; }
 
-		[Column(Name = "password")]
-		public string Password { get; set; }
-
 		[Column(Name = "first_name")]
 		public string FirstName { get; set; }
 
@@ -320,6 +294,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "last_name")]
 		public string LastName { get; set; }
+
+		[Column(Name = "user_full_name")]
+		public string UserFullName { get; set; }
 
 		[Column(Name = "email")]
 		public string Email { get; set; }
@@ -337,7 +314,7 @@ namespace EventManager.DAL
 		public long? RegionId { get; set; }
 
 		[Column(Name = "created_on_date_time")]
-		public DateTime? CreatedOnDateTime { get; set; }
+		public DateTime CreatedOnDateTime { get; set; }
 
 		[Column(Name = "created_by_user_id")]
 		public long? CreatedByUserId { get; set; }
@@ -350,6 +327,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "region_name")]
 		public string RegionName { get; set; }
+
+		[Column(Name = "has_profile_picture")]
+		public bool? HasProfilePicture { get; set; }
 	}
 
 	[Table(Name = "v_users_events")]
@@ -370,8 +350,8 @@ namespace EventManager.DAL
 		[Column(Name = "username")]
 		public string Username { get; set; }
 
-		[Column(Name = "profile_picture_path")]
-		public string ProfilePicturePath { get; set; }
+		[Column(Name = "has_profile_picture")]
+		public bool? HasProfilePicture { get; set; }
 	}
 
 	[Table(Name = "v_events")]
@@ -387,7 +367,7 @@ namespace EventManager.DAL
 		public string EventDescription { get; set; }
 
 		[Column(Name = "event_start_date_time")]
-		public DateTime? EventStartDateTime { get; set; }
+		public DateTime EventStartDateTime { get; set; }
 
 		[Column(Name = "event_end_date_time")]
 		public DateTime? EventEndDateTime { get; set; }
@@ -401,11 +381,14 @@ namespace EventManager.DAL
 		[Column(Name = "region_name")]
 		public string RegionName { get; set; }
 
-		[Column(Name = "username")]
-		public string Username { get; set; }
+		[Column(Name = "created_by_username")]
+		public string CreatedByUsername { get; set; }
 
-		[Column(Name = "main_image_id")]
-		public long? MainImageId { get; set; }
+		[Column(Name = "event_created_at_date_time")]
+		public DateTime? EventCreatedAtDateTime { get; set; }
+
+		[Column(Name = "has_main_image")]
+		public bool? HasMainImage { get; set; }
 	}
 
 }

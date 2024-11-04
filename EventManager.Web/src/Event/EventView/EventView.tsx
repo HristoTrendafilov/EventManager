@@ -143,7 +143,7 @@ export function EventViewComponent() {
                   <div>
                     Създаден от:{' '}
                     <Link to={`/users/${event.createdByUserId}/view`}>
-                      {event.username}
+                      {event.createdByUsername}
                     </Link>
                   </div>
 

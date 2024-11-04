@@ -109,7 +109,7 @@ namespace EventManager.API.Controllers
                 return Unauthorized();
             }
 
-            var eventToReturn = _mapper.CreateObject<EventDto>(eventPoco);
+            var eventToReturn = _mapper.CreateObject<EventUpdate>(eventPoco);
 
             return Ok(eventToReturn);
         }
@@ -136,7 +136,7 @@ namespace EventManager.API.Controllers
 
             await _eventService.UpdateEventAsync(eventId, @event, User.X_CurrentUserId());
 
-            return Ok(new SaveEventResponse { EventId = eventId });
+            return Ok(new PrimaryKeyResponse { PrimaryKey = eventId });
         }
 
         [HttpGet("{eventId}/main-image")]
@@ -171,7 +171,7 @@ namespace EventManager.API.Controllers
 
             var eventId = await _eventService.CreateEventAsync(@event, currentUserId);
 
-            return Ok(new SaveEventResponse { EventId = eventId });
+            return Ok(new PrimaryKeyResponse { PrimaryKey = eventId });
         }
 
         [Authorize]

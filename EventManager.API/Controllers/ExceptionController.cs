@@ -26,7 +26,7 @@ namespace EventManager.API.Controllers
         public async Task<ActionResult> GetAllExceptions()
         {
             var exceptions = await _exceptionService.GetAllExceptionsAsync(x => true);
-            var exceptionsToReturn = _mapper.CreateList<ExceptionDto>(exceptions); 
+            var exceptionsToReturn = _mapper.CreateList<ExceptionView>(exceptions); 
 
             return Ok(exceptionsToReturn);
         }
@@ -40,7 +40,7 @@ namespace EventManager.API.Controllers
             }
 
             var exception = await _exceptionService.GetExceptionAsync(x => x.ExceptionId == exceptionId);
-            var exceptionToReturn = _mapper.CreateObject<ExceptionDto>(exception);
+            var exceptionToReturn = _mapper.CreateObject<ExceptionView>(exception);
 
             return Ok(exceptionToReturn);
         }

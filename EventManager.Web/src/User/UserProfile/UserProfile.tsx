@@ -85,8 +85,7 @@ export function UserProfile() {
                       <h6 className="mb-0">Имена</h6>
                     </div>
                     <div className="col-sm-9 text-secondary">
-                      {userView.firstName} {userView.secondName}{' '}
-                      {userView.lastName}
+                      {userView.userFullName}
                     </div>
                   </div>
                   <hr />

@@ -10,8 +10,7 @@ namespace EventManager.API.Dto.Event
         }
 
         public bool CanEdit { get; set; }
-        public List<UserEventView> Subscribers { get; set; }
         public bool IsUserSubscribed { get; set; }
-        public bool HasMainImage => MainImageId != null;
+        public List<UserEventView> Subscribers { get; set; }
     }
 }

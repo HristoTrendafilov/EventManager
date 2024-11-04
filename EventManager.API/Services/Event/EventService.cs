@@ -5,6 +5,7 @@ using EventManager.API.Dto.User;
 using LinqToDB;
 using System.Linq.Expressions;
 using EventManager.API.Services.FileStorage;
+using EventManager.API.Dto.Event.Image;
 
 namespace EventManager.API.Services.Event
 {
@@ -64,7 +65,7 @@ namespace EventManager.API.Services.Event
         {
             var imagePath = await _fileStorageService.SaveFileToStorage(file);
 
-            var image = new ImagePoco
+            var image = new EventImageNew
             {
                 EventId = eventId,
                 ImageExtension = Path.GetExtension(file.FileName),
@@ -73,12 +74,12 @@ namespace EventManager.API.Services.Event
                 ImageName = file.FileName
             };
 
-            await _db.Images.X_CreateAsync(image, currentUserId);
+            await _db.EventImages.X_CreateAsync(image, currentUserId);
         }
 
         private async Task DeleteEventMainImageAsync(long eventId, long? currentUserId)
         {
-            var mainImage = await _db.Images.FirstOrDefaultAsync(x => x.EventId == eventId && x.ImageIsMain);
+            var mainImage = await _db.EventImages.FirstOrDefaultAsync(x => x.EventId == eventId && x.ImageIsMain);
             if (mainImage == null)
             {
                 return;
@@ -89,14 +90,14 @@ namespace EventManager.API.Services.Event
                 File.Delete(mainImage.ImageFilePath);
             }
 
-            await _db.Images.X_DeleteAsync(x => x.ImageId == mainImage.ImageId, currentUserId);
+            await _db.EventImages.X_DeleteAsync(x => x.ImageId == mainImage.ImageId, currentUserId);
         }
 
         public async Task DeleteEventAsync(long eventId, long? currentUserId)
         {
             await _db.WithTransactionAsync(async () =>
             {
-                var eventImages = await _db.Images.Where(x => x.EventId == eventId).ToListAsync();
+                var eventImages = await _db.EventImages.Where(x => x.EventId == eventId).ToListAsync();
                 foreach (var image in eventImages)
                 {
                     if (File.Exists(image.ImageFilePath))
@@ -106,7 +107,7 @@ namespace EventManager.API.Services.Event
                 }
 
                 await _db.UsersEvents.X_DeleteAsync(x => x.EventId == eventId, currentUserId);
-                await _db.Images.X_DeleteAsync(x => x.EventId == eventId, currentUserId);
+                await _db.EventImages.X_DeleteAsync(x => x.EventId == eventId, currentUserId);
                 await _db.Events.X_DeleteAsync(x => x.EventId == eventId, currentUserId);
             });
         }
@@ -139,7 +140,7 @@ namespace EventManager.API.Services.Event
 
         public Task<long> SubscribeUser(long eventId, long? currentUserId)
         {
-            var userEvent = new UserEventSubscribeNewDto
+            var userEvent = new UserEventNew
             {
                 EventId = eventId,
                 UserId = currentUserId.Value
@@ -174,7 +175,7 @@ namespace EventManager.API.Services.Event
 
         public async Task<byte[]> GetEventMainImageAsync(long eventId)
         {
-            var mainImage = await _db.Images.FirstOrDefaultAsync(x => x.EventId == eventId && x.ImageIsMain);
+            var mainImage = await _db.EventImages.FirstOrDefaultAsync(x => x.EventId == eventId && x.ImageIsMain);
             if (mainImage == null)
             {
                 return null;

@@ -17,12 +17,12 @@ namespace EventManager.API.Services.User
         Task<byte[]> GetUserProfilePictureAsync(long userId);
 
         Task<List<RegionPoco>> GetAllUserRegionsHelping(long userId);
-        Task CreateUserRegionHelpingAsync(UserRegionHelpingNewDto userRegionHelping, long? currentUserId);
+        Task CreateUserRegionHelpingAsync(UserRegionHelpingNew userRegionHelping, long? currentUserId);
         Task DeleteUserRegionHelpingAsync(Expression<Func<UserRegionHelpingPoco, bool>> predicate, long? currentUserId);
 
         Task<List<RolePoco>> GetAllUserRolesAsync(long userId);
         Task<UserRolePoco> GetUserRoleAsync(Expression<Func<UserRolePoco, bool>> predicate);
-        Task<long> CreateUserRoleAsync(UserRoleNewDto userClaim, long? currentUserId);
+        Task<long> CreateUserRoleAsync(UserRoleNew userClaim, long? currentUserId);
         Task DeleteUserRoleAsync(Expression<Func<UserRolePoco, bool>> predicate, long? currentUserId);
         Task<bool> UserRoleExistsAsync(Expression<Func<UserRolePoco, bool>> predicate);
     }

@@ -1,6 +1,6 @@
 ﻿namespace EventManager.API.Dto.Exception
 {
-    public class ExceptionUpdate : ExceptionManipulationDto
+    public class ExceptionUpdate : ExceptionManipulation
     {
     }
 }

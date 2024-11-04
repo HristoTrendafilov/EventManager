@@ -2,12 +2,14 @@
 
 namespace EventManager.API.Dto.User
 {
-    public class UserRoleNewDto
+    public class UserRegionHelpingNew
     {
+        public long UserRegionHelpingId { get; set; }
+
         [Required(ErrorMessage = "Потребителят е задължителен.")]
         public long UserId { get; set; }
 
-        [Required(ErrorMessage = "Правото е задължително.")]
-        public long RoleId { get; set; }
+        [Required(ErrorMessage = "Регионът е задължителен.")]
+        public long RegionId { get; set; }
     }
 }

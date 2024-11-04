@@ -1,10 +1,10 @@
 ﻿namespace EventManager.API.Dto.User
 {
-    public class UserEventSubscribeNewDto
+    public class UserEventNew
     {
-        public UserEventSubscribeNewDto()
+        public UserEventNew()
         {
-            this.UserSubscribedOnDateTime = DateTime.Now;
+            UserSubscribedOnDateTime = DateTime.Now;
         }
 
         public long UserId { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace EventManager.API.Dto.Region
 {
-    public class RegionUpdate : RegionManipulationDto
+    public class RegionUpdate : RegionManipulation
     {
     }
 }

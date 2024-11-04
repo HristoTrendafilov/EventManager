@@ -27,7 +27,7 @@ namespace EventManager.DAL
                 PocoBeforeAction = JsonConvert.SerializeObject(new T(), Formatting.Indented),
                 PocoAfterAction = JsonConvert.SerializeObject(poco, Formatting.Indented),
                 TableAffected = linqToDbTable.TableName,
-                ActionType = (int)DatabaseAction.Insert,
+                ActionType = (int)CrudActionType.Insert,
                 TableAffectedPrimaryKey = primaryKey,
                 CreatedByUserId = currentUserId,
                 ActionDateTime = DateTime.Now,
@@ -52,7 +52,7 @@ namespace EventManager.DAL
             {
                 PocoBeforeAction = JsonConvert.SerializeObject(poco, Formatting.Indented),
                 TableAffected = linqToDbTable.TableName,
-                ActionType = (int)DatabaseAction.Update,
+                ActionType = (int)CrudActionType.Update,
                 TableAffectedPrimaryKey = primaryKey,
                 CreatedByUserId = currentUserId,
                 ActionDateTime = DateTime.Now,
@@ -87,7 +87,7 @@ namespace EventManager.DAL
                     {
                         PocoBeforeAction = JsonConvert.SerializeObject(model, Formatting.Indented),
                         TableAffected = linqToDbTable.TableName,
-                        ActionType = (int)DatabaseAction.Delete,
+                        ActionType = (int)CrudActionType.Delete,
                         TableAffectedPrimaryKey = Convert.ToInt64(primaryKeyValue),
                         CreatedByUserId = currentUserId,
                         ActionDateTime = DateTime.Now,
@@ -122,7 +122,7 @@ namespace EventManager.DAL
         }
     }
 
-    public enum DatabaseAction
+    public enum CrudActionType
     {
         None = 0,
         Insert = 1,

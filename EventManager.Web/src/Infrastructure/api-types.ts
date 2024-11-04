@@ -14,6 +14,7 @@ export interface UserView {
   firstName: string;
   secondName: string;
   lastName: string;
+  userFullName: string;
   phoneNumber: string;
   email: string;
   regionId: number;
@@ -42,7 +43,7 @@ export interface EventView {
   regionId: number;
   createdByUserId: number;
   regionName: string;
-  username: string;
+  createdByUsername: string;
   isUserSubscribed: boolean;
   hasMainImage: boolean;
   canEdit: boolean;

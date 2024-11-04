@@ -31,7 +31,7 @@ namespace EventManager.API.Services.User
 
                 foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
                 {
-                    var userRegionHelping = new UserRegionHelpingNewDto { UserId = userId, RegionId = userRegionHelpingId };
+                    var userRegionHelping = new UserRegionHelpingNew { UserId = userId, RegionId = userRegionHelpingId };
                     await this.CreateUserRegionHelpingAsync(userRegionHelping, currentUserId);
                 }
 
@@ -79,7 +79,7 @@ namespace EventManager.API.Services.User
                 await this.DeleteUserRegionHelpingAsync(x => x.UserId == userId, currentUserId);
                 foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
                 {
-                    var userRegionHelping = new UserRegionHelpingNewDto { UserId = userId, RegionId = userRegionHelpingId };
+                    var userRegionHelping = new UserRegionHelpingNew { UserId = userId, RegionId = userRegionHelpingId };
                     await this.CreateUserRegionHelpingAsync(userRegionHelping, currentUserId);
                 }
 
@@ -102,7 +102,7 @@ namespace EventManager.API.Services.User
             return _db.Users.AnyAsync(predicate);
         }
 
-        public Task CreateUserRegionHelpingAsync(UserRegionHelpingNewDto userRegionHelping, long? currentUserId)
+        public Task CreateUserRegionHelpingAsync(UserRegionHelpingNew userRegionHelping, long? currentUserId)
         {
             return _db.UsersRegionsHelping.X_CreateAsync(userRegionHelping, currentUserId);
         }
@@ -124,7 +124,7 @@ namespace EventManager.API.Services.User
             return _db.UsersRoles.Where(x => x.UserId == userId && x.RoleId == (int)UserRole.Admin).AnyAsync();
         }
 
-        public Task<long> CreateUserRoleAsync(UserRoleNewDto userClaim, long? currentUserId)
+        public Task<long> CreateUserRoleAsync(UserRoleNew userClaim, long? currentUserId)
         {
             return _db.UsersRoles.X_CreateAsync(userClaim, currentUserId);
         }
