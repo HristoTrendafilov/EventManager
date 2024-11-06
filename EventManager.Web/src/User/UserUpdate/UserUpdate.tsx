@@ -162,12 +162,14 @@ export function UserUpdate() {
                     user={user}
                     userId={Number(userId)}
                     userProfilePicture={userProfilePicture}
+                    onUserUpdate={loadUser}
                   />
                 )}
                 {user && activeTab === 'settings' && (
                   <UserAccountSettings
                     userId={Number(userId)}
                     username={user.username}
+                    onUserUpdate={loadUser}
                   />
                 )}
                 {activeTab === 'security' && (

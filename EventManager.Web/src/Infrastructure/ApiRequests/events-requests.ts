@@ -4,7 +4,6 @@ import type {
   EventDto,
   EventView,
   PrimaryKeyResponse,
-  SaveEventResponse,
   UserEventView,
 } from '~Infrastructure/api-types';
 
@@ -17,11 +16,11 @@ export function getEventForUpdate(eventId: number) {
 }
 
 export function updateEvent(eventId: number, event: FormData) {
-  return callApi<SaveEventResponse>(`/events/${eventId}/update`, 'PUT', event);
+  return callApi<PrimaryKeyResponse>(`/events/${eventId}/update`, 'PUT', event);
 }
 
 export function createEvent(event: FormData) {
-  return callApi<SaveEventResponse>(`/events/new`, 'POST', event);
+  return callApi<PrimaryKeyResponse>(`/events/new`, 'POST', event);
 }
 
 export function getEventMainImage(eventId: number) {

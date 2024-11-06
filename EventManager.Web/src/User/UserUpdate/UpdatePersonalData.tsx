@@ -28,17 +28,22 @@ interface UpdatePersonalDataProps {
   userId: number;
   userProfilePicture: string | undefined;
   user: UserView;
+  onUserUpdate: () => void;
 }
 
 export function UpdatePersonalData(props: UpdatePersonalDataProps) {
   const [error, setError] = useState<string | undefined>();
   const [profilePicture, setProfilePicture] = useState<string>(noUserLogo);
 
-  const { user, userId, userProfilePicture } = props;
+  const { user, userId, userProfilePicture, onUserUpdate } = props;
 
-  const form = useZodForm({ schema: userManipulationSchema });
+  const form = useZodForm({
+    schema: userManipulationSchema,
+    defaultValues: user,
+  });
 
   const onProfilePictureChange = (file: File) => {
+    URL.revokeObjectURL(profilePicture);
     setProfilePicture(URL.createObjectURL(file));
   };
 
@@ -54,18 +59,17 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
         return;
       }
 
+      onUserUpdate();
       toast.success('Успешно променени данни.');
     },
-    [userId]
+    [onUserUpdate, userId]
   );
 
   useEffect(() => {
     if (userProfilePicture) {
       setProfilePicture(userProfilePicture);
     }
-
-    form.reset(user);
-  }, [form, user, userProfilePicture]);
+  }, [form, userProfilePicture]);
 
   return (
     <div className="user-data-wrapper">

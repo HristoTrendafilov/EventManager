@@ -35,6 +35,13 @@ export function EventUserCard(props: EventUserCardProps) {
     }
   }, [loadProfilePicture, user.hasProfilePicture]);
 
+  useEffect(
+    () => () => {
+      URL.revokeObjectURL(profilePicture);
+    },
+    [profilePicture]
+  );
+
   return (
     <Link
       to={`/users/${user.userId}/view`}

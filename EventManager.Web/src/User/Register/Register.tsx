@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
@@ -59,8 +59,16 @@ export function Register() {
   );
 
   const onProfilePictureChosen = (file: File) => {
+    URL.revokeObjectURL(profilePicture);
     setProfilePicture(URL.createObjectURL(file));
   };
+
+  useEffect(
+    () => () => {
+      URL.revokeObjectURL(profilePicture);
+    },
+    [profilePicture]
+  );
 
   return (
     <div className="register-wrapper">

@@ -40,6 +40,13 @@ export function UserProfile() {
     void fetchUserView();
   }, [fetchUserView]);
 
+  useEffect(
+    () => () => {
+      URL.revokeObjectURL(profilePicture);
+    },
+    [profilePicture]
+  );
+
   return (
     <div className="user-profile-wrapper">
       <div className="container mt-3">

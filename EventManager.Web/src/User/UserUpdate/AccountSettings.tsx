@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
@@ -7,6 +7,8 @@ import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessa
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+import { useAppDispatch } from '~Infrastructure/redux/store';
+import { updateUsername } from '~Infrastructure/redux/user-slice';
 
 const schema = z.object({
   username: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
@@ -17,15 +19,18 @@ export type UpdateUserUsername = z.infer<typeof schema>;
 interface UserAccountSettingsProps {
   userId: number;
   username: string;
+  onUserUpdate: () => void;
 }
 
 export function UserAccountSettings(props: UserAccountSettingsProps) {
   const [isLocked, setIsLocked] = useState<boolean>(true);
   const [error, setError] = useState<string | undefined>();
 
-  const { userId, username } = props;
+  const { userId, username, onUserUpdate } = props;
 
-  const form = useZodForm({ schema });
+  const form = useZodForm({ schema, defaultValues: { username } });
+
+  const dispatch = useAppDispatch();
 
   const toggleIsLocked = useCallback(() => {
     setIsLocked(!isLocked);
@@ -41,15 +46,13 @@ export function UserAccountSettings(props: UserAccountSettingsProps) {
         return;
       }
 
+      onUserUpdate();
+      dispatch(updateUsername({ username: user.username }));
       toast.success('Успешно променихте потребителското си име.');
       toggleIsLocked();
     },
-    [toggleIsLocked, userId]
+    [dispatch, onUserUpdate, toggleIsLocked, userId]
   );
-
-  useEffect(() => {
-    form.reset({ username });
-  }, [form, username]);
 
   return (
     <div className="user-account-settings-wrapper">

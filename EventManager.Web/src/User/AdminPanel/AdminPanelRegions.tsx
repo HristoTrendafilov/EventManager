@@ -1,5 +1,4 @@
 import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 import {
@@ -38,7 +37,7 @@ export function AdminPanelRegions() {
 
   const form = useZodForm({ schema });
 
-  const handleCloseFormModal = useCallback(() => {
+  const closeFormModal = useCallback(() => {
     setSubmitError(undefined);
     setRegionIdForEdit(undefined);
     setShowFormModal(false);
@@ -87,41 +86,46 @@ export function AdminPanelRegions() {
     [regions]
   );
 
-  const handleFormSubmit = useCallback(
+  const handleCreateRegion = useCallback(
     async (region: RegionForm) => {
-      setSubmitError(undefined);
-
-      let response;
-      if (regionIdForEdit) {
-        response = await updateRegion(regionIdForEdit, region);
-      } else {
-        response = await createRegion(region);
-      }
-
+      const response = await createRegion(region);
       if (!response.success) {
         setSubmitError(response.errorMessage);
         return;
       }
 
-      const { data } = response;
+      setFilteredRegions([response.data, ...regions]);
+    },
+    [regions]
+  );
 
-      if (regionIdForEdit) {
-        const newRegions = regions.map((r) =>
-          r.regionId === regionIdForEdit ? data : r
-        );
-        setFilteredRegions(newRegions);
-      } else {
-        setFilteredRegions([data, ...regions]);
+  const handleUpdateRegion = useCallback(
+    async (regionId: number, region: RegionForm) => {
+      const response = await updateRegion(regionId, region);
+      if (!response.success) {
+        setSubmitError(response.errorMessage);
+        return;
       }
 
-      toast.success(
-        `Успешно ${regionIdForEdit ? 'редактиран' : 'създаден'} регион: ${
-          response.data.regionName
-        }`
+      const newRegions = regions.map((r) =>
+        r.regionId === regionIdForEdit ? response.data : r
       );
-      handleCloseFormModal();
+      setFilteredRegions(newRegions);
     },
-    [handleCloseFormModal, regionIdForEdit, regions]
+    [regionIdForEdit, regions]
+  );
+
+  const handleFormSubmit = useCallback(
+    async (region: RegionForm) => {
+      if (regionIdForEdit) {
+        await handleUpdateRegion(regionIdForEdit, region);
+      } else {
+        await handleCreateRegion(region);
+      }
+
+      closeFormModal();
+    },
+    [closeFormModal, handleCreateRegion, handleUpdateRegion, regionIdForEdit]
   );
 
   useEffect(() => {
@@ -181,7 +185,7 @@ export function AdminPanelRegions() {
       {error && <ErrorMessage error={error} />}
 
       {showFormModal && (
-        <Modal onBackdropClick={handleCloseFormModal}>
+        <Modal onBackdropClick={closeFormModal}>
           <div className="region-form-wrapper container">
             <div className="card mt-4">
               <h3 className="card-header">
@@ -202,7 +206,7 @@ export function AdminPanelRegions() {
                     <button
                       type="button"
                       className="btn btn-warning w-100"
-                      onClick={handleCloseFormModal}
+                      onClick={closeFormModal}
                     >
                       Изход
                     </button>

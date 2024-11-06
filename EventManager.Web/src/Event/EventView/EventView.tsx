@@ -102,6 +102,13 @@ export function EventViewComponent() {
     void loadEvent();
   }, [loadEvent]);
 
+  useEffect(
+    () => () => {
+      URL.revokeObjectURL(mainImage);
+    },
+    [mainImage]
+  );
+
   return (
     <div className="event-view-wrapper">
       {event && (

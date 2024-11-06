@@ -118,7 +118,7 @@ export function Navbar() {
   }, [dispatch, navigate]);
 
   return (
-    <nav className="navbar bg-light fixed-top navbar-expand-md">
+    <nav className="navbar bg-light fixed-top navbar-expand-md px-md-5">
       <div className="container-fluid">
         <button
           id="offcanvasBtn"

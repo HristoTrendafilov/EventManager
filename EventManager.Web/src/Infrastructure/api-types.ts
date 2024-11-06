@@ -9,14 +9,14 @@ export interface RegionView {
 
 export interface UserView {
   userId: number;
-  createdOnDateTime: Date;
   username: string;
   firstName: string;
   secondName: string;
   lastName: string;
   userFullName: string;
-  phoneNumber: string;
   email: string;
+  phoneNumber: string;
+  createdOnDateTime: Date;
   regionId: number;
   regionName: string;
   shortDescription: string;
@@ -89,19 +89,6 @@ export interface PrimaryKeyResponse {
 
 export interface UserLoginResponseDto extends UserState {
   token: string;
-}
-
-export interface FileObject {
-  fileContents: string;
-  contentType: string;
-  fileDownloadName: string;
-  lastModified: Date;
-  entityTag: string;
-  enableRangeProcessing: boolean;
-}
-
-export interface SaveEventResponse {
-  eventId: number;
 }
 
 export const userManipulationSchema = z.object({

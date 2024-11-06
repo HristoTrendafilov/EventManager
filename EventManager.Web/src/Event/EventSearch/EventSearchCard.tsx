@@ -16,7 +16,7 @@ export function EventSearchCard(props: EventSearchCardProps) {
   const { event } = props;
 
   const [error, setError] = useState<string | undefined>();
-  const [mainImage, setMainImage] = useState<string | undefined>();
+  const [mainImage, setMainImage] = useState<string>(noImage);
 
   const loadMainImage = useCallback(async () => {
     const response = await getEventMainImage(Number(event.eventId));
@@ -31,10 +31,12 @@ export function EventSearchCard(props: EventSearchCardProps) {
   useEffect(() => {
     if (event.hasMainImage) {
       void loadMainImage();
-    } else {
-      setMainImage(noImage);
     }
-  }, [event.hasMainImage, loadMainImage]);
+
+    return () => {
+      URL.revokeObjectURL(mainImage);
+    };
+  }, [event.hasMainImage, loadMainImage, mainImage]);
 
   return (
     <div className="event-search-card-wrapper mt-3">
@@ -42,13 +44,11 @@ export function EventSearchCard(props: EventSearchCardProps) {
         <Link to={`/events/${event.eventId}/view`} className=" unset-anchor">
           <div className="row border">
             <div className="col-md-5 col-lg-3 p-0 d-flex">
-              {mainImage && (
-                <img
-                  className="object-fit-cover object-pos-center w-100"
-                  src={mainImage}
-                  alt="main"
-                />
-              )}
+              <img
+                className="object-fit-cover object-pos-center w-100"
+                src={mainImage}
+                alt="main"
+              />
             </div>
             <div className="col-md-7 col-lg-9">
               <div className="d-flex flex-column p-1">

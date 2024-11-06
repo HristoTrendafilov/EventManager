@@ -17,6 +17,7 @@ import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/Custo
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
 import { objectToFormData } from '~Infrastructure/utils';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
+import noImage from '~asset/no-image.png';
 
 import './EventForm.css';
 
@@ -44,7 +45,7 @@ const defaultValues: EventForm = {
 
 export function Event() {
   const [error, setError] = useState<string | undefined>();
-  const [mainImage, setMainImage] = useState<string | undefined>();
+  const [mainImage, setMainImage] = useState<string>(noImage);
 
   const { eventId } = useParams();
   const navigate = useNavigate();
@@ -72,16 +73,8 @@ export function Event() {
     [form]
   );
 
-  useEffect(() => {
-    if (eventId) {
-      void loadEvent(Number(eventId));
-    } else {
-      form.reset(defaultValues);
-      setMainImage(undefined);
-    }
-  }, [eventId, loadEvent, form]);
-
   const onMainImageChosen = (file: File) => {
+    URL.revokeObjectURL(mainImage);
     setMainImage(URL.createObjectURL(file));
   };
 
@@ -103,9 +96,26 @@ export function Event() {
         return;
       }
 
-      navigate(`/events/${response.data.eventId}/view`);
+      navigate(`/events/${response.data.primaryKey}/view`);
     },
     [eventId, navigate]
+  );
+
+  useEffect(() => {
+    if (eventId) {
+      void loadEvent(Number(eventId));
+    } else {
+      form.reset(defaultValues);
+      setMainImage(noImage);
+      setError(undefined);
+    }
+  }, [eventId, form, loadEvent]);
+
+  useEffect(
+    () => () => {
+      URL.revokeObjectURL(mainImage);
+    },
+    [mainImage]
   );
 
   return (
@@ -156,9 +166,7 @@ export function Event() {
                     />
                   </div>
                   <div className="card-body p-1 main-image-wrapper">
-                    {mainImage && (
-                      <img alt="main" className="main-image" src={mainImage} />
-                    )}
+                    <img alt="main" className="main-image" src={mainImage} />
                   </div>
                 </div>
               </div>

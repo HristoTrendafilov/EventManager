@@ -61,11 +61,13 @@ export const userSlice = createSlice({
     },
     removeUser: () => {
       localStorage.removeItem(localStorageKey);
-
       return initialUserState;
+    },
+    updateUsername: (state, action: PayloadAction<{ username: string }>) => {
+      state.username = action.payload.username;
     },
   },
 });
 
 export const userSelector = (state: ApplicationState) => state.user;
-export const { setUser, removeUser } = userSlice.actions;
+export const { setUser, removeUser, updateUsername } = userSlice.actions;
