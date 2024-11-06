@@ -24,7 +24,6 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-    document.title = 'Събития | Начало';
     void loadView();
   }, [loadView]);
 

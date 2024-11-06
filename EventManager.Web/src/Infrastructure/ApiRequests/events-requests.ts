@@ -1,7 +1,7 @@
 import type { EventSearchFilter } from '~Event/EventSearch/EventSearch';
 import { callApi } from '~Infrastructure/api-client';
 import type {
-  EventDto,
+  EventUpdate,
   EventView,
   PrimaryKeyResponse,
   UserEventView,
@@ -12,7 +12,7 @@ export function getEventView(eventId: number) {
 }
 
 export function getEventForUpdate(eventId: number) {
-  return callApi<EventDto>(`/events/${eventId}/update`, 'GET');
+  return callApi<EventUpdate>(`/events/${eventId}/update`, 'GET');
 }
 
 export function updateEvent(eventId: number, event: FormData) {

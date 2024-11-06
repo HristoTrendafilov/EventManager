@@ -2,5 +2,6 @@
 {
     public class EventUpdate : EventManipulationDto
     {
+        public bool HasMainImage { get; set; }
     }
 }

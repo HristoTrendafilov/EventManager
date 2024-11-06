@@ -62,13 +62,15 @@ export function Event() {
 
       form.reset(eventResponse.data);
 
-      const imageResponse = await getEventMainImage(paramEventId);
-      if (!imageResponse.success) {
-        setError(imageResponse.errorMessage);
-        return;
-      }
+      if (eventResponse.data.hasMainImage) {
+        const imageResponse = await getEventMainImage(paramEventId);
+        if (!imageResponse.success) {
+          setError(imageResponse.errorMessage);
+          return;
+        }
 
-      setMainImage(URL.createObjectURL(imageResponse.data));
+        setMainImage(URL.createObjectURL(imageResponse.data));
+      }
     },
     [form]
   );

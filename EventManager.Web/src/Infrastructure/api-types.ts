@@ -72,8 +72,7 @@ export interface PaginationHeader {
   totalPages: number;
 }
 
-export interface EventDto {
-  eventId: number;
+export interface EventUpdate {
   eventName: string;
   eventDescription: string | null;
   eventStartDateTime: Date;
@@ -81,6 +80,7 @@ export interface EventDto {
   createdByUserId: number;
   regionId: number;
   image: FileList | undefined | null;
+  hasMainImage: boolean;
 }
 
 export interface PrimaryKeyResponse {

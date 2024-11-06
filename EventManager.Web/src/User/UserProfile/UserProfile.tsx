@@ -27,13 +27,17 @@ export function UserProfile() {
 
     setUserView(userViewResponse.data);
 
-    const profilePictureResponse = await getUserProfilePicture(Number(userId));
-    if (!profilePictureResponse.success) {
-      setError(profilePictureResponse.errorMessage);
-      return;
-    }
+    if (userViewResponse.data.hasProfilePicture) {
+      const profilePictureResponse = await getUserProfilePicture(
+        Number(userId)
+      );
+      if (!profilePictureResponse.success) {
+        setError(profilePictureResponse.errorMessage);
+        return;
+      }
 
-    setProfilePicture(URL.createObjectURL(profilePictureResponse.data));
+      setProfilePicture(URL.createObjectURL(profilePictureResponse.data));
+    }
   }, [userId]);
 
   useEffect(() => {

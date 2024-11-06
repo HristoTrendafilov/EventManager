@@ -49,13 +49,17 @@ export function UserUpdate() {
 
     setUser(userResponse.data);
 
-    const profilePictureResponse = await getUserProfilePicture(Number(userId));
-    if (!profilePictureResponse.success) {
-      setError(profilePictureResponse.errorMessage);
-      return;
-    }
+    if (userResponse.data.hasProfilePicture) {
+      const profilePictureResponse = await getUserProfilePicture(
+        Number(userId)
+      );
+      if (!profilePictureResponse.success) {
+        setError(profilePictureResponse.errorMessage);
+        return;
+      }
 
-    setUserProfilePicture(URL.createObjectURL(profilePictureResponse.data));
+      setUserProfilePicture(URL.createObjectURL(profilePictureResponse.data));
+    }
   }, [userId]);
 
   useEffect(() => {

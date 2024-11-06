@@ -15,7 +15,7 @@ export function CarouselEvent(props: CarouselEventProps) {
   const { event, isActive } = props;
 
   const [error, setError] = useState<string | undefined>();
-  const [mainImage, setMainImage] = useState<string | undefined>();
+  const [mainImage, setMainImage] = useState<string>(noImage);
 
   const loadMainImage = useCallback(async () => {
     const response = await getEventMainImage(Number(event.eventId));
@@ -30,10 +30,15 @@ export function CarouselEvent(props: CarouselEventProps) {
   useEffect(() => {
     if (event.hasMainImage) {
       void loadMainImage();
-    } else {
-      setMainImage(noImage);
     }
   }, [event.hasMainImage, loadMainImage]);
+
+  useEffect(
+    () => () => {
+      URL.revokeObjectURL(mainImage);
+    },
+    [mainImage]
+  );
 
   return (
     <div className={`carousel-item ${isActive ? 'active' : ''}`}>
@@ -41,7 +46,7 @@ export function CarouselEvent(props: CarouselEventProps) {
         {mainImage && (
           <img
             src={mainImage}
-            className="d-block w-100 object-fit-cover object-pos-center"
+            className="w-100 object-fit-cover object-pos-center"
             alt="Event"
           />
         )}

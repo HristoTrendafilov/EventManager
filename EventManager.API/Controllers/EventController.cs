@@ -102,9 +102,9 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
+            var eventPoco = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
 
-            if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.CreatedByUserId))
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.CreatedByUserId.Value))
             {
                 return Unauthorized();
             }

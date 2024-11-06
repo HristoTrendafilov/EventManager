@@ -9,6 +9,7 @@ export const NavigatorSetter = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.title = 'Събития';
     dispatch(setNavigate(navigate)); // Set the navigate function globally in Redux
   }, [dispatch, navigate]);
 
