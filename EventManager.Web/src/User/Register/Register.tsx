@@ -65,9 +65,6 @@ export function Register() {
   const onProfilePictureChosen = useCallback(
     (file: File) => {
       setShowCropImageModal(true);
-      /* eslint-disable no-console */
-      console.log('show');
-      /* eslint-enable no-console */
       URL.revokeObjectURL(selectedImage);
       setSelectedImage(URL.createObjectURL(file));
       setSelectedImageName(file.name);
@@ -103,21 +100,9 @@ export function Register() {
     [croppedImage, selectedImage]
   );
 
-  /* eslint-disable no-console */
-  console.log(form.watch());
-  /* eslint-enable no-console */
-
   return (
     <div className="register-wrapper">
       <div className="container mt-3">
-        {showCropImageModal && (
-          <ImageCropModal
-            imageSrc={selectedImage}
-            fileName={selectedImageName}
-            onCropComplete={onCropComplete}
-            onBackdropClick={closeImageCropModal}
-          />
-        )}
         <CustomForm form={form} onSubmit={handleRegister}>
           <div className="row g-3">
             <div className="col-md-4">
@@ -240,6 +225,15 @@ export function Register() {
             </div>
           </div>
         </CustomForm>
+
+        {showCropImageModal && (
+          <ImageCropModal
+            imageSrc={selectedImage}
+            fileName={selectedImageName}
+            onCropComplete={onCropComplete}
+            onBackdropClick={closeImageCropModal}
+          />
+        )}
       </div>
     </div>
   );

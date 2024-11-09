@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import type { z } from 'zod';
 
 import { updateUserPersonalData } from '~Infrastructure/ApiRequests/users-requests';
+import { ImageCropModal } from '~Infrastructure/ImageCropping/ImageCropper';
 import {
   type UserView,
   userManipulationSchema,
@@ -33,7 +34,10 @@ interface UpdatePersonalDataProps {
 
 export function UpdatePersonalData(props: UpdatePersonalDataProps) {
   const [error, setError] = useState<string | undefined>();
-  const [profilePicture, setProfilePicture] = useState<string>(noUserLogo);
+  const [selectedImage, setSelectedImage] = useState<string>(noUserLogo);
+  const [selectedImageName, setSelectedImageName] = useState<string>('');
+  const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [showCropImageModal, setShowCropImageModal] = useState<boolean>(false);
 
   const { user, userId, userProfilePicture, onUserUpdate } = props;
 
@@ -43,8 +47,10 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
   });
 
   const onProfilePictureChange = (file: File) => {
-    URL.revokeObjectURL(profilePicture);
-    setProfilePicture(URL.createObjectURL(file));
+    setShowCropImageModal(true);
+    URL.revokeObjectURL(selectedImage);
+    setSelectedImage(URL.createObjectURL(file));
+    setSelectedImageName(file.name);
   };
 
   const handleSubmit = useCallback(
@@ -65,9 +71,27 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
     [onUserUpdate, userId]
   );
 
+  const closeImageCropModal = useCallback(() => {
+    setShowCropImageModal(false);
+  }, []);
+
+  const onCropComplete = (imageBlob: File | null) => {
+    if (croppedImage) {
+      URL.revokeObjectURL(croppedImage);
+    }
+
+    if (imageBlob) {
+      const croppedProfilePicture = URL.createObjectURL(imageBlob);
+      setCroppedImage(croppedProfilePicture);
+      form.setValue('profilePicture', imageBlob);
+    }
+
+    closeImageCropModal();
+  };
+
   useEffect(() => {
     if (userProfilePicture) {
-      setProfilePicture(userProfilePicture);
+      setCroppedImage(userProfilePicture);
     }
   }, [form, userProfilePicture]);
 
@@ -81,7 +105,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
             <img
               alt="profile"
               className="profile-picture"
-              src={profilePicture}
+              src={croppedImage || noUserLogo}
             />
           </div>
           <CustomButtonFileInput
@@ -130,6 +154,15 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
         </div>
       </CustomForm>
       {error && <ErrorMessage error={error} />}
+
+      {showCropImageModal && (
+        <ImageCropModal
+          imageSrc={selectedImage}
+          fileName={selectedImageName}
+          onCropComplete={onCropComplete}
+          onBackdropClick={closeImageCropModal}
+        />
+      )}
     </div>
   );
 }

@@ -56,6 +56,8 @@ function appendToFormData<T extends object>(
         for (let i = 0; i < value.length; i++) {
           formData.append(formKey, value[i]);
         }
+      } else if (value instanceof File) {
+        formData.append(formKey, value);
       }
       // else if (Array.isArray(value)) {
       //   value.forEach((item) => {
