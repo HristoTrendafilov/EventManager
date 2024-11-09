@@ -122,7 +122,7 @@ export function AdminPanelCrudLogs() {
                   type="button"
                   data-bs-toggle="collapse"
                   data-bs-target={`#collapse${x.crudLogId}`}
-                  aria-expanded="true"
+                  aria-expanded="false"
                   aria-controls="collapseOne"
                 >
                   <div className="row w-100">

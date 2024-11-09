@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 
 import { registerUser } from '~Infrastructure/ApiRequests/users-requests';
+import { ImageCropModal } from '~Infrastructure/ImageCropping/ImageCropper';
 import { userManipulationSchema } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
@@ -29,7 +30,10 @@ export type NewUser = z.infer<typeof schema>;
 
 export function Register() {
   const [error, setError] = useState<string>();
-  const [profilePicture, setProfilePicture] = useState<string>(noUserLogo);
+  const [selectedImage, setSelectedImage] = useState<string>(noUserLogo);
+  const [selectedImageName, setSelectedImageName] = useState<string>('');
+  const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [showCropImageModal, setShowCropImageModal] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -58,21 +62,62 @@ export function Register() {
     [form, navigate]
   );
 
-  const onProfilePictureChosen = (file: File) => {
-    URL.revokeObjectURL(profilePicture);
-    setProfilePicture(URL.createObjectURL(file));
+  const onProfilePictureChosen = useCallback(
+    (file: File) => {
+      setShowCropImageModal(true);
+      /* eslint-disable no-console */
+      console.log('show');
+      /* eslint-enable no-console */
+      URL.revokeObjectURL(selectedImage);
+      setSelectedImage(URL.createObjectURL(file));
+      setSelectedImageName(file.name);
+    },
+    [selectedImage]
+  );
+
+  const closeImageCropModal = useCallback(() => {
+    setShowCropImageModal(false);
+  }, []);
+
+  const onCropComplete = (imageBlob: File | null) => {
+    if (croppedImage) {
+      URL.revokeObjectURL(croppedImage);
+    }
+
+    if (imageBlob) {
+      const croppedProfilePicture = URL.createObjectURL(imageBlob);
+      setCroppedImage(croppedProfilePicture);
+      form.setValue('profilePicture', imageBlob);
+    }
+
+    closeImageCropModal();
   };
 
   useEffect(
     () => () => {
-      URL.revokeObjectURL(profilePicture);
+      URL.revokeObjectURL(selectedImage);
+      if (croppedImage) {
+        URL.revokeObjectURL(croppedImage);
+      }
     },
-    [profilePicture]
+    [croppedImage, selectedImage]
   );
+
+  /* eslint-disable no-console */
+  console.log(form.watch());
+  /* eslint-enable no-console */
 
   return (
     <div className="register-wrapper">
       <div className="container mt-3">
+        {showCropImageModal && (
+          <ImageCropModal
+            imageSrc={selectedImage}
+            fileName={selectedImageName}
+            onCropComplete={onCropComplete}
+            onBackdropClick={closeImageCropModal}
+          />
+        )}
         <CustomForm form={form} onSubmit={handleRegister}>
           <div className="row g-3">
             <div className="col-md-4">
@@ -81,7 +126,7 @@ export function Register() {
                 <div className="card-body d-flex flex-column gap-2 justify-content-center align-items-center">
                   <img
                     className="profile-picture"
-                    src={profilePicture}
+                    src={croppedImage || noUserLogo}
                     alt=""
                   />
                   <CustomButtonFileInput

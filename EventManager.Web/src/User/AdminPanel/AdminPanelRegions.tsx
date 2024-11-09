@@ -133,53 +133,59 @@ export function AdminPanelRegions() {
   }, [loadRegions]);
 
   return (
-    <div className="admin-panel-regions-wrapper mt-4">
+    <div
+      className="admin-panel-regions-wrapper mt-4"
+      style={{ maxWidth: '800px', margin: '0 auto' }}
+    >
       <div className="container">
-        <div className="d-flex justify-content-end">
-          <button
-            type="button"
-            className="btn btn-success mb-3"
-            onClick={() => handleShowFormModal()}
-          >
-            Нов регион
-          </button>
-        </div>
-        <TextInput
-          name="filterName"
-          label="Търси"
-          onChange={handleFilterNameChange}
-        />
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col" className="col-1">
-                #
-              </th>
-              <th scope="col">Име</th>
-              <th scope="col" className="col-auto text-nowrap">
-                Действия
-              </th>
-            </tr>
-          </thead>
-          <tbody>
+        <div className="card">
+          <h4 className="card-header d-flex justify-content-between align-items-center">
+            <div>Региони</div>
+            <button
+              type="button"
+              className="btn btn-success "
+              onClick={() => handleShowFormModal()}
+            >
+              Нов регион
+            </button>
+          </h4>
+          <div className="card-body">
+            <div className="row">
+              <div className="col-7">
+                <TextInput
+                  name="filterName"
+                  label="Търси"
+                  onChange={handleFilterNameChange}
+                />
+              </div>
+            </div>
+
             {filteredRegions.length > 0 &&
               filteredRegions.map((x) => (
-                <tr key={x.regionId}>
-                  <th scope="row">{x.regionId}</th>
-                  <td>{x.regionName}</td>
-                  <td>
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-primary"
-                      onClick={() => handleShowFormModal(x.regionId)}
-                    >
-                      Редакция
-                    </button>
-                  </td>
-                </tr>
+                <div className="card mb-2">
+                  <div className="card-body p-2">
+                    <div className="row align-items-center">
+                      <div className="col-2 col-md-2 col-lg-1">
+                        #{x.regionId}
+                      </div>
+                      <div className="col-5 col-md-7 col-lg-9">
+                        {x.regionName}
+                      </div>
+                      <div className="col-5 col-md-3 col-lg-2">
+                        <button
+                          type="button"
+                          className="btn btn-primary w-100"
+                          onClick={() => handleShowFormModal(x.regionId)}
+                        >
+                          Редакция
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               ))}
-          </tbody>
-        </table>
+          </div>
+        </div>
       </div>
 
       {error && <ErrorMessage error={error} />}

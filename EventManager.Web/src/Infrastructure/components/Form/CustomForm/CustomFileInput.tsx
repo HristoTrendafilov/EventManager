@@ -50,6 +50,8 @@ export const CustomFileInput = forwardRef<
           onFileChosen(files[0]);
         }
       }
+
+      event.target.value = '';
     },
     [props, onFileChosen]
   );

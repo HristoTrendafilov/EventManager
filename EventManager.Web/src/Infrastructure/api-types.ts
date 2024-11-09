@@ -99,5 +99,5 @@ export const userManipulationSchema = z.object({
   regionId: z.number(),
   shortDescription: z.string().nullable(),
   userRegionsHelpingIds: z.number().array(),
-  profilePicture: z.instanceof(FileList).nullable(),
+  profilePicture: z.instanceof(File).nullable(),
 });
