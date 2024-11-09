@@ -164,7 +164,7 @@ export function EventViewComponent() {
             </div>
 
             <div className="col-lg-4">
-              <div className="card">
+              <div className="card subscribers-card">
                 <div className="card-header">
                   <div className="d-flex justify-content-between align-items-center">
                     <h5>Участници ({subscribers.length})</h5>
@@ -205,7 +205,7 @@ export function EventViewComponent() {
                   {error && <ErrorMessage error={subscriptionError} />}
                 </div>
 
-                <div className="card-body">
+                <div className="card-body p-2">
                   <div className="d-flex flex-column gap-1 subscribers ">
                     {subscribers.map((x) => (
                       <EventUserCard key={x.userId} user={x} />

@@ -1,27 +1,32 @@
-.main-image-wrapper {
+.event-view-wrapper .main-image-wrapper {
   display: flex;
   height: 400px;
 }
 
-.main-image-wrapper img {
+.event-view-wrapper .main-image-wrapper img {
   width: 100%;
   object-fit: cover;
   object-position: center;
 }
 
-.subscribers {
-  height: 100vh;
+.event-view-wrapper .subscribers-card {
+  position: sticky;
+  top: 3.5em;
+}
+
+.event-view-wrapper .subscribers {
+  height: 70vh;
   overflow-y: scroll;
 }
 
 @media (max-width: 991px) {
-  .subscribers {
+  .event-view-wrapper .subscribers {
     height: 350px;
   }
 }
 
 @media (max-width: 486px) {
-  .main-image-wrapper {
+  .event-view-wrapper .main-image-wrapper {
     height: 200px;
   }
 }
