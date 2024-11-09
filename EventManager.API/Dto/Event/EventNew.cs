@@ -1,10 +1,8 @@
-﻿using EventManager.API.Helpers;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace EventManager.API.Dto.Event
 {
-    [GenerateZodSchema]
-    public class EventNew : EventManipulationDto
+    public class EventNew : EventBaseForm
     {
         public EventNew()
         {
@@ -13,5 +11,8 @@ namespace EventManager.API.Dto.Event
 
         [JsonIgnore]
         public DateTime EventCreatedAtDateTime { get; set; }
+
+        [JsonIgnore]
+        public virtual long CreatedByUserId { get; set; }
     }
 }

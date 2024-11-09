@@ -47,7 +47,7 @@ namespace EventManager.API.Services.Event
             });
         }
 
-        public async Task UpdateEventAsync(long eventId, EventUpdate @event, long? currentUserId)
+        public async Task UpdateEventAsync(long eventId, EventBaseForm @event, long? currentUserId)
         {
             await _db.WithTransactionAsync(async () =>
             {

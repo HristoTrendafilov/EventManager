@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import { z } from 'zod';
 
 import { registerUser } from '~Infrastructure/ApiRequests/users-requests';
 import { ImageCropModal } from '~Infrastructure/ImageCropping/ImageCropper';
-import { userManipulationSchema } from '~Infrastructure/api-types';
+import { UserNewSchema, type UserNewType } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
@@ -19,15 +18,6 @@ import noUserLogo from '~asset/no-user-logo.png';
 
 import './Register.css';
 
-const schema = userManipulationSchema.extend({
-  username: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
-  password: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
-  passwordRepeated: z.string(),
-  email: z.string().email('Неправилен имейл'),
-});
-
-export type NewUser = z.infer<typeof schema>;
-
 export function Register() {
   const [error, setError] = useState<string>();
   const [selectedImage, setSelectedImage] = useState<string>(noUserLogo);
@@ -37,10 +27,10 @@ export function Register() {
 
   const navigate = useNavigate();
 
-  const form = useZodForm({ schema });
+  const form = useZodForm({ schema: UserNewSchema });
 
   const handleRegister = useCallback(
-    async (user: NewUser) => {
+    async (user: UserNewType) => {
       if (user.password !== user.passwordRepeated) {
         form.setError('password', { message: 'Паролите не съвпадат' });
         form.setError('passwordRepeated', { message: 'Паролите не съвпадат' });

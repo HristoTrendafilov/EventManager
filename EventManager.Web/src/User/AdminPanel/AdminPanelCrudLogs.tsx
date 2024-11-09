@@ -117,7 +117,7 @@ export function AdminPanelCrudLogs() {
               <div className="accordion-header" id="headingOne">
                 <button
                   className={`accordion-button text-white bg-${accordionBackColor.get(
-                    x.actionType
+                    x.actionType!
                   )}`}
                   type="button"
                   data-bs-toggle="collapse"
@@ -128,7 +128,7 @@ export function AdminPanelCrudLogs() {
                   <div className="row w-100">
                     <div className="col-md-8 col-lg-9"> {x.tableAffected}</div>
                     <div className="col-md-4 col-lg-3">
-                      {formatDateTime(x.actionDateTime)}
+                      {formatDateTime(x.actionDateTime!)}
                     </div>
                   </div>
                 </button>

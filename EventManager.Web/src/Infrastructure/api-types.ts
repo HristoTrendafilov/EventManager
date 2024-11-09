@@ -1,14 +1,49 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable no-use-before-define */
+
 import { z } from 'zod';
 
-import type { UserState } from './redux/user-slice';
+// interfaces
+export interface PaginationMetadata {
+  totalCount: number;
+  pageSize: number;
+  currentPage: number;
+  totalPages: number;
+}
 
-export interface RegionView {
+export interface PrimaryKeyResponse {
+  primaryKey: number;
+}
+
+export interface UserForUpdate {
+  hasProfilePicture: boolean;
+  username: string;
+  firstName: string;
+  secondName: string;
+  lastName: string;
+  phoneNumber: string;
+  shortDescription: string;
   regionId: number;
-  regionName: string;
+  userRegionsHelpingIds: number[];
+  profilePicture: File | null | undefined;
+  profilePicturePath: string;
+}
+
+export interface UserForWeb {
+  userId: number;
+  username: string;
+  token: string;
+  webSessionId: number;
+  isLoggedIn: boolean;
+  isAdmin: boolean;
+  isEventCreator: boolean;
 }
 
 export interface UserView {
-  userId: number;
+  canEdit: boolean;
+  regionsHelping: RegionView[];
+  userRegionsHelpingIds: number[];
+  userId: number | null;
   username: string;
   firstName: string;
   secondName: string;
@@ -16,88 +51,142 @@ export interface UserView {
   userFullName: string;
   email: string;
   phoneNumber: string;
-  createdOnDateTime: Date;
-  regionId: number;
-  regionName: string;
-  shortDescription: string;
-  canEdit: boolean;
-  regionsHelping: RegionView[];
-  hasProfilePicture: boolean;
-}
-
-export interface UserEventView {
-  userEventId: number;
-  userId: number;
-  username: string;
-  eventId: number;
-  userSubscribedOnDateTime: Date;
-  hasProfilePicture: boolean;
-}
-
-export interface EventView {
-  eventId: number;
-  eventName: string;
-  eventDescription: string | null;
-  eventStartDateTime: Date;
-  eventEndDateTime: Date | null;
-  regionId: number;
-  createdByUserId: number;
-  regionName: string;
-  createdByUsername: string;
-  isUserSubscribed: boolean;
-  hasMainImage: boolean;
-  canEdit: boolean;
-}
-
-export interface CrudLogView {
-  crudLogId: number;
-  actionType: number;
-  tableAffected: string;
-  tableAffectedPrimaryKey: number;
-  pocoBeforeAction: string;
-  pocoAfterAction: string;
+  regionId: number | null;
+  createdOnDateTime: Date | null;
   createdByUserId: number | null;
-  actionDateTime: Date;
-  username: string;
+  shortDescription: string;
+  regionName: string;
+  hasProfilePicture: boolean | null;
+}
+
+export interface RegionView {
+  regionId: number;
+  regionName: string;
 }
 
 export interface HomeView {
   incommingEvents: EventView[];
 }
 
-export interface PaginationHeader {
-  totalCount: number;
-  pageSize: number;
-  currentPage: number;
-  totalPages: number;
-}
-
-export interface EventUpdate {
+export interface EventForUpdate {
+  hasMainImage: boolean;
   eventName: string;
-  eventDescription: string | null;
+  eventDescription: string;
   eventStartDateTime: Date;
   eventEndDateTime: Date | null;
-  createdByUserId: number;
   regionId: number;
-  image: FileList | undefined | null;
-  hasMainImage: boolean;
+  mainImage: File | null | undefined;
 }
 
-export interface PrimaryKeyResponse {
-  primaryKey: number;
+export interface EventView {
+  canEdit: boolean;
+  isUserSubscribed: boolean;
+  subscribers: UserEventView[];
+  eventId: number | null;
+  eventName: string;
+  eventDescription: string;
+  eventStartDateTime: Date | null;
+  eventEndDateTime: Date | null;
+  regionId: number | null;
+  createdByUserId: number | null;
+  regionName: string;
+  createdByUsername: string;
+  eventCreatedAtDateTime: Date | null;
+  hasMainImage: boolean | null;
 }
 
-export interface UserLoginResponseDto extends UserState {
-  token: string;
+export interface UserEventView {
+  userEventId: number | null;
+  userId: number | null;
+  userSubscribedOnDateTime: Date | null;
+  eventId: number | null;
+  username: string;
+  hasProfilePicture: boolean | null;
 }
 
-export const userManipulationSchema = z.object({
+export interface CrudLogView {
+  crudLogId: number | null;
+  actionType: number | null;
+  tableAffected: string;
+  tableAffectedPrimaryKey: number | null;
+  pocoBeforeAction: string;
+  pocoAfterAction: string;
+  createdByUserId: number | null;
+  actionDateTime: Date | null;
+  username: string;
+}
+
+// zod schemas
+export const UserBaseFormSchema = z.object({
   firstName: z.string(),
   secondName: z.string().nullable(),
   lastName: z.string(),
   phoneNumber: z.string().nullable(),
-  regionId: z.number(),
   shortDescription: z.string().nullable(),
+  regionId: z.number(),
   userRegionsHelpingIds: z.number().array(),
   profilePicture: z.instanceof(File).nullable(),
+  profilePicturePath: z.string().nullable(),
 });
+export type UserBaseFormType = z.infer<typeof UserBaseFormSchema>;
+
+export const UserLoginSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+});
+export type UserLoginType = z.infer<typeof UserLoginSchema>;
+
+export const UserNewSchema = z.object({
+  username: z.string(),
+  email: z.string(),
+  password: z.string(),
+  passwordRepeated: z.string(),
+  firstName: z.string(),
+  secondName: z.string().nullable(),
+  lastName: z.string(),
+  phoneNumber: z.string().nullable(),
+  shortDescription: z.string().nullable(),
+  regionId: z.number(),
+  userRegionsHelpingIds: z.number().array(),
+  profilePicture: z.instanceof(File).nullable(),
+  profilePicturePath: z.string().nullable(),
+});
+export type UserNewType = z.infer<typeof UserNewSchema>;
+
+export const UserUpdatePasswordSchema = z.object({
+  oldPassword: z.string().nullable(),
+  newPassword: z.string().nullable(),
+  newPasswordRepeated: z.string().nullable(),
+});
+export type UserUpdatePasswordType = z.infer<typeof UserUpdatePasswordSchema>;
+
+export const UserUpdatePersonalDataSchema = z.object({
+  firstName: z.string(),
+  secondName: z.string().nullable(),
+  lastName: z.string(),
+  phoneNumber: z.string().nullable(),
+  shortDescription: z.string().nullable(),
+  regionId: z.number(),
+  userRegionsHelpingIds: z.number().array(),
+  profilePicture: z.instanceof(File).nullable(),
+  profilePicturePath: z.string().nullable(),
+});
+export type UserUpdatePersonalDataType = z.infer<
+  typeof UserUpdatePersonalDataSchema
+>;
+
+export const EventBaseFormSchema = z.object({
+  eventName: z.string(),
+  eventDescription: z.string().nullable(),
+  eventStartDateTime: z.coerce.date(),
+  eventEndDateTime: z.coerce.date().nullable(),
+  regionId: z.number(),
+  mainImage: z.instanceof(File).nullable(),
+});
+export type EventBaseFormType = z.infer<typeof EventBaseFormSchema>;
+
+export const EventSearchFilterSchema = z.object({
+  eventName: z.string().nullable(),
+  pageSize: z.number(),
+});
+export type EventSearchFilterType = z.infer<typeof EventSearchFilterSchema>;

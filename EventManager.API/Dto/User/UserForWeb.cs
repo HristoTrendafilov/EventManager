@@ -1,6 +1,9 @@
-﻿namespace EventManager.API.Dto.User
+﻿using EventManager.API.Helpers;
+
+namespace EventManager.API.Dto.User
 {
-    public class UserForWebDto
+    [GenerateTypeScriptInterface]
+    public class UserForWeb
     {
         public long UserId { get; set; }
         public string Username { get; set; }

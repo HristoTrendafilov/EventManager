@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { z } from 'zod';
 
 import { getEventSearch } from '~Infrastructure/ApiRequests/events-requests';
-import type { EventView, PaginationHeader } from '~Infrastructure/api-types';
+import type { EventView, PaginationMetadata } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
@@ -27,7 +27,9 @@ const defaultValues: EventSearchFilter = {
 export function EventSearch() {
   const [events, setEvents] = useState<EventView[]>([]);
   const [error, setError] = useState<string | undefined>();
-  const [pagination, setPagination] = useState<PaginationHeader | undefined>();
+  const [pagination, setPagination] = useState<
+    PaginationMetadata | undefined
+  >();
 
   const form = useZodForm({ schema, defaultValues });
 
@@ -45,7 +47,7 @@ export function EventSearch() {
       if (paginationHeader) {
         const paginationValue = JSON.parse(
           paginationHeader
-        ) as PaginationHeader;
+        ) as PaginationMetadata;
         setPagination(paginationValue);
       }
 

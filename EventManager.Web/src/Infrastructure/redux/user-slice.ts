@@ -1,6 +1,6 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import type { UserLoginResponseDto } from '~Infrastructure/api-types';
+import type { UserForWeb } from '~Infrastructure/api-types';
 
 import type { ApplicationState } from './store';
 
@@ -46,7 +46,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: getInitialState(),
   reducers: {
-    setUser: (state, action: PayloadAction<UserLoginResponseDto>) => {
+    setUser: (state, action: PayloadAction<UserForWeb>) => {
       const { payload } = action;
 
       state.userId = payload.userId;

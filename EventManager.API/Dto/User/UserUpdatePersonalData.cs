@@ -1,7 +1,9 @@
-﻿namespace EventManager.API.Dto.User
+﻿using EventManager.API.Helpers;
+
+namespace EventManager.API.Dto.User
 {
-    public class UserUpdatePersonalData : UserManipulation
+    [GenerateZodSchema]
+    public class UserUpdatePersonalData : UserBaseForm
     {
- 
     }
 }

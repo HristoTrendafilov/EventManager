@@ -20,7 +20,7 @@ export function EventUserCard(props: EventUserCardProps) {
   const [error, setError] = useState<string>();
 
   const loadProfilePicture = useCallback(async () => {
-    const response = await getUserProfilePicture(user.userId);
+    const response = await getUserProfilePicture(user.userId!);
     if (!response.success) {
       setError(response.errorMessage);
       return;
@@ -52,7 +52,7 @@ export function EventUserCard(props: EventUserCardProps) {
         <div className="d-flex flex-column ms-2">
           <div>{user.username}</div>
           <div className="fst-italic">
-            {formatDateTime(user.userSubscribedOnDateTime)}
+            {formatDateTime(user.userSubscribedOnDateTime!)}
           </div>
         </div>
       </div>

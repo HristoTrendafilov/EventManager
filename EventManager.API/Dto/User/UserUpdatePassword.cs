@@ -1,5 +1,8 @@
-﻿namespace EventManager.API.Dto.User
+﻿using EventManager.API.Helpers;
+
+namespace EventManager.API.Dto.User
 {
+    [GenerateZodSchema]
     public class UserUpdatePassword
     {
         public string OldPassword { get; set; }

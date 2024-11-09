@@ -1,7 +1,11 @@
 import { callApi } from '~Infrastructure/api-client';
-import type { UserLoginResponseDto, UserView } from '~Infrastructure/api-types';
+import type {
+  UserBaseFormType,
+  UserForUpdate,
+  UserForWeb,
+  UserView,
+} from '~Infrastructure/api-types';
 import type { UserLogin } from '~User/Login/Login';
-import type { UpdatePersonalDataForm } from '~User/UserUpdate/UpdatePersonalData';
 import type { UserUpdatePassword } from '~User/UserUpdate/UserSecurity';
 
 export function registerUser(user: FormData) {
@@ -17,7 +21,7 @@ export function getUserView(userId: number) {
 }
 
 export function getUserForUpdate(userId: number) {
-  return callApi<UserView>(`/users/${userId}/update`, 'GET');
+  return callApi<UserForUpdate>(`/users/${userId}/update`, 'GET');
 }
 
 export function getUserProfilePicture(userId: number) {
@@ -43,7 +47,7 @@ export function updateUserPassword(
 }
 
 export function getUserPersonalData(userId: number) {
-  return callApi<UpdatePersonalDataForm>(
+  return callApi<UserBaseFormType>(
     `/users/${userId}/update/personal-data`,
     'GET'
   );
@@ -58,9 +62,5 @@ export function updateUserPersonalData(userId: number, user: FormData) {
 }
 
 export function loginUser(req: UserLogin) {
-  return callApi<UserLoginResponseDto>(
-    '/users/login',
-    'POST',
-    JSON.stringify(req)
-  );
+  return callApi<UserForWeb>('/users/login', 'POST', JSON.stringify(req));
 }

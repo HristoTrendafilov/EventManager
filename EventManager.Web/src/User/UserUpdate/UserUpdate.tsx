@@ -7,7 +7,7 @@ import {
   getUserForUpdate,
   getUserProfilePicture,
 } from '~Infrastructure/ApiRequests/users-requests';
-import type { UserView } from '~Infrastructure/api-types';
+import type { UserForUpdate } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 
 import { UserAccountSettings } from './AccountSettings';
@@ -27,7 +27,7 @@ type UserUpdateTabName = keyof typeof UserUpdateTabNames;
 export function UserUpdate() {
   const [activeTab, setActiveTab] = useState<UserUpdateTabName>('profile');
   const [error, setError] = useState<string | undefined>();
-  const [user, setUser] = useState<UserView | undefined>();
+  const [user, setUser] = useState<UserForUpdate | undefined>();
   const [userProfilePicture, setUserProfilePicture] = useState<
     string | undefined
   >();

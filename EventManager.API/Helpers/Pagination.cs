@@ -27,6 +27,7 @@ namespace EventManager.API.Helpers
         }
     }
 
+    [GenerateTypeScriptInterface]
     public class PaginationMetadata
     {
         public PaginationMetadata(int totalItemCount, int pageSize, int currentPage, int totalPages)

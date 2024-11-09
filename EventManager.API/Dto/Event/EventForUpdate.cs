@@ -1,10 +1,10 @@
 ﻿using EventManager.API.Helpers;
-using EventManager.DAL;
 
 namespace EventManager.API.Dto.Event
 {
     [GenerateTypeScriptInterface]
-    public class UserEventView : VUserEventPoco
+    public class EventForUpdate : EventBaseForm
     {
+        public bool HasMainImage { get; set; }
     }
 }

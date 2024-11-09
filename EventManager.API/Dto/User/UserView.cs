@@ -1,9 +1,11 @@
 ﻿using EventManager.API.Dto.Region;
+using EventManager.API.Helpers;
 using EventManager.DAL;
 using Newtonsoft.Json;
 
 namespace EventManager.API.Dto.User
 {
+    [GenerateTypeScriptInterface]
     public class UserView : VUserPoco
     {
         public UserView()

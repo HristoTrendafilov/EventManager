@@ -104,13 +104,12 @@ namespace EventManager.API.Controllers
             }
 
             var eventPoco = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
-
             if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.CreatedByUserId.Value))
             {
                 return Unauthorized();
             }
 
-            var eventToReturn = _mapper.CreateObject<EventUpdate>(eventPoco);
+            var eventToReturn = _mapper.CreateObject<EventForUpdate>(eventPoco);
 
             return Ok(eventToReturn);
         }
@@ -118,13 +117,8 @@ namespace EventManager.API.Controllers
         [Authorize]
         [Role(UserRole.EventCreator)]
         [HttpPut("{eventId}/update")]
-        public async Task<ActionResult> UpdateEvent(long eventId, [FromForm] EventUpdate @event)
+        public async Task<ActionResult> UpdateEvent(long eventId, [FromForm] EventForUpdate @event)
         {
-            if (!await _sharedService.IsUserAuthorizedToEdit(User, @event.CreatedByUserId))
-            {
-                return Unauthorized();
-            }
-
             if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
             {
                 return NotFound();
@@ -133,6 +127,12 @@ namespace EventManager.API.Controllers
             if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName && x.EventId != eventId))
             {
                 return BadRequest($"Вече съществува събитие с име: {@event.EventName}");
+            }
+
+            var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.CreatedByUserId))
+            {
+                return Unauthorized();
             }
 
             await _eventService.UpdateEventAsync(eventId, @event, User.X_CurrentUserId());

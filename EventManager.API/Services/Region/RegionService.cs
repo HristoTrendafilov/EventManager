@@ -14,7 +14,7 @@ namespace EventManager.API.Services.Region
             _db = db;
         }
 
-        public Task<long> CreateRegionAsync(RegionNew region, long? currentUserId)
+        public Task<long> CreateRegionAsync(RegionBaseForm region, long? currentUserId)
         {
             return _db.Regions.X_CreateAsync(region, currentUserId);
         }
@@ -39,7 +39,7 @@ namespace EventManager.API.Services.Region
             return _db.Regions.AnyAsync(predicate);
         }
 
-        public Task UpdateRegionAsync(long regionId, RegionUpdate region, long? currentUserId)
+        public Task UpdateRegionAsync(long regionId, RegionBaseForm region, long? currentUserId)
         {
             return _db.Regions.X_UpdateAsync(regionId, region, currentUserId);
         }

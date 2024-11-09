@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import type { z } from 'zod';
 
 import { updateUserPersonalData } from '~Infrastructure/ApiRequests/users-requests';
 import { ImageCropModal } from '~Infrastructure/ImageCropping/ImageCropper';
 import {
-  type UserView,
-  userManipulationSchema,
+  type UserForUpdate,
+  UserUpdatePersonalDataSchema,
+  type UserUpdatePersonalDataType,
 } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
@@ -19,16 +19,10 @@ import { RegionMultiSelect } from '~Shared/SmartSelects/Region/RegionMultiSelect
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 import noUserLogo from '~asset/no-user-logo.png';
 
-const userUpdatePersonalDataSchema = userManipulationSchema.extend({});
-
-export type UpdatePersonalDataForm = z.infer<
-  typeof userUpdatePersonalDataSchema
->;
-
 interface UpdatePersonalDataProps {
   userId: number;
   userProfilePicture: string | undefined;
-  user: UserView;
+  user: UserForUpdate;
   onUserUpdate: () => void;
 }
 
@@ -42,7 +36,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
   const { user, userId, userProfilePicture, onUserUpdate } = props;
 
   const form = useZodForm({
-    schema: userManipulationSchema,
+    schema: UserUpdatePersonalDataSchema,
     defaultValues: user,
   });
 
@@ -54,7 +48,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
   };
 
   const handleSubmit = useCallback(
-    async (personalData: UpdatePersonalDataForm) => {
+    async (personalData: UserUpdatePersonalDataType) => {
       setError(undefined);
 
       const formData = objectToFormData(personalData);

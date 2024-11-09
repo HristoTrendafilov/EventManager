@@ -3,9 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EventManager.API.Dto.User
 {
-    public abstract class UserManipulation
+    [GenerateZodSchema]
+    public abstract class UserBaseForm
     {
-        protected UserManipulation()
+        protected UserBaseForm()
         {
             UserRegionsHelpingIds = new List<long>();
         }

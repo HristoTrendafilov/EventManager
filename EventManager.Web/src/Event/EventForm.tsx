@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { z } from 'zod';
 
 import {
   createEvent,
@@ -8,6 +7,10 @@ import {
   getEventMainImage,
   updateEvent,
 } from '~Infrastructure/ApiRequests/events-requests';
+import {
+  EventBaseFormSchema,
+  type EventBaseFormType,
+} from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomDateInput } from '~Infrastructure/components/Form/CustomForm/CustomDateInput';
@@ -21,26 +24,13 @@ import noImage from '~asset/no-image.png';
 
 import './EventForm.css';
 
-const schema = z.object({
-  eventName: z.string(),
-  eventDescription: z.string().nullable(),
-  eventStartDateTime: z.coerce.date(),
-  eventEndDateTime: z.coerce.date().nullable(),
-  regionId: z.number(),
-  mainImage: z.instanceof(File).nullable(),
-  createdByUserId: z.number(),
-});
-
-type EventForm = z.infer<typeof schema>;
-
-const defaultValues: EventForm = {
+const defaultValues: EventBaseFormType = {
   eventName: '',
   eventDescription: null,
   eventStartDateTime: new Date(),
   eventEndDateTime: null,
   regionId: 0,
   mainImage: null,
-  createdByUserId: 0,
 };
 
 export function Event() {
@@ -50,7 +40,7 @@ export function Event() {
   const { eventId } = useParams();
   const navigate = useNavigate();
 
-  const form = useZodForm({ schema });
+  const form = useZodForm({ schema: EventBaseFormSchema });
 
   const loadEvent = useCallback(
     async (paramEventId: number) => {
@@ -82,7 +72,7 @@ export function Event() {
   };
 
   const handleSubmit = useCallback(
-    async (event: EventForm) => {
+    async (event: EventBaseFormType) => {
       setError(undefined);
 
       const formData = objectToFormData(event);

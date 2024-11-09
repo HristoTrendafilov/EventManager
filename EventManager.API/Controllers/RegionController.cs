@@ -49,7 +49,7 @@ namespace EventManager.API.Controllers
         [Authorize]
         [Role(UserRole.Admin)]
         [HttpPost("new")]
-        public async Task<ActionResult> CreateRegion(RegionNew region)
+        public async Task<ActionResult> CreateRegion(RegionBaseForm region)
         {
             if (await _regionService.RegionExistsAsync(x => x.RegionName == region.RegionName))
             {
@@ -67,7 +67,7 @@ namespace EventManager.API.Controllers
         [Authorize]
         [Role(UserRole.Admin)]
         [HttpPut("{regionId}/update")]
-        public async Task<ActionResult> UpdateRegion(long regionId, RegionUpdate region)
+        public async Task<ActionResult> UpdateRegion(long regionId, RegionBaseForm region)
         {
             if (await _regionService.RegionExistsAsync(x => x.RegionName == region.RegionName && x.RegionId != regionId))
             {

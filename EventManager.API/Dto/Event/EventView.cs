@@ -1,6 +1,5 @@
 ﻿using EventManager.API.Helpers;
 using EventManager.DAL;
-using Newtonsoft.Json;
 
 namespace EventManager.API.Dto.Event
 {

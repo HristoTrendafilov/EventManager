@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EventManager.API.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace EventManager.API.Dto.User
 {
+    [GenerateZodSchema]
     public class UserLogin
     {
         [Required(ErrorMessage = "Потребителско име е задължително.")]

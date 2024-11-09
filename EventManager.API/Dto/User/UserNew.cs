@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EventManager.API.Helpers;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace EventManager.API.Dto.User
 {
-    public class UserNew : UserManipulation
+    [GenerateZodSchema]
+    public class UserNew : UserBaseForm
     {
         public UserNew()
         {
@@ -22,10 +25,13 @@ namespace EventManager.API.Dto.User
         [Required(ErrorMessage = "Моля, повторете отново паролата")]
         public string PasswordRepeated { get; set; }
 
+        [JsonIgnore]
         public DateTime CreatedOnDateTime { get; set; }
 
+        [JsonIgnore]
         public string EmailVerificationSecret { get; set; }
 
+        [JsonIgnore]
         public long? CreatedByUserId { get; set; }
     }
 }

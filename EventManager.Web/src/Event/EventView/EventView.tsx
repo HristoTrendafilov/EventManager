@@ -136,7 +136,7 @@ export function EventViewComponent() {
                 </h5>
 
                 <div className="card-body">
-                  <div>Начало: {formatDateTime(event.eventStartDateTime)}</div>
+                  <div>Начало: {formatDateTime(event.eventStartDateTime!)}</div>
 
                   <div>
                     Край:{' '}

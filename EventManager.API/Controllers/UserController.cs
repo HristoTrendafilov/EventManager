@@ -101,10 +101,10 @@ namespace EventManager.API.Controllers
                 return Unauthorized();
             }
 
-            var userToReturn = _mapper.CreateObject<UserView>(userView);
+            var userToReturn = _mapper.CreateObject<UserForUpdate>(userView);
 
             var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
-            userToReturn.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);
+            userToReturn.UserRegionsHelpingIds = userRegionsHelping.Select(x => x.RegionId).ToList();
 
             return Ok(userToReturn);
         }
@@ -239,7 +239,7 @@ namespace EventManager.API.Controllers
 
             var userRoles = await _userService.GetAllUserRolesAsync(user.UserId);
 
-            var response = new UserForWebDto
+            var response = new UserForWeb
             {
                 UserId = user.UserId,
                 Username = user.Username,

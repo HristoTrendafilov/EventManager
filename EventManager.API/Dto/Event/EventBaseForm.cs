@@ -1,25 +1,25 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EventManager.API.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace EventManager.API.Dto.Event
 {
-    public abstract class EventManipulationDto
+    [GenerateZodSchema]
+    public abstract class EventBaseForm
     {
         [Required(ErrorMessage = "Името на събитието е задължително.")]
         [MinLength(5, ErrorMessage = "Името на събитието трябва да е поне 5 символа.")]
-        public string EventName { get; set; }
+        public virtual string EventName { get; set; }
 
-        public string EventDescription { get; set; }
+        public virtual string EventDescription { get; set; }
 
         [Range(typeof(DateTime), "01-01-1900", "01-01-3000", ErrorMessage = "Дата на събитието е задължителна.")]
-        public DateTime EventStartDateTime { get; set; }
+        public virtual DateTime EventStartDateTime { get; set; }
 
-        public DateTime? EventEndDateTime { get; set; }
-
-        public long CreatedByUserId { get; set; }
+        public virtual DateTime? EventEndDateTime { get; set; }
 
         [Range(1, long.MaxValue, ErrorMessage = "Регионът на събитието е задължителен.")]
-        public long RegionId { get; set; }
+        public virtual long RegionId { get; set; }
 
-        public IFormFile MainImage { get; set; }
+        public virtual IFormFile MainImage { get; set; }
     }
 }
