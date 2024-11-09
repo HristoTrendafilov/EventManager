@@ -66,4 +66,14 @@ namespace EventManager.API.Helpers
             }
         }
     }
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    public class GenerateTypeScriptInterfaceAttribute : Attribute
+    {
+    }
+
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
+    public class GenerateZodSchemaAttribute : Attribute
+    {
+    }
 }

@@ -103,6 +103,9 @@ namespace EventManager.API.Controllers
 
             var userToReturn = _mapper.CreateObject<UserView>(userView);
 
+            var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
+            userToReturn.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);
+
             return Ok(userToReturn);
         }
 

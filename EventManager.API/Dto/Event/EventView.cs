@@ -1,7 +1,10 @@
-﻿using EventManager.DAL;
+﻿using EventManager.API.Helpers;
+using EventManager.DAL;
+using Newtonsoft.Json;
 
 namespace EventManager.API.Dto.Event
 {
+    [GenerateTypeScriptInterface]
     public class EventView : VEventPoco
     {
         public EventView()
