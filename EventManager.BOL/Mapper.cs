@@ -40,7 +40,7 @@
             {
                 var sourceProperty = sourceType.GetProperty(destinationProperty.Name);
 
-                if (sourceProperty != null && sourceProperty.PropertyType == destinationProperty.PropertyType)
+                if (sourceProperty != null)
                 {
                     var value = sourceProperty.GetValue(source);
                     destinationProperty.SetValue(destinationObject, value);

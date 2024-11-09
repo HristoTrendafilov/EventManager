@@ -27,7 +27,7 @@ const schema = z.object({
   eventStartDateTime: z.coerce.date(),
   eventEndDateTime: z.coerce.date().nullable(),
   regionId: z.number(),
-  mainImage: z.instanceof(FileList).nullable(),
+  mainImage: z.instanceof(File).nullable(),
   createdByUserId: z.number(),
 });
 
@@ -78,6 +78,7 @@ export function Event() {
   const onMainImageChosen = (file: File) => {
     URL.revokeObjectURL(mainImage);
     setMainImage(URL.createObjectURL(file));
+    form.setValue('mainImage', file);
   };
 
   const handleSubmit = useCallback(
@@ -119,6 +120,10 @@ export function Event() {
     },
     [mainImage]
   );
+
+  /* eslint-disable no-console */
+  console.log(form.watch());
+  /* eslint-enable no-console */
 
   return (
     <div className="event-wrapper">
