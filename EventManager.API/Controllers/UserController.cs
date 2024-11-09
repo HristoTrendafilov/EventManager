@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using EventManager.API.Services.Region;
+using EventManager.API.Dto.Event;
 
 namespace EventManager.API.Controllers
 {
@@ -82,6 +83,27 @@ namespace EventManager.API.Controllers
             }
 
             return File(profilePicture, "application/octet-stream");
+        }
+
+        [Authorize]
+        [HttpGet("{userId}/update")]
+        public async Task<ActionResult> GetUserForUpdate(long userId)
+        {
+            if (!await _userService.UserExistsAsync(x => x.UserId == userId))
+            {
+                return NotFound();
+            }
+
+            var userView = await _userService.GetUserViewAsync(x => x.UserId == userId);
+
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
+            {
+                return Unauthorized();
+            }
+
+            var userToReturn = _mapper.CreateObject<UserView>(userView);
+
+            return Ok(userToReturn);
         }
 
         [Authorize]

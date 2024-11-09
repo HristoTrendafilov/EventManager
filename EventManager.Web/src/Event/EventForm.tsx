@@ -121,10 +121,6 @@ export function Event() {
     [mainImage]
   );
 
-  /* eslint-disable no-console */
-  console.log(form.watch());
-  /* eslint-enable no-console */
-
   return (
     <div className="event-wrapper">
       <div className="card main-card border-1 border-danger">

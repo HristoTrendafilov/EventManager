@@ -16,6 +16,10 @@ export function getUserView(userId: number) {
   return callApi<UserView>(`/users/${userId}/view`, 'GET');
 }
 
+export function getUserForUpdate(userId: number) {
+  return callApi<UserView>(`/users/${userId}/update`, 'GET');
+}
+
 export function getUserProfilePicture(userId: number) {
   return callApi<Blob>(`/users/${userId}/profile-picture`, 'GET');
 }

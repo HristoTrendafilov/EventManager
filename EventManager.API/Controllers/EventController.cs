@@ -94,6 +94,7 @@ namespace EventManager.API.Controllers
         }
 
         [Authorize]
+        [Role(UserRole.EventCreator)]
         [HttpGet("{eventId}/update")]
         public async Task<ActionResult> GetEventForUpdate(long eventId)
         {

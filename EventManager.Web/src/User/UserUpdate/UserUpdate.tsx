@@ -4,8 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
+  getUserForUpdate,
   getUserProfilePicture,
-  getUserView,
 } from '~Infrastructure/ApiRequests/users-requests';
 import type { UserView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
@@ -41,7 +41,7 @@ export function UserUpdate() {
   const loadUser = useCallback(async () => {
     setError(undefined);
 
-    const userResponse = await getUserView(Number(userId));
+    const userResponse = await getUserForUpdate(Number(userId));
     if (!userResponse.success) {
       setError(userResponse.errorMessage);
       return;
