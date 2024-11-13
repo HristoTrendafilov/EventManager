@@ -13,6 +13,7 @@ import { UserProfile } from '~User/UserProfile/UserProfile';
 import { UserUpdate } from '~User/UserUpdate/UserUpdate';
 
 export interface RouteTable {
+  key?: string;
   location: string;
   component: React.JSX.Element;
   requiresLogin: boolean;
@@ -64,13 +65,13 @@ export const routes: RouteTable[] = [
   },
   {
     location: '/events/new',
-    component: <Event key="event_new" />,
+    component: <Event />,
     requiresLogin: true,
     role: 'EventCreator',
   },
   {
     location: '/events/:eventId/update',
-    component: <Event key="event_update" />,
+    component: <Event />,
     requiresLogin: true,
     role: 'EventCreator',
   },
