@@ -122,7 +122,7 @@ export function EventViewComponent() {
               </div>
 
               <div className="card mt-2">
-                <h5 className="card-header d-flex justify-content-between align-items-center">
+                <h4 className="card-header d-flex justify-content-between align-items-center">
                   <div>Описание</div>
 
                   {event.canEdit && (
@@ -133,16 +133,15 @@ export function EventViewComponent() {
                       Редакция
                     </Link>
                   )}
-                </h5>
+                </h4>
 
                 <div className="card-body">
                   <div>Начало: {formatDateTime(event.eventStartDateTime!)}</div>
 
                   <div>
                     Край:{' '}
-                    {event.eventEndDateTime
-                      ? formatDateTime(event.eventEndDateTime)
-                      : '-'}
+                    {event.eventEndDateTime &&
+                      formatDateTime(event.eventEndDateTime)}
                   </div>
 
                   <div>Регион: {event.regionName}</div>

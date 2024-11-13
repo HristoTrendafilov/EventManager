@@ -64,13 +64,13 @@ export const routes: RouteTable[] = [
   },
   {
     location: '/events/new',
-    component: <Event />,
+    component: <Event key="event_new" />,
     requiresLogin: true,
     role: 'EventCreator',
   },
   {
     location: '/events/:eventId/update',
-    component: <Event />,
+    component: <Event key="event_update" />,
     requiresLogin: true,
     role: 'EventCreator',
   },

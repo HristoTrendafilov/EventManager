@@ -138,9 +138,8 @@ string GenerateZodSchema(Type classType)
 
     foreach (var property in properties)
     {
-        var isNullable = !classType.GetProperty(property.Name).GetCustomAttributes<ValidationAttribute>().Any();
-        var propertyType = property.PropertyType;
-        sb.AppendLine($"  {ToCamelCase(property.Name)}: z.{ConvertToZodType(propertyType, isNullable)},");
+        var validationAttributes = classType.GetProperty(property.Name).GetCustomAttributes<ValidationAttribute>();
+        sb.AppendLine($"  {ToCamelCase(property.Name)}: {ConvertToZodType(property.PropertyType, validationAttributes)},");
     }
 
     sb.AppendLine("});");
@@ -150,39 +149,86 @@ string GenerateZodSchema(Type classType)
     return sb.ToString();
 }
 
-// Helper function to map C# types to Zod types
-string ConvertToZodType(Type propertyType, bool isNullable)
+string ConvertToZodType(Type propertyType, IEnumerable<ValidationAttribute> validationAttributes)
 {
     // Check if the type is nullable (i.e., Nullable<T>)
     if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
     {
-        // Get the underlying type (e.g., bool from bool?)
         var underlyingType = propertyType.GetGenericArguments()[0];
-
-        // For other nullable types, map them to their TypeScript equivalent with | null
-        return $"{ConvertToZodType(underlyingType, true)}";
+        return $"{ConvertToZodType(underlyingType, validationAttributes)}.nullable()";
     }
 
     // Check if the type is a generic collection (e.g., List<T> or ICollection<T>)
     if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
     {
         var elementType = propertyType.GetGenericArguments()[0];
-        return $"{ConvertToZodType(elementType, isNullable)}.array()"; // Array in TypeScript
+        return $"{ConvertToZodType(elementType, validationAttributes)}.array()";
     }
 
+    // Map C# types to basic Zod types
     var schemaProperty = propertyType.Name.ToLower() switch
     {
-        "string" => "string()",
-        "int32" => "number()",
-        "boolean" => "boolean()",
-        "int64" => "number()",
-        "decimal" => "number()",
-        "datetime" => "coerce.date()",
-        "iformfile" => "instanceof(File)",
-        _ => "unknown"
+        "string" => "z.string()",
+        "int32" => "z.number().int()",
+        "boolean" => "z.boolean()",
+        "int64" => "z.number().int()",
+        "decimal" => "z.number()",
+        "datetime" => "z.coerce.date()",
+        "iformfile" => "z.instanceof(File)",
+        _ => throw new Exception($"Unknown type for Zod schema: {propertyType.Name}")
     };
 
-    if (isNullable)
+    if (validationAttributes.Any()) 
+    {
+        // Apply validation attributes with error messages
+        foreach (var attribute in validationAttributes)
+        {
+            var errorMessage = attribute?.ErrorMessage;
+
+            if (string.IsNullOrWhiteSpace(errorMessage))
+            {
+                throw new Exception($"No error message found for property with type: {propertyType.Name}");
+            }
+
+            switch (attribute)
+            {
+                case RequiredAttribute:
+                    schemaProperty += $".min(1, {{ message: \"{errorMessage}\" }})";
+                    break;
+
+                case MinLengthAttribute minLengthAttr:
+                    schemaProperty += $".min({minLengthAttr.Length}, {{ message: \"{errorMessage}\" }})";
+                    break;
+
+                case MaxLengthAttribute maxLengthAttr:
+                    schemaProperty += $".max({maxLengthAttr.Length}, {{ message: \"{errorMessage}\" }})";
+                    break;
+
+                case RegularExpressionAttribute regexAttr:
+                    schemaProperty += $".regex(new RegExp(\"{regexAttr.Pattern}\"), {{ message: \"{errorMessage}\" }})";
+                    break;
+
+                case NotEmptyCollection notEmptyCollectionAttr:
+                    schemaProperty += $".min(1, {{ message: \"{errorMessage}\" }})";
+                    break;
+
+                case EmailAddressAttribute emailAttr:
+                    schemaProperty += $".email({{ message: \"{errorMessage}\" }})";
+                    break;
+
+                case RangeAttribute rangeAttr:
+                    if (propertyType == typeof(int) || propertyType == typeof(double) || propertyType == typeof(decimal))
+                    {
+                        schemaProperty += $".min({rangeAttr.Minimum}, {{ message: \"{errorMessage}\" }}).max({rangeAttr.Maximum}, {{ message: \"{errorMessage}\" }})";
+                    }
+                    break;
+
+                default:
+                    throw new Exception($"The validation attribute: {nameof(attribute)} is not implemented!");
+            }
+        }
+    }
+    else
     {
         schemaProperty += ".nullable()";
     }

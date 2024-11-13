@@ -24,15 +24,6 @@ import noImage from '~asset/no-image.png';
 
 import './EventForm.css';
 
-const defaultValues: EventBaseFormType = {
-  eventName: '',
-  eventDescription: null,
-  eventStartDateTime: new Date(),
-  eventEndDateTime: null,
-  regionId: 0,
-  mainImage: null,
-};
-
 export function Event() {
   const [error, setError] = useState<string | undefined>();
   const [mainImage, setMainImage] = useState<string>(noImage);
@@ -97,10 +88,6 @@ export function Event() {
   useEffect(() => {
     if (eventId) {
       void loadEvent(Number(eventId));
-    } else {
-      form.reset(defaultValues);
-      setMainImage(noImage);
-      setError(undefined);
     }
   }, [eventId, form, loadEvent]);
 
@@ -127,10 +114,6 @@ export function Event() {
                   label="Наименование"
                   required
                 />
-                <CustomTextArea
-                  {...form.register('eventDescription')}
-                  label="Описание"
-                />
                 <RegionSelect
                   {...form.register('regionId')}
                   label="Регион на събитието"
@@ -147,6 +130,11 @@ export function Event() {
                   {...form.register('eventEndDateTime')}
                   label="Край на събитието"
                   showTime
+                />
+                <CustomTextArea
+                  {...form.register('eventDescription')}
+                  label="Описание"
+                  rows={8}
                 />
               </div>
               <div className="col-md-6">

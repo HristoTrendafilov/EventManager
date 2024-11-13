@@ -118,36 +118,36 @@ export interface CrudLogView {
 
 // zod schemas
 export const UserBaseFormSchema = z.object({
-  firstName: z.string(),
+  firstName: z.string().min(1, { message: "Името е задължително." }),
   secondName: z.string().nullable(),
-  lastName: z.string(),
+  lastName: z.string().min(1, { message: "Фамилията е задължителна." }),
   phoneNumber: z.string().nullable(),
   shortDescription: z.string().nullable(),
-  regionId: z.number(),
-  userRegionsHelpingIds: z.number().array(),
+  regionId: z.number().int(),
+  userRegionsHelpingIds: z.number().int().min(1, { message: "Моля, изберете региони, в които искате да помагате." }).array(),
   profilePicture: z.instanceof(File).nullable(),
   profilePicturePath: z.string().nullable(),
 });
 export type UserBaseFormType = z.infer<typeof UserBaseFormSchema>;
 
 export const UserLoginSchema = z.object({
-  username: z.string(),
-  password: z.string(),
+  username: z.string().min(1, { message: "Потребителско име е задължително." }),
+  password: z.string().min(1, { message: "Паролата е задължителна." }),
 });
 export type UserLoginType = z.infer<typeof UserLoginSchema>;
 
 export const UserNewSchema = z.object({
-  username: z.string(),
-  email: z.string(),
-  password: z.string(),
-  passwordRepeated: z.string(),
-  firstName: z.string(),
+  username: z.string().min(1, { message: "Потребителско име е задължително." }),
+  email: z.string().email({ message: "Имейлът е задължителен." }),
+  password: z.string().min(1, { message: "Паролата е задължителна." }),
+  passwordRepeated: z.string().min(1, { message: "Моля, повторете отново паролата" }),
+  firstName: z.string().min(1, { message: "Името е задължително." }),
   secondName: z.string().nullable(),
-  lastName: z.string(),
+  lastName: z.string().min(1, { message: "Фамилията е задължителна." }),
   phoneNumber: z.string().nullable(),
   shortDescription: z.string().nullable(),
-  regionId: z.number(),
-  userRegionsHelpingIds: z.number().array(),
+  regionId: z.number().int(),
+  userRegionsHelpingIds: z.number().int().min(1, { message: "Моля, изберете региони, в които искате да помагате." }).array(),
   profilePicture: z.instanceof(File).nullable(),
   profilePicturePath: z.string().nullable(),
 });
@@ -161,32 +161,31 @@ export const UserUpdatePasswordSchema = z.object({
 export type UserUpdatePasswordType = z.infer<typeof UserUpdatePasswordSchema>;
 
 export const UserUpdatePersonalDataSchema = z.object({
-  firstName: z.string(),
+  firstName: z.string().min(1, { message: "Името е задължително." }),
   secondName: z.string().nullable(),
-  lastName: z.string(),
+  lastName: z.string().min(1, { message: "Фамилията е задължителна." }),
   phoneNumber: z.string().nullable(),
   shortDescription: z.string().nullable(),
-  regionId: z.number(),
-  userRegionsHelpingIds: z.number().array(),
+  regionId: z.number().int(),
+  userRegionsHelpingIds: z.number().int().min(1, { message: "Моля, изберете региони, в които искате да помагате." }).array(),
   profilePicture: z.instanceof(File).nullable(),
   profilePicturePath: z.string().nullable(),
 });
-export type UserUpdatePersonalDataType = z.infer<
-  typeof UserUpdatePersonalDataSchema
->;
+export type UserUpdatePersonalDataType = z.infer<typeof UserUpdatePersonalDataSchema>;
 
 export const EventBaseFormSchema = z.object({
-  eventName: z.string(),
+  eventName: z.string().min(1, { message: "Името на събитието е задължително." }).min(5, { message: "Името на събитието трябва да е поне 5 символа." }),
   eventDescription: z.string().nullable(),
   eventStartDateTime: z.coerce.date(),
-  eventEndDateTime: z.coerce.date().nullable(),
-  regionId: z.number(),
+  eventEndDateTime: z.coerce.date().nullable().nullable(),
+  regionId: z.number().int(),
   mainImage: z.instanceof(File).nullable(),
 });
 export type EventBaseFormType = z.infer<typeof EventBaseFormSchema>;
 
 export const EventSearchFilterSchema = z.object({
   eventName: z.string().nullable(),
-  pageSize: z.number(),
+  pageSize: z.number().int().min(0, { message: "Размерът на страниците трябва да е по-голям от 0" }).max(2147483647, { message: "Размерът на страниците трябва да е по-голям от 0" }),
 });
 export type EventSearchFilterType = z.infer<typeof EventSearchFilterSchema>;
+
