@@ -5,8 +5,9 @@ import { EventSearch } from '~Event/EventSearch/EventSearch';
 import { EventViewComponent } from '~Event/EventView/EventView';
 import type { UserRole } from '~Infrastructure/redux/user-slice';
 import { AdminPanel } from '~User/AdminPanel/AdminPanel';
-import { AdminPanelCrudLogs } from '~User/AdminPanel/AdminPanelCrudLogs';
-import { AdminPanelRegions } from '~User/AdminPanel/AdminPanelRegions';
+import { CrudLogs } from '~User/AdminPanel/CrudLogs';
+import { RegionsCatalog } from '~User/AdminPanel/RegionsCatalog';
+import { UsersRolesCatalog } from '~User/AdminPanel/UsersRolesCatalog';
 import { Login } from '~User/Login/Login';
 import { Register } from '~User/Register/Register';
 import { UserProfile } from '~User/UserProfile/UserProfile';
@@ -41,13 +42,19 @@ export const routes: RouteTable[] = [
   },
   {
     location: 'users/admin-panel/regions',
-    component: <AdminPanelRegions />,
+    component: <RegionsCatalog />,
     requiresLogin: true,
     role: 'Admin',
   },
   {
     location: 'users/admin-panel/action-logs',
-    component: <AdminPanelCrudLogs />,
+    component: <CrudLogs />,
+    requiresLogin: true,
+    role: 'Admin',
+  },
+  {
+    location: 'users/admin-panel/user-roles',
+    component: <UsersRolesCatalog />,
     requiresLogin: true,
     role: 'Admin',
   },

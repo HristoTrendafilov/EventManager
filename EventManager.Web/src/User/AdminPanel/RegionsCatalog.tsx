@@ -14,7 +14,7 @@ import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedFor
 import { TextInput } from '~Infrastructure/components/Form/TextInput/TextInput';
 import { Modal } from '~Infrastructure/components/Modal/Modal';
 
-import './AdminPanelRegions.css';
+import './RegionsCatalog.css';
 
 const schema = z.object({
   regionName: z.string(),
@@ -26,7 +26,7 @@ const defaultValues: RegionForm = {
   regionName: '',
 };
 
-export function AdminPanelRegions() {
+export function RegionsCatalog() {
   const [regions, setRegions] = useState<RegionView[]>([]);
   const [filteredRegions, setFilteredRegions] = useState<RegionView[]>([]);
   const [error, setError] = useState<string | undefined>();
@@ -133,10 +133,7 @@ export function AdminPanelRegions() {
   }, [loadRegions]);
 
   return (
-    <div
-      className="admin-panel-regions-wrapper mt-4"
-      style={{ maxWidth: '800px', margin: '0 auto' }}
-    >
+    <div className="admin-panel-regions-wrapper mt-4">
       <div className="container">
         <div className="card">
           <h4 className="card-header d-flex justify-content-between align-items-center">
@@ -150,15 +147,13 @@ export function AdminPanelRegions() {
             </button>
           </h4>
           <div className="card-body">
-            <div className="row">
-              <div className="col-7">
-                <TextInput
-                  name="filterName"
-                  label="Търси"
-                  onChange={handleFilterNameChange}
-                />
-              </div>
-            </div>
+            <TextInput
+              name="filterName"
+              label="Търси"
+              onChange={handleFilterNameChange}
+            />
+
+            <hr />
 
             {filteredRegions.length > 0 &&
               filteredRegions.map((x) => (

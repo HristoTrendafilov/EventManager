@@ -45,8 +45,8 @@ namespace EventManager.API.Services.User
         {
             await _db.WithTransactionAsync(async () =>
             {
-                await DeleteUserRoleAsync(x => x.UserId == userId, currentUserId);
-                await DeleteUserRegionHelpingAsync(x => x.UserId == userId, currentUserId);
+                await _db.UsersRoles.X_DeleteAsync(x => x.UserId == userId, currentUserId);
+                await _db.UsersRegionsHelping.X_DeleteAsync(x => x.UserId == userId, currentUserId);
 
                 await _db.Users.X_DeleteAsync(x => x.UserId == userId, currentUserId);
             });
@@ -76,7 +76,7 @@ namespace EventManager.API.Services.User
 
                 user.ProfilePicturePath = userProfilePictureFilePath;
 
-                await this.DeleteUserRegionHelpingAsync(x => x.UserId == userId, currentUserId);
+                await _db.UsersRegionsHelping.X_DeleteAsync(x => x.UserId == userId, currentUserId);
                 foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
                 {
                     var userRegionHelping = new UserRegionHelpingNew { UserId = userId, RegionId = userRegionHelpingId };
@@ -97,6 +97,11 @@ namespace EventManager.API.Services.User
             return _db.VUsers.FirstOrDefaultAsync(predicate);
         }
 
+        public Task<List<VUserPoco>> GetAllUsersViewAsync(Expression<Func<VUserPoco, bool>> predicate)
+        {
+            return _db.VUsers.Where(predicate).ToListAsync();
+        }
+
         public Task<bool> UserExistsAsync(Expression<Func<UserPoco, bool>> predicate)
         {
             return _db.Users.AnyAsync(predicate);
@@ -105,11 +110,6 @@ namespace EventManager.API.Services.User
         public Task CreateUserRegionHelpingAsync(UserRegionHelpingNew userRegionHelping, long? currentUserId)
         {
             return _db.UsersRegionsHelping.X_CreateAsync(userRegionHelping, currentUserId);
-        }
-
-        public Task DeleteUserRegionHelpingAsync(Expression<Func<UserRegionHelpingPoco, bool>> predicate, long? currentUserId)
-        {
-            return _db.UsersRegionsHelping.X_DeleteAsync(predicate, currentUserId);
         }
 
         public Task<List<RolePoco>> GetAllUserRolesAsync(long userId)
@@ -124,14 +124,28 @@ namespace EventManager.API.Services.User
             return _db.UsersRoles.Where(x => x.UserId == userId && x.RoleId == (int)UserRole.Admin).AnyAsync();
         }
 
-        public Task<long> CreateUserRoleAsync(UserRoleNew userClaim, long? currentUserId)
+        public async Task SaveUserRoles(UserRoleBaseForm userRoles, long? currentUserId)
         {
-            return _db.UsersRoles.X_CreateAsync(userClaim, currentUserId);
+            await _db.WithTransactionAsync(async () =>
+            {
+                await _db.UsersRoles.X_DeleteAsync(x => x.UserId == userRoles.UserId, currentUserId);
+
+                foreach (var roleId in userRoles.RolesIds)
+                {
+                    var userRole = new UserRolePoco
+                    {
+                        UserId = userRoles.UserId,
+                        RoleId = roleId
+                    };
+
+                    await _db.UsersRoles.X_CreateAsync(userRole, currentUserId);
+                }
+            });
         }
 
-        public Task DeleteUserRoleAsync(Expression<Func<UserRolePoco, bool>> predicate, long? currentUserId)
+        public Task<List<RolePoco>> GetAllRolesAsync(Expression<Func<RolePoco, bool>> predicate)
         {
-            return _db.UsersRoles.X_DeleteAsync(predicate, currentUserId);
+            return _db.Roles.Where(predicate).ToListAsync();
         }
 
         public Task<List<RegionPoco>> GetAllUserRegionsHelping(long userId)
@@ -139,21 +153,6 @@ namespace EventManager.API.Services.User
             return (from userRegionsHelping in _db.UsersRegionsHelping.Where(x => x.UserId == userId)
                     join regions in _db.Regions on userRegionsHelping.RegionId equals regions.RegionId
                     select regions).ToListAsync();
-        }
-
-        public Task DeleteUserRoleAsync(Expression<Func<UserRolePoco, bool>> predicate)
-        {
-            return _db.UsersRoles.DeleteAsync(predicate);
-        }
-
-        public Task<bool> UserRoleExistsAsync(Expression<Func<UserRolePoco, bool>> predicate)
-        {
-            return _db.UsersRoles.AnyAsync(predicate);
-        }
-
-        public Task<UserRolePoco> GetUserRoleAsync(Expression<Func<UserRolePoco, bool>> predicate)
-        {
-            return _db.UsersRoles.FirstOrDefaultAsync(predicate);
         }
 
         public async Task<byte[]> GetUserProfilePictureAsync(long userId)

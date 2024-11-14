@@ -1,6 +1,6 @@
 import { callApi } from '~Infrastructure/api-client';
 import type { RegionView } from '~Infrastructure/api-types';
-import type { RegionForm } from '~User/AdminPanel/AdminPanelRegions';
+import type { RegionForm } from '~User/AdminPanel/RegionsCatalog';
 
 export function getRegions() {
   return callApi<RegionView[]>('/regions', 'GET');

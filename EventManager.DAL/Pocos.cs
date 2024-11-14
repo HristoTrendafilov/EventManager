@@ -44,6 +44,20 @@ namespace EventManager.DAL
 		public virtual long RegionId { get; set; }
 	}
 
+	[Table(Name = "roles")]
+	public class RolePoco
+	{
+		[PrimaryKey, Identity]
+		[Column(Name = "role_id")]
+		public virtual long RoleId { get; set; }
+
+		[Column(Name = "role_name")]
+		public virtual string RoleName { get; set; }
+
+		[Column(Name = "role_name_bg")]
+		public virtual string RoleNameBg { get; set; }
+	}
+
 	[Table(Name = "users_roles")]
 	public class UserRolePoco
 	{
@@ -56,17 +70,6 @@ namespace EventManager.DAL
 
 		[Column(Name = "role_id")]
 		public virtual long RoleId { get; set; }
-	}
-
-	[Table(Name = "roles")]
-	public class RolePoco
-	{
-		[PrimaryKey, Identity]
-		[Column(Name = "role_id")]
-		public virtual long RoleId { get; set; }
-
-		[Column(Name = "role_name")]
-		public virtual string RoleName { get; set; }
 	}
 
 	[Table(Name = "event_images")]

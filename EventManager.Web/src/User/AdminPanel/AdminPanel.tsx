@@ -1,4 +1,4 @@
-import { faList, faLocation } from '@fortawesome/free-solid-svg-icons';
+import { faList, faLocation, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
@@ -34,6 +34,19 @@ export function AdminPanel() {
                   <div className="card-body border border-black d-flex bg-warning flex-wrap flex-column justify-content-center align-content-center">
                     <FontAwesomeIcon color="white" icon={faList} size="4x" />
                     <div className="text-white fw-medium">Логове</div>
+                  </div>
+                </Link>
+              </div>
+              <div className="col-md-6">
+                <Link
+                  to="/users/admin-panel/user-roles"
+                  className="card unset-anchor"
+                >
+                  <div className="card-body border border-black d-flex bg-success flex-wrap flex-column justify-content-center align-content-center">
+                    <FontAwesomeIcon color="white" icon={faUser} size="4x" />
+                    <div className="text-white fw-medium">
+                      Потребителски права
+                    </div>
                   </div>
                 </Link>
               </div>

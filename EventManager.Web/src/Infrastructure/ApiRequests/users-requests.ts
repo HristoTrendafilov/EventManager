@@ -1,8 +1,11 @@
 import { callApi } from '~Infrastructure/api-client';
 import type {
+  RoleView,
   UserBaseFormType,
   UserForUpdate,
   UserForWeb,
+  UserRoleBaseFormType,
+  UserRoleFilterType,
   UserView,
 } from '~Infrastructure/api-types';
 import type { UserLogin } from '~User/Login/Login';
@@ -18,6 +21,22 @@ export function logoutUser() {
 
 export function getUserView(userId: number) {
   return callApi<UserView>(`/users/${userId}/view`, 'GET');
+}
+
+export function getAllRoles() {
+  return callApi<RoleView[]>(`/users/roles`, 'GET');
+}
+
+export function getUsersForRoles(filter: UserRoleFilterType) {
+  return callApi<UserView[]>(
+    `/users/roles/filter`,
+    'POST',
+    JSON.stringify(filter)
+  );
+}
+
+export function saveUserRoles(userRole: UserRoleBaseFormType) {
+  return callApi(`/users/roles`, 'PUT', JSON.stringify(userRole));
 }
 
 export function getUserForUpdate(userId: number) {

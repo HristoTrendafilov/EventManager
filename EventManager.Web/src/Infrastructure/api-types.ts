@@ -15,6 +15,12 @@ export interface PrimaryKeyResponse {
   primaryKey: number;
 }
 
+export interface RoleView {
+  roleId: number;
+  roleName: string;
+  roleNameBg: string;
+}
+
 export interface UserForUpdate {
   hasProfilePicture: boolean;
   username: string;
@@ -43,6 +49,8 @@ export interface UserView {
   canEdit: boolean;
   regionsHelping: RegionView[];
   userRegionsHelpingIds: number[];
+  userRoles: RoleView[];
+  userRolesIds: number[];
   userId: number | null;
   username: string;
   firstName: string;
@@ -152,6 +160,17 @@ export const UserNewSchema = z.object({
   profilePicturePath: z.string().nullable(),
 });
 export type UserNewType = z.infer<typeof UserNewSchema>;
+
+export const UserRoleBaseFormSchema = z.object({
+  userId: z.number().int().min(1, { message: "Потребителят е задължителен." }),
+  rolesIds: z.number().int().nullable().array(),
+});
+export type UserRoleBaseFormType = z.infer<typeof UserRoleBaseFormSchema>;
+
+export const UserRoleFilterSchema = z.object({
+  username: z.string().nullable(),
+});
+export type UserRoleFilterType = z.infer<typeof UserRoleFilterSchema>;
 
 export const UserUpdatePasswordSchema = z.object({
   oldPassword: z.string().nullable(),

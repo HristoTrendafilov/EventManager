@@ -17,6 +17,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using EventManager.API.Services.Region;
 using EventManager.API.Dto.Event;
+using EventManager.DAL;
+using System.Data;
 
 namespace EventManager.API.Controllers
 {
@@ -334,17 +336,49 @@ namespace EventManager.API.Controllers
 
         [Authorize]
         [Role(UserRole.Admin)]
-        [HttpPost("roles")]
-        public async Task<ActionResult> AddRoleToUser(UserRoleNew role)
+        [HttpPut("roles")]
+        public async Task<ActionResult> SaveUserRoles(UserRoleBaseForm userRoles)
         {
-            if (!await _userService.UserRoleExistsAsync(x => x.UserId == role.UserId && x.RoleId == role.RoleId))
-            {
-                return BadRequest($"Вече съществува това право за потребител с ID: {role.UserId}");
-            }
-
-            await _userService.CreateUserRoleAsync(role, User.X_CurrentUserId());
+            await _userService.SaveUserRoles(userRoles, User.X_CurrentUserId());
 
             return NoContent();
+        }
+
+        [Authorize]
+        [Role(UserRole.Admin)]
+        [HttpGet("roles")]
+        public async Task<ActionResult> GetAllRoles()
+        {
+            var roles = await _userService.GetAllRolesAsync(x => x.RoleId != (int)UserRole.Admin);
+            var rolesView = _mapper.CreateList<RoleView>(roles);
+
+            return Ok(rolesView);
+        }
+
+        [Authorize]
+        [Role(UserRole.Admin)]
+        [HttpPost("roles/filter")]
+        public async Task<ActionResult> GetUsersForRoles(UserRoleFilter filter)
+        {
+            var predicate = PredicateBuilder.True<VUserPoco>();
+
+            if (!string.IsNullOrWhiteSpace(filter.Username))
+            {
+                predicate = predicate.And(x => x.Username.StartsWith(filter.Username, StringComparison.CurrentCultureIgnoreCase));
+            }
+
+            var usersViewPoco = await _userService.GetAllUsersViewAsync(predicate);
+            var usersView = _mapper.CreateList<UserView>(usersViewPoco);
+
+            foreach (var user in usersView)
+            {
+                var roles = await _userService.GetAllUserRolesAsync(user.UserId.Value);
+                var rolesView = _mapper.CreateList<RoleView>(roles);
+
+                user.UserRoles = rolesView;
+            }
+
+            return Ok(usersView);
         }
     }
 }

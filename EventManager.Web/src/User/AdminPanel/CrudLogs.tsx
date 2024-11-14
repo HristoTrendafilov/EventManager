@@ -37,7 +37,7 @@ const defaultValues: CrudLogsFilter = {
   actionType: 0,
 };
 
-export function AdminPanelCrudLogs() {
+export function CrudLogs() {
   const [error, setError] = useState<string | undefined>();
   const [crudLogsView, setCrudLogsView] = useState<CrudLogView[]>([]);
 

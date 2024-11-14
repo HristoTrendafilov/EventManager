@@ -11,11 +11,15 @@ namespace EventManager.API.Dto.User
         public UserView()
         {
             RegionsHelping = new List<RegionView>();
+            UserRoles = new List<RoleView>();
         }
 
         public bool CanEdit { get; set; }
         public List<RegionView> RegionsHelping { get; set; }
         public List<long> UserRegionsHelpingIds => RegionsHelping.Select(x => x.RegionId).ToList();
+
+        public List<RoleView> UserRoles { get; set; }
+        public List<long> UserRolesIds => this.UserRoles.Select(x => x.RoleId).ToList();
 
         [JsonIgnore]
         public override string Password { get; set; }
