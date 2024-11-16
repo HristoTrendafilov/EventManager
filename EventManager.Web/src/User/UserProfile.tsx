@@ -79,7 +79,7 @@ export function UserProfile() {
                       onClick={handleShowGallery}
                     >
                       <img
-                        className="rounded-circle"
+                        className="rounded-circle object-fit-cover"
                         height={200}
                         width={200}
                         src={profilePicture}

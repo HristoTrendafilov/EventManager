@@ -3,7 +3,7 @@
   margin-bottom: 11px;
 
   width: 100%;
-  border: 1px solid black;
+  border: var(--input-border);
   border-radius: 5px;
   font-size: 1rem;
   padding: 6px;
@@ -12,6 +12,16 @@
   display: flex;
 
   cursor: pointer;
+}
+
+.date-input-wrapper:focus-within {
+  border-color: var(--input-border-color-focused);
+  outline: var(--input-border-color-focused);
+}
+
+.date-input-wrapper:hover {
+  border-color: var(--input-border-color-focused);
+  outline: var(--input-border-color-focused);
 }
 
 .date-input-wrapper input {

@@ -7,11 +7,16 @@
 .text-input-wrapper > .text-input {
   width: 100%;
   border-radius: 5px;
-  border: var(--input-border-color);
+  border: var(--input-border);
   padding: 8px 10px;
 }
 
 .text-input-wrapper > .text-input:focus {
+  border-color: var(--input-border-color-focused);
+  outline: var(--input-border-color-focused);
+}
+
+.text-input-wrapper > .text-input:hover {
   border-color: var(--input-border-color-focused);
   outline: var(--input-border-color-focused);
 }

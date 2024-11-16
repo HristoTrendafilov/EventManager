@@ -66,8 +66,9 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
   );
 
   const closeImageCropModal = useCallback(() => {
+    form.setValue('profilePicture', null);
     setShowCropImageModal(false);
-  }, []);
+  }, [form]);
 
   const onCropComplete = (imageBlob: File | null) => {
     if (croppedImage) {

@@ -4,8 +4,13 @@
 }
 
 .textarea-wrapper > .textarea-input:focus {
-  outline: none;
-  border: 1px solid black;
+  border-color: var(--input-border-color-focused);
+  outline: var(--input-border-color-focused);
+}
+
+.textarea-wrapper > .textarea-input:hover {
+  border-color: var(--input-border-color-focused);
+  outline: var(--input-border-color-focused);
 }
 
 .textarea-wrapper > .textarea-input {

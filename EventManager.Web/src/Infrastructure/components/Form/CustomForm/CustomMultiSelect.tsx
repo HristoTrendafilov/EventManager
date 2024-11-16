@@ -87,10 +87,16 @@ export const CustomMultiSelect = forwardRef<
               );
             }}
             styles={{
-              control: (baseStyles, _) => ({
+              control: (baseStyles, inputState) => ({
                 ...baseStyles,
-                borderColor: 'var(--input-border-color)',
-                border: 'var(--input-border-color)',
+                border: inputState.isFocused
+                  ? '1px solid #0d6efd'
+                  : 'var(--input-border)',
+                boxShadow: 'none',
+                ':hover': {
+                  borderColor: 'var(--input-border-color-focused)',
+                  outline: 'var(--input-border-color-focused)',
+                },
               }),
             }}
             isMulti
