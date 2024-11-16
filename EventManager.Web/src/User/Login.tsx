@@ -45,10 +45,8 @@ export function Login() {
   return (
     <div className="mw-600px m-50auto">
       <div className="container">
-        <div className="card border-1 border-danger">
-          <h2 className="card-header text-white bg-danger bg-gradient">
-            Потребителски вход
-          </h2>
+        <div className="card">
+          <h2 className="card-header">Потребителски вход</h2>
           <div className="card-body">
             <CustomForm form={form} onSubmit={handleLogin}>
               <CustomInput

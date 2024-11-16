@@ -1,19 +1,4 @@
-.event-wrapper {
-  padding: 0 8px;
-}
-
-.event-wrapper .main-card {
-  max-width: 700px;
-  margin: 48px auto;
-}
-
 .event-wrapper .main-image-wrapper {
-  height: 223px;
+  max-height: 300px;
   display: flex;
-}
-
-.event-wrapper .main-image {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
 }

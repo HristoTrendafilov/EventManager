@@ -121,9 +121,7 @@ export function Register() {
             </div>
             <div className="col-md-8">
               <div className="card">
-                <h2 className="card-header text-white bg-danger bg-gradient">
-                  Регистрация
-                </h2>
+                <h2 className="card-header">Регистрация</h2>
                 <div className="card-body">
                   <div className="row g-2">
                     <div className="col-md-6 h-100">
@@ -182,6 +180,7 @@ export function Register() {
                           <CustomInput
                             {...form.register('phoneNumber')}
                             label="Телефон"
+                            type="number"
                           />
                         </div>
                       </div>

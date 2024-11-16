@@ -99,72 +99,80 @@ export function Event() {
 
   return (
     <div className="event-wrapper">
-      <div className="card main-card border-1 border-danger">
-        <h2 className="card-header text-white bg-danger bg-gradient">
-          {eventId ? 'Редакция на събитие' : 'Ново събитие'}
-        </h2>
+      <div className="container">
+        <div className="mw-800px m-50auto">
+          <div className="card">
+            <h2 className="card-header">
+              {eventId ? 'Редакция на събитие' : 'Ново събитие'}
+            </h2>
 
-        <div className="card-body">
-          <CustomForm form={form} onSubmit={handleSubmit}>
-            <div className="row">
-              <div className="col-md-6">
-                <CustomInput
-                  {...form.register('eventName')}
-                  label="Наименование"
-                  required
-                />
-                <RegionSelect
-                  {...form.register('regionId')}
-                  label="Регион на събитието"
-                  isNumber
-                  required
-                  searchable={false}
-                />
-                <CustomDateInput
-                  {...form.register('eventStartDateTime')}
-                  label="Начало на събитието"
-                  showTime
-                  required
-                />
-                <CustomDateInput
-                  {...form.register('eventEndDateTime')}
-                  label="Край на събитието"
-                  showTime
-                  nullable
-                />
-                <CustomTextArea
-                  {...form.register('eventDescription')}
-                  label="Описание"
-                  rows={8}
-                />
-              </div>
-              <div className="col-md-6">
-                <div className="card">
-                  <div className="card-header p-1 d-flex justify-content-center">
-                    <CustomFileInputButton
-                      {...form.register('mainImage')}
-                      label="Главна снимка"
-                      onFileChosen={onMainImageChosen}
+            <div className="card-body">
+              <CustomForm form={form} onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-md-6">
+                    <CustomInput
+                      {...form.register('eventName')}
+                      label="Наименование"
+                      required
+                    />
+                    <RegionSelect
+                      {...form.register('regionId')}
+                      label="Регион на събитието"
+                      isNumber
+                      required
+                      searchable={false}
+                    />
+                    <CustomDateInput
+                      {...form.register('eventStartDateTime')}
+                      label="Начало на събитието"
+                      showTime
+                      required
+                    />
+                    <CustomDateInput
+                      {...form.register('eventEndDateTime')}
+                      label="Край на събитието"
+                      showTime
+                      nullable
+                    />
+                    <CustomTextArea
+                      {...form.register('eventDescription')}
+                      label="Описание"
+                      rows={8}
                     />
                   </div>
-                  <div className="card-body p-1 main-image-wrapper">
-                    <img alt="main" className="main-image" src={mainImage} />
+                  <div className="col-md-6">
+                    <div className="card">
+                      <div className="card-header p-1 d-flex justify-content-center">
+                        <CustomFileInputButton
+                          {...form.register('mainImage')}
+                          label="Главна снимка"
+                          onFileChosen={onMainImageChosen}
+                        />
+                      </div>
+                      <div className="card-body p-1 main-image-wrapper">
+                        <img
+                          alt="main"
+                          className="w-100 object-fit-contain"
+                          src={mainImage}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-center mt-3">
+                    <button type="submit" className="btn btn-primary">
+                      {eventId ? 'Обнови' : 'Създай'}
+                    </button>
                   </div>
                 </div>
-              </div>
-              <div className="d-flex justify-content-center mt-3">
-                <button type="submit" className="btn btn-primary">
-                  {eventId ? 'Обнови' : 'Създай'}
-                </button>
-              </div>
+              </CustomForm>
             </div>
-          </CustomForm>
-        </div>
-        {error && (
-          <div className="card-footer">
-            <ErrorMessage error={error} />
+            {error && (
+              <div className="card-footer">
+                <ErrorMessage error={error} />
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
