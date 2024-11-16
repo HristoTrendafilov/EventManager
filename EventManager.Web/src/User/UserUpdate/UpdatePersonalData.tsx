@@ -41,8 +41,8 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
   });
 
   const onProfilePictureChange = (file: File) => {
-    setShowCropImageModal(true);
     URL.revokeObjectURL(selectedImage);
+    setShowCropImageModal(true);
     setSelectedImage(URL.createObjectURL(file));
     setSelectedImageName(file.name);
   };
@@ -66,9 +66,13 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
   );
 
   const closeImageCropModal = useCallback(() => {
-    form.setValue('profilePicture', null);
     setShowCropImageModal(false);
-  }, [form]);
+  }, []);
+
+  const handleCropCancel = useCallback(() => {
+    form.setValue('profilePicture', null);
+    closeImageCropModal();
+  }, [closeImageCropModal, form]);
 
   const onCropComplete = (imageBlob: File | null) => {
     if (croppedImage) {
@@ -159,7 +163,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           imageSrc={selectedImage}
           fileName={selectedImageName}
           onCropComplete={onCropComplete}
-          onCancel={closeImageCropModal}
+          onCancel={handleCropCancel}
         />
       )}
     </div>
