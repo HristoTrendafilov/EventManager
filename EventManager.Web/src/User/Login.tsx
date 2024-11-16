@@ -11,8 +11,6 @@ import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedFor
 import { useAppDispatch } from '~Infrastructure/redux/store';
 import { setUser } from '~Infrastructure/redux/user-slice';
 
-import './Login.css';
-
 const schema = z.object({
   username: z.string(),
   password: z.string(),
@@ -45,7 +43,7 @@ export function Login() {
   );
 
   return (
-    <div className="login-wrapper">
+    <div className="mw-600px m-50auto">
       <div className="container">
         <div className="card border-1 border-danger">
           <h2 className="card-header text-white bg-danger bg-gradient">
@@ -66,16 +64,11 @@ export function Login() {
               />
 
               <div className="d-flex justify-content-center">
-                <button type="submit" className="btn btn-primary login-btn">
+                <button type="submit" className="btn btn-primary w-200px">
                   Вход
                 </button>
               </div>
             </CustomForm>
-
-            <div className="mt-3">
-              <span className="me-2">Все още нямате регистрация?</span>
-              <Link to="/users/register">Регистрирай ме!</Link>
-            </div>
           </div>
 
           {error && (
@@ -83,6 +76,10 @@ export function Login() {
               <ErrorMessage error={error} />
             </div>
           )}
+        </div>
+        <div className="mt-1">
+          <span className="me-2">Все още нямате регистрация?</span>
+          <Link to="/users/register">Регистрирай ме!</Link>
         </div>
       </div>
     </div>

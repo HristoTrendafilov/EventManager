@@ -5,6 +5,8 @@ import {
   type ComponentProps,
   forwardRef,
   useCallback,
+  useEffect,
+  useRef,
 } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -25,6 +27,8 @@ export const CustomTextArea = forwardRef<
   const { getFieldState, formState, setValue } = useFormContext();
   const state = getFieldState(name, formState);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLTextAreaElement>) => {
       setValue(name, event.target.value);
@@ -32,8 +36,17 @@ export const CustomTextArea = forwardRef<
     [name, setValue]
   );
 
+  useEffect(() => {
+    if (state.error && wrapperRef.current) {
+      wrapperRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [state.error]);
+
   return (
-    <div className="textarea-wrapper">
+    <div className="textarea-wrapper" ref={wrapperRef}>
       <label className="textarea-label" htmlFor={name}>
         {label}
       </label>

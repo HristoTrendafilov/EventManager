@@ -2,7 +2,7 @@ import { forwardRef, useCallback } from 'react';
 
 import { CustomFileInput, type CustomFileInputProps } from './CustomFileInput';
 
-export const CustomButtonFileInput = forwardRef<
+export const CustomFileInputButton = forwardRef<
   HTMLInputElement,
   CustomFileInputProps
 >((props, ref) => {

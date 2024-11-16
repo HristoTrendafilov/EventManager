@@ -14,8 +14,6 @@ import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedFor
 import { TextInput } from '~Infrastructure/components/Form/TextInput/TextInput';
 import { Modal } from '~Infrastructure/components/Modal/Modal';
 
-import './RegionsCatalog.css';
-
 const schema = z.object({
   regionName: z.string(),
 });
@@ -133,7 +131,7 @@ export function RegionsCatalog() {
   }, [loadRegions]);
 
   return (
-    <div className="admin-panel-regions-wrapper mt-4">
+    <div className="mw-700px m-50auto">
       <div className="container">
         <div className="card">
           <h4 className="card-header d-flex justify-content-between align-items-center">
@@ -163,10 +161,10 @@ export function RegionsCatalog() {
                       <div className="col-2 col-md-2 col-lg-1">
                         #{x.regionId}
                       </div>
-                      <div className="col-5 col-md-7 col-lg-9">
+                      <div className="col-5 col-md-7 col-lg-8">
                         {x.regionName}
                       </div>
-                      <div className="col-5 col-md-3 col-lg-2">
+                      <div className="col-5 col-md-3 col-lg-3">
                         <button
                           type="button"
                           className="btn btn-primary w-100"
@@ -187,33 +185,35 @@ export function RegionsCatalog() {
 
       {showFormModal && (
         <Modal onBackdropClick={closeFormModal}>
-          <div className="region-form-wrapper container">
-            <div className="card mt-4">
-              <h3 className="card-header">
-                {regionIdForEdit
-                  ? `Редакция на регион (#${regionIdForEdit})`
-                  : 'Нов регион'}
-              </h3>
-              <div className="card-body">
-                <CustomForm form={form} onSubmit={handleFormSubmit}>
-                  <CustomInput
-                    label="Наименование"
-                    {...form.register('regionName')}
-                  />
-                  <div className="d-flex gap-2">
-                    <button type="submit" className="btn btn-primary w-100">
-                      Запис
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-warning w-100"
-                      onClick={closeFormModal}
-                    >
-                      Изход
-                    </button>
-                  </div>
-                </CustomForm>
-                {submitError && <ErrorMessage error={submitError} />}
+          <div className="container">
+            <div className="mw-500px m-70auto">
+              <div className="card mt-4">
+                <h3 className="card-header">
+                  {regionIdForEdit
+                    ? `Редакция на регион (#${regionIdForEdit})`
+                    : 'Нов регион'}
+                </h3>
+                <div className="card-body">
+                  <CustomForm form={form} onSubmit={handleFormSubmit}>
+                    <CustomInput
+                      label="Наименование"
+                      {...form.register('regionName')}
+                    />
+                    <div className="d-flex gap-2">
+                      <button type="submit" className="btn btn-primary w-100">
+                        Запис
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-warning w-100"
+                        onClick={closeFormModal}
+                      >
+                        Изход
+                      </button>
+                    </div>
+                  </CustomForm>
+                  {submitError && <ErrorMessage error={submitError} />}
+                </div>
               </div>
             </div>
           </div>

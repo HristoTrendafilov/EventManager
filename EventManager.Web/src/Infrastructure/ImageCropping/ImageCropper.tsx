@@ -58,7 +58,7 @@ interface ImageCropModalProps {
   imageSrc: string;
   fileName: string;
   onCropComplete: (croppedImage: File | null) => void;
-  onBackdropClick: () => void;
+  onCancel: () => void;
 }
 
 export function ImageCropModal(props: ImageCropModalProps) {
@@ -69,7 +69,7 @@ export function ImageCropModal(props: ImageCropModalProps) {
   const onCropChange = setCrop;
   const onZoomChange = setZoom;
 
-  const { imageSrc, fileName, onCropComplete, onBackdropClick } = props;
+  const { imageSrc, fileName, onCropComplete, onCancel } = props;
 
   const onCropCompleteInternal = useCallback((_: Area, pixels: Area) => {
     setCroppedAreaPixels(pixels);
@@ -91,7 +91,7 @@ export function ImageCropModal(props: ImageCropModalProps) {
   }, [croppedAreaPixels, fileName, imageSrc, onCropComplete]);
 
   return (
-    <Modal onBackdropClick={onBackdropClick}>
+    <Modal onBackdropClick={onCancel}>
       <div className="image-cropper-wrapper container">
         <div className="card">
           <div className="card-header">
@@ -122,7 +122,7 @@ export function ImageCropModal(props: ImageCropModalProps) {
             </button>
             <button
               type="button"
-              onClick={onBackdropClick}
+              onClick={onCancel}
               className="btn btn-warning w-100"
             >
               Изход

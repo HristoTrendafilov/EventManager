@@ -12,7 +12,7 @@ import {
   type EventBaseFormType,
 } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
+import { CustomFileInputButton } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomDateInput } from '~Infrastructure/components/Form/CustomForm/CustomDateInput';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
@@ -59,7 +59,6 @@ export function Event() {
   const onMainImageChosen = (file: File) => {
     URL.revokeObjectURL(mainImage);
     setMainImage(URL.createObjectURL(file));
-    form.setValue('mainImage', file);
   };
 
   const handleSubmit = useCallback(
@@ -89,7 +88,7 @@ export function Event() {
     if (eventId) {
       void loadEvent(Number(eventId));
     }
-  }, [eventId, form, loadEvent]);
+  }, [eventId, loadEvent]);
 
   useEffect(
     () => () => {
@@ -119,6 +118,7 @@ export function Event() {
                   label="Регион на събитието"
                   isNumber
                   required
+                  searchable={false}
                 />
                 <CustomDateInput
                   {...form.register('eventStartDateTime')}
@@ -130,6 +130,7 @@ export function Event() {
                   {...form.register('eventEndDateTime')}
                   label="Край на събитието"
                   showTime
+                  nullable
                 />
                 <CustomTextArea
                   {...form.register('eventDescription')}
@@ -140,7 +141,7 @@ export function Event() {
               <div className="col-md-6">
                 <div className="card">
                   <div className="card-header p-1 d-flex justify-content-center">
-                    <CustomButtonFileInput
+                    <CustomFileInputButton
                       {...form.register('mainImage')}
                       label="Главна снимка"
                       onFileChosen={onMainImageChosen}

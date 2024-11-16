@@ -7,14 +7,14 @@ import {
 } from '~Infrastructure/ApiRequests/users-requests';
 import type { UserView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+import { ImageGalleryModal } from '~Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
 import noUserLogo from '~asset/no-user-logo.png';
-
-import './UserProfile.css';
 
 export function UserProfile() {
   const [userView, setUserView] = useState<UserView | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [profilePicture, setProfilePicture] = useState<string>(noUserLogo);
+  const [showGallery, setShowGallery] = useState<boolean>(false);
 
   const { userId } = useParams();
 
@@ -39,6 +39,14 @@ export function UserProfile() {
       setProfilePicture(URL.createObjectURL(profilePictureResponse.data));
     }
   }, [userId]);
+
+  const handleShowGallery = useCallback(() => {
+    setShowGallery(true);
+  }, []);
+
+  const handleCloseGallery = useCallback(() => {
+    setShowGallery(false);
+  }, []);
 
   useEffect(() => {
     void fetchUserView();
@@ -65,11 +73,19 @@ export function UserProfile() {
               <div className="card">
                 <div className="card-body">
                   <div className="d-flex flex-column align-items-center text-center">
-                    <img
-                      className="profile-image"
-                      src={profilePicture}
-                      alt=""
-                    />
+                    <button
+                      className="unset-btn"
+                      type="button"
+                      onClick={handleShowGallery}
+                    >
+                      <img
+                        className="rounded-circle"
+                        height={200}
+                        width={200}
+                        src={profilePicture}
+                        alt="profile"
+                      />
+                    </button>
                     <div className="mt-3">
                       <h4>{userView.username}</h4>
                       <p className="text-secondary mb-1">
@@ -144,6 +160,14 @@ export function UserProfile() {
           </div>
         )}
       </div>
+      {showGallery && (
+        <div>
+          <ImageGalleryModal
+            items={[{ original: profilePicture }]}
+            onCloseButtonClick={handleCloseGallery}
+          />
+        </div>
+      )}
     </div>
   );
 }

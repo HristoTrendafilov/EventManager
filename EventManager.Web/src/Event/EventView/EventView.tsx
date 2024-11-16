@@ -25,7 +25,6 @@ import './EventView.css';
 
 export function EventViewComponent() {
   const [error, setError] = useState<string | undefined>();
-
   const [subscriptionError, setSubscriptionError] = useState<
     string | undefined
   >();
@@ -100,9 +99,13 @@ export function EventViewComponent() {
     }
   }, [eventId, loadSubscribers]);
 
-  const handleImageClick = () => {
+  const handleShowGallery = useCallback(() => {
     setShowGallery(true);
-  };
+  }, []);
+
+  const handleCloseGallery = useCallback(() => {
+    setShowGallery(false);
+  }, []);
 
   useEffect(() => {
     void loadEvent();
@@ -124,9 +127,9 @@ export function EventViewComponent() {
           <div className="row g-2">
             <div className="col-lg-8">
               <button
-                className="main-img-button"
+                className="unset-btn"
                 type="button"
-                onClick={handleImageClick}
+                onClick={handleShowGallery}
               >
                 <div className="main-image-wrapper">
                   <img src={mainImage} alt="main" />
@@ -235,7 +238,7 @@ export function EventViewComponent() {
         <div>
           <ImageGalleryModal
             items={[{ original: mainImage }]}
-            onCloseButtonClick={() => setShowGallery(false)}
+            onCloseButtonClick={handleCloseGallery}
           />
         </div>
       )}

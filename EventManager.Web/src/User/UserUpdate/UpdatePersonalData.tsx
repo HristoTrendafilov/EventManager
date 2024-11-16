@@ -9,12 +9,12 @@ import {
   type UserUpdatePersonalDataType,
 } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
+import { CustomFileInputButton } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { objectToFormData } from '~Infrastructure/utils';
+import { convertToFileList, objectToFormData } from '~Infrastructure/utils';
 import { RegionMultiSelect } from '~Shared/SmartSelects/Region/RegionMultiSelect';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 import noUserLogo from '~asset/no-user-logo.png';
@@ -77,7 +77,9 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
     if (imageBlob) {
       const croppedProfilePicture = URL.createObjectURL(imageBlob);
       setCroppedImage(croppedProfilePicture);
-      form.setValue('profilePicture', imageBlob);
+
+      const fileList = convertToFileList([imageBlob]);
+      form.setValue('profilePicture', fileList);
     }
 
     closeImageCropModal();
@@ -102,7 +104,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
               src={croppedImage || noUserLogo}
             />
           </div>
-          <CustomButtonFileInput
+          <CustomFileInputButton
             {...form.register('profilePicture')}
             label="Избери нова профилна снимка"
             className="d-flex justify-content-center mb-3 mt-2"
@@ -154,7 +156,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           imageSrc={selectedImage}
           fileName={selectedImageName}
           onCropComplete={onCropComplete}
-          onBackdropClick={closeImageCropModal}
+          onCancel={closeImageCropModal}
         />
       )}
     </div>

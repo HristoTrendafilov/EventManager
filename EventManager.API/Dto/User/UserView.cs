@@ -21,16 +21,19 @@ namespace EventManager.API.Dto.User
         public List<RoleView> UserRoles { get; set; }
         public List<long> UserRolesIds => this.UserRoles.Select(x => x.RoleId).ToList();
 
+        #region JsonIgnore
         [JsonIgnore]
         public override string Password { get; set; }
-
         [JsonIgnore]
         public override string ProfilePicturePath { get; set; }
-
         [JsonIgnore]
         public override string EmailVerificationSecret { get; set; }
-
         [JsonIgnore]
         public override bool? IsEmailVerified { get; set; }
+        [JsonIgnore]
+        public override DateTime? CreatedOnDateTime { get; set; }
+        [JsonIgnore]
+        public override long? CreatedByUserId { get; set; }
+        #endregion JsonIgnore
     }
 }

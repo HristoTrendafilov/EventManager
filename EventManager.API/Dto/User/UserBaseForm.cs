@@ -12,25 +12,25 @@ namespace EventManager.API.Dto.User
         }
 
         [Required(ErrorMessage = "Името е задължително.")]
-        public string FirstName { get; set; }
+        public virtual string FirstName { get; set; }
 
-        public string SecondName { get; set; }
+        public virtual string SecondName { get; set; }
 
         [Required(ErrorMessage = "Фамилията е задължителна.")]
-        public string LastName { get; set; }
+        public virtual string LastName { get; set; }
 
-        public string PhoneNumber { get; set; }
+        public virtual string PhoneNumber { get; set; }
 
-        public string ShortDescription { get; set; }
+        public virtual string ShortDescription { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Регионът, в който живеете, е задължителен.")]
-        public long RegionId { get; set; }
+        public virtual long RegionId { get; set; }
 
         [NotEmptyCollection(ErrorMessage = "Моля, изберете региони, в които искате да помагате.")]
-        public List<long> UserRegionsHelpingIds { get; set; }
+        public virtual List<long> UserRegionsHelpingIds { get; set; }
 
-        public IFormFile ProfilePicture { get; set; }
+        public virtual IFormFile ProfilePicture { get; set; }
 
-        public string ProfilePicturePath { get; set; }
+        public virtual string ProfilePicturePath { get; set; }
     }
 }

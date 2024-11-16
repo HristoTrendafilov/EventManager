@@ -6,17 +6,15 @@ import { registerUser } from '~Infrastructure/ApiRequests/users-requests';
 import { ImageCropModal } from '~Infrastructure/ImageCropping/ImageCropper';
 import { UserNewSchema, type UserNewType } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomButtonFileInput } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
+import { CustomFileInputButton } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { objectToFormData } from '~Infrastructure/utils';
+import { convertToFileList, objectToFormData } from '~Infrastructure/utils';
 import { RegionMultiSelect } from '~Shared/SmartSelects/Region/RegionMultiSelect';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 import noUserLogo from '~asset/no-user-logo.png';
-
-import './Register.css';
 
 export function Register() {
   const [error, setError] = useState<string>();
@@ -54,8 +52,8 @@ export function Register() {
 
   const onProfilePictureChosen = useCallback(
     (file: File) => {
-      setShowCropImageModal(true);
       URL.revokeObjectURL(selectedImage);
+      setShowCropImageModal(true);
       setSelectedImage(URL.createObjectURL(file));
       setSelectedImageName(file.name);
     },
@@ -66,6 +64,11 @@ export function Register() {
     setShowCropImageModal(false);
   }, []);
 
+  const handleCropCancel = useCallback(() => {
+    form.setValue('profilePicture', null);
+    closeImageCropModal();
+  }, [closeImageCropModal, form]);
+
   const onCropComplete = (imageBlob: File | null) => {
     if (croppedImage) {
       URL.revokeObjectURL(croppedImage);
@@ -74,7 +77,9 @@ export function Register() {
     if (imageBlob) {
       const croppedProfilePicture = URL.createObjectURL(imageBlob);
       setCroppedImage(croppedProfilePicture);
-      form.setValue('profilePicture', imageBlob);
+
+      const fileList = convertToFileList([imageBlob]);
+      form.setValue('profilePicture', fileList);
     }
 
     closeImageCropModal();
@@ -91,7 +96,7 @@ export function Register() {
   );
 
   return (
-    <div className="register-wrapper">
+    <div className="m-50auto">
       <div className="container mt-3">
         <CustomForm form={form} onSubmit={handleRegister}>
           <div className="row g-3">
@@ -100,11 +105,13 @@ export function Register() {
                 <h4 className="card-header">Профилна снимка</h4>
                 <div className="card-body d-flex flex-column gap-2 justify-content-center align-items-center">
                   <img
-                    className="profile-picture"
+                    className="rounded-circle"
+                    height={180}
+                    width={180}
                     src={croppedImage || noUserLogo}
-                    alt=""
+                    alt="profile"
                   />
-                  <CustomButtonFileInput
+                  <CustomFileInputButton
                     {...form.register('profilePicture')}
                     label="Избери профилна снимка"
                     onFileChosen={onProfilePictureChosen}
@@ -221,7 +228,7 @@ export function Register() {
             imageSrc={selectedImage}
             fileName={selectedImageName}
             onCropComplete={onCropComplete}
-            onBackdropClick={closeImageCropModal}
+            onCancel={handleCropCancel}
           />
         )}
       </div>

@@ -12,11 +12,9 @@ using EventManager.API.Dto.WebSession;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using EventManager.API.Services.Region;
-using EventManager.API.Dto.Event;
 using EventManager.DAL;
 using System.Data;
 

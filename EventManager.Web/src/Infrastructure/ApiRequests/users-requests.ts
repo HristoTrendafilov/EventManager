@@ -8,7 +8,7 @@ import type {
   UserRoleFilterType,
   UserView,
 } from '~Infrastructure/api-types';
-import type { UserLogin } from '~User/Login/Login';
+import type { UserLogin } from '~User/Login';
 import type { UserUpdatePassword } from '~User/UserUpdate/UserSecurity';
 
 export function registerUser(user: FormData) {

@@ -17,8 +17,6 @@ import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedFor
 
 import { UserRole } from './UserRole';
 
-import './UsersRolesCatalog.css';
-
 export function UsersRolesCatalog() {
   const [users, setUsers] = useState<UserView[]>([]);
   const [roles, setRoles] = useState<RoleView[]>([]);
@@ -51,8 +49,8 @@ export function UsersRolesCatalog() {
   }, [loadRoles]);
 
   return (
-    <div className="user-roles-wrapper">
-      <div className="container">
+    <div className="container">
+      <div className="mw-800px m-70auto">
         {error && <ErrorMessage error={error} />}
         <div className="card">
           <h4 className="card-header">Потребителски права</h4>

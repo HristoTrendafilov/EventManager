@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import { z } from 'zod';
 
 import { updateUserUsername } from '~Infrastructure/ApiRequests/users-requests';
@@ -8,7 +9,7 @@ import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomFor
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
 import { useAppDispatch } from '~Infrastructure/redux/store';
-import { updateUsername } from '~Infrastructure/redux/user-slice';
+import { updateUsername, userSelector } from '~Infrastructure/redux/user-slice';
 
 const schema = z.object({
   username: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
@@ -30,6 +31,7 @@ export function UserAccountSettings(props: UserAccountSettingsProps) {
 
   const form = useZodForm({ schema, defaultValues: { username } });
 
+  const user = useSelector(userSelector);
   const dispatch = useAppDispatch();
 
   const toggleIsLocked = useCallback(() => {
@@ -37,21 +39,24 @@ export function UserAccountSettings(props: UserAccountSettingsProps) {
   }, [isLocked]);
 
   const handleSubmit = useCallback(
-    async (user: UpdateUserUsername) => {
+    async (updateUser: UpdateUserUsername) => {
       setError(undefined);
 
-      const response = await updateUserUsername(userId, user.username);
+      const response = await updateUserUsername(userId, updateUser.username);
       if (!response.success) {
         setError(response.errorMessage);
         return;
       }
 
       onUserUpdate();
-      dispatch(updateUsername({ username: user.username }));
       toast.success('Успешно променихте потребителското си име.');
       toggleIsLocked();
+
+      if (user.userId === userId) {
+        dispatch(updateUsername({ username: updateUser.username }));
+      }
     },
-    [dispatch, onUserUpdate, toggleIsLocked, userId]
+    [dispatch, onUserUpdate, toggleIsLocked, user.userId, userId]
   );
 
   return (

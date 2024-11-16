@@ -8,9 +8,9 @@ import { AdminPanel } from '~User/AdminPanel/AdminPanel';
 import { CrudLogs } from '~User/AdminPanel/CrudLogs';
 import { RegionsCatalog } from '~User/AdminPanel/RegionsCatalog';
 import { UsersRolesCatalog } from '~User/AdminPanel/UsersRolesCatalog';
-import { Login } from '~User/Login/Login';
-import { Register } from '~User/Register/Register';
-import { UserProfile } from '~User/UserProfile/UserProfile';
+import { Login } from '~User/Login';
+import { Register } from '~User/Register';
+import { UserProfile } from '~User/UserProfile';
 import { UserUpdate } from '~User/UserUpdate/UserUpdate';
 
 export interface RouteTable {

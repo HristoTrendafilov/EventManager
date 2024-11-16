@@ -177,11 +177,11 @@ string ConvertToZodType(Type propertyType, IEnumerable<ValidationAttribute> vali
         "int64" => "z.number().int()",
         "decimal" => "z.number()",
         "datetime" => "z.coerce.date()",
-        "iformfile" => "z.instanceof(File)",
+        "iformfile" => "z.instanceof(FileList)",
         _ => throw new Exception($"Unknown type for Zod schema: {propertyType.Name}")
     };
 
-    if (validationAttributes.Any()) 
+    if (validationAttributes.Any())
     {
         // Apply validation attributes with error messages
         foreach (var attribute in validationAttributes)
@@ -223,6 +223,15 @@ string ConvertToZodType(Type propertyType, IEnumerable<ValidationAttribute> vali
                     if (propertyType == typeof(int) || propertyType == typeof(double) || propertyType == typeof(decimal))
                     {
                         schemaProperty += $".min({rangeAttr.Minimum}, {{ message: \"{errorMessage}\" }}).max({rangeAttr.Maximum}, {{ message: \"{errorMessage}\" }})";
+                    }
+                    else if (propertyType == typeof(DateTime))
+                    {
+                        // Parse the minimum and maximum dates from the RangeAttribute
+                        var minDate = DateTime.Parse(rangeAttr.Minimum.ToString()).ToString("yyyy-MM-dd");
+                        var maxDate = DateTime.Parse(rangeAttr.Maximum.ToString()).ToString("yyyy-MM-dd");
+
+                        // Apply Zod refinement for date validation
+                        schemaProperty += $".refine(date => date >= new Date(\"{minDate}\") && date <= new Date(\"{maxDate}\"), {{ message: \"{errorMessage}\" }})";
                     }
                     break;
 

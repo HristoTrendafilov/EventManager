@@ -1,8 +1,35 @@
+import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faList, faLocation, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
-import './AdminPanel.css';
+interface AdminPanelNav {
+  location: string;
+  name: string;
+  icon: IconProp;
+  color: string;
+}
+
+const navigation: AdminPanelNav[] = [
+  {
+    location: '/users/admin-panel/regions',
+    name: 'Региони',
+    icon: faLocation,
+    color: 'success',
+  },
+  {
+    location: '/users/admin-panel/action-logs',
+    name: 'Логове',
+    icon: faList,
+    color: 'warning',
+  },
+  {
+    location: '/users/admin-panel/user-roles',
+    name: 'Потребителски права',
+    icon: faUser,
+    color: 'primary',
+  },
+];
 
 export function AdminPanel() {
   return (
@@ -11,45 +38,18 @@ export function AdminPanel() {
         <div className="card">
           <div className="card-body">
             <div className="row g-2">
-              <div className="col-md-6">
-                <Link
-                  to="/users/admin-panel/regions"
-                  className="card unset-anchor"
-                >
-                  <div className="card-body d-flex border border-black bg-primary flex-wrap flex-column justify-content-center align-content-center">
-                    <FontAwesomeIcon
-                      color="white"
-                      icon={faLocation}
-                      size="4x"
-                    />
-                    <div className="text-white fw-medium">Региони</div>
-                  </div>
-                </Link>
-              </div>
-              <div className="col-md-6">
-                <Link
-                  to="/users/admin-panel/action-logs"
-                  className="card unset-anchor"
-                >
-                  <div className="card-body border border-black d-flex bg-warning flex-wrap flex-column justify-content-center align-content-center">
-                    <FontAwesomeIcon color="white" icon={faList} size="4x" />
-                    <div className="text-white fw-medium">Логове</div>
-                  </div>
-                </Link>
-              </div>
-              <div className="col-md-6">
-                <Link
-                  to="/users/admin-panel/user-roles"
-                  className="card unset-anchor"
-                >
-                  <div className="card-body border border-black d-flex bg-success flex-wrap flex-column justify-content-center align-content-center">
-                    <FontAwesomeIcon color="white" icon={faUser} size="4x" />
-                    <div className="text-white fw-medium">
-                      Потребителски права
+              {navigation.map((x) => (
+                <div key={x.location} className="col-md-6">
+                  <Link to={x.location} className="card unset-anchor">
+                    <div
+                      className={`card-body d-flex border border-black bg-${x.color} flex-wrap flex-column justify-content-center align-content-center`}
+                    >
+                      <FontAwesomeIcon color="white" icon={x.icon} size="4x" />
+                      <div className="text-white fw-medium">{x.name}</div>
                     </div>
-                  </div>
-                </Link>
-              </div>
+                  </Link>
+                </div>
+              ))}
             </div>
           </div>
         </div>

@@ -33,11 +33,11 @@ export const CustomFileInput = forwardRef<
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      const { files } = event.target;
-
+      // event.target.value = '';
       if (props.onChange) {
         props.onChange(event);
       }
+      const { files } = event.target;
 
       if (files && files.length > 0) {
         const fileNames = Array.from(files)
@@ -50,8 +50,6 @@ export const CustomFileInput = forwardRef<
           onFileChosen(files[0]);
         }
       }
-
-      event.target.value = '';
     },
     [props, onFileChosen]
   );
@@ -77,6 +75,7 @@ export const CustomFileInput = forwardRef<
           ref={ref}
           id={props.name}
           type="file"
+          multiple={false}
           onChange={handleChange}
         />
         <div className="clear-button-wrapper">

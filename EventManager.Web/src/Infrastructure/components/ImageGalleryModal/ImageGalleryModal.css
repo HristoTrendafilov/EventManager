@@ -2,15 +2,50 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-}
-
-.image-gallery-wrapper .custom-gallery {
-  display: flex;
-  justify-content: center;
+  margin-top: 80px;
 }
 
 .image-gallery-wrapper .card {
-  max-width: 800px;
+  width: 500px;
+}
+
+.image-gallery-wrapper .card-body {
+  display: flex;
+  justify-content: center;
+  overflow-y: auto; /* Allow vertical scrolling if content overflows */
+}
+
+.image-gallery {
   width: 100%;
+}
+
+.image-gallery-slide img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+}
+
+.image-gallery-slide {
+  display: flex !important;
+  max-height: 500px; /* Applied only when NOT fullscreen */
+}
+
+.fullscreen .image-gallery-slide {
+  max-height: unset; /* Remove the 500px restriction in fullscreen mode */
+}
+
+.fullscreen .image-gallery-slide img {
+  max-height: 100vh; /* Ensure images take up full screen height in fullscreen mode */
+}
+
+.image-gallery-slide img {
+  width: 100%;
+  height: auto;
+  object-fit: contain; /* Maintain aspect ratio within the container */
+  max-height: 500px; /* Restrict image height in non-fullscreen mode */
+}
+
+.fullscreen .image-gallery-slide img {
+  object-fit: contain; /* Adjust behavior for fullscreen if desired */
 }

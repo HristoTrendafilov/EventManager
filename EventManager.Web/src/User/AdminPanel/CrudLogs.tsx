@@ -61,117 +61,126 @@ export function CrudLogs() {
 
   return (
     <div className="container mt-4">
-      <div className="accordion mb-3" id="accordionExample">
-        <div className="accordion-item">
-          <div className="accordion-header" id="headingOne">
-            <button
-              className="accordion-button"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseOne"
-              aria-expanded="true"
-              aria-controls="collapseOne"
+      <div className="mw-900px m-50auto">
+        <div className="accordion mb-3" id="accordionExample">
+          <div className="accordion-item">
+            <div className="accordion-header" id="headingOne">
+              <button
+                className="accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseOne"
+                aria-expanded="true"
+                aria-controls="collapseOne"
+              >
+                Филтър
+              </button>
+            </div>
+            <div
+              id="collapseOne"
+              className="accordion-collapse collapse show"
+              aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample"
             >
-              Филтър
-            </button>
-          </div>
-          <div
-            id="collapseOne"
-            className="accordion-collapse collapse show"
-            aria-labelledby="headingOne"
-            data-bs-parent="#accordionExample"
-          >
-            <div className="accordion-body">
-              <CustomForm form={form} onSubmit={loadCrudLogs}>
-                <CustomSelect
-                  {...form.register('actionType')}
-                  options={crudLogSelectOptions}
-                  isNumber
-                  searchable={false}
-                  label="Тип"
-                />
-                <CustomDateInput
-                  {...form.register('actionDateTime')}
-                  label="Дата"
-                  showTime={false}
-                />
-                <div className="d-flex justify-content-center">
-                  <button type="submit" className="btn btn-primary">
-                    Търси
-                  </button>
-                </div>
-              </CustomForm>
+              <div className="accordion-body">
+                <CustomForm form={form} onSubmit={loadCrudLogs}>
+                  <CustomSelect
+                    {...form.register('actionType')}
+                    options={crudLogSelectOptions}
+                    isNumber
+                    searchable={false}
+                    label="Тип"
+                  />
+                  <CustomDateInput
+                    {...form.register('actionDateTime')}
+                    label="Дата"
+                    showTime={false}
+                  />
+                  <div className="d-flex justify-content-center">
+                    <button type="submit" className="btn btn-primary">
+                      Търси
+                    </button>
+                  </div>
+                </CustomForm>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {crudLogsView.length > 0 &&
-        crudLogsView.map((x) => (
-          <div
-            key={x.crudLogId}
-            className="accordion mb-2"
-            id={`accordionExample${x.crudLogId}`}
-          >
-            <div className="accordion-item">
-              <div className="accordion-header" id="headingOne">
-                <button
-                  className={`accordion-button text-white bg-${accordionBackColor.get(
-                    x.actionType!
-                  )}`}
-                  type="button"
-                  data-bs-toggle="collapse"
-                  data-bs-target={`#collapse${x.crudLogId}`}
-                  aria-expanded="false"
-                  aria-controls="collapseOne"
+        {crudLogsView.length > 0 &&
+          crudLogsView.map((x) => (
+            <div
+              key={x.crudLogId}
+              className="accordion mb-2"
+              id={`accordionExample${x.crudLogId}`}
+            >
+              <div className="accordion-item">
+                <div className="accordion-header" id="headingOne">
+                  <button
+                    className={`accordion-button text-white bg-${accordionBackColor.get(
+                      x.actionType!
+                    )}`}
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target={`#collapse${x.crudLogId}`}
+                    aria-expanded="false"
+                    aria-controls="collapseOne"
+                  >
+                    <div className="row w-100">
+                      <div className="col-md-8 col-lg-9">
+                        {' '}
+                        {x.tableAffected}
+                      </div>
+                      <div className="col-md-4 col-lg-3">
+                        {formatDateTime(x.actionDateTime!)}
+                      </div>
+                    </div>
+                  </button>
+                </div>
+                <div
+                  id={`collapse${x.crudLogId}`}
+                  className="accordion-collapse collapse"
+                  aria-labelledby="headingOne"
+                  data-bs-parent={`#accordionExample${x.crudLogId}`}
                 >
-                  <div className="row w-100">
-                    <div className="col-md-8 col-lg-9"> {x.tableAffected}</div>
-                    <div className="col-md-4 col-lg-3">
-                      {formatDateTime(x.actionDateTime!)}
+                  <div className="accordion-body">
+                    <div>
+                      Извършил действието:
+                      <Link
+                        className="ms-2"
+                        to={`/users/${x.createdByUserId}/view`}
+                      >
+                        {x.username}
+                      </Link>
                     </div>
-                  </div>
-                </button>
-              </div>
-              <div
-                id={`collapse${x.crudLogId}`}
-                className="accordion-collapse collapse"
-                aria-labelledby="headingOne"
-                data-bs-parent={`#accordionExample${x.crudLogId}`}
-              >
-                <div className="accordion-body">
-                  <div>
-                    Извършил действието:
-                    <Link
-                      className="ms-2"
-                      to={`/users/${x.createdByUserId}/view`}
-                    >
-                      {x.username}
-                    </Link>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <pre>
-                        {JSON.stringify(
-                          JSON.parse(x.pocoBeforeAction),
-                          null,
-                          2
-                        )}
-                      </pre>
-                    </div>
-                    <div className="col-lg-5">
-                      <pre>
-                        {JSON.stringify(JSON.parse(x.pocoAfterAction), null, 2)}
-                      </pre>
+                    <hr />
+                    <div className="row">
+                      <div className="col-lg-6">
+                        <pre>
+                          {JSON.stringify(
+                            JSON.parse(x.pocoBeforeAction),
+                            null,
+                            2
+                          )}
+                        </pre>
+                      </div>
+                      <div className="col-lg-5">
+                        <pre>
+                          {JSON.stringify(
+                            JSON.parse(x.pocoAfterAction),
+                            null,
+                            2
+                          )}
+                        </pre>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
-      {error && <ErrorMessage error={error} />}
+          ))}
+        {error && <ErrorMessage error={error} />}
+      </div>
     </div>
   );
 }

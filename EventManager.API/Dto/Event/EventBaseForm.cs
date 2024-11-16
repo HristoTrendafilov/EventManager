@@ -12,7 +12,7 @@ namespace EventManager.API.Dto.Event
 
         public virtual string EventDescription { get; set; }
 
-        [Range(typeof(DateTime), "01-01-1900", "01-01-3000", ErrorMessage = "Дата на събитието е задължителна.")]
+        [Range(typeof(DateTime), "01-01-1971", "01-01-3000", ErrorMessage = "Дата на събитието е задължителна.")]
         public virtual DateTime EventStartDateTime { get; set; }
 
         public virtual DateTime? EventEndDateTime { get; set; }

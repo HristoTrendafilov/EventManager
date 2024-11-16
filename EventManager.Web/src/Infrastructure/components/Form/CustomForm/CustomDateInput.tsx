@@ -1,7 +1,14 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import bg from 'date-fns/locale/bg';
-import { type ComponentProps, forwardRef, useCallback, useState } from 'react';
+import {
+  type ComponentProps,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -13,18 +20,21 @@ interface CustomDateInputProps extends ComponentProps<'input'> {
   label: string;
   showTime?: boolean;
   timeInterval?: number;
+  nullable?: boolean;
 }
 
 export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
   (props, ref) => {
-    const { name, label, required, showTime, timeInterval } = props;
+    const { name, label, required, showTime, timeInterval, nullable } = props;
 
     const [open, setOpen] = useState<boolean>(false);
     const [previousDate, setPreviousDate] = useState<Date | null>(null);
 
     registerLocale('bg', bg);
 
-    const { getFieldState, formState, control } = useFormContext();
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    const { getFieldState, formState, control, setValue } = useFormContext();
     const state = getFieldState(name, formState);
 
     const isTimeChanged = useCallback(
@@ -35,53 +45,78 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
       []
     );
 
+    const handleClearInput = useCallback(() => {
+      setValue(props.name, null);
+    }, [props.name, setValue]);
+
+    useEffect(() => {
+      if (state.error && wrapperRef.current) {
+        wrapperRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        });
+      }
+    }, [state.error]);
+
     return (
-      <div className="date-input-wrapper">
+      <div className="date-input-wrapper" ref={wrapperRef}>
         <label className="date-input-label" htmlFor={name}>
           {label}
         </label>
-        <Controller
-          control={control}
-          name={name}
-          render={({ field }) => (
-            <DatePicker
-              ref={ref}
-              className="date-input"
-              onChange={(date) => {
-                field.onChange(date);
+        <div className="date-input">
+          <Controller
+            control={control}
+            name={name}
+            render={({ field }) => (
+              <DatePicker
+                ref={ref}
+                onChange={(date) => {
+                  field.onChange(date);
 
-                if (!showTime) {
-                  setOpen(false);
-                  return;
-                }
-
-                if (date instanceof Date && !Number.isNaN(date.getTime())) {
-                  if (isTimeChanged(previousDate, date)) {
+                  if (!showTime) {
                     setOpen(false);
+                    return;
                   }
 
-                  setPreviousDate(date); // Update previous date
-                }
-              }}
-              onInputClick={() => {
-                setOpen(true);
-              }}
-              onClickOutside={() => setOpen(false)}
-              id={name}
-              showTimeSelect={showTime}
-              selected={field.value ? new Date(field.value as string) : null}
-              dateFormat={showTime ? 'Pp' : 'P'} // Use only date format when showTime is false
-              locale="bg"
-              timeFormat="HH:mm"
-              timeIntervals={timeInterval ?? 15}
-              showYearDropdown
-              required={required}
-              onChangeRaw={(e) => e?.preventDefault()}
-              readOnly
-              open={open}
-            />
+                  if (date instanceof Date && !Number.isNaN(date.getTime())) {
+                    if (isTimeChanged(previousDate, date)) {
+                      setOpen(false);
+                    }
+
+                    setPreviousDate(date); // Update previous date
+                  }
+                }}
+                onInputClick={() => {
+                  setOpen(true);
+                }}
+                onClickOutside={() => setOpen(false)}
+                id={name}
+                showTimeSelect={showTime}
+                selected={field.value ? new Date(field.value as string) : null}
+                dateFormat={showTime ? 'Pp' : 'P'} // Use only date format when showTime is false
+                locale="bg"
+                timeFormat="HH:mm"
+                timeIntervals={timeInterval ?? 15}
+                showYearDropdown
+                required={required}
+                onFocus={(e) => e.target.blur()}
+                open={open}
+                shouldCloseOnSelect
+              />
+            )}
+          />
+          {nullable && (
+            <div className="clear-button-wrapper">
+              <button
+                type="button"
+                className="clear-button"
+                onClick={handleClearInput}
+              >
+                X
+              </button>
+            </div>
           )}
-        />
+        </div>
 
         {state.error && (
           <p className="input-validation-error">

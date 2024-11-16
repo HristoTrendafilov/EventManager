@@ -25,6 +25,7 @@ namespace EventManager.API.Dto.User
         [Required(ErrorMessage = "Моля, повторете отново паролата")]
         public string PasswordRepeated { get; set; }
 
+        #region JsonIgnore
         [JsonIgnore]
         public DateTime CreatedOnDateTime { get; set; }
 
@@ -33,5 +34,6 @@ namespace EventManager.API.Dto.User
 
         [JsonIgnore]
         public long? CreatedByUserId { get; set; }
+        #endregion JsonIgnore
     }
 }

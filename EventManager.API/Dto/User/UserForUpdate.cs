@@ -1,4 +1,5 @@
 ﻿using EventManager.API.Helpers;
+using Newtonsoft.Json;
 
 namespace EventManager.API.Dto.User
 {
@@ -7,5 +8,12 @@ namespace EventManager.API.Dto.User
     {
         public bool HasProfilePicture { get; set; }
         public string Username { get; set; }
+
+        #region JsonIgnore
+        [JsonIgnore]
+        public override string ProfilePicturePath { get; set; }
+        [JsonIgnore]
+        public override IFormFile ProfilePicture { get; set; }
+        #endregion JsonIgnore
     }
 }

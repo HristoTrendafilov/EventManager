@@ -98,3 +98,9 @@ export const fileToBase64 = (file: File): Promise<string> =>
     };
     reader.onerror = reject;
   });
+
+export const convertToFileList = (files: File[]): FileList => {
+  const dataTransfer = new DataTransfer();
+  files.forEach((file) => dataTransfer.items.add(file));
+  return dataTransfer.files;
+};

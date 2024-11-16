@@ -1,4 +1,4 @@
-import { Fragment, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
@@ -60,8 +60,8 @@ export function RenderRouteTable() {
           key={route.location}
           path={route.location}
           element={
-            <UserAccessBoundary routeTable={route}>
-              <Fragment key={uuidv4()}>{route.component}</Fragment>
+            <UserAccessBoundary key={uuidv4()} routeTable={route}>
+              {route.component}
             </UserAccessBoundary>
           }
         />
