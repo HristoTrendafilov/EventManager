@@ -34,7 +34,10 @@ foreach (var zodSchemaClass in zodSchemaClasses)
     fileBuilder.AppendLine(zodSchema);
 }
 
-await File.WriteAllTextAsync("../../../../EventManager.Web/src/Infrastructure/api-types.ts", fileBuilder.ToString());
+var basePath = AppDomain.CurrentDomain.BaseDirectory;
+var filePath = Path.Combine(basePath, "../../../../EventManager.Web/src/Infrastructure/api-types.ts");
+
+await File.WriteAllTextAsync(filePath, fileBuilder.ToString());
 
 // Generate TypeScript interface for the entire class
 string GenerateTypeScriptInterface(Type classType)

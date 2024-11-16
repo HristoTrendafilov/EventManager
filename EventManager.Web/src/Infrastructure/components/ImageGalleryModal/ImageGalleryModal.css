@@ -1,0 +1,16 @@
+.image-gallery-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.image-gallery-wrapper .custom-gallery {
+  display: flex;
+  justify-content: center;
+}
+
+.image-gallery-wrapper .card {
+  max-width: 800px;
+  width: 100%;
+}

@@ -63,6 +63,7 @@ export function UsersRolesCatalog() {
                   <CustomInput
                     {...form.register('username')}
                     label="Потребителско име"
+                    required
                   />
                 </div>
                 <div className="col-md-4">

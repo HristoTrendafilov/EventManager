@@ -128,7 +128,7 @@ namespace EventManager.API.Services.User
         {
             await _db.WithTransactionAsync(async () =>
             {
-                await _db.UsersRoles.X_DeleteAsync(x => x.UserId == userRoles.UserId, currentUserId);
+                await _db.UsersRoles.X_DeleteAsync(x => x.UserId == userRoles.UserId && x.RoleId != (int)UserRole.Admin, currentUserId);
 
                 foreach (var roleId in userRoles.RolesIds)
                 {

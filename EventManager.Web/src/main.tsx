@@ -4,6 +4,7 @@ import React from 'react';
 import 'react-datepicker/dist/react-datepicker-cssmodules.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import ReactDOM from 'react-dom/client';
+import 'react-image-gallery/styles/css/image-gallery.css';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 

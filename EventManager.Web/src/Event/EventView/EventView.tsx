@@ -14,6 +14,7 @@ import {
 } from '~Infrastructure/ApiRequests/events-requests';
 import type { EventView, UserEventView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+import { ImageGalleryModal } from '~Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
 import { userSelector } from '~Infrastructure/redux/user-slice';
 import { formatDateTime } from '~Infrastructure/utils';
 import noImage from '~asset/no-image.png';
@@ -33,6 +34,7 @@ export function EventViewComponent() {
   const [mainImage, setMainImage] = useState<string>(noImage);
   const [isUserSubscribed, setIsUserSubscribed] = useState<boolean>(false);
   const [subscribers, setSubscribers] = useState<UserEventView[]>([]);
+  const [showGallery, setShowGallery] = useState<boolean>(false);
 
   const user = useSelector(userSelector);
 
@@ -98,6 +100,10 @@ export function EventViewComponent() {
     }
   }, [eventId, loadSubscribers]);
 
+  const handleImageClick = () => {
+    setShowGallery(true);
+  };
+
   useEffect(() => {
     void loadEvent();
   }, [loadEvent]);
@@ -117,9 +123,15 @@ export function EventViewComponent() {
 
           <div className="row g-2">
             <div className="col-lg-8">
-              <div className="main-image-wrapper">
-                <img src={mainImage} alt="main" />
-              </div>
+              <button
+                className="main-img-button"
+                type="button"
+                onClick={handleImageClick}
+              >
+                <div className="main-image-wrapper">
+                  <img src={mainImage} alt="main" />
+                </div>
+              </button>
 
               <div className="card mt-2">
                 <h4 className="card-header d-flex justify-content-between align-items-center">
@@ -218,6 +230,15 @@ export function EventViewComponent() {
       )}
 
       {error && <ErrorMessage error={error} />}
+
+      {showGallery && (
+        <div>
+          <ImageGalleryModal
+            items={[{ original: mainImage }]}
+            onCloseButtonClick={() => setShowGallery(false)}
+          />
+        </div>
+      )}
     </div>
   );
 }
