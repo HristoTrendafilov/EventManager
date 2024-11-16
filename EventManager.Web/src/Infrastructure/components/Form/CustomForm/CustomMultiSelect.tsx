@@ -16,6 +16,7 @@ export interface CustomMultiSelectProps extends ComponentProps<'select'> {
   name: string;
   label: string;
   loading?: boolean;
+  searchable?: boolean;
   placeholder?: string;
   options: SelectInputOption[];
   isNumber?: boolean;
@@ -34,6 +35,7 @@ export const CustomMultiSelect = forwardRef<
     options,
     disabled,
     isNumber = false,
+    searchable,
     error,
   } = props;
   const { control, getFieldState } = useFormContext();
@@ -68,8 +70,7 @@ export const CustomMultiSelect = forwardRef<
             })}
             options={options}
             closeMenuOnSelect={false}
-            isClearable
-            isSearchable
+            isSearchable={searchable}
             placeholder={<div>{placeholder ?? 'Избор...'}</div>}
             noOptionsMessage={() => 'Няма повече елементи за избор'}
             onChange={(

@@ -135,12 +135,14 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           label="Живея в"
           isNumber
           required
+          searchable={false}
         />
         <RegionMultiSelect
           {...form.register('userRegionsHelpingIds')}
           label="Искам да помагам в"
           isNumber
           required
+          searchable={false}
         />
 
         <div className="d-flex justify-content-center mt-3">

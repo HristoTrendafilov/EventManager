@@ -1,28 +1,12 @@
-.crop-container {
-  width: 100%;
+.image-cropper-wrapper .crop-container {
   height: 320px;
 }
 
-.crop-container .reactEasyCrop_CropArea {
-  box-shadow: none;
-}
-
-.crop-container .reactEasyCrop_CropArea {
-  border: 3px solid rgba(212, 21, 21, 0.8);
-}
-
-.crop-container img {
-  width: 100%;
-  object-fit: contain;
-}
-
-.image-cropper-wrapper {
-  width: 500px;
-  margin: 100px auto;
+.image-cropper-wrapper .crop-container .reactEasyCrop_CropArea {
+  border: 3px dashed rgba(212, 21, 21, 0.8);
 }
 
 .image-cropper-wrapper .card-body {
   overflow: hidden;
   position: relative;
-  padding: 0;
 }

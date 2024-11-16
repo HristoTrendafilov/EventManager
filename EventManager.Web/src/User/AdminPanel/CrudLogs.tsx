@@ -79,7 +79,6 @@ export function CrudLogs() {
             <div
               id="collapseOne"
               className="accordion-collapse collapse show"
-              aria-labelledby="headingOne"
               data-bs-parent="#accordionExample"
             >
               <div className="accordion-body">
@@ -115,7 +114,7 @@ export function CrudLogs() {
               id={`accordionExample${x.crudLogId}`}
             >
               <div className="accordion-item">
-                <div className="accordion-header" id="headingOne">
+                <div className="accordion-header">
                   <button
                     className={`accordion-button text-white bg-${accordionBackColor.get(
                       x.actionType!
@@ -124,13 +123,10 @@ export function CrudLogs() {
                     data-bs-toggle="collapse"
                     data-bs-target={`#collapse${x.crudLogId}`}
                     aria-expanded="false"
-                    aria-controls="collapseOne"
+                    aria-controls={`#collapse${x.crudLogId}`}
                   >
                     <div className="row w-100">
-                      <div className="col-md-8 col-lg-9">
-                        {' '}
-                        {x.tableAffected}
-                      </div>
+                      <div className="col-md-8 col-lg-9">{x.tableAffected}</div>
                       <div className="col-md-4 col-lg-3">
                         {formatDateTime(x.actionDateTime!)}
                       </div>
@@ -140,7 +136,6 @@ export function CrudLogs() {
                 <div
                   id={`collapse${x.crudLogId}`}
                   className="accordion-collapse collapse"
-                  aria-labelledby="headingOne"
                   data-bs-parent={`#accordionExample${x.crudLogId}`}
                 >
                   <div className="accordion-body">

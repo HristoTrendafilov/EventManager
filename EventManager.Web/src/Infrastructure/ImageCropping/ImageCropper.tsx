@@ -63,7 +63,7 @@ interface ImageCropModalProps {
 
 export function ImageCropModal(props: ImageCropModalProps) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(1.5);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
   const onCropChange = setCrop;
@@ -92,41 +92,43 @@ export function ImageCropModal(props: ImageCropModalProps) {
 
   return (
     <Modal onBackdropClick={onCancel}>
-      <div className="image-cropper-wrapper container">
-        <div className="card">
-          <div className="card-header">
-            <h5>Корекция на изображение</h5>
-          </div>
-          <div className="card-body">
-            <div className="crop-container">
-              <Cropper
-                image={imageSrc}
-                crop={crop}
-                zoom={zoom}
-                aspect={1}
-                cropShape="round"
-                showGrid={false}
-                onCropChange={onCropChange}
-                onZoomChange={onZoomChange}
-                onCropComplete={onCropCompleteInternal}
-              />
+      <div className="container">
+        <div className="image-cropper-wrapper mw-500px m-70auto">
+          <div className="card">
+            <div className="card-header">
+              <h5>Корекция на изображение</h5>
             </div>
-          </div>
-          <div className="card-footer d-flex gap-3">
-            <button
-              type="button"
-              onClick={handleCrop}
-              className="btn btn-success w-100"
-            >
-              Запази
-            </button>
-            <button
-              type="button"
-              onClick={onCancel}
-              className="btn btn-warning w-100"
-            >
-              Изход
-            </button>
+            <div className="card-body">
+              <div className="crop-container">
+                <Cropper
+                  image={imageSrc}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1}
+                  cropShape="round"
+                  showGrid={false}
+                  onCropChange={onCropChange}
+                  onZoomChange={onZoomChange}
+                  onCropComplete={onCropCompleteInternal}
+                />
+              </div>
+            </div>
+            <div className="card-footer d-flex gap-3">
+              <button
+                type="button"
+                onClick={handleCrop}
+                className="btn btn-success w-100"
+              >
+                Запази
+              </button>
+              <button
+                type="button"
+                onClick={onCancel}
+                className="btn btn-warning w-100"
+              >
+                Изход
+              </button>
+            </div>
           </div>
         </div>
       </div>
