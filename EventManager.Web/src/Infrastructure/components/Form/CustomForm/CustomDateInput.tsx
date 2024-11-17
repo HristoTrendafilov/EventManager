@@ -59,72 +59,75 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
     }, [state.error]);
 
     return (
-      <div className="date-input-wrapper" ref={wrapperRef}>
-        <label className="date-input-label" htmlFor={name}>
-          {label}
-        </label>
-        <div className="date-input">
-          <Controller
-            control={control}
-            name={name}
-            render={({ field }) => (
-              <DatePicker
-                ref={ref}
-                onChange={(date) => {
-                  field.onChange(date);
+      <>
+        <div className="date-input-wrapper" ref={wrapperRef}>
+          <label className="date-input-label" htmlFor={name}>
+            {label}
+          </label>
+          <div className="date-input">
+            <Controller
+              control={control}
+              name={name}
+              render={({ field }) => (
+                <DatePicker
+                  ref={ref}
+                  onChange={(date) => {
+                    field.onChange(date);
 
-                  if (!showTime) {
-                    setOpen(false);
-                    return;
-                  }
-
-                  if (date instanceof Date && !Number.isNaN(date.getTime())) {
-                    if (isTimeChanged(previousDate, date)) {
+                    if (!showTime) {
                       setOpen(false);
+                      return;
                     }
 
-                    setPreviousDate(date); // Update previous date
-                  }
-                }}
-                onInputClick={() => {
-                  setOpen(true);
-                }}
-                onClickOutside={() => setOpen(false)}
-                id={name}
-                showTimeSelect={showTime}
-                selected={field.value ? new Date(field.value as string) : null}
-                dateFormat={showTime ? 'Pp' : 'P'} // Use only date format when showTime is false
-                locale="bg"
-                timeFormat="HH:mm"
-                timeIntervals={timeInterval ?? 15}
-                showYearDropdown
-                required={required}
-                onFocus={(e) => e.target.blur()}
-                open={open}
-                shouldCloseOnSelect
-              />
-            )}
-          />
-          {nullable && (
-            <div className="clear-button-wrapper">
-              <button
-                type="button"
-                className="clear-button"
-                onClick={handleClearInput}
-              >
-                X
-              </button>
-            </div>
-          )}
-        </div>
+                    if (date instanceof Date && !Number.isNaN(date.getTime())) {
+                      if (isTimeChanged(previousDate, date)) {
+                        setOpen(false);
+                      }
 
+                      setPreviousDate(date); // Update previous date
+                    }
+                  }}
+                  onInputClick={() => {
+                    setOpen(true);
+                  }}
+                  onClickOutside={() => setOpen(false)}
+                  id={name}
+                  showTimeSelect={showTime}
+                  selected={
+                    field.value ? new Date(field.value as string) : null
+                  }
+                  dateFormat={showTime ? 'Pp' : 'P'} // Use only date format when showTime is false
+                  locale="bg"
+                  timeFormat="HH:mm"
+                  timeIntervals={timeInterval ?? 15}
+                  showYearDropdown
+                  required={required}
+                  onFocus={(e) => e.target.blur()}
+                  open={open}
+                  shouldCloseOnSelect
+                />
+              )}
+            />
+            {nullable && (
+              <div className="clear-button-wrapper">
+                <button
+                  type="button"
+                  className="clear-button"
+                  onClick={handleClearInput}
+                >
+                  X
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
         {state.error && (
-          <p className="input-validation-error">
+          <p className="input-validation-error mt-minus-10px">
             <FontAwesomeIcon icon={faExclamationTriangle} />
             {state.error.message?.toString()}
           </p>
         )}
-      </div>
+      </>
     );
   }
 );

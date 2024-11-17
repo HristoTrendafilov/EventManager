@@ -1,5 +1,8 @@
-﻿namespace EventManager.API.Dto.CrudLog
+﻿using EventManager.API.Helpers;
+
+namespace EventManager.API.Dto.CrudLog
 {
+    [GenerateZodSchema]
     public class CrudLogFilter
     {
         public DateTime ActionDateTime { get; set; }

@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { z } from 'zod';
 
 import { getCrudLogs } from '~Infrastructure/ApiRequests/crud-logs-requests';
 import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
-import type { CrudLogView } from '~Infrastructure/api-types';
+import {
+  CrudLogFilterSchema,
+  type CrudLogFilterType,
+  type CrudLogView,
+} from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomDateInput } from '~Infrastructure/components/Form/CustomForm/CustomDateInput';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
@@ -19,13 +22,6 @@ const accordionBackColor = new Map<number, string>([
   [3, 'danger'],
 ]);
 
-const schema = z.object({
-  actionDateTime: z.date(),
-  actionType: z.number(),
-});
-
-export type CrudLogsFilter = z.infer<typeof schema>;
-
 const crudLogSelectOptions: SelectInputOption[] = [
   { value: '0', label: 'Всички' },
   { value: '1', label: 'Създаване' },
@@ -33,7 +29,7 @@ const crudLogSelectOptions: SelectInputOption[] = [
   { value: '3', label: 'Изтриване' },
 ];
 
-const defaultValues: CrudLogsFilter = {
+const defaultValues: CrudLogFilterType = {
   actionDateTime: new Date(),
   actionType: 0,
 };
@@ -42,9 +38,9 @@ export function CrudLogs() {
   const [error, setError] = useState<string | undefined>();
   const [crudLogsView, setCrudLogsView] = useState<CrudLogView[]>([]);
 
-  const form = useZodForm({ schema, defaultValues });
+  const form = useZodForm({ schema: CrudLogFilterSchema, defaultValues });
 
-  const loadCrudLogs = useCallback(async (filter: CrudLogsFilter) => {
+  const loadCrudLogs = useCallback(async (filter: CrudLogFilterType) => {
     setError(undefined);
 
     const response = await getCrudLogs(filter);
@@ -118,7 +114,7 @@ export function CrudLogs() {
                 <div className="accordion-header">
                   <button
                     className={`accordion-button text-white bg-${accordionBackColor.get(
-                      x.actionType!
+                      x.actionType
                     )}`}
                     type="button"
                     data-bs-toggle="collapse"
@@ -129,7 +125,7 @@ export function CrudLogs() {
                     <div className="row w-100">
                       <div className="col-md-8 col-lg-9">{x.tableAffected}</div>
                       <div className="col-md-4 col-lg-3">
-                        {formatDateTime(x.actionDateTime!)}
+                        {formatDateTime(x.actionDateTime)}
                       </div>
                     </div>
                   </button>

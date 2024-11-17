@@ -29,9 +29,9 @@ namespace EventManager.API.Dto.User
         [JsonIgnore]
         public override string EmailVerificationSecret { get; set; }
         [JsonIgnore]
-        public override bool? IsEmailVerified { get; set; }
+        public override bool IsEmailVerified { get; set; }
         [JsonIgnore]
-        public override DateTime? CreatedOnDateTime { get; set; }
+        public override DateTime CreatedOnDateTime { get; set; }
         [JsonIgnore]
         public override long? CreatedByUserId { get; set; }
         #endregion JsonIgnore

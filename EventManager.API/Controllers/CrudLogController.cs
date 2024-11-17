@@ -29,11 +29,11 @@ namespace EventManager.API.Controllers
         public async Task<ActionResult> GetAllCrudLogs(CrudLogFilter filter)
         {
             var predicate = PredicateBuilder.True<VCrudLogPoco>()
-                .And(x => x.ActionDateTime.Value.Date == filter.ActionDateTime.Date);
+                .And(x => x.ActionDateTime.Date == filter.ActionDateTime.Date);
 
             if (filter.ActionType != 0)
             {
-                predicate = predicate.And(x => x.ActionType.Value == filter.ActionType);
+                predicate = predicate.And(x => x.ActionType == filter.ActionType);
             }
 
             var crudLogs = await _crudLogService.GetAllCrudLogsViewAsync(predicate);

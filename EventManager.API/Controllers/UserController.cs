@@ -209,7 +209,7 @@ namespace EventManager.API.Controllers
             var now = DateTime.Now;
             var expiresOn = now.AddHours(12);
 
-            var webSession = new WebSessionNew
+            var webSession = new WebSessionBaseForm
             {
                 LoginDateTime = now,
                 ExpireOnDateTime = expiresOn,
@@ -370,7 +370,7 @@ namespace EventManager.API.Controllers
 
             foreach (var user in usersView)
             {
-                var roles = await _userService.GetAllUserRolesAsync(user.UserId.Value);
+                var roles = await _userService.GetAllUserRolesAsync(user.UserId);
                 var rolesView = _mapper.CreateList<RoleView>(roles);
 
                 user.UserRoles = rolesView;

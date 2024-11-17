@@ -1,7 +1,6 @@
 import { callApi } from '~Infrastructure/api-client';
-import type { CrudLogView } from '~Infrastructure/api-types';
-import type { CrudLogsFilter } from '~User/AdminPanel/CrudLogs';
+import type { CrudLogFilterType, CrudLogView } from '~Infrastructure/api-types';
 
-export function getCrudLogs(filter: CrudLogsFilter) {
+export function getCrudLogs(filter: CrudLogFilterType) {
   return callApi<CrudLogView[]>('/crud-logs', 'POST', JSON.stringify(filter));
 }

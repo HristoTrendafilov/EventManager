@@ -14,7 +14,7 @@ namespace EventManager.API.Services.WebSession
             _db = db;
         }
 
-        public Task<long> CreateWebSession(WebSessionNew webSession)
+        public Task<long> CreateWebSession(WebSessionBaseForm webSession)
         {
             return _db.WebSessions.X_CreateAsync(webSession, null);
         }

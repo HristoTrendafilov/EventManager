@@ -249,11 +249,65 @@ namespace EventManager.DAL
 		public virtual DateTime? LogoutDateTime { get; set; }
 	}
 
+	[Table(Name = "v_regions")]
+	public class VRegionPoco
+	{
+		[Column(Name = "region_id")]
+		public virtual long RegionId { get; set; }
+
+		[Column(Name = "region_name")]
+		public virtual string RegionName { get; set; }
+	}
+
+	[Table(Name = "v_web_sessions")]
+	public class VWebSessionPoco
+	{
+		[Column(Name = "web_sessions_id")]
+		public virtual long WebSessionId { get; set; }
+
+		[Column(Name = "login_date_time")]
+		public virtual DateTime LoginDateTime { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "expires_on_date_time")]
+		public virtual DateTime ExpireOnDateTime { get; set; }
+
+		[Column(Name = "user_ip_address")]
+		public virtual string UserIpAddress { get; set; }
+
+		[Column(Name = "logout_date_time")]
+		public virtual DateTime? LogoutDateTime { get; set; }
+	}
+
+	[Table(Name = "v_exceptions")]
+	public class VExceptionPoco
+	{
+		[Column(Name = "exception_id")]
+		public virtual long ExceptionId { get; set; }
+
+		[Column(Name = "exception")]
+		public virtual string Exception { get; set; }
+
+		[Column(Name = "exception_message")]
+		public virtual string ExceptionMessage { get; set; }
+
+		[Column(Name = "exception_date_time")]
+		public virtual DateTime ExceptionDateTime { get; set; }
+
+		[Column(Name = "is_resolved")]
+		public virtual bool IsResolved { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long? UserId { get; set; }
+	}
+
 	[Table(Name = "v_users")]
 	public class VUserPoco
 	{
 		[Column(Name = "user_id")]
-		public virtual long? UserId { get; set; }
+		public virtual long UserId { get; set; }
 
 		[Column(Name = "username")]
 		public virtual string Username { get; set; }
@@ -283,13 +337,13 @@ namespace EventManager.DAL
 		public virtual string EmailVerificationSecret { get; set; }
 
 		[Column(Name = "is_email_verified")]
-		public virtual bool? IsEmailVerified { get; set; }
+		public virtual bool IsEmailVerified { get; set; }
 
 		[Column(Name = "region_id")]
-		public virtual long? RegionId { get; set; }
+		public virtual long RegionId { get; set; }
 
 		[Column(Name = "created_on_date_time")]
-		public virtual DateTime? CreatedOnDateTime { get; set; }
+		public virtual DateTime CreatedOnDateTime { get; set; }
 
 		[Column(Name = "created_by_user_id")]
 		public virtual long? CreatedByUserId { get; set; }
@@ -304,23 +358,23 @@ namespace EventManager.DAL
 		public virtual string RegionName { get; set; }
 
 		[Column(Name = "has_profile_picture")]
-		public virtual bool? HasProfilePicture { get; set; }
+		public virtual bool HasProfilePicture { get; set; }
 	}
 
 	[Table(Name = "v_crud_logs")]
 	public class VCrudLogPoco
 	{
 		[Column(Name = "crud_log_id")]
-		public virtual long? CrudLogId { get; set; }
+		public virtual long CrudLogId { get; set; }
 
 		[Column(Name = "action_type")]
-		public virtual int? ActionType { get; set; }
+		public virtual int ActionType { get; set; }
 
 		[Column(Name = "table_affected")]
 		public virtual string TableAffected { get; set; }
 
 		[Column(Name = "table_affected_primary_key")]
-		public virtual long? TableAffectedPrimaryKey { get; set; }
+		public virtual long TableAffectedPrimaryKey { get; set; }
 
 		[Column(Name = "poco_before_action")]
 		public virtual string PocoBeforeAction { get; set; }
@@ -332,7 +386,7 @@ namespace EventManager.DAL
 		public virtual long? CreatedByUserId { get; set; }
 
 		[Column(Name = "action_date_time")]
-		public virtual DateTime? ActionDateTime { get; set; }
+		public virtual DateTime ActionDateTime { get; set; }
 
 		[Column(Name = "username")]
 		public virtual string Username { get; set; }
@@ -342,29 +396,29 @@ namespace EventManager.DAL
 	public class VUserEventPoco
 	{
 		[Column(Name = "user_event_id")]
-		public virtual long? UserEventId { get; set; }
+		public virtual long UserEventId { get; set; }
 
 		[Column(Name = "user_id")]
-		public virtual long? UserId { get; set; }
+		public virtual long UserId { get; set; }
 
 		[Column(Name = "user_subscribed_on_date_time")]
-		public virtual DateTime? UserSubscribedOnDateTime { get; set; }
+		public virtual DateTime UserSubscribedOnDateTime { get; set; }
 
 		[Column(Name = "event_id")]
-		public virtual long? EventId { get; set; }
+		public virtual long EventId { get; set; }
 
 		[Column(Name = "username")]
 		public virtual string Username { get; set; }
 
 		[Column(Name = "has_profile_picture")]
-		public virtual bool? HasProfilePicture { get; set; }
+		public virtual bool HasProfilePicture { get; set; }
 	}
 
 	[Table(Name = "v_events")]
 	public class VEventPoco
 	{
 		[Column(Name = "event_id")]
-		public virtual long? EventId { get; set; }
+		public virtual long EventId { get; set; }
 
 		[Column(Name = "event_name")]
 		public virtual string EventName { get; set; }
@@ -373,16 +427,16 @@ namespace EventManager.DAL
 		public virtual string EventDescription { get; set; }
 
 		[Column(Name = "event_start_date_time")]
-		public virtual DateTime? EventStartDateTime { get; set; }
+		public virtual DateTime EventStartDateTime { get; set; }
 
 		[Column(Name = "event_end_date_time")]
 		public virtual DateTime? EventEndDateTime { get; set; }
 
 		[Column(Name = "region_id")]
-		public virtual long? RegionId { get; set; }
+		public virtual long RegionId { get; set; }
 
 		[Column(Name = "created_by_user_id")]
-		public virtual long? CreatedByUserId { get; set; }
+		public virtual long CreatedByUserId { get; set; }
 
 		[Column(Name = "region_name")]
 		public virtual string RegionName { get; set; }
@@ -391,10 +445,10 @@ namespace EventManager.DAL
 		public virtual string CreatedByUsername { get; set; }
 
 		[Column(Name = "event_created_at_date_time")]
-		public virtual DateTime? EventCreatedAtDateTime { get; set; }
+		public virtual DateTime EventCreatedAtDateTime { get; set; }
 
 		[Column(Name = "has_main_image")]
-		public virtual bool? HasMainImage { get; set; }
+		public virtual bool HasMainImage { get; set; }
 	}
 
 }

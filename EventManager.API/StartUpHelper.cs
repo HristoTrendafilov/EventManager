@@ -230,8 +230,8 @@ namespace EventManager.API
                                 if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
                                 {
                                     var handler = new JwtSecurityTokenHandler();
-                                    var jsonToken = handler.ReadToken(headerValue.Parameter);
                                     var tokenS = handler.ReadToken(headerValue.Parameter) as JwtSecurityToken;
+
                                     var webSessionId =  tokenS.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.WebSessionId)?.Value;
                                     var userId = tokenS.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.UserId)?.Value;
 

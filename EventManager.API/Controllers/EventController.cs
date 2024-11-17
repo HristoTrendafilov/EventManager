@@ -41,7 +41,7 @@ namespace EventManager.API.Controllers
             }
 
             var eventView = _mapper.CreateObject<EventView>(eventViewPoco);
-            eventView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, eventView.CreatedByUserId.Value);
+            eventView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, eventView.CreatedByUserId);
 
             var currentUserId = User.X_CurrentUserId();
             if (currentUserId.HasValue)
@@ -104,7 +104,7 @@ namespace EventManager.API.Controllers
             }
 
             var eventPoco = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
-            if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.CreatedByUserId.Value))
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.CreatedByUserId))
             {
                 return Unauthorized();
             }

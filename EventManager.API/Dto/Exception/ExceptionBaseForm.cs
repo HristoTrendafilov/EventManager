@@ -2,7 +2,7 @@
 
 namespace EventManager.API.Dto.Exception
 {
-    public class ExceptionView : VExceptionPoco
+    public class ExceptionBaseForm : ExceptionPoco
     {
     }
 }

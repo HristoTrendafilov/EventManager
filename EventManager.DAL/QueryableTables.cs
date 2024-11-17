@@ -18,6 +18,9 @@ namespace EventManager.DAL
 		public IQueryable<ExceptionPoco> Exceptions => DataExtensions.GetTable<ExceptionPoco>(this);
 		public IQueryable<EventPoco> Events => DataExtensions.GetTable<EventPoco>(this);
 		public IQueryable<WebSessionPoco> WebSessions => DataExtensions.GetTable<WebSessionPoco>(this);
+		public IQueryable<VRegionPoco> VRegions => DataExtensions.GetTable<VRegionPoco>(this);
+		public IQueryable<VWebSessionPoco> VWebSessions => DataExtensions.GetTable<VWebSessionPoco>(this);
+		public IQueryable<VExceptionPoco> VExceptions => DataExtensions.GetTable<VExceptionPoco>(this);
 		public IQueryable<VUserPoco> VUsers => DataExtensions.GetTable<VUserPoco>(this);
 		public IQueryable<VCrudLogPoco> VCrudLogs => DataExtensions.GetTable<VCrudLogPoco>(this);
 		public IQueryable<VUserEventPoco> VUsersEvents => DataExtensions.GetTable<VUserEventPoco>(this);

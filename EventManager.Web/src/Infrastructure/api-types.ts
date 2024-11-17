@@ -48,7 +48,7 @@ export interface UserView {
   userRegionsHelpingIds: number[];
   userRoles: RoleView[];
   userRolesIds: number[];
-  userId: number | null;
+  userId: number;
   username: string;
   firstName: string;
   secondName: string;
@@ -56,10 +56,10 @@ export interface UserView {
   userFullName: string;
   email: string;
   phoneNumber: string;
-  regionId: number | null;
+  regionId: number;
   shortDescription: string;
   regionName: string;
-  hasProfilePicture: boolean | null;
+  hasProfilePicture: boolean;
 }
 
 export interface RegionView {
@@ -84,37 +84,37 @@ export interface EventView {
   canEdit: boolean;
   isUserSubscribed: boolean;
   subscribers: UserEventView[];
-  eventId: number | null;
+  eventId: number;
   eventName: string;
   eventDescription: string;
-  eventStartDateTime: Date | null;
+  eventStartDateTime: Date;
   eventEndDateTime: Date | null;
-  regionId: number | null;
-  createdByUserId: number | null;
+  regionId: number;
+  createdByUserId: number;
   regionName: string;
   createdByUsername: string;
-  eventCreatedAtDateTime: Date | null;
-  hasMainImage: boolean | null;
+  eventCreatedAtDateTime: Date;
+  hasMainImage: boolean;
 }
 
 export interface UserEventView {
-  userEventId: number | null;
-  userId: number | null;
-  userSubscribedOnDateTime: Date | null;
-  eventId: number | null;
+  userEventId: number;
+  userId: number;
+  userSubscribedOnDateTime: Date;
+  eventId: number;
   username: string;
-  hasProfilePicture: boolean | null;
+  hasProfilePicture: boolean;
 }
 
 export interface CrudLogView {
-  crudLogId: number | null;
-  actionType: number | null;
+  crudLogId: number;
+  actionType: number;
   tableAffected: string;
-  tableAffectedPrimaryKey: number | null;
+  tableAffectedPrimaryKey: number;
   pocoBeforeAction: string;
   pocoAfterAction: string;
   createdByUserId: number | null;
-  actionDateTime: Date | null;
+  actionDateTime: Date;
   username: string;
 }
 
@@ -206,4 +206,10 @@ export const EventSearchFilterSchema = z.object({
   pageSize: z.number().int().min(0, { message: "Размерът на страниците трябва да е по-голям от 0" }).max(2147483647, { message: "Размерът на страниците трябва да е по-голям от 0" }),
 });
 export type EventSearchFilterType = z.infer<typeof EventSearchFilterSchema>;
+
+export const CrudLogFilterSchema = z.object({
+  actionDateTime: z.coerce.date().nullable(),
+  actionType: z.number().int().nullable(),
+});
+export type CrudLogFilterType = z.infer<typeof CrudLogFilterSchema>;
 
