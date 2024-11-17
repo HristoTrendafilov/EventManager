@@ -60,7 +60,11 @@ export class CustomRoutes {
     return '/events/:eventId/view';
   }
 
-  static eventsSearch(page?: number) {
+  static eventsSearchBase() {
+    return '/events/search';
+  }
+
+  static eventsSearchPage(page?: number) {
     if (page) {
       return `/events/search/${page}`;
     }

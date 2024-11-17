@@ -89,7 +89,7 @@ export function EventSearch() {
       });
 
       navigate(
-        `${CustomRoutes.eventsSearch(pageNumber)}?${queryParams.toString()}`
+        `${CustomRoutes.eventsSearchPage(pageNumber)}?${queryParams.toString()}`
       );
     },
     [form, navigate]

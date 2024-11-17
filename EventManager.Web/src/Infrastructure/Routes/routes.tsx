@@ -91,7 +91,7 @@ export const table: RouteTable[] = [
     role: 'None',
   },
   {
-    location: CustomRoutes.eventsSearch(),
+    location: CustomRoutes.eventsSearchPage(),
     component: <EventSearch />,
     requiresLogin: false,
     role: 'None',

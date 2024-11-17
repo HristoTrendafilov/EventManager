@@ -196,7 +196,7 @@ export function Navbar() {
               <li className="nav-item">
                 <Link
                   className="nav-link"
-                  to="/events/search"
+                  to={CustomRoutes.eventsSearchBase()}
                   data-bs-dismiss="offcanvas"
                   onClick={handleLinkClick}
                 >
