@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
 import { getCrudLogs } from '~Infrastructure/ApiRequests/crud-logs-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import type { CrudLogView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomDateInput } from '~Infrastructure/components/Form/CustomForm/CustomDateInput';
@@ -143,7 +144,7 @@ export function CrudLogs() {
                       Извършил действието:
                       <Link
                         className="ms-2"
-                        to={`/users/${x.createdByUserId}/view`}
+                        to={CustomRoutes.usersView(x.createdByUserId!)}
                       >
                         {x.username}
                       </Link>

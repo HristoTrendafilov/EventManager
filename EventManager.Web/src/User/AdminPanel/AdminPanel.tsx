@@ -3,6 +3,8 @@ import { faList, faLocation, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
+
 interface AdminPanelNav {
   location: string;
   name: string;
@@ -12,19 +14,19 @@ interface AdminPanelNav {
 
 const navigation: AdminPanelNav[] = [
   {
-    location: '/users/admin-panel/regions',
+    location: CustomRoutes.usersAdminPanelRegions(),
     name: 'Региони',
     icon: faLocation,
     color: 'success',
   },
   {
-    location: '/users/admin-panel/action-logs',
+    location: CustomRoutes.usersAdminPanelCrudLogs(),
     name: 'Логове',
     icon: faList,
     color: 'warning',
   },
   {
-    location: '/users/admin-panel/user-roles',
+    location: CustomRoutes.usersAdminPanelUserRoles(),
     name: 'Потребителски права',
     icon: faUser,
     color: 'primary',

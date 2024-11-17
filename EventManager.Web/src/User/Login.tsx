@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
 import { loginUser } from '~Infrastructure/ApiRequests/users-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
@@ -77,7 +78,7 @@ export function Login() {
         </div>
         <div className="mt-1">
           <span className="me-2">Все още нямате регистрация?</span>
-          <Link to="/users/register">Регистрирай ме!</Link>
+          <Link to={CustomRoutes.usersRegister()}>Регистрирай ме!</Link>
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ import {
   subscribeUserToEvent,
   unsubscribeUserFromEvent,
 } from '~Infrastructure/ApiRequests/events-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import type { EventView, UserEventView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { ImageGalleryModal } from '~Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
@@ -142,7 +143,7 @@ export function EventViewComponent() {
 
                   {event.canEdit && (
                     <Link
-                      to={`/events/${eventId}/update`}
+                      to={CustomRoutes.eventsUpdate(event.eventId!)}
                       className="btn btn-primary"
                     >
                       Редакция
@@ -163,7 +164,7 @@ export function EventViewComponent() {
 
                   <div>
                     Създаден от:{' '}
-                    <Link to={`/users/${event.createdByUserId}/view`}>
+                    <Link to={CustomRoutes.usersView(event.createdByUserId!)}>
                       {event.createdByUsername}
                     </Link>
                   </div>

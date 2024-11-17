@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { logoutUser } from '~Infrastructure/ApiRequests/users-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import { ErrorModal } from '~Infrastructure/components/ErrorModal/ErrorModal';
 import { useAppDispatch } from '~Infrastructure/redux/store';
 import {
@@ -37,7 +38,7 @@ function NavUserDropdown(props: NavUserDropdownProps) {
       <ul className="dropdown-menu dropdown-menu-start dropdown-menu-md-end p-2">
         <li>
           <Link
-            to={`/users/${user.userId}/view`}
+            to={CustomRoutes.usersView(user.userId)}
             data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
             onClick={handleNavClick}
           >
@@ -47,7 +48,7 @@ function NavUserDropdown(props: NavUserDropdownProps) {
         {(user.isAdmin || user.isEventCreator) && (
           <li>
             <Link
-              to="/events/new"
+              to={CustomRoutes.eventsNew()}
               data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
               onClick={handleNavClick}
             >
@@ -58,7 +59,7 @@ function NavUserDropdown(props: NavUserDropdownProps) {
         {user.isAdmin && (
           <li>
             <Link
-              to="/users/admin-panel"
+              to={CustomRoutes.usersAdminPanel()}
               data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
               onClick={handleNavClick}
             >
@@ -137,7 +138,7 @@ export function Navbar() {
 
         <div className="d-flex gap-2 order-0 order-md-1">
           {!user.isLoggedIn ? (
-            <Link to="users/login" className="btn btn-warning">
+            <Link to={CustomRoutes.usersLogin()} className="btn btn-warning">
               Вход
             </Link>
           ) : (

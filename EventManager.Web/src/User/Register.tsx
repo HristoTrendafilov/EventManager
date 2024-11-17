@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { registerUser } from '~Infrastructure/ApiRequests/users-requests';
 import { ImageCropModal } from '~Infrastructure/ImageCropping/ImageCropper';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import { UserNewSchema, type UserNewType } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomFileInputButton } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
@@ -45,7 +46,7 @@ export function Register() {
       toast.success(
         'Успешна регистрация. Моля, потвърдете имейла си, за да влезете в системата.'
       );
-      navigate('/users/login');
+      navigate(CustomRoutes.usersLogin());
     },
     [form, navigate]
   );

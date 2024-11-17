@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 
 import { getEventSearch } from '~Infrastructure/ApiRequests/events-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import {
   EventSearchFilterSchema,
   type EventSearchFilterType,
@@ -87,7 +88,9 @@ export function EventSearch() {
         }
       });
 
-      navigate(`/events/search/${pageNumber}?${queryParams.toString()}`);
+      navigate(
+        `${CustomRoutes.eventsSearch(pageNumber)}?${queryParams.toString()}`
+      );
     },
     [form, navigate]
   );

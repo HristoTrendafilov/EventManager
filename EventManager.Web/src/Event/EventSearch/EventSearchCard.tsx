@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { getEventMainImage } from '~Infrastructure/ApiRequests/events-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import type { EventView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import noImage from '~asset/no-image.png';
@@ -44,7 +45,10 @@ export function EventSearchCard(props: EventSearchCardProps) {
   return (
     <div className="event-search-card-wrapper mt-3">
       <div className="container">
-        <Link to={`/events/${event.eventId}/view`} className=" unset-anchor">
+        <Link
+          to={CustomRoutes.eventsView(event.eventId!)}
+          className=" unset-anchor"
+        >
           <div className="row border">
             <div className="col-md-5 col-lg-3 p-0 d-flex justify-content-center bg-secondary-subtle">
               <div className="d-flex" style={{ height: '215px' }}>

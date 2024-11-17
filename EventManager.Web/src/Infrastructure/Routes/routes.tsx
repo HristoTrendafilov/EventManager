@@ -13,6 +13,8 @@ import { Register } from '~User/Register';
 import { UserProfile } from '~User/UserProfile';
 import { UserUpdate } from '~User/UserUpdate/UserUpdate';
 
+import { CustomRoutes } from './CustomRoutes';
+
 export interface RouteTable {
   key?: string;
   location: string;
@@ -21,75 +23,75 @@ export interface RouteTable {
   role: UserRole;
 }
 
-export const routes: RouteTable[] = [
+export const table: RouteTable[] = [
   {
-    location: 'users/login',
+    location: CustomRoutes.usersLogin(),
     component: <Login />,
     requiresLogin: false,
     role: 'None',
   },
   {
-    location: 'users/register',
+    location: CustomRoutes.usersRegister(),
     component: <Register />,
     requiresLogin: false,
     role: 'None',
   },
   {
-    location: 'users/admin-panel',
+    location: CustomRoutes.usersAdminPanel(),
     component: <AdminPanel />,
     requiresLogin: true,
     role: 'Admin',
   },
   {
-    location: 'users/admin-panel/regions',
+    location: CustomRoutes.usersAdminPanelRegions(),
     component: <RegionsCatalog />,
     requiresLogin: true,
     role: 'Admin',
   },
   {
-    location: 'users/admin-panel/action-logs',
+    location: CustomRoutes.usersAdminPanelCrudLogs(),
     component: <CrudLogs />,
     requiresLogin: true,
     role: 'Admin',
   },
   {
-    location: 'users/admin-panel/user-roles',
+    location: CustomRoutes.usersAdminPanelUserRoles(),
     component: <UsersRolesCatalog />,
     requiresLogin: true,
     role: 'Admin',
   },
   {
-    location: 'users/:userId/view',
+    location: CustomRoutes.usersView(),
     component: <UserProfile />,
     requiresLogin: false,
     role: 'None',
   },
   {
-    location: 'users/:userId/update',
+    location: CustomRoutes.usersUpdate(),
     component: <UserUpdate />,
     requiresLogin: true,
     role: 'None',
   },
   {
-    location: '/events/new',
+    location: CustomRoutes.eventsNew(),
     component: <Event />,
     requiresLogin: true,
     role: 'EventCreator',
   },
   {
-    location: '/events/:eventId/update',
+    location: CustomRoutes.eventsUpdate(),
     component: <Event />,
     requiresLogin: true,
     role: 'EventCreator',
   },
   {
-    location: '/events/:eventId/view',
+    location: CustomRoutes.eventsView(),
     component: <EventViewComponent />,
     requiresLogin: false,
     role: 'None',
   },
   {
-    location: '/events/search/:page?',
+    location: CustomRoutes.eventsSearch(),
     component: <EventSearch />,
     requiresLogin: false,
     role: 'None',

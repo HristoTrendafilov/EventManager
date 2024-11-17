@@ -6,16 +6,17 @@ import { v4 as uuidv4 } from 'uuid';
 import { Home } from '~Home/Home';
 import { type UserState, userSelector } from '~Infrastructure/redux/user-slice';
 
-import { type RouteTable, routes } from './routes';
+import { CustomRoutes } from './CustomRoutes';
+import { type RouteTable, table } from './routes';
 
 function canUserAccessComponent(
   routeTable: RouteTable,
   user: UserState
 ): boolean {
-  if (routeTable.location === 'users/login' && user.isLoggedIn) {
+  if (routeTable.location === CustomRoutes.usersLogin() && user.isLoggedIn) {
     return false;
   }
-  if (routeTable.location === 'users/register' && user.isLoggedIn) {
+  if (routeTable.location === CustomRoutes.usersRegister() && user.isLoggedIn) {
     return false;
   }
 
@@ -55,13 +56,13 @@ export function RenderRouteTable() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      {routes.map((route) => (
+      {table.map((x) => (
         <Route
-          key={route.location}
-          path={route.location}
+          key={x.location}
+          path={x.location}
           element={
-            <UserAccessBoundary key={uuidv4()} routeTable={route}>
-              {route.component}
+            <UserAccessBoundary key={uuidv4()} routeTable={x}>
+              {x.component}
             </UserAccessBoundary>
           }
         />

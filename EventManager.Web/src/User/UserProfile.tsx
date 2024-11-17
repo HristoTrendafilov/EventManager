@@ -5,6 +5,7 @@ import {
   getUserProfilePicture,
   getUserView,
 } from '~Infrastructure/ApiRequests/users-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import type { UserView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { ImageGalleryModal } from '~Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
@@ -93,7 +94,7 @@ export function UserProfile() {
                       </p>
                       {userView.canEdit && (
                         <Link
-                          to={`/users/${userId}/update`}
+                          to={CustomRoutes.usersUpdate(Number(userId))}
                           className="btn btn-primary w-200px"
                         >
                           Редакция

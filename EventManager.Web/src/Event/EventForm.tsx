@@ -7,6 +7,7 @@ import {
   getEventMainImage,
   updateEvent,
 } from '~Infrastructure/ApiRequests/events-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import {
   EventBaseFormSchema,
   type EventBaseFormType,
@@ -79,7 +80,7 @@ export function Event() {
         return;
       }
 
-      navigate(`/events/${response.data.primaryKey}/view`);
+      navigate(CustomRoutes.eventsView(response.data.primaryKey));
     },
     [eventId, navigate]
   );

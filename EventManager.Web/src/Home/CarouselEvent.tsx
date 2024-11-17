@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { getEventMainImage } from '~Infrastructure/ApiRequests/events-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import type { EventView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import noImage from '~asset/no-image.png';
@@ -62,7 +63,7 @@ export function CarouselEvent(props: CarouselEventProps) {
           </div>
           <div className="col-md-2">
             <Link
-              to={`/events/${event.eventId}/view`}
+              to={CustomRoutes.eventsView(event.eventId!)}
               className="btn z-4 mb-4 btn-primary"
             >
               Към събитието

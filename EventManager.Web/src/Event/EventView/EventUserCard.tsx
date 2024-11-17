@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { getUserProfilePicture } from '~Infrastructure/ApiRequests/users-requests';
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import type { UserEventView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { formatDateTime } from '~Infrastructure/utils';
@@ -44,7 +45,7 @@ export function EventUserCard(props: EventUserCardProps) {
 
   return (
     <Link
-      to={`/users/${user.userId}/view`}
+      to={CustomRoutes.usersView(user.userId!)}
       className="event-user-card-wrapper unset-anchor"
     >
       <div className="d-flex border border-1 align-items-center p-1">
