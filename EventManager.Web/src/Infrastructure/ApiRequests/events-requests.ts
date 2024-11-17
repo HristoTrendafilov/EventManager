@@ -1,7 +1,7 @@
-import type { EventSearchFilter } from '~Event/EventSearch/EventSearch';
 import { callApi } from '~Infrastructure/api-client';
 import type {
   EventForUpdate,
+  EventSearchFilterType,
   EventView,
   PrimaryKeyResponse,
   UserEventView,
@@ -42,7 +42,10 @@ export function getEventSubscribers(eventId: number) {
   return callApi<UserEventView[]>(`/events/${eventId}/subscribers`, 'GET');
 }
 
-export function getEventSearch(pageNumber: number, filter: EventSearchFilter) {
+export function getEventSearch(
+  pageNumber: number,
+  filter: EventSearchFilterType
+) {
   return callApi<EventView[]>(
     `/events/search/${pageNumber}`,
     'POST',

@@ -89,7 +89,7 @@ export const routes: RouteTable[] = [
     role: 'None',
   },
   {
-    location: '/events/search',
+    location: '/events/search/:page?',
     component: <EventSearch />,
     requiresLogin: false,
     role: 'None',
