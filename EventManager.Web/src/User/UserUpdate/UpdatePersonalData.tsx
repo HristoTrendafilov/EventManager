@@ -150,8 +150,10 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           searchable={false}
         />
 
-        <div className="d-flex justify-content-center mt-3">
-          <button type="submit" className="btn btn-primary">
+        <hr />
+
+        <div className="d-flex justify-content-center">
+          <button type="submit" className="btn btn-primary w-200px">
             Обнови
           </button>
         </div>

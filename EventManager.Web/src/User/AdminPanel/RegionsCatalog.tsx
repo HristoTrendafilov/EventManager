@@ -1,26 +1,17 @@
 import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
-import { z } from 'zod';
 
-import {
-  createRegion,
-  getRegions,
-  updateRegion,
-} from '~Infrastructure/ApiRequests/regions-request';
+import { getRegions } from '~Infrastructure/ApiRequests/regions-request';
 import type { RegionView } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
 import { TextInput } from '~Infrastructure/components/Form/TextInput/TextInput';
-import { Modal } from '~Infrastructure/components/Modal/Modal';
 
-const schema = z.object({
-  regionName: z.string(),
-});
+import { RegionModal } from './RegionModal';
 
-export type RegionForm = z.infer<typeof schema>;
+interface RegionsCatalogFilter {
+  regionName: string;
+}
 
-const defaultValues: RegionForm = {
+const defaultValues: RegionsCatalogFilter = {
   regionName: '',
 };
 
@@ -28,35 +19,20 @@ export function RegionsCatalog() {
   const [regions, setRegions] = useState<RegionView[]>([]);
   const [filteredRegions, setFilteredRegions] = useState<RegionView[]>([]);
   const [error, setError] = useState<string | undefined>();
-  const [submitError, setSubmitError] = useState<string | undefined>();
+  const [filter, setFilter] = useState<RegionsCatalogFilter>(defaultValues);
 
   const [regionIdForEdit, setRegionIdForEdit] = useState<number | undefined>();
-  const [showFormModal, setShowFormModal] = useState<boolean>(false);
-
-  const form = useZodForm({ schema });
+  const [formModal, setFormModal] = useState<boolean>(false);
 
   const closeFormModal = useCallback(() => {
-    setSubmitError(undefined);
     setRegionIdForEdit(undefined);
-    setShowFormModal(false);
+    setFormModal(false);
   }, []);
 
-  const handleShowFormModal = useCallback(
-    (regionId?: number) => {
-      if (regionId) {
-        setRegionIdForEdit(regionId);
-        const selectedRegion = filteredRegions.find(
-          (x) => x.regionId === regionId
-        );
-        form.reset(selectedRegion);
-      } else {
-        form.reset(defaultValues);
-      }
-
-      setShowFormModal(true);
-    },
-    [filteredRegions, form]
-  );
+  const showFormModal = useCallback((regionId?: number) => {
+    setRegionIdForEdit(regionId);
+    setFormModal(true);
+  }, []);
 
   const loadRegions = useCallback(async () => {
     const response = await getRegions();
@@ -72,6 +48,8 @@ export function RegionsCatalog() {
   const handleFilterNameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
+      setFilter({ regionName: value });
+
       if (value) {
         const newFilteredRegions = regions.filter((x) =>
           x.regionName.toLowerCase().startsWith(value.toLowerCase())
@@ -84,46 +62,28 @@ export function RegionsCatalog() {
     [regions]
   );
 
-  const handleCreateRegion = useCallback(
-    async (region: RegionForm) => {
-      const response = await createRegion(region);
-      if (!response.success) {
-        setSubmitError(response.errorMessage);
-        return;
-      }
-
-      setFilteredRegions([response.data, ...regions]);
-    },
-    [regions]
-  );
-
-  const handleUpdateRegion = useCallback(
-    async (regionId: number, region: RegionForm) => {
-      const response = await updateRegion(regionId, region);
-      if (!response.success) {
-        setSubmitError(response.errorMessage);
-        return;
-      }
-
-      const newRegions = regions.map((r) =>
-        r.regionId === regionIdForEdit ? response.data : r
-      );
+  const handleOnCreated = useCallback(
+    (region: RegionView) => {
+      const newRegions = [region, ...regions];
+      setRegions(newRegions);
       setFilteredRegions(newRegions);
-    },
-    [regionIdForEdit, regions]
-  );
-
-  const handleFormSubmit = useCallback(
-    async (region: RegionForm) => {
-      if (regionIdForEdit) {
-        await handleUpdateRegion(regionIdForEdit, region);
-      } else {
-        await handleCreateRegion(region);
-      }
-
+      setFilter(defaultValues);
       closeFormModal();
     },
-    [closeFormModal, handleCreateRegion, handleUpdateRegion, regionIdForEdit]
+    [closeFormModal, regions]
+  );
+
+  const handleOnUpdated = useCallback(
+    (region: RegionView) => {
+      const newRegions = regions.map((x) =>
+        x.regionId === region.regionId ? region : x
+      );
+
+      setRegions(newRegions);
+      setFilteredRegions(newRegions);
+      closeFormModal();
+    },
+    [closeFormModal, regions]
   );
 
   useEffect(() => {
@@ -139,7 +99,7 @@ export function RegionsCatalog() {
             <button
               type="button"
               className="btn btn-success "
-              onClick={() => handleShowFormModal()}
+              onClick={() => showFormModal()}
             >
               Нов регион
             </button>
@@ -148,6 +108,7 @@ export function RegionsCatalog() {
             <TextInput
               name="filterName"
               label="Търси"
+              value={filter.regionName}
               onChange={handleFilterNameChange}
             />
 
@@ -155,7 +116,7 @@ export function RegionsCatalog() {
 
             {filteredRegions.length > 0 &&
               filteredRegions.map((x) => (
-                <div className="card mb-2">
+                <div key={x.regionId} className="card mb-2">
                   <div className="card-body p-2">
                     <div className="row align-items-center">
                       <div className="col-2 col-md-2 col-lg-1">
@@ -168,7 +129,7 @@ export function RegionsCatalog() {
                         <button
                           type="button"
                           className="btn btn-primary w-100"
-                          onClick={() => handleShowFormModal(x.regionId)}
+                          onClick={() => showFormModal(x.regionId)}
                         >
                           Редакция
                         </button>
@@ -183,41 +144,13 @@ export function RegionsCatalog() {
 
       {error && <ErrorMessage error={error} />}
 
-      {showFormModal && (
-        <Modal onBackdropClick={closeFormModal}>
-          <div className="container">
-            <div className="mw-500px m-70auto">
-              <div className="card mt-4">
-                <h3 className="card-header">
-                  {regionIdForEdit
-                    ? `Редакция на регион (#${regionIdForEdit})`
-                    : 'Нов регион'}
-                </h3>
-                <div className="card-body">
-                  <CustomForm form={form} onSubmit={handleFormSubmit}>
-                    <CustomInput
-                      label="Наименование"
-                      {...form.register('regionName')}
-                    />
-                    <div className="d-flex gap-2">
-                      <button type="submit" className="btn btn-primary w-100">
-                        Запис
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-warning w-100"
-                        onClick={closeFormModal}
-                      >
-                        Изход
-                      </button>
-                    </div>
-                  </CustomForm>
-                  {submitError && <ErrorMessage error={submitError} />}
-                </div>
-              </div>
-            </div>
-          </div>
-        </Modal>
+      {formModal && (
+        <RegionModal
+          regionId={regionIdForEdit}
+          onCreated={handleOnCreated}
+          onUpdated={handleOnUpdated}
+          onCancel={closeFormModal}
+        />
       )}
     </div>
   );

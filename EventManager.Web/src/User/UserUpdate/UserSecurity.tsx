@@ -77,7 +77,7 @@ export function UserSecurity(props: UserSecurityProps) {
         />
 
         <div className="d-flex justify-content-center mt-3">
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-primary w-200px">
             Обнови
           </button>
         </div>

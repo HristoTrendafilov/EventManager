@@ -132,7 +132,7 @@ export function EventSearch() {
                     label="Име на събитието"
                   />
                   <div className="d-flex justify-content-center">
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn btn-primary w-200px">
                       Търси
                     </button>
                   </div>

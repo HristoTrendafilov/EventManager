@@ -159,7 +159,7 @@ export function Event() {
                     </div>
                   </div>
                   <div className="d-flex justify-content-center mt-3">
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn btn-primary w-200px">
                       {eventId ? 'Обнови' : 'Създай'}
                     </button>
                   </div>

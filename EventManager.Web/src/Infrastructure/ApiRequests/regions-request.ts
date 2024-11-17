@@ -1,12 +1,15 @@
 import { callApi } from '~Infrastructure/api-client';
-import type { RegionView } from '~Infrastructure/api-types';
-import type { RegionForm } from '~User/AdminPanel/RegionsCatalog';
+import type { RegionBaseFormType, RegionView } from '~Infrastructure/api-types';
 
 export function getRegions() {
   return callApi<RegionView[]>('/regions', 'GET');
 }
 
-export function updateRegion(regionId: number, region: RegionForm) {
+export function getRegionView(regionId: number) {
+  return callApi<RegionView>(`/regions/${regionId}/view`, 'GET');
+}
+
+export function updateRegion(regionId: number, region: RegionBaseFormType) {
   return callApi<RegionView>(
     `/regions/${regionId}/update`,
     'PUT',
@@ -14,6 +17,6 @@ export function updateRegion(regionId: number, region: RegionForm) {
   );
 }
 
-export function createRegion(region: RegionForm) {
+export function createRegion(region: RegionBaseFormType) {
   return callApi<RegionView>('/regions/new', 'POST', JSON.stringify(region));
 }

@@ -186,6 +186,11 @@ export const UserUpdatePersonalDataSchema = z.object({
 });
 export type UserUpdatePersonalDataType = z.infer<typeof UserUpdatePersonalDataSchema>;
 
+export const RegionBaseFormSchema = z.object({
+  regionName: z.string().min(1, { message: "Името на региона е задължително." }),
+});
+export type RegionBaseFormType = z.infer<typeof RegionBaseFormSchema>;
+
 export const EventBaseFormSchema = z.object({
   eventName: z.string().min(1, { message: "Името на събитието е задължително." }).min(5, { message: "Името на събитието трябва да е поне 5 символа." }),
   eventDescription: z.string().nullable(),
