@@ -16,7 +16,7 @@
   margin-bottom: 0;
 }
 
-.carousel-description {
+.home-wrapper .carousel-description {
   margin-left: 15%;
   margin-right: 15%;
 }
@@ -26,7 +26,16 @@
   padding: 2px;
 }
 
-.event-carousel-description {
+.home-wrapper .carousel-control-prev-icon,
+.home-wrapper .carousel-control-next-icon {
+  width: 70px;
+  height: 70px;
+  background-color: red;
+  border: 15px solid red;
+  border-radius: 50%;
+}
+
+.home-wrapper .event-carousel-description {
   display: -webkit-box; /* Create a flexible box container */
   -webkit-box-orient: vertical; /* Set the box orientation to vertical */
   overflow: hidden; /* Hide the overflowed content */
@@ -45,5 +54,11 @@
 @media (max-width: 600px) {
   .home-carousel-img-wrapper {
     height: 300px;
+  }
+
+  .home-wrapper .carousel-control-prev-icon,
+  .home-wrapper .carousel-control-next-icon {
+    width: 48px;
+    height: 48px;
   }
 }
