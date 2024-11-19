@@ -4,6 +4,7 @@ using EventManager.API.Dto.User;
 using LinqToDB;
 using System.Linq.Expressions;
 using EventManager.API.Services.FileStorage;
+using EventManager.API.Dto.User.Role;
 
 namespace EventManager.API.Services.User
 {
@@ -124,7 +125,7 @@ namespace EventManager.API.Services.User
             return _db.UsersRoles.Where(x => x.UserId == userId && x.RoleId == (int)UserRole.Admin).AnyAsync();
         }
 
-        public async Task SaveUserRoles(UserRoleBaseForm userRoles, long? currentUserId)
+        public async Task SaveUserRoles(RoleBaseForm userRoles, long? currentUserId)
         {
             await _db.WithTransactionAsync(async () =>
             {

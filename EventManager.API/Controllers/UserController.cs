@@ -17,6 +17,7 @@ using System.Security.Claims;
 using EventManager.API.Services.Region;
 using EventManager.DAL;
 using System.Data;
+using EventManager.API.Dto.User.Role;
 
 namespace EventManager.API.Controllers
 {
@@ -335,7 +336,7 @@ namespace EventManager.API.Controllers
         [Authorize]
         [Role(UserRole.Admin)]
         [HttpPut("roles")]
-        public async Task<ActionResult> SaveUserRoles(UserRoleBaseForm userRoles)
+        public async Task<ActionResult> SaveUserRoles(RoleBaseForm userRoles)
         {
             await _userService.SaveUserRoles(userRoles, User.X_CurrentUserId());
 
@@ -356,7 +357,7 @@ namespace EventManager.API.Controllers
         [Authorize]
         [Role(UserRole.Admin)]
         [HttpPost("roles/filter")]
-        public async Task<ActionResult> GetUsersForRoles(UserRoleFilter filter)
+        public async Task<ActionResult> GetUsersForRoles(RoleFilter filter)
         {
             var predicate = PredicateBuilder.True<VUserPoco>();
 

@@ -5,9 +5,9 @@ import {
   getUsersForRoles,
 } from '~Infrastructure/ApiRequests/users-requests';
 import {
+  RoleFilterSchema,
+  type RoleFilterType,
   type RoleView,
-  UserRoleFilterSchema,
-  type UserRoleFilterType,
   type UserView,
 } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
@@ -22,7 +22,7 @@ export function UsersRolesCatalog() {
   const [roles, setRoles] = useState<RoleView[]>([]);
   const [error, setError] = useState<string | undefined>();
 
-  const form = useZodForm({ schema: UserRoleFilterSchema });
+  const form = useZodForm({ schema: RoleFilterSchema });
 
   const loadRoles = useCallback(async () => {
     const response = await getAllRoles();
@@ -34,7 +34,7 @@ export function UsersRolesCatalog() {
     setRoles(response.data);
   }, []);
 
-  const handleFormSubmit = useCallback(async (filter: UserRoleFilterType) => {
+  const handleFormSubmit = useCallback(async (filter: RoleFilterType) => {
     const response = await getUsersForRoles(filter);
     if (!response.success) {
       setError(response.errorMessage);

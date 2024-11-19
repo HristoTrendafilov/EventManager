@@ -1,8 +1,20 @@
-﻿using EventManager.DAL;
+﻿using LinqToDB.Mapping;
 
 namespace EventManager.API.Dto.Exception
 {
-    public class ExceptionBaseForm : ExceptionPoco
+    public class ExceptionBaseForm
     {
+        public long ExceptionId { get; set; }
+
+        public string Exception { get; set; }
+
+        public string ExceptionMessage { get; set; }
+
+        public DateTime ExceptionDateTime { get; set; }
+
+        public bool IsResolved { get; set; }
+
+        [Nullable]
+        public long? UserId { get; set; }
     }
 }

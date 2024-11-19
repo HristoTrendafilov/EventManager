@@ -11,8 +11,6 @@ namespace EventManager.API.Dto.User
 
         #region JsonIgnore
         [JsonIgnore]
-        public override string ProfilePicturePath { get; set; }
-        [JsonIgnore]
         public override IFormFile ProfilePicture { get; set; }
         #endregion JsonIgnore
     }

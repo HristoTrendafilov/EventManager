@@ -1,10 +1,10 @@
 ﻿using EventManager.API.Helpers;
 using System.ComponentModel.DataAnnotations;
 
-namespace EventManager.API.Dto.User
+namespace EventManager.API.Dto.User.Role
 {
     [GenerateZodSchema]
-    public class UserRoleBaseForm
+    public class RoleBaseForm
     {
         [Required(ErrorMessage = "Потребителят е задължителен.")]
         public long UserId { get; set; }

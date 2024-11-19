@@ -157,13 +157,15 @@ export function CrudLogs() {
                         </pre>
                       </div>
                       <div className="col-lg-5">
-                        <pre>
-                          {JSON.stringify(
-                            JSON.parse(x.pocoAfterAction),
-                            null,
-                            2
-                          )}
-                        </pre>
+                        {x.pocoAfterAction && (
+                          <pre>
+                            {JSON.stringify(
+                              JSON.parse(x.pocoAfterAction),
+                              null,
+                              2
+                            )}
+                          </pre>
+                        )}
                       </div>
                     </div>
                   </div>

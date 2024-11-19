@@ -3,9 +3,9 @@ import toast from 'react-hot-toast';
 
 import { saveUserRoles } from '~Infrastructure/ApiRequests/users-requests';
 import {
+  RoleBaseFormSchema,
+  type RoleBaseFormType,
   type RoleView,
-  UserRoleBaseFormSchema,
-  type UserRoleBaseFormType,
   type UserView,
 } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
@@ -23,12 +23,12 @@ export function UserRole(props: UserRoleProps) {
   const [error, setError] = useState<string | undefined>();
 
   const form = useZodForm({
-    schema: UserRoleBaseFormSchema,
-    defaultValues: { userId: user.userId!, rolesIds: user.userRolesIds || [] },
+    schema: RoleBaseFormSchema,
+    defaultValues: { userId: user.userId, rolesIds: user.userRolesIds || [] },
   });
 
   const handleFormSubmit = useCallback(
-    async (userRoles: UserRoleBaseFormType) => {
+    async (userRoles: RoleBaseFormType) => {
       const response = await saveUserRoles(userRoles);
       if (!response.success) {
         setError(response.errorMessage);

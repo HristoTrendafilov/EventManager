@@ -1,6 +1,6 @@
 ﻿using EventManager.API.Helpers;
 
-namespace EventManager.API.Dto.User
+namespace EventManager.API.Dto.User.Role
 {
     [GenerateTypeScriptInterface]
     public class RoleView

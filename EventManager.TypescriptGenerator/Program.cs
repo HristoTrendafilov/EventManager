@@ -1,5 +1,6 @@
 ﻿using EventManager.API.Core;
 using EventManager.API.Helpers;
+using LinqToDB.Mapping;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
@@ -58,7 +59,8 @@ string GenerateTypeScriptInterface(Type classType)
         var tsPropertyName = ToCamelCase(propertyName);
 
         // Handle nullable types
-        var tsPropertyType = ConvertToTypeScriptType(propertyType);
+        var isNullable = classType.GetProperty(property.Name).GetCustomAttributes<NullableAttribute>().Any();
+        var tsPropertyType = ConvertToTypeScriptType(propertyType, isNullable);
 
         sb.AppendLine($"  {tsPropertyName}: {tsPropertyType};");
     }
@@ -79,7 +81,7 @@ string ToCamelCase(string propertyName)
 }
 
 // Helper method to map C# types to TypeScript types
-string ConvertToTypeScriptType(Type propertyType)
+string ConvertToTypeScriptType(Type propertyType, bool isNullable)
 {
     // Check if the type is nullable (i.e., Nullable<T>)
     if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
@@ -88,18 +90,18 @@ string ConvertToTypeScriptType(Type propertyType)
         var underlyingType = propertyType.GetGenericArguments()[0];
 
         // For other nullable types, map them to their TypeScript equivalent with | null
-        return $"{ConvertToTypeScriptType(underlyingType)} | null";
+        return $"{ConvertToTypeScriptType(underlyingType, isNullable)}";
     }
 
     // Check if the type is a generic collection (e.g., List<T> or ICollection<T>)
     if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
     {
         var elementType = propertyType.GetGenericArguments()[0];
-        return $"{ConvertToTypeScriptType(elementType)}[]"; // Array in TypeScript
+        return $"{ConvertToTypeScriptType(elementType, isNullable)}[]"; // Array in TypeScript
     }
 
     // Map common C# types to TypeScript types
-    return propertyType.Name.ToLower() switch
+    var tsProperty = propertyType.Name.ToLower() switch
     {
         "string" => "string",
         "int32" => "number",
@@ -110,6 +112,13 @@ string ConvertToTypeScriptType(Type propertyType)
         "iformfile" => "File | null | undefined",
         _ => GetTypeScriptTypeForComplexTypes(propertyType)  // Handle complex types
     };
+
+    if (isNullable)
+    {
+        tsProperty += " | null";
+    }
+
+    return tsProperty;
 }
 
 // Handle complex or custom types (e.g., UserEventView)
@@ -122,7 +131,7 @@ string GetTypeScriptTypeForComplexTypes(Type propertyType)
         return propertyType.Name; // Just use the class name, TypeScript will handle it
     }
 
-    return "unknown";
+     throw new Exception($"WARNING! Detected property that is not complex type: {propertyType.Name}");
 }
 
 // Generate Zod schema for the entire class
@@ -142,7 +151,8 @@ string GenerateZodSchema(Type classType)
     foreach (var property in properties)
     {
         var validationAttributes = classType.GetProperty(property.Name).GetCustomAttributes<ValidationAttribute>();
-        sb.AppendLine($"  {ToCamelCase(property.Name)}: {ConvertToZodType(property.PropertyType, validationAttributes)},");
+        var isNullable = classType.GetProperty(property.Name).GetCustomAttributes<NullableAttribute>().Any();
+        sb.AppendLine($"  {ToCamelCase(property.Name)}: {ConvertToZodType(property.PropertyType, isNullable, validationAttributes)},");
     }
 
     sb.AppendLine("});");
@@ -152,20 +162,24 @@ string GenerateZodSchema(Type classType)
     return sb.ToString();
 }
 
-string ConvertToZodType(Type propertyType, IEnumerable<ValidationAttribute> validationAttributes)
+string ConvertToZodType(Type propertyType, bool isNullable, IEnumerable<ValidationAttribute> validationAttributes)
 {
-    // Check if the type is nullable (i.e., Nullable<T>)
+    if (isNullable && validationAttributes.Any())
+    {
+        throw new Exception("WARNING! Detected nullable property with validation attributes!");
+    }
+
     if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
     {
         var underlyingType = propertyType.GetGenericArguments()[0];
-        return $"{ConvertToZodType(underlyingType, validationAttributes)}.nullable()";
+        return $"{ConvertToZodType(underlyingType, isNullable, validationAttributes)}.nullable()";
     }
 
     // Check if the type is a generic collection (e.g., List<T> or ICollection<T>)
     if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
     {
         var elementType = propertyType.GetGenericArguments()[0];
-        return $"{ConvertToZodType(elementType, validationAttributes)}.array()";
+        return $"{ConvertToZodType(elementType, isNullable, validationAttributes)}.array()";
     }
 
     // Map C# types to basic Zod types
@@ -180,6 +194,11 @@ string ConvertToZodType(Type propertyType, IEnumerable<ValidationAttribute> vali
         "iformfile" => "z.instanceof(FileList)",
         _ => throw new Exception($"Unknown type for Zod schema: {propertyType.Name}")
     };
+
+    if (isNullable) 
+    {
+        schemaProperty += ".nullable()";
+    }
 
     if (validationAttributes.Any())
     {
@@ -239,10 +258,6 @@ string ConvertToZodType(Type propertyType, IEnumerable<ValidationAttribute> vali
                     throw new Exception($"The validation attribute: {nameof(attribute)} is not implemented!");
             }
         }
-    }
-    else
-    {
-        schemaProperty += ".nullable()";
     }
 
     return schemaProperty;

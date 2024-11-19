@@ -1,4 +1,5 @@
 ﻿using EventManager.API.Dto.Region;
+using EventManager.API.Dto.User.Role;
 using EventManager.API.Helpers;
 using EventManager.DAL;
 using Newtonsoft.Json;

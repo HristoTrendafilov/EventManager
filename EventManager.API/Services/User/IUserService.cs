@@ -1,6 +1,7 @@
 ﻿using EventManager.DAL;
 using EventManager.API.Dto.User;
 using System.Linq.Expressions;
+using EventManager.API.Dto.User.Role;
 
 namespace EventManager.API.Services.User
 {
@@ -22,6 +23,6 @@ namespace EventManager.API.Services.User
 
         Task<List<RolePoco>> GetAllUserRolesAsync(long userId);
         Task<List<RolePoco>> GetAllRolesAsync(Expression<Func<RolePoco, bool>> predicate);
-        Task SaveUserRoles(UserRoleBaseForm userClaim, long? currentUserId);
+        Task SaveUserRoles(RoleBaseForm userClaim, long? currentUserId);
     }
 }

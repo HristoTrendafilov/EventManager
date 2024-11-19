@@ -15,22 +15,16 @@ export interface PrimaryKeyResponse {
   primaryKey: number;
 }
 
-export interface RoleView {
-  roleId: number;
-  roleName: string;
-  roleNameBg: string;
-}
-
 export interface UserForUpdate {
   hasProfilePicture: boolean;
   username: string;
   firstName: string;
-  secondName: string;
   lastName: string;
-  phoneNumber: string;
-  shortDescription: string;
   regionId: number;
   userRegionsHelpingIds: number[];
+  secondName: string | null;
+  phoneNumber: string | null;
+  shortDescription: string | null;
 }
 
 export interface UserForWeb {
@@ -51,15 +45,21 @@ export interface UserView {
   userId: number;
   username: string;
   firstName: string;
-  secondName: string;
+  secondName: string | null;
   lastName: string;
   userFullName: string;
   email: string;
-  phoneNumber: string;
+  phoneNumber: string | null;
   regionId: number;
-  shortDescription: string;
+  shortDescription: string | null;
   regionName: string;
   hasProfilePicture: boolean;
+}
+
+export interface RoleView {
+  roleId: number;
+  roleName: string;
+  roleNameBg: string;
 }
 
 export interface RegionView {
@@ -74,10 +74,10 @@ export interface HomeView {
 export interface EventForUpdate {
   hasMainImage: boolean;
   eventName: string;
-  eventDescription: string;
   eventStartDateTime: Date;
-  eventEndDateTime: Date | null;
   regionId: number;
+  eventDescription: string | null;
+  eventEndDateTime: Date | null;
 }
 
 export interface EventView {
@@ -86,7 +86,7 @@ export interface EventView {
   subscribers: UserEventView[];
   eventId: number;
   eventName: string;
-  eventDescription: string;
+  eventDescription: string | null;
   eventStartDateTime: Date;
   eventEndDateTime: Date | null;
   regionId: number;
@@ -112,136 +112,89 @@ export interface CrudLogView {
   tableAffected: string;
   tableAffectedPrimaryKey: number;
   pocoBeforeAction: string;
-  pocoAfterAction: string;
+  pocoAfterAction: string | null;
   createdByUserId: number | null;
   actionDateTime: Date;
   username: string;
 }
 
 // zod schemas
-export const UserBaseFormSchema = z.object({
-  firstName: z.string().min(1, { message: 'Името е задължително.' }),
-  secondName: z.string().nullable(),
-  lastName: z.string().min(1, { message: 'Фамилията е задължителна.' }),
-  phoneNumber: z.string().nullable(),
-  shortDescription: z.string().nullable(),
-  regionId: z.number().int(),
-  userRegionsHelpingIds: z
-    .number()
-    .int()
-    .min(1, { message: 'Моля, изберете региони, в които искате да помагате.' })
-    .array(),
-  profilePicture: z.instanceof(FileList).nullable(),
-  profilePicturePath: z.string().nullable(),
-});
-export type UserBaseFormType = z.infer<typeof UserBaseFormSchema>;
-
 export const UserLoginSchema = z.object({
-  username: z.string().min(1, { message: 'Потребителско име е задължително.' }),
-  password: z.string().min(1, { message: 'Паролата е задължителна.' }),
+  username: z.string().min(1, { message: "Потребителско име е задължително." }),
+  password: z.string().min(1, { message: "Паролата е задължителна." }),
 });
 export type UserLoginType = z.infer<typeof UserLoginSchema>;
 
 export const UserNewSchema = z.object({
-  username: z.string().min(1, { message: 'Потребителско име е задължително.' }),
-  email: z.string().email({ message: 'Имейлът е задължителен.' }),
-  password: z.string().min(1, { message: 'Паролата е задължителна.' }),
-  passwordRepeated: z
-    .string()
-    .min(1, { message: 'Моля, повторете отново паролата' }),
-  firstName: z.string().min(1, { message: 'Името е задължително.' }),
+  username: z.string().min(1, { message: "Потребителско име е задължително." }),
+  email: z.string().email({ message: "Имейлът е задължителен." }),
+  password: z.string().min(1, { message: "Паролата е задължителна." }),
+  passwordRepeated: z.string().min(1, { message: "Моля, повторете отново паролата" }),
+  firstName: z.string().min(1, { message: "Името е задължително." }),
+  lastName: z.string().min(1, { message: "Фамилията е задължителна." }),
+  regionId: z.number().int(),
+  userRegionsHelpingIds: z.number().int().min(1, { message: "Моля, изберете региони, в които искате да помагате." }).array(),
+  profilePicture: z.instanceof(FileList).nullable(),
   secondName: z.string().nullable(),
-  lastName: z.string().min(1, { message: 'Фамилията е задължителна.' }),
   phoneNumber: z.string().nullable(),
   shortDescription: z.string().nullable(),
-  regionId: z.number().int(),
-  userRegionsHelpingIds: z
-    .number()
-    .int()
-    .min(1, { message: 'Моля, изберете региони, в които искате да помагате.' })
-    .array(),
-  profilePicture: z.instanceof(FileList).nullable(),
-  profilePicturePath: z.string().nullable(),
 });
 export type UserNewType = z.infer<typeof UserNewSchema>;
 
-export const UserRoleBaseFormSchema = z.object({
-  userId: z.number().int().min(1, { message: 'Потребителят е задължителен.' }),
-  rolesIds: z.number().int().nullable().array(),
-});
-export type UserRoleBaseFormType = z.infer<typeof UserRoleBaseFormSchema>;
-
-export const UserRoleFilterSchema = z.object({
-  username: z.string().min(1, { message: 'Моля, въведете потребителско име' }),
-});
-export type UserRoleFilterType = z.infer<typeof UserRoleFilterSchema>;
-
 export const UserUpdatePasswordSchema = z.object({
-  oldPassword: z.string().nullable(),
-  newPassword: z.string().nullable(),
-  newPasswordRepeated: z.string().nullable(),
+  oldPassword: z.string(),
+  newPassword: z.string(),
+  newPasswordRepeated: z.string(),
 });
 export type UserUpdatePasswordType = z.infer<typeof UserUpdatePasswordSchema>;
 
 export const UserUpdatePersonalDataSchema = z.object({
-  firstName: z.string().min(1, { message: 'Името е задължително.' }),
+  firstName: z.string().min(1, { message: "Името е задължително." }),
+  lastName: z.string().min(1, { message: "Фамилията е задължителна." }),
+  regionId: z.number().int(),
+  userRegionsHelpingIds: z.number().int().min(1, { message: "Моля, изберете региони, в които искате да помагате." }).array(),
+  profilePicture: z.instanceof(FileList).nullable(),
   secondName: z.string().nullable(),
-  lastName: z.string().min(1, { message: 'Фамилията е задължителна.' }),
   phoneNumber: z.string().nullable(),
   shortDescription: z.string().nullable(),
-  regionId: z.number().int(),
-  userRegionsHelpingIds: z
-    .number()
-    .int()
-    .min(1, { message: 'Моля, изберете региони, в които искате да помагате.' })
-    .array(),
-  profilePicture: z.instanceof(FileList).nullable(),
-  profilePicturePath: z.string().nullable(),
 });
-export type UserUpdatePersonalDataType = z.infer<
-  typeof UserUpdatePersonalDataSchema
->;
+export type UserUpdatePersonalDataType = z.infer<typeof UserUpdatePersonalDataSchema>;
+
+export const RoleBaseFormSchema = z.object({
+  userId: z.number().int().min(1, { message: "Потребителят е задължителен." }),
+  rolesIds: z.number().int().array(),
+});
+export type RoleBaseFormType = z.infer<typeof RoleBaseFormSchema>;
+
+export const RoleFilterSchema = z.object({
+  username: z.string().min(1, { message: "Моля, въведете потребителско име" }),
+});
+export type RoleFilterType = z.infer<typeof RoleFilterSchema>;
 
 export const RegionBaseFormSchema = z.object({
-  regionName: z
-    .string()
-    .min(1, { message: 'Името на региона е задължително.' }),
+  regionName: z.string().min(1, { message: "Името на региона е задължително." }),
 });
 export type RegionBaseFormType = z.infer<typeof RegionBaseFormSchema>;
 
 export const EventBaseFormSchema = z.object({
-  eventName: z
-    .string()
-    .min(1, { message: 'Името на събитието е задължително.' })
-    .min(5, { message: 'Името на събитието трябва да е поне 5 символа.' }),
-  eventDescription: z.string().nullable(),
-  eventStartDateTime: z.coerce
-    .date()
-    .refine(
-      (date) =>
-        date >= new Date('1971-01-01') && date <= new Date('3000-01-01'),
-      { message: 'Дата на събитието е задължителна.' }
-    ),
-  eventEndDateTime: z.coerce.date().nullable().nullable(),
+  eventName: z.string().min(1, { message: "Името на събитието е задължително." }).min(5, { message: "Името на събитието трябва да е поне 5 символа." }),
+  eventStartDateTime: z.coerce.date().refine(date => date >= new Date("1971-01-01") && date <= new Date("3000-01-01"), { message: "Дата на събитието е задължителна." }),
   regionId: z.number().int(),
+  eventDescription: z.string().nullable(),
+  eventEndDateTime: z.coerce.date().nullable().nullable(),
   mainImage: z.instanceof(FileList).nullable(),
 });
 export type EventBaseFormType = z.infer<typeof EventBaseFormSchema>;
 
 export const EventSearchFilterSchema = z.object({
   eventName: z.string().nullable(),
-  pageSize: z
-    .number()
-    .int()
-    .min(0, { message: 'Размерът на страниците трябва да е по-голям от 0' })
-    .max(2147483647, {
-      message: 'Размерът на страниците трябва да е по-голям от 0',
-    }),
+  pageSize: z.number().int().min(0, { message: "Размерът на страниците трябва да е по-голям от 0" }).max(2147483647, { message: "Размерът на страниците трябва да е по-голям от 0" }),
 });
 export type EventSearchFilterType = z.infer<typeof EventSearchFilterSchema>;
 
 export const CrudLogFilterSchema = z.object({
-  actionDateTime: z.coerce.date().nullable(),
-  actionType: z.number().int().nullable(),
+  actionDateTime: z.coerce.date(),
+  actionType: z.number().int(),
 });
 export type CrudLogFilterType = z.infer<typeof CrudLogFilterSchema>;
+
