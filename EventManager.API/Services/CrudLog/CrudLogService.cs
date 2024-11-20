@@ -26,7 +26,7 @@ namespace EventManager.API.Services.CrudLog
 
         public Task<List<VCrudLogPoco>> GetAllCrudLogsViewAsync(Expression<Func<VCrudLogPoco, bool>> predicate)
         {
-            return _db.VCrudLogs.Where(predicate).OrderByDescending(x => x.ActionDateTime).ToListAsync();
+            return _db.VCrudLogs.Where(predicate).OrderByDescending(x => x.CrudLogCreatedOnDateTime).ToListAsync();
         }
 
         public Task<CrudLogPoco> GetCrudLogAsync(Expression<Func<CrudLogPoco, bool>> predicate)

@@ -8,7 +8,7 @@ namespace EventManager.API.Dto.User
     {
         #region JsonIgnore
         [JsonIgnore]
-        public string ProfilePicturePath { get; set; }
+        public long? UserProfilePictureFileId { get; set; }
         #endregion JsonIgnore
     }
 }

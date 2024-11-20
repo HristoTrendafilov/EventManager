@@ -45,7 +45,7 @@ namespace EventManager.API.Services.Exception
             var exception = await this.GetExceptionAsync(x => x.ExceptionId == exceptionId);
             if (exception != null)
             {
-                exception.IsResolved = true;
+                exception.ExceptionIsResolved = true;
                 await _db.Exceptions.X_UpdateAsync(exceptionId, exception, currentUserId);
             }
         }

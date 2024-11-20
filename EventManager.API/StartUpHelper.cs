@@ -103,7 +103,7 @@ namespace EventManager.API
             services.AddScoped<ICrudLogService, CrudLogService>();
             services.AddScoped<IWebSessionService, WebSessionService>();
             services.AddScoped<ISharedService, SharedService>();
-            services.AddScoped<IFileStorageService, FileStorageService>();
+            services.AddScoped<IFileService, FileService>();
 
             return builder;
         }

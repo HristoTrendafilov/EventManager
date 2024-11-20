@@ -24,17 +24,17 @@ namespace EventManager.API.Dto.User
 
         #region JsonIgnore
         [JsonIgnore]
-        public override string Password { get; set; }
+        public override string UserPassword { get; set; }
         [JsonIgnore]
-        public override string ProfilePicturePath { get; set; }
+        public override long? UserProfilePictureFileId { get; set; }
         [JsonIgnore]
-        public override string EmailVerificationSecret { get; set; }
+        public override string UserEmailVerificationSecret { get; set; }
         [JsonIgnore]
-        public override bool IsEmailVerified { get; set; }
+        public override bool UserIsEmailVerified { get; set; }
         [JsonIgnore]
-        public override DateTime CreatedOnDateTime { get; set; }
+        public override DateTime UserCreatedOnDateTime { get; set; }
         [JsonIgnore]
-        public override long? CreatedByUserId { get; set; }
+        public override long? UserCreatedByUserId { get; set; }
         #endregion JsonIgnore
     }
 }

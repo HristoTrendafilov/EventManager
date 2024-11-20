@@ -27,7 +27,7 @@ namespace EventManager.API.Services.WebSession
         public async Task CloseWebSessionAsync(long webSessionId, long? currentUserId)
         {
             var webSessionPoco = await _db.WebSessions.FirstOrDefaultAsync(x => x.WebSessionId == webSessionId);
-            webSessionPoco.LogoutDateTime = DateTime.Now;
+            webSessionPoco.WebSessionLogoutDateTime = DateTime.Now;
 
             await _db.WebSessions.X_UpdateAsync(webSessionId, webSessionPoco, currentUserId);
         }

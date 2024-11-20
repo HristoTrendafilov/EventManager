@@ -11,9 +11,9 @@ namespace EventManager.API.Services.User
     public class UserService : IUserService
     {
         private readonly PostgresConnection _db;
-        private readonly IFileStorageService _fileStorageService;
+        private readonly IFileService _fileStorageService;
 
-        public UserService(PostgresConnection db, IFileStorageService fileStorageService)
+        public UserService(PostgresConnection db, IFileService fileStorageService)
         {
             _db = db;
             _fileStorageService = fileStorageService;
@@ -25,7 +25,7 @@ namespace EventManager.API.Services.User
             {
                 if (user.ProfilePicture != null)
                 {
-                    user.ProfilePicturePath = await _fileStorageService.SaveFileToStorage(user.ProfilePicture);
+                    user.UserProfilePictureFileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, currentUserId);
                 }
 
                 var userId = await _db.Users.X_CreateAsync(user, currentUserId);
@@ -62,20 +62,20 @@ namespace EventManager.API.Services.User
         {
             await _db.WithTransactionAsync(async () =>
             {
-                var userProfilePictureFilePath = await _db.Users.Where(x => x.UserId == userId)
-                      .Select(x => x.ProfilePicturePath).FirstOrDefaultAsync();
+                var userView = await _db.VUsers.FirstOrDefaultAsync(x => x.UserId == userId);
 
                 if (user.ProfilePicture != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(userProfilePictureFilePath) && File.Exists(userProfilePictureFilePath))
+                    var profilePictureFilePath = userView.FileStoragePath;
+
+                    if (!string.IsNullOrWhiteSpace(profilePictureFilePath) && File.Exists(profilePictureFilePath))
                     {
-                        File.Delete(userProfilePictureFilePath);
+                        File.Delete(profilePictureFilePath);
+                        await _db.Files.X_DeleteAsync(x => x.FileId == userView.UserProfilePictureFileId, currentUserId);
                     }
 
-                    userProfilePictureFilePath = await _fileStorageService.SaveFileToStorage(user.ProfilePicture);
+                    user.UserProfilePictureFileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, currentUserId);
                 }
-
-                user.ProfilePicturePath = userProfilePictureFilePath;
 
                 await _db.UsersRegionsHelping.X_DeleteAsync(x => x.UserId == userId, currentUserId);
                 foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
@@ -158,18 +158,18 @@ namespace EventManager.API.Services.User
 
         public async Task<byte[]> GetUserProfilePictureAsync(long userId)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            var user = await _db.VUsers.FirstOrDefaultAsync(x => x.UserId == userId);
             if (user == null)
             {
                 return null;
             }
 
-            if (!File.Exists(user.ProfilePicturePath))
+            if (!File.Exists(user.FileStoragePath))
             {
                 return null;
             }
 
-            return await File.ReadAllBytesAsync(user.ProfilePicturePath);
+            return await File.ReadAllBytesAsync(user.FileStoragePath);
         }
     }
 }

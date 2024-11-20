@@ -12,10 +12,10 @@ namespace EventManager.API.Services.Event
     public class EventService : IEventService
     {
         private readonly PostgresConnection _db;
-        private readonly IFileStorageService _fileStorageService;
+        private readonly IFileService _fileStorageService;
         private readonly IConfiguration _config;
 
-        public EventService(PostgresConnection db, IFileStorageService fileStorageService, IConfiguration config)
+        public EventService(PostgresConnection db, IFileService fileStorageService, IConfiguration config)
         {
             _db = db;
             _fileStorageService = fileStorageService;
@@ -63,15 +63,13 @@ namespace EventManager.API.Services.Event
 
         private async Task CreateEventImageAsync(IFormFile file, long eventId, long? currentUserId)
         {
-            var imagePath = await _fileStorageService.SaveFileToStorage(file);
+            var fileId = await _fileStorageService.CreateFileAsync(file, currentUserId);
 
             var image = new EventImageNew
             {
                 EventId = eventId,
-                ImageExtension = Path.GetExtension(file.FileName),
-                ImageFilePath = imagePath,
-                ImageIsMain = true,
-                ImageName = file.FileName
+                EventImageIsMain = true,
+                FileId = fileId,
             };
 
             await _db.EventImages.X_CreateAsync(image, currentUserId);
@@ -79,18 +77,22 @@ namespace EventManager.API.Services.Event
 
         private async Task DeleteEventMainImageAsync(long eventId, long? currentUserId)
         {
-            var mainImage = await _db.EventImages.FirstOrDefaultAsync(x => x.EventId == eventId && x.ImageIsMain);
+            var mainImage = await _db.VEventImages.FirstOrDefaultAsync(x => x.EventId == eventId && x.EventImageIsMain);
             if (mainImage == null)
             {
                 return;
             }
 
-            if (File.Exists(mainImage.ImageFilePath))
+            await _db.WithTransactionAsync(async () =>
             {
-                File.Delete(mainImage.ImageFilePath);
-            }
+                if (File.Exists(mainImage.FileStoragePath))
+                {
+                    File.Delete(mainImage.FileStoragePath);
+                }
 
-            await _db.EventImages.X_DeleteAsync(x => x.ImageId == mainImage.ImageId, currentUserId);
+                await _db.Files.X_DeleteAsync(x => x.FileId == mainImage.FileId, currentUserId);
+                await _db.EventImages.X_DeleteAsync(x => x.EventImageId == mainImage.EventImageId, currentUserId);
+            });
         }
 
         public async Task DeleteEventAsync(long eventId, long? currentUserId)
@@ -98,17 +100,34 @@ namespace EventManager.API.Services.Event
             await _db.WithTransactionAsync(async () =>
             {
                 var eventImages = await _db.EventImages.Where(x => x.EventId == eventId).ToListAsync();
-                foreach (var image in eventImages)
-                {
-                    if (File.Exists(image.ImageFilePath))
-                    {
-                        File.Delete(image.ImageFilePath);
-                    }
-                }
+
+                await DeleteAllEventImages(eventId, currentUserId);
 
                 await _db.UsersEvents.X_DeleteAsync(x => x.EventId == eventId, currentUserId);
                 await _db.EventImages.X_DeleteAsync(x => x.EventId == eventId, currentUserId);
                 await _db.Events.X_DeleteAsync(x => x.EventId == eventId, currentUserId);
+            });
+        }
+
+        public async Task DeleteAllEventImages(long eventId, long? currentUserId)
+        {
+            var images = await _db.VEventImages.Where(x => x.EventId == eventId).ToListAsync();
+
+            await _db.WithTransactionAsync(async () =>
+            {
+                foreach (var image in images)
+                {
+                    if (File.Exists(image.FileStoragePath))
+                    {
+                        File.Delete(image.FileStoragePath);
+                    }
+                }
+
+                var filesIds = images.Select(x => x.FileId).ToList();
+                var eventImagesIds = images.Select(x => x.EventImageId).ToList();
+
+                await _db.Files.X_DeleteAsync(x => filesIds.Contains(x.FileId), currentUserId);
+                await _db.EventImages.X_DeleteAsync(x => eventImagesIds.Contains(x.EventImageId), currentUserId);
             });
         }
 
@@ -175,18 +194,17 @@ namespace EventManager.API.Services.Event
 
         public async Task<byte[]> GetEventMainImageAsync(long eventId)
         {
-            var mainImage = await _db.EventImages.FirstOrDefaultAsync(x => x.EventId == eventId && x.ImageIsMain);
-            if (mainImage == null)
+            var mainImageFilePath = await _db.VEventImages
+                .Where(x => x.EventId == eventId && x.EventImageIsMain)
+                .Select(x => x.FileStoragePath)
+                .FirstOrDefaultAsync();
+
+            if (string.IsNullOrWhiteSpace(mainImageFilePath) || !File.Exists(mainImageFilePath))
             {
                 return null;
             }
 
-            if (!File.Exists(mainImage.ImageFilePath))
-            {
-                return null;
-            }
-
-            return await File.ReadAllBytesAsync(mainImage.ImageFilePath);
+            return await File.ReadAllBytesAsync(mainImageFilePath);
         }
     }
 }

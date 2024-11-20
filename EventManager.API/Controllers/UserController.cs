@@ -126,7 +126,7 @@ namespace EventManager.API.Controllers
 
             if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
             {
-                if (await _userService.UserExistsAsync(x => x.PhoneNumber == user.PhoneNumber && x.UserId != userId))
+                if (await _userService.UserExistsAsync(x => x.UserPhoneNumber == user.PhoneNumber && x.UserId != userId))
                 {
                     return BadRequest($"Вече съществува потребител с телефонен номер: {user.PhoneNumber}");
                 }
@@ -183,12 +183,12 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            if (user.Password != password.OldPassword)
+            if (user.UserPassword != password.OldPassword)
             {
                 return BadRequest("Неправилна парола");
             }
 
-            user.Password = password.NewPassword;
+            user.UserPassword = password.NewPassword;
             await _userService.UpdateUserAsync(userId, user, User.X_CurrentUserId());
 
             return NoContent();
@@ -197,12 +197,12 @@ namespace EventManager.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> LoginUser(UserLogin userLogin)
         {
-            var user = await _userService.GetUserAsync(x => x.Username == userLogin.Username && x.Password == userLogin.Password);
+            var user = await _userService.GetUserAsync(x => x.Username == userLogin.Username && x.UserPassword == userLogin.Password);
             if (user == null)
             {
                 return BadRequest("Неправилно потребителско име или парола.");
             }
-            if (!user.IsEmailVerified)
+            if (!user.UserIsEmailVerified)
             {
                 return BadRequest($"Моля, потвърдете имейла си, за да може да достъпите сайта.");
             }
@@ -265,14 +265,14 @@ namespace EventManager.API.Controllers
             {
                 return BadRequest($"Вече съществува потребителското име: {userNew.Username}");
             }
-            if (await _userService.UserExistsAsync(x => x.Email == userNew.Email))
+            if (await _userService.UserExistsAsync(x => x.UserEmail == userNew.Email))
             {
                 return BadRequest($"Вече съществува потребител с имейл: {userNew.Email}");
             }
 
             if (!string.IsNullOrWhiteSpace(userNew.PhoneNumber))
             {
-                if (await _userService.UserExistsAsync(x => x.PhoneNumber == userNew.PhoneNumber))
+                if (await _userService.UserExistsAsync(x => x.UserPhoneNumber == userNew.PhoneNumber))
                 {
                     return BadRequest($"Вече съществува потребител с телефонен номер: {userNew.PhoneNumber}");
                 }
