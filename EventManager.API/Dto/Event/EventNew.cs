@@ -6,13 +6,13 @@ namespace EventManager.API.Dto.Event
     {
         public EventNew()
         {
-            EventCreatedAtDateTime = DateTime.Now;
+            EventCreatedOnDateTime = DateTime.Now;
         }
 
         [JsonIgnore]
-        public DateTime EventCreatedAtDateTime { get; set; }
+        public DateTime EventCreatedOnDateTime { get; set; }
 
         [JsonIgnore]
-        public virtual long CreatedByUserId { get; set; }
+        public virtual long EventCreatedByUserId { get; set; }
     }
 }

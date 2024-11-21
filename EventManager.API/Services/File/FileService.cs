@@ -30,6 +30,7 @@ namespace EventManager.API.Services.FileStorage
                 FileName = file.FileName,
                 FileExtension = Path.GetExtension(file.FileName),
                 FileStoragePath = filePath,
+                FileCreatedOnDateTime = DateTime.Now
             };
 
             return await _db.Files.X_CreateAsync(filePoco, currentUserId);

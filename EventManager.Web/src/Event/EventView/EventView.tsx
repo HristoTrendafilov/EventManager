@@ -143,7 +143,7 @@ export function EventViewComponent() {
 
                   {event.canEdit && (
                     <Link
-                      to={CustomRoutes.eventsUpdate(event.eventId!)}
+                      to={CustomRoutes.eventsUpdate(event.eventId)}
                       className="btn btn-primary"
                     >
                       Редакция
@@ -152,7 +152,7 @@ export function EventViewComponent() {
                 </h4>
 
                 <div className="card-body">
-                  <div>Начало: {formatDateTime(event.eventStartDateTime!)}</div>
+                  <div>Начало: {formatDateTime(event.eventStartDateTime)}</div>
 
                   <div>
                     Край:{' '}
@@ -164,7 +164,9 @@ export function EventViewComponent() {
 
                   <div>
                     Създаден от:{' '}
-                    <Link to={CustomRoutes.usersView(event.createdByUserId!)}>
+                    <Link
+                      to={CustomRoutes.usersView(event.eventCreatedByUserId)}
+                    >
                       {event.createdByUsername}
                     </Link>
                   </div>

@@ -90,7 +90,7 @@ export function UserProfile() {
                     <div className="mt-3">
                       <h4>{userView.username}</h4>
                       <p className="text-secondary mb-1">
-                        {userView.shortDescription}
+                        {userView.userShortDescription}
                       </p>
                       {userView.canEdit && (
                         <Link
@@ -122,7 +122,7 @@ export function UserProfile() {
                       <h6 className="mb-0">Имейл</h6>
                     </div>
                     <div className="col-sm-9 text-secondary">
-                      {userView.email}
+                      {userView.userEmail}
                     </div>
                   </div>
                   <hr />
@@ -131,7 +131,7 @@ export function UserProfile() {
                       <h6 className="mb-0">Телефон</h6>
                     </div>
                     <div className="col-sm-9 text-secondary">
-                      {userView.phoneNumber}
+                      {userView.userPhoneNumber}
                     </div>
                   </div>
                   <hr />

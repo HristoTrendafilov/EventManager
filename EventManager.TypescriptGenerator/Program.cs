@@ -239,7 +239,7 @@ string ConvertToZodType(Type propertyType, bool isNullable, IEnumerable<Validati
                     break;
 
                 case RangeAttribute rangeAttr:
-                    if (propertyType == typeof(int) || propertyType == typeof(double) || propertyType == typeof(decimal))
+                    if (propertyType == typeof(int) || propertyType == typeof(double) || propertyType == typeof(decimal) || propertyType == typeof(long))
                     {
                         schemaProperty += $".min({rangeAttr.Minimum}, {{ message: \"{errorMessage}\" }}).max({rangeAttr.Maximum}, {{ message: \"{errorMessage}\" }})";
                     }

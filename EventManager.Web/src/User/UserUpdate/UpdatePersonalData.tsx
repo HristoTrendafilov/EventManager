@@ -118,17 +118,24 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           <hr />
           <div className="col-lg-6">
             <CustomTextArea
-              {...form.register('shortDescription')}
+              {...form.register('userShortDescription')}
               label="Кратко описание"
               rows={3}
             />
-            <CustomInput {...form.register('phoneNumber')} label="Телефон" />
+            <CustomInput
+              {...form.register('userPhoneNumber')}
+              label="Телефон"
+            />
           </div>
           <div className="col-lg-6">
-            <CustomInput {...form.register('firstName')} label="Име" required />
-            <CustomInput {...form.register('secondName')} label="Презиме" />
             <CustomInput
-              {...form.register('lastName')}
+              {...form.register('userFirstName')}
+              label="Име"
+              required
+            />
+            <CustomInput {...form.register('userSecondName')} label="Презиме" />
+            <CustomInput
+              {...form.register('userLastName')}
               label="Фамилия"
               required
             />

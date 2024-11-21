@@ -30,8 +30,8 @@ export function Register() {
 
   const handleRegister = useCallback(
     async (user: UserNewType) => {
-      if (user.password !== user.passwordRepeated) {
-        form.setError('password', { message: 'Паролите не съвпадат' });
+      if (user.userPassword !== user.passwordRepeated) {
+        form.setError('userPassword', { message: 'Паролите не съвпадат' });
         form.setError('passwordRepeated', { message: 'Паролите не съвпадат' });
         return;
       }
@@ -135,7 +135,7 @@ export function Register() {
                             required
                           />
                           <CustomInput
-                            {...form.register('password')}
+                            {...form.register('userPassword')}
                             label="Парола"
                             type="password"
                             required
@@ -147,7 +147,7 @@ export function Register() {
                             required
                           />
                           <CustomTextArea
-                            {...form.register('shortDescription')}
+                            {...form.register('userShortDescription')}
                             label="Кратко описание"
                             rows={3}
                           />
@@ -159,27 +159,27 @@ export function Register() {
                         <h4 className="card-header">Лични данни</h4>
                         <div className="card-body">
                           <CustomInput
-                            {...form.register('firstName')}
+                            {...form.register('userFirstName')}
                             label="Име"
                             required
                           />
                           <CustomInput
-                            {...form.register('secondName')}
+                            {...form.register('userSecondName')}
                             label="Презиме"
                           />
                           <CustomInput
-                            {...form.register('lastName')}
+                            {...form.register('userLastName')}
                             label="Фамилия"
                             required
                           />
                           <CustomInput
-                            {...form.register('email')}
+                            {...form.register('userEmail')}
                             label="Имейл"
                             type="email"
                             required
                           />
                           <CustomInput
-                            {...form.register('phoneNumber')}
+                            {...form.register('userPhoneNumber')}
                             label="Телефон"
                             type="number"
                           />

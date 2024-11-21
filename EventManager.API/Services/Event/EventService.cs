@@ -90,8 +90,8 @@ namespace EventManager.API.Services.Event
                     File.Delete(mainImage.FileStoragePath);
                 }
 
-                await _db.Files.X_DeleteAsync(x => x.FileId == mainImage.FileId, currentUserId);
                 await _db.EventImages.X_DeleteAsync(x => x.EventImageId == mainImage.EventImageId, currentUserId);
+                await _db.Files.X_DeleteAsync(x => x.FileId == mainImage.FileId, currentUserId);
             });
         }
 

@@ -124,11 +124,11 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            if (!string.IsNullOrWhiteSpace(user.PhoneNumber))
+            if (!string.IsNullOrWhiteSpace(user.UserPhoneNumber))
             {
-                if (await _userService.UserExistsAsync(x => x.UserPhoneNumber == user.PhoneNumber && x.UserId != userId))
+                if (await _userService.UserExistsAsync(x => x.UserPhoneNumber == user.UserPhoneNumber && x.UserId != userId))
                 {
-                    return BadRequest($"Вече съществува потребител с телефонен номер: {user.PhoneNumber}");
+                    return BadRequest($"Вече съществува потребител с телефонен номер: {user.UserPhoneNumber}");
                 }
             }
 
@@ -183,7 +183,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            if (user.UserPassword != password.OldPassword)
+            if (user.UserPassword != password.CurrentPassword)
             {
                 return BadRequest("Неправилна парола");
             }
@@ -212,8 +212,8 @@ namespace EventManager.API.Controllers
 
             var webSession = new WebSessionBaseForm
             {
-                LoginDateTime = now,
-                ExpireOnDateTime = expiresOn,
+                WebSessionCreatedOnDateTime = now,
+                WebSessionExpireOnDateTime = expiresOn,
                 UserId = user.UserId,
             };
 
@@ -256,7 +256,7 @@ namespace EventManager.API.Controllers
         [HttpPost]
         public async Task<ActionResult> RegisterUser([FromForm] UserNew userNew)
         {
-            if (userNew.Password != userNew.PasswordRepeated)
+            if (userNew.PasswordRepeated != userNew.PasswordRepeated)
             {
                 return BadRequest($"Паролите не съвпадат");
             }
@@ -265,22 +265,22 @@ namespace EventManager.API.Controllers
             {
                 return BadRequest($"Вече съществува потребителското име: {userNew.Username}");
             }
-            if (await _userService.UserExistsAsync(x => x.UserEmail == userNew.Email))
+            if (await _userService.UserExistsAsync(x => x.UserEmail == userNew.UserEmail))
             {
-                return BadRequest($"Вече съществува потребител с имейл: {userNew.Email}");
+                return BadRequest($"Вече съществува потребител с имейл: {userNew.UserEmail}");
             }
 
-            if (!string.IsNullOrWhiteSpace(userNew.PhoneNumber))
+            if (!string.IsNullOrWhiteSpace(userNew.UserPhoneNumber))
             {
-                if (await _userService.UserExistsAsync(x => x.UserPhoneNumber == userNew.PhoneNumber))
+                if (await _userService.UserExistsAsync(x => x.UserPhoneNumber == userNew.UserPhoneNumber))
                 {
-                    return BadRequest($"Вече съществува потребител с телефонен номер: {userNew.PhoneNumber}");
+                    return BadRequest($"Вече съществува потребител с телефонен номер: {userNew.UserPhoneNumber}");
                 }
             }
 
             var currentUserId = User.X_CurrentUserId();
 
-            userNew.CreatedByUserId = currentUserId;
+            userNew.UserCreatedByUserId = currentUserId;
             await _userService.CreateUserAsync(userNew, currentUserId);
 
             return NoContent();

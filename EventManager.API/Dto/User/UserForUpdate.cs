@@ -1,17 +1,35 @@
 ﻿using EventManager.API.Helpers;
-using Newtonsoft.Json;
+using LinqToDB.Mapping;
 
 namespace EventManager.API.Dto.User
 {
     [GenerateTypeScriptInterface]
-    public class UserForUpdate : UserBaseForm
+    public class UserForUpdate
     {
+        public UserForUpdate()
+        {
+            UserRegionsHelpingIds = new List<long>();
+        }
+
         public bool HasProfilePicture { get; set; }
+
         public string Username { get; set; }
 
-        #region JsonIgnore
-        [JsonIgnore]
-        public override IFormFile ProfilePicture { get; set; }
-        #endregion JsonIgnore
+        public string UserFirstName { get; set; }
+
+        [Nullable]
+        public string UserSecondName { get; set; }
+
+        public string UserLastName { get; set; }
+
+        public long RegionId { get; set; }
+
+        [Nullable]
+        public string UserPhoneNumber { get; set; }
+
+        [Nullable]
+        public string UserShortDescription { get; set; }
+
+        public List<long> UserRegionsHelpingIds { get; set; }
     }
 }

@@ -165,7 +165,7 @@ namespace EventManager.DAL
 	{
 		[PrimaryKey, Identity]
 		[Column(Name = "file_id")]
-		public virtual int FileId { get; set; }
+		public virtual long FileId { get; set; }
 
 		[Column(Name = "file_name")]
 		public virtual string FileName { get; set; }
@@ -424,6 +424,28 @@ namespace EventManager.DAL
 		public virtual string Username { get; set; }
 	}
 
+	[Table(Name = "v_users_events")]
+	public class VUserEventPoco
+	{
+		[Column(Name = "user_event_id")]
+		public virtual long UserEventId { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "user_subscribed_on_date_time")]
+		public virtual DateTime UserSubscribedOnDateTime { get; set; }
+
+		[Column(Name = "event_id")]
+		public virtual long EventId { get; set; }
+
+		[Column(Name = "username")]
+		public virtual string Username { get; set; }
+
+		[Column(Name = "has_profile_picture")]
+		public virtual bool HasProfilePicture { get; set; }
+	}
+
 	[Table(Name = "v_users")]
 	public class VUserPoco
 	{
@@ -489,28 +511,6 @@ namespace EventManager.DAL
 
 		[Column(Name = "file_storage_path")]
 		public virtual string FileStoragePath { get; set; }
-	}
-
-	[Table(Name = "v_users_events")]
-	public class VUserEventPoco
-	{
-		[Column(Name = "user_event_id")]
-		public virtual long UserEventId { get; set; }
-
-		[Column(Name = "user_id")]
-		public virtual long UserId { get; set; }
-
-		[Column(Name = "user_subscribed_on_date_time")]
-		public virtual DateTime UserSubscribedOnDateTime { get; set; }
-
-		[Column(Name = "event_id")]
-		public virtual long EventId { get; set; }
-
-		[Column(Name = "username")]
-		public virtual string Username { get; set; }
-
-		[Column(Name = "has_profile_picture")]
-		public virtual bool HasProfilePicture { get; set; }
 	}
 
 	[Table(Name = "v_event_images")]

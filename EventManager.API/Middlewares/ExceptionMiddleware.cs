@@ -36,7 +36,7 @@ namespace EventManager.API.Middlewares
                 {
                     Exception = ex.ToString(),
                     ExceptionMessage = ex.Message,
-                    ExceptionDateTime = DateTime.Now,
+                    ExceptionCreatedOnDateTime = DateTime.Now,
                     UserId = context.User.X_CurrentUserId()
                 }, context.User.X_CurrentUserId());
 

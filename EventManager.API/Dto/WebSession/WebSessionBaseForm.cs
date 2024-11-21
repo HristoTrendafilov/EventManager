@@ -4,18 +4,21 @@ namespace EventManager.API.Dto.WebSession
 {
     public class WebSessionBaseForm
     {
-        public long WebSessionId { get; set; }
-        
-        public DateTime LoginDateTime { get; set; }
-        
+        public WebSessionBaseForm()
+        {
+            WebSessionCreatedOnDateTime = DateTime.Now;
+        }
+
         public long UserId { get; set; }
-        
-        public DateTime ExpireOnDateTime { get; set; }
 
         [Nullable]
-        public string UserIpAddress { get; set; }
+        public string WebSessionUserIpAddress { get; set; }
+
+        public DateTime WebSessionCreatedOnDateTime { get; set; }
+
+        public DateTime WebSessionExpireOnDateTime { get; set; }
 
         [Nullable]
-        public DateTime? LogoutDateTime { get; set; }
+        public DateTime? WebSessionLogoutDateTime { get; set; }
     }
 }

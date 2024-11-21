@@ -168,7 +168,7 @@ namespace EventManager.API.Controllers
             }
 
             var currentUserId = User.X_CurrentUserId();
-            @event.CreatedByUserId = currentUserId.Value;
+            @event.EventCreatedByUserId = currentUserId.Value;
 
             var eventId = await _eventService.CreateEventAsync(@event, currentUserId);
 

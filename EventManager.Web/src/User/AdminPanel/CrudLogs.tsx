@@ -114,7 +114,7 @@ export function CrudLogs() {
                 <div className="accordion-header">
                   <button
                     className={`accordion-button text-white bg-${accordionBackColor.get(
-                      x.actionType
+                      x.crudLogActionType
                     )}`}
                     type="button"
                     data-bs-toggle="collapse"
@@ -123,9 +123,9 @@ export function CrudLogs() {
                     aria-controls={`#collapse${x.crudLogId}`}
                   >
                     <div className="row w-100">
-                      <div className="col-md-8 col-lg-9">{x.tableAffected}</div>
+                      <div className="col-md-8 col-lg-9">{x.crudLogTable}</div>
                       <div className="col-md-4 col-lg-3">
-                        {formatDateTime(x.actionDateTime)}
+                        {formatDateTime(x.crudLogCreatedOnDateTime)}
                       </div>
                     </div>
                   </button>
@@ -140,7 +140,7 @@ export function CrudLogs() {
                       Извършил действието:
                       <Link
                         className="ms-2"
-                        to={CustomRoutes.usersView(x.createdByUserId!)}
+                        to={CustomRoutes.usersView(x.crudLogCreatedByUserId!)}
                       >
                         {x.username}
                       </Link>
@@ -150,17 +150,17 @@ export function CrudLogs() {
                       <div className="col-lg-6">
                         <pre>
                           {JSON.stringify(
-                            JSON.parse(x.pocoBeforeAction),
+                            JSON.parse(x.crudLogPocoBeforeAction),
                             null,
                             2
                           )}
                         </pre>
                       </div>
                       <div className="col-lg-5">
-                        {x.pocoAfterAction && (
+                        {x.crudLogPocoAfterAction && (
                           <pre>
                             {JSON.stringify(
-                              JSON.parse(x.pocoAfterAction),
+                              JSON.parse(x.crudLogPocoAfterAction),
                               null,
                               2
                             )}
