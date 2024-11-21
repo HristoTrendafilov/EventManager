@@ -5,7 +5,6 @@ using EventManager.API.Dto.User;
 using LinqToDB;
 using System.Linq.Expressions;
 using EventManager.API.Services.FileStorage;
-using EventManager.API.Dto.Event.Image;
 
 namespace EventManager.API.Services.Event
 {
@@ -13,13 +12,11 @@ namespace EventManager.API.Services.Event
     {
         private readonly PostgresConnection _db;
         private readonly IFileService _fileStorageService;
-        private readonly IConfiguration _config;
 
-        public EventService(PostgresConnection db, IFileService fileStorageService, IConfiguration config)
+        public EventService(PostgresConnection db, IFileService fileStorageService)
         {
             _db = db;
             _fileStorageService = fileStorageService;
-            _config = config;
         }
 
         public Task<VEventPoco> GetEventViewAsync(Expression<Func<VEventPoco, bool>> predicate)
@@ -65,11 +62,12 @@ namespace EventManager.API.Services.Event
         {
             var fileId = await _fileStorageService.CreateFileAsync(file, currentUserId);
 
-            var image = new EventImageNew
+            var image = new EventImagePoco
             {
                 EventId = eventId,
-                EventImageIsMain = true,
                 FileId = fileId,
+                EventImageIsMain = true,
+                EventImageCreatedOnDateTime = DateTime.Now,
             };
 
             await _db.EventImages.X_CreateAsync(image, currentUserId);
@@ -85,13 +83,8 @@ namespace EventManager.API.Services.Event
 
             await _db.WithTransactionAsync(async () =>
             {
-                if (File.Exists(mainImage.FileStoragePath))
-                {
-                    File.Delete(mainImage.FileStoragePath);
-                }
-
                 await _db.EventImages.X_DeleteAsync(x => x.EventImageId == mainImage.EventImageId, currentUserId);
-                await _db.Files.X_DeleteAsync(x => x.FileId == mainImage.FileId, currentUserId);
+                await _fileStorageService.DeleteFileAsync(mainImage.FileId, currentUserId);
             });
         }
 

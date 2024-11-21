@@ -1,4 +1,5 @@
 ﻿using EventManager.DAL;
+using LinqToDB;
 
 namespace EventManager.API.Services.FileStorage
 {
@@ -34,6 +35,22 @@ namespace EventManager.API.Services.FileStorage
             };
 
             return await _db.Files.X_CreateAsync(filePoco, currentUserId);
+        }
+
+        public async Task DeleteFileAsync(long fileId, long? currentUserId)
+        {
+            var file = await _db.Files.FirstOrDefaultAsync(x => x.FileId == fileId);
+            if (file == null)
+            {
+                return;
+            }
+
+            if (File.Exists(file.FileStoragePath))
+            {
+                File.Delete(file.FileStoragePath);
+            }
+
+            await _db.Files.X_DeleteAsync(x => x.FileId == fileId, currentUserId);
         }
     }
 }
