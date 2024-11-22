@@ -1,60 +1,99 @@
+import {
+  faFacebook,
+  faLinkedin,
+  faTwitter,
+} from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
+
+import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
+
 export function Footer() {
   return (
-    <footer className="bg-dark text-white py-4" style={{ marginTop: 'auto' }}>
+    <footer className="bg-dark text-white py-4 mt-auto">
       <div className="container">
         <div className="row">
           <div className="col-md-4">
-            <h5>About Us</h5>
+            <h5>За нас</h5>
             <p>
-              We are a team of passionate developers creating amazing web
-              applications.
+              Ние сме екип, който се е съсредоточил върху това да направи
+              обществото ни по-сплотено и работи усилено върху подобряване на
+              средата ни за живот.
             </p>
           </div>
           <div className="col-md-4">
-            <h5>Quick Links</h5>
+            <h5>Бързи линкове</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="/about" className="text-white">
-                  About
-                </a>
+                <Link to="/about-us" className="text-white">
+                  За нас
+                </Link>
               </li>
               <li>
-                <a href="/services" className="text-white">
-                  Services
-                </a>
-              </li>
-              <li>
-                <a href="/contact" className="text-white">
-                  Contact
-                </a>
+                <Link
+                  to={CustomRoutes.eventsSearchBase()}
+                  className="text-white"
+                >
+                  Събития
+                </Link>
               </li>
             </ul>
           </div>
           <div className="col-md-4">
-            <h5>Follow Us</h5>
+            <h5>Последвайте ни</h5>
             <ul className="list-unstyled">
-              <li>
-                <a href="https://facebook.com" className="text-white">
+              <li className="mb-1">
+                <Link
+                  to="https://facebook.com"
+                  target="_blank"
+                  className="text-white"
+                >
+                  <FontAwesomeIcon
+                    icon={faFacebook}
+                    color="lightBlue"
+                    className="me-2"
+                    size="lg"
+                  />
                   Facebook
-                </a>
+                </Link>
               </li>
-              <li>
-                <a href="https://twitter.com" className="text-white">
+              <li className="mb-1">
+                <Link
+                  to="https://twitter.com"
+                  target="_blank"
+                  className="text-white"
+                >
+                  <FontAwesomeIcon
+                    icon={faTwitter}
+                    color="lightBlue"
+                    className="me-2"
+                    size="lg"
+                  />
                   Twitter
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="https://linkedin.com" className="text-white">
-                  LinkedIn
-                </a>
+                <Link
+                  to="https://linkedin.com"
+                  target="_blank"
+                  className="text-white"
+                >
+                  <FontAwesomeIcon
+                    icon={faLinkedin}
+                    color="lightBlue"
+                    className="me-2"
+                    size="lg"
+                  />
+                  Linkedin
+                </Link>
               </li>
             </ul>
           </div>
         </div>
         <div className="text-center mt-4">
           <p>
-            &copy; {new Date().getFullYear()} Your Company Name. All Rights
-            Reserved.
+            &copy; {new Date().getFullYear()} Aspire Technologies. Всички права
+            са запазени.
           </p>
         </div>
       </div>
