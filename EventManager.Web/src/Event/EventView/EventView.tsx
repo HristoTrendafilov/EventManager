@@ -14,6 +14,7 @@ import {
 } from '~Infrastructure/ApiRequests/events-requests';
 import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
 import type { EventView, UserEventView } from '~Infrastructure/api-types';
+import { ConfirmModal } from '~Infrastructure/components/ConfirmModal/ConfirmModal';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { ImageGalleryModal } from '~Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
 import { userSelector } from '~Infrastructure/redux/user-slice';
@@ -36,9 +37,19 @@ export function EventViewComponent() {
   const [subscribers, setSubscribers] = useState<UserEventView[]>([]);
   const [showGallery, setShowGallery] = useState<boolean>(false);
 
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
+
   const user = useSelector(userSelector);
 
   const { eventId } = useParams();
+
+  const showConfirmModal = useCallback(() => {
+    setConfirmModal(true);
+  }, []);
+
+  const closeConfirmModal = useCallback(() => {
+    setConfirmModal(false);
+  }, []);
 
   const loadSubscribers = useCallback(async () => {
     const subscribersResponse = await getEventSubscribers(Number(eventId));
@@ -65,6 +76,7 @@ export function EventViewComponent() {
     const response = await unsubscribeUserFromEvent(Number(eventId));
     if (!response.success) {
       setSubscriptionError(response.errorMessage);
+      closeConfirmModal();
       return;
     }
 
@@ -75,7 +87,8 @@ export function EventViewComponent() {
         (subscriber) => subscriber.userEventId !== response.data.primaryKey
       )
     );
-  }, [eventId]);
+    closeConfirmModal();
+  }, [closeConfirmModal, eventId]);
 
   const loadEvent = useCallback(async () => {
     const eventViewResponse = await getEventView(Number(eventId));
@@ -198,7 +211,7 @@ export function EventViewComponent() {
                           <button
                             type="button"
                             className="btn btn-warning"
-                            onClick={unsubscribeUser}
+                            onClick={showConfirmModal}
                           >
                             Отпиши ме
                           </button>
@@ -242,6 +255,14 @@ export function EventViewComponent() {
             onCloseButtonClick={handleCloseGallery}
           />
         </div>
+      )}
+
+      {confirmModal && (
+        <ConfirmModal
+          message="Сигурни ли сте, че искате да се отпишете от събитието?"
+          onCancel={closeConfirmModal}
+          onConfirm={unsubscribeUser}
+        />
       )}
     </div>
   );
