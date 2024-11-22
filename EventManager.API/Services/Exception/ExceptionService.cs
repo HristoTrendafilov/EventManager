@@ -10,7 +10,7 @@ namespace EventManager.API.Services.Exception
     {
         private readonly PostgresConnection _db;
 
-        public ExceptionService(PostgresConnection db, Mapper mapper)
+        public ExceptionService(PostgresConnection db)
         {
             _db = db;
         }

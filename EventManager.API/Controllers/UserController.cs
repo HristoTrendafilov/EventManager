@@ -31,7 +31,6 @@ namespace EventManager.API.Controllers
         private readonly ISharedService _sharedService;
         private readonly IConfiguration _configuration;
         private readonly IRegionService _regionService;
-        private readonly Mapper _mapper;
 
         public UserController(
             IUserService userService,
@@ -39,8 +38,7 @@ namespace EventManager.API.Controllers
             IWebSessionService webSessionService,
             ISharedService sharedService,
             IConfiguration configuration,
-            IRegionService regionService,
-            Mapper mapper)
+            IRegionService regionService)
         {
             _userService = userService;
             _emailService = emailService;
@@ -48,7 +46,6 @@ namespace EventManager.API.Controllers
             _sharedService = sharedService;
             _configuration = configuration;
             _regionService = regionService;
-            _mapper = mapper;
         }
 
         [HttpGet("{userId}/view")]
@@ -60,11 +57,11 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            var userView = _mapper.CreateObject<UserView>(userViewPoco);
+            var userView = Mapper.CreateObject<UserView>(userViewPoco);
             userView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
 
             var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
-            userView.RegionsHelping = _mapper.CreateList<RegionView>(userRegionsHelping);
+            userView.RegionsHelping = Mapper.CreateList<RegionView>(userRegionsHelping);
 
             return Ok(userView);
         }
@@ -102,7 +99,7 @@ namespace EventManager.API.Controllers
                 return Unauthorized();
             }
 
-            var userToReturn = _mapper.CreateObject<UserForUpdate>(userView);
+            var userToReturn = Mapper.CreateObject<UserForUpdate>(userView);
 
             var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
             userToReturn.UserRegionsHelpingIds = userRegionsHelping.Select(x => x.RegionId).ToList();
@@ -352,7 +349,7 @@ namespace EventManager.API.Controllers
         public async Task<ActionResult> GetAllRoles()
         {
             var roles = await _userService.GetAllRolesAsync(x => x.RoleId != (int)UserRole.Admin);
-            var rolesView = _mapper.CreateList<RoleView>(roles);
+            var rolesView = Mapper.CreateList<RoleView>(roles);
 
             return Ok(rolesView);
         }
@@ -370,12 +367,12 @@ namespace EventManager.API.Controllers
             }
 
             var usersViewPoco = await _userService.GetAllUsersViewAsync(predicate);
-            var usersView = _mapper.CreateList<UserView>(usersViewPoco);
+            var usersView = Mapper.CreateList<UserView>(usersViewPoco);
 
             foreach (var user in usersView)
             {
                 var roles = await _userService.GetAllUserRolesAsync(user.UserId);
-                var rolesView = _mapper.CreateList<RoleView>(roles);
+                var rolesView = Mapper.CreateList<RoleView>(roles);
 
                 user.UserRoles = rolesView;
             }

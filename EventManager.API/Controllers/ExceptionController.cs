@@ -14,19 +14,17 @@ namespace EventManager.API.Controllers
     public class ExceptionController : ControllerBase
     {
         private readonly IExceptionService _exceptionService;
-        private readonly Mapper _mapper;
 
-        public ExceptionController(IExceptionService exceptionService, Mapper mapper)
+        public ExceptionController(IExceptionService exceptionService)
         {
             _exceptionService = exceptionService;
-            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult> GetAllExceptions()
         {
             var exceptions = await _exceptionService.GetAllExceptionsAsync(x => true);
-            var exceptionsToReturn = _mapper.CreateList<ExceptionView>(exceptions); 
+            var exceptionsToReturn = Mapper.CreateList<ExceptionView>(exceptions); 
 
             return Ok(exceptionsToReturn);
         }
@@ -40,7 +38,7 @@ namespace EventManager.API.Controllers
             }
 
             var exception = await _exceptionService.GetExceptionAsync(x => x.ExceptionId == exceptionId);
-            var exceptionToReturn = _mapper.CreateObject<ExceptionView>(exception);
+            var exceptionToReturn = Mapper.CreateObject<ExceptionView>(exception);
 
             return Ok(exceptionToReturn);
         }

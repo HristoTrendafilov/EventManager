@@ -13,9 +13,8 @@ namespace EventManager.DAL
             (this IQueryable<T> table, object model, long? currentUserId) where T : class, new()
         {
             var linqToDbTable = table as ITable<T>;
-
-            var mapper = new Mapper();
-            var poco = mapper.CreateObject<T>(model);
+             
+            var poco = Mapper.CreateObject<T>(model);
             var primaryKey = await linqToDbTable.DataContext.InsertWithInt64IdentityAsync(poco);
 
             var primaryKeyProperty = typeof(T).GetProperties()
@@ -42,8 +41,6 @@ namespace EventManager.DAL
         {
             var linqToDbTable = table as ITable<T>;
 
-            var mapper = new Mapper();
-
             var primaryKeyPropertyName = GetPrimaryKeyPropertyName<T>();
             var predicate = BuildPredicate<T>(primaryKeyPropertyName, primaryKey);
             var poco = await linqToDbTable.FirstOrDefaultAsync(predicate);
@@ -58,7 +55,7 @@ namespace EventManager.DAL
                 CrudLogCreatedOnDateTime = DateTime.Now,
             };
 
-            mapper.ObjectToObject(model, poco);
+            Mapper.ObjectToObject(model, poco);
             crudLog.CrudLogPocoAfterAction = JsonConvert.SerializeObject(poco, Formatting.Indented);
 
             await linqToDbTable.DataContext.UpdateAsync(poco);

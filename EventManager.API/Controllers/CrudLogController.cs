@@ -17,12 +17,10 @@ namespace EventManager.API.Controllers
     public class CrudLogController : ControllerBase
     {
         private readonly ICrudLogService _crudLogService;
-        private readonly Mapper _mapper;
 
-        public CrudLogController(ICrudLogService crudLogService, Mapper mapper)
+        public CrudLogController(ICrudLogService crudLogService)
         {
             _crudLogService = crudLogService;
-            _mapper = mapper;
         }
 
         [HttpPost]
@@ -37,7 +35,7 @@ namespace EventManager.API.Controllers
             }
 
             var crudLogs = await _crudLogService.GetAllCrudLogsViewAsync(predicate);
-            var crudLogsToReturn = _mapper.CreateList<CrudLogView>(crudLogs);
+            var crudLogsToReturn = Mapper.CreateList<CrudLogView>(crudLogs);
 
             return Ok(crudLogsToReturn);
         }
@@ -51,7 +49,7 @@ namespace EventManager.API.Controllers
             }
 
             var crudLog = await _crudLogService.GetCrudLogAsync(x => x.CrudLogId == crudLogId);
-            var crudLogToReturn = _mapper.CreateObject<CrudLogView>(crudLog);
+            var crudLogToReturn = Mapper.CreateObject<CrudLogView>(crudLog);
 
             return Ok(crudLogToReturn);
         }

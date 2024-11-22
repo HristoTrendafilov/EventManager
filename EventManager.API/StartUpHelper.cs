@@ -94,7 +94,6 @@ namespace EventManager.API
         {
             var services = builder.Services;
 
-            services.AddSingleton<Mapper>();
             services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
             services.AddTransient<IEmailService, EmailService>();
 

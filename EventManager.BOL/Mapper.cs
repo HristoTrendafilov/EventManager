@@ -2,7 +2,7 @@
 {
     public class Mapper
     {
-        public void ObjectToObject(object source, object destination)
+        public static void ObjectToObject(object source, object destination)
         {
             var sourceType = source.GetType();
             var destinationType = destination.GetType();
@@ -23,7 +23,7 @@
             }
         }
 
-        public TDestination CreateObject<TDestination>(object source) where TDestination : class
+        public static TDestination CreateObject<TDestination>(object source) where TDestination : class
         {
             if (source == null)
             {
@@ -50,7 +50,7 @@
             return destinationObject;
         }
 
-        public List<TDestination> CreateList<TDestination>(IEnumerable<object> sourceList) where TDestination : class
+        public static List<TDestination> CreateList<TDestination>(IEnumerable<object> sourceList) where TDestination : class
         {
             var destinationList = new List<TDestination>();
 

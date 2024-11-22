@@ -14,19 +14,17 @@ namespace EventManager.API.Controllers
     public class RegionController : ControllerBase
     {
         private readonly IRegionService _regionService;
-        private readonly Mapper _mapper;
 
-        public RegionController(IRegionService regionService, Mapper mapper)
+        public RegionController(IRegionService regionService)
         {
             _regionService = regionService;
-            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<ActionResult> GetAllRegions()
         {
             var regions = await _regionService.GetAllRegionsAsync(x => true);
-            var regionToReturn = _mapper.CreateList<RegionView>(regions);
+            var regionToReturn = Mapper.CreateList<RegionView>(regions);
 
             return Ok(regionToReturn);
         }
@@ -40,7 +38,7 @@ namespace EventManager.API.Controllers
             }
 
             var region = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
-            var regionToReturn = _mapper.CreateObject<RegionView>(region);
+            var regionToReturn = Mapper.CreateObject<RegionView>(region);
 
             return Ok(regionToReturn);
         }
@@ -58,7 +56,7 @@ namespace EventManager.API.Controllers
             var regionId = await _regionService.CreateRegionAsync(region, User.X_CurrentUserId());
 
             var regionPoco = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
-            var regionToReturn = _mapper.CreateObject<RegionView>(regionPoco);
+            var regionToReturn = Mapper.CreateObject<RegionView>(regionPoco);
 
             return Ok(regionToReturn);
         }
@@ -76,7 +74,7 @@ namespace EventManager.API.Controllers
              await _regionService.UpdateRegionAsync(regionId, region, User.X_CurrentUserId());
 
             var regionPoco = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
-            var regionToReturn = _mapper.CreateObject<RegionView>(regionPoco);
+            var regionToReturn = Mapper.CreateObject<RegionView>(regionPoco);
 
             return Ok(regionToReturn);
         }
@@ -92,7 +90,7 @@ namespace EventManager.API.Controllers
             }
  
             var regionPoco = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
-            var regionToReturn = _mapper.CreateObject<RegionForUpdate>(regionPoco);
+            var regionToReturn = Mapper.CreateObject<RegionForUpdate>(regionPoco);
 
             return Ok(regionToReturn);
         }

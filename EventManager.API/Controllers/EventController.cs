@@ -22,13 +22,11 @@ namespace EventManager.API.Controllers
 
         private readonly IEventService _eventService;
         private readonly ISharedService _sharedService;
-        private readonly Mapper _mapper;
 
-        public EventController(IEventService eventService, ISharedService sharedService, Mapper mapper)
+        public EventController(IEventService eventService, ISharedService sharedService)
         {
             _eventService = eventService;
             _sharedService = sharedService;
-            _mapper = mapper;
         }
 
         [HttpGet("{eventId}/view")]
@@ -40,7 +38,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            var eventView = _mapper.CreateObject<EventView>(eventViewPoco);
+            var eventView = Mapper.CreateObject<EventView>(eventViewPoco);
             eventView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, eventView.EventCreatedByUserId);
 
             var currentUserId = User.X_CurrentUserId();
@@ -56,7 +54,7 @@ namespace EventManager.API.Controllers
         public async Task<ActionResult> GetEventSubscribers(long eventId)
         {
             var subscribers = await _eventService.GetAllEventSubscribersViewAsync(eventId);
-            var subscribersToReturn = _mapper.CreateList<UserEventView>(subscribers);
+            var subscribersToReturn = Mapper.CreateList<UserEventView>(subscribers);
 
             return Ok(subscribersToReturn);
         }
@@ -83,7 +81,7 @@ namespace EventManager.API.Controllers
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             }));
 
-            var eventsToReturn = _mapper.CreateList<EventView>(events);
+            var eventsToReturn = Mapper.CreateList<EventView>(events);
 
             return Ok(eventsToReturn);
         }
@@ -104,7 +102,7 @@ namespace EventManager.API.Controllers
                 return Unauthorized();
             }
 
-            var eventToReturn = _mapper.CreateObject<EventForUpdate>(eventView);
+            var eventToReturn = Mapper.CreateObject<EventForUpdate>(eventView);
 
             return Ok(eventToReturn);
         }
@@ -117,6 +115,11 @@ namespace EventManager.API.Controllers
             if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName && x.EventId != eventId))
             {
                 return BadRequest($"Вече съществува събитие с име: {@event.EventName}");
+            }
+
+            if (@event.EventEndDateTime.HasValue && @event.EventEndDateTime.Value < @event.EventStartDateTime)
+            {
+                return BadRequest($"Датата за край на събитието не може да е по-малка от тази за начало");
             }
 
             var eventPoco = await _eventService.GetEventPocoAsync(x => x.EventId == eventId);
@@ -155,6 +158,11 @@ namespace EventManager.API.Controllers
             if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName))
             {
                 return BadRequest($"Вече съществува събитие с име: {@event.EventName}");
+            }
+
+            if (@event.EventEndDateTime.HasValue && @event.EventEndDateTime.Value < @event.EventStartDateTime)
+            {
+                return BadRequest($"Датата за край на събитието не може да е по-малка от тази за начало");
             }
 
             var currentUserId = User.X_CurrentUserId();
@@ -203,9 +211,15 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече е записан потребител с ID: {currentUserId.Value}");
             }
 
+            var eventView = await _eventService.GetEventViewAsync(x => x.EventId ==  eventId);
+            if (eventView.EventHasEnded)
+            {
+                return BadRequest("Събитието вече е приключило. Не може да се запишете");
+            }
+
             var userEventId = await _eventService.SubscribeUser(eventId, currentUserId);
             var userEvent = await _eventService.GetEventSubscriberViewAsync(x => x.UserEventId == userEventId);
-            var userEventToReturn = _mapper.CreateObject<UserEventView>(userEvent);
+            var userEventToReturn = Mapper.CreateObject<UserEventView>(userEvent);
 
             return Ok(userEventToReturn);
         }
