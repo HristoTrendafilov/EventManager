@@ -290,6 +290,9 @@ namespace EventManager.DAL
 		[Nullable]
 		[Column(Name = "web_session_logout_date_time")]
 		public virtual DateTime? WebSessionLogoutDateTime { get; set; }
+
+		[Column(Name = "web_session_revoked")]
+		public virtual bool WebSessionRevoked { get; set; }
 	}
 
 	[Table(Name = "v_regions")]
@@ -303,6 +306,33 @@ namespace EventManager.DAL
 
 		[Column(Name = "region_created_on_date_time")]
 		public virtual DateTime RegionCreatedOnDateTime { get; set; }
+	}
+
+	[Table(Name = "v_web_sessions")]
+	public class VWebSessionPoco
+	{
+		[Column(Name = "web_sessions_id")]
+		public virtual long WebSessionId { get; set; }
+
+		[Column(Name = "web_session_created_on_date_time")]
+		public virtual DateTime WebSessionCreatedOnDateTime { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "web_session_expires_on_date_time")]
+		public virtual DateTime WebSessionExpireOnDateTime { get; set; }
+
+		[Nullable]
+		[Column(Name = "web_session_user_ip_address")]
+		public virtual string WebSessionUserIpAddress { get; set; }
+
+		[Nullable]
+		[Column(Name = "web_session_logout_date_time")]
+		public virtual DateTime? WebSessionLogoutDateTime { get; set; }
+
+		[Column(Name = "web_session_revoked")]
+		public virtual bool WebSessionRevoked { get; set; }
 	}
 
 	[Table(Name = "v_events")]
@@ -365,30 +395,6 @@ namespace EventManager.DAL
 		[Nullable]
 		[Column(Name = "user_id")]
 		public virtual long? UserId { get; set; }
-	}
-
-	[Table(Name = "v_web_sessions")]
-	public class VWebSessionPoco
-	{
-		[Column(Name = "web_sessions_id")]
-		public virtual long WebSessionId { get; set; }
-
-		[Column(Name = "web_session_created_on_date_time")]
-		public virtual DateTime WebSessionCreatedOnDateTime { get; set; }
-
-		[Column(Name = "user_id")]
-		public virtual long UserId { get; set; }
-
-		[Column(Name = "web_session_expires_on_date_time")]
-		public virtual DateTime WebSessionExpireOnDateTime { get; set; }
-
-		[Nullable]
-		[Column(Name = "web_session_user_ip_address")]
-		public virtual string WebSessionUserIpAddress { get; set; }
-
-		[Nullable]
-		[Column(Name = "web_session_logout_date_time")]
-		public virtual DateTime? WebSessionLogoutDateTime { get; set; }
 	}
 
 	[Table(Name = "v_crud_logs")]

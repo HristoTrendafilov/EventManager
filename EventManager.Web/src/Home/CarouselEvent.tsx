@@ -63,7 +63,7 @@ export function CarouselEvent(props: CarouselEventProps) {
           </div>
           <div className="col-md-2">
             <Link
-              to={CustomRoutes.eventsView(event.eventId!)}
+              to={CustomRoutes.eventsView(event.eventId)}
               className="btn z-4 mb-4 btn-primary"
             >
               Към събитието

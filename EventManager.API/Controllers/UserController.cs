@@ -285,11 +285,14 @@ namespace EventManager.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
         [HttpPost("logout")]
         public async Task<ActionResult> LogoutUser()
         {
             var currentUserId = User.X_CurrentUserId();
+            if (!currentUserId.HasValue)
+            {
+                return NoContent();
+            }
 
             if (!await _userService.UserExistsAsync(x => x.UserId == currentUserId.Value))
             {

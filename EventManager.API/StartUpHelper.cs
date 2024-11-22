@@ -221,6 +221,27 @@ namespace EventManager.API
 
                     options.Events = new JwtBearerEvents
                     {
+                        OnTokenValidated = async context =>
+                        {
+                            var claimsPrincipal = context.Principal;
+                            if (claimsPrincipal != null)
+                            {
+                                var webSessionId = claimsPrincipal.Claims
+                                    .FirstOrDefault(c => c.Type == CustomClaimTypes.WebSessionId)?.Value;
+
+                                if (!string.IsNullOrWhiteSpace(webSessionId))
+                                {
+                                    var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
+                                    var webSession = await webSessionService.GetWebSessionAsync(x => x.WebSessionId == long.Parse(webSessionId));
+
+                                    if (webSession.WebSessionRevoked)
+                                    {
+                                        context.Response.StatusCode = StatusCodes.Status204NoContent;
+                                        context.Response.Headers.Append("TokenExpired", "true");
+                                    }
+                                }
+                            }
+                        },
                         OnAuthenticationFailed = async context =>
                         {
                             if (context.Exception is SecurityTokenExpiredException)
@@ -232,7 +253,7 @@ namespace EventManager.API
                                     var handler = new JwtSecurityTokenHandler();
                                     var tokenS = handler.ReadToken(headerValue.Parameter) as JwtSecurityToken;
 
-                                    var webSessionId =  tokenS.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.WebSessionId)?.Value;
+                                    var webSessionId = tokenS.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.WebSessionId)?.Value;
                                     var userId = tokenS.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.UserId)?.Value;
 
                                     if (!string.IsNullOrWhiteSpace(webSessionId) && !string.IsNullOrWhiteSpace(userId))
