@@ -214,6 +214,7 @@ namespace EventManager.API.Controllers
             {
                 WebSessionExpireOnDateTime = expiresOn,
                 UserId = user.UserId,
+                WebSessionUserIpAddress = HttpContext.Request.Headers["X-Forwarded-For"].ToString()
             };
 
             var webSessionId = await _webSessionService.CreateWebSession(webSession);
