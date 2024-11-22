@@ -29,6 +29,8 @@ using EventManager.API.Middlewares;
 using EventManager.API.Helpers;
 using EventManager.API.Dto;
 using EventManager.API.Services.FileStorage;
+using Newtonsoft.Json.Linq;
+using EventManager.API.Helpers.Extensions;
 
 namespace EventManager.API
 {
@@ -226,18 +228,21 @@ namespace EventManager.API
                             var claimsPrincipal = context.Principal;
                             if (claimsPrincipal != null)
                             {
-                                var webSessionId = claimsPrincipal.Claims
-                                    .FirstOrDefault(c => c.Type == CustomClaimTypes.WebSessionId)?.Value;
+                                var webSessionId = claimsPrincipal.X_WebSessionId();
+                                var userId = claimsPrincipal.X_CurrentUserId();
 
-                                if (!string.IsNullOrWhiteSpace(webSessionId))
+                                if (webSessionId.HasValue)
                                 {
                                     var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
-                                    var webSession = await webSessionService.GetWebSessionAsync(x => x.WebSessionId == long.Parse(webSessionId));
+                                    var webSession = await webSessionService.GetWebSessionAsync(x => x.WebSessionId == webSessionId.Value);
 
                                     if (webSession.WebSessionRevoked)
                                     {
+                                        await webSessionService.CloseWebSessionAsync(webSessionId.Value, userId);
+
                                         context.Response.StatusCode = StatusCodes.Status204NoContent;
                                         context.Response.Headers.Append("TokenExpired", "true");
+
                                     }
                                 }
                             }
