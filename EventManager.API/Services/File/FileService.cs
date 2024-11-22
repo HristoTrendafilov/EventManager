@@ -1,4 +1,5 @@
-﻿using EventManager.DAL;
+﻿using EventManager.API.Dto.File;
+using EventManager.DAL;
 using LinqToDB;
 
 namespace EventManager.API.Services.FileStorage
@@ -26,15 +27,14 @@ namespace EventManager.API.Services.FileStorage
                 await file.CopyToAsync(fileStream);
             }
 
-            var filePoco = new FilePoco
+            var fileNew = new FileNew
             {
                 FileName = file.FileName,
-                FileExtension = Path.GetExtension(file.FileName),
                 FileStoragePath = filePath,
-                FileCreatedOnDateTime = DateTime.Now
+                FileExtension = Path.GetExtension(file.FileName),
             };
 
-            return await _db.Files.X_CreateAsync(filePoco, currentUserId);
+            return await _db.Files.X_CreateAsync(fileNew, currentUserId);
         }
 
         public async Task DeleteFileAsync(long fileId, long? currentUserId)
