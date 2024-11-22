@@ -162,15 +162,12 @@ export function EventViewComponent() {
 
                 <div className="card-body">
                   <div>Начало: {formatDateTime(event.eventStartDateTime)}</div>
-
                   <div>
                     Край:{' '}
                     {event.eventEndDateTime &&
                       formatDateTime(event.eventEndDateTime)}
                   </div>
-
                   <div>Регион: {event.regionName}</div>
-
                   <div>
                     Създаден от:{' '}
                     <Link
@@ -209,6 +206,7 @@ export function EventViewComponent() {
                             type="button"
                             className="btn btn-warning"
                             onClick={showConfirmModal}
+                            disabled={event.eventHasEnded}
                           >
                             Отпиши ме
                           </button>

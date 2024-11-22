@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import toast from 'react-hot-toast';
 
 import { saveUserRoles } from '~Infrastructure/ApiRequests/users-requests';
 import {
@@ -11,6 +10,7 @@ import {
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+import { toastService } from '~Infrastructure/components/ToastService';
 
 interface UserRoleProps {
   user: UserView;
@@ -35,7 +35,7 @@ export function UserRole(props: UserRoleProps) {
         return;
       }
 
-      toast.success(
+      toastService.success(
         `Успешно променихте правата на потребител: ${user.username}`
       );
     },

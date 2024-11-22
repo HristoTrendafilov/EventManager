@@ -7,12 +7,13 @@ import ReactDOM from 'react-dom/client';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { Footer } from '~Footer/Footer';
 import { RenderRouteTable } from '~Infrastructure/Routes/RouteTable';
 import { ErrorBoundary } from '~Infrastructure/components/ErrorBoundary/ErrorBoundary';
 import { NavigatorSetter } from '~Infrastructure/components/NavigationSetter';
-import { ToastWrapper } from '~Infrastructure/components/ToastMessages/ToastWrapper';
 import { store } from '~Infrastructure/redux/store';
 import { Navbar } from '~Navbar/Navbar';
 
@@ -27,7 +28,7 @@ root.render(
       <BrowserRouter>
         <NavigatorSetter />
         <ErrorBoundary>
-          <ToastWrapper />
+          <ToastContainer />
           <Navbar />
           <div id="main">
             <RenderRouteTable />

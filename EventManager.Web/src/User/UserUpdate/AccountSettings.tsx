@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { z } from 'zod';
 
@@ -8,6 +7,7 @@ import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessa
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+import { toastService } from '~Infrastructure/components/ToastService';
 import { useAppDispatch } from '~Infrastructure/redux/store';
 import { updateUsername, userSelector } from '~Infrastructure/redux/user-slice';
 
@@ -49,7 +49,7 @@ export function UserAccountSettings(props: UserAccountSettingsProps) {
       }
 
       onUserUpdate();
-      toast.success('Успешно променихте потребителското си име.');
+      toastService.success('Успешно променихте потребителското си име.');
       toggleIsLocked();
 
       if (user.userId === userId) {

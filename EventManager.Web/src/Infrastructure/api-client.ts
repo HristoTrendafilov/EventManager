@@ -1,5 +1,4 @@
-import toast from 'react-hot-toast';
-
+import { toastService } from './components/ToastService';
 import { store } from './redux/store';
 import { removeUser } from './redux/user-slice';
 import { reportError } from './utils';
@@ -76,7 +75,7 @@ export async function callApi<T>(
   }
 
   if (status === 401 || status === 403) {
-    toast.error('Нямате право на достъп до този ресурс.');
+    toastService.error('Нямате право на достъп до този ресурс.');
 
     if (navigate) {
       navigate('/');
@@ -96,7 +95,9 @@ export async function callApi<T>(
     store.dispatch(removeUser());
 
     if (endPoint !== '/users/logout') {
-      toast.error('Сесията ви изтече. Моля, влезте отново в профила си.');
+      toastService.error(
+        'Сесията ви изтече. Моля, влезте отново в профила си.'
+      );
     }
 
     if (navigate) {

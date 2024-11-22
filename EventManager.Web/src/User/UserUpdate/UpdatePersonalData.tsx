@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
 
 import { updateUserPersonalData } from '~Infrastructure/ApiRequests/users-requests';
 import { ImageCropModal } from '~Infrastructure/ImageCropping/ImageCropper';
@@ -14,6 +13,7 @@ import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomFor
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+import { toastService } from '~Infrastructure/components/ToastService';
 import { convertToFileList, objectToFormData } from '~Infrastructure/utils';
 import { RegionMultiSelect } from '~Shared/SmartSelects/Region/RegionMultiSelect';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
@@ -60,7 +60,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
       }
 
       onUserUpdate();
-      toast.success('Успешно променени данни.');
+      toastService.success('Успешно променени данни.');
     },
     [onUserUpdate, userId]
   );

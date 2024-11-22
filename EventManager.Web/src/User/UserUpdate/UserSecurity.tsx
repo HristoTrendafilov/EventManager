@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import toast from 'react-hot-toast';
 
 import { updateUserPassword } from '~Infrastructure/ApiRequests/users-requests';
 import {
@@ -10,6 +9,7 @@ import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessa
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+import { toastService } from '~Infrastructure/components/ToastService';
 
 interface UserSecurityProps {
   userId: number;
@@ -32,7 +32,7 @@ export function UserSecurity(props: UserSecurityProps) {
         return;
       }
 
-      toast.success('Успешно променихте паролата си.');
+      toastService.success('Успешно променихте паролата си.');
       form.reset({
         currentPassword: '',
         newPassword: '',
