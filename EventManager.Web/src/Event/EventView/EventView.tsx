@@ -200,6 +200,7 @@ export function EventViewComponent() {
                             type="button"
                             className="btn btn-success"
                             onClick={subscribeUser}
+                            disabled={event.eventHasEnded}
                           >
                             Запиши се
                           </button>

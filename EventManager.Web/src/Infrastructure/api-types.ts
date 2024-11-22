@@ -101,6 +101,7 @@ export interface EventView {
   createdByUsername: string;
   eventCreatedOnDateTime: Date;
   hasMainImage: boolean;
+  eventHasEnded: boolean;
 }
 
 export interface UserEventView {

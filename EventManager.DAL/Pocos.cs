@@ -335,6 +335,29 @@ namespace EventManager.DAL
 		public virtual bool WebSessionRevoked { get; set; }
 	}
 
+	[Table(Name = "v_exceptions")]
+	public class VExceptionPoco
+	{
+		[Column(Name = "exception_id")]
+		public virtual long ExceptionId { get; set; }
+
+		[Column(Name = "exception")]
+		public virtual string Exception { get; set; }
+
+		[Column(Name = "exception_message")]
+		public virtual string ExceptionMessage { get; set; }
+
+		[Column(Name = "exception_created_on_date_time")]
+		public virtual DateTime ExceptionCreatedOnDateTime { get; set; }
+
+		[Column(Name = "exception_is_resolved")]
+		public virtual bool ExceptionIsResolved { get; set; }
+
+		[Nullable]
+		[Column(Name = "user_id")]
+		public virtual long? UserId { get; set; }
+	}
+
 	[Table(Name = "v_events")]
 	public class VEventPoco
 	{
@@ -372,29 +395,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "has_main_image")]
 		public virtual bool HasMainImage { get; set; }
-	}
 
-	[Table(Name = "v_exceptions")]
-	public class VExceptionPoco
-	{
-		[Column(Name = "exception_id")]
-		public virtual long ExceptionId { get; set; }
-
-		[Column(Name = "exception")]
-		public virtual string Exception { get; set; }
-
-		[Column(Name = "exception_message")]
-		public virtual string ExceptionMessage { get; set; }
-
-		[Column(Name = "exception_created_on_date_time")]
-		public virtual DateTime ExceptionCreatedOnDateTime { get; set; }
-
-		[Column(Name = "exception_is_resolved")]
-		public virtual bool ExceptionIsResolved { get; set; }
-
-		[Nullable]
-		[Column(Name = "user_id")]
-		public virtual long? UserId { get; set; }
+		[Column(Name = "event_has_ended")]
+		public virtual bool EventHasEnded { get; set; }
 	}
 
 	[Table(Name = "v_crud_logs")]
