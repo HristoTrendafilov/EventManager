@@ -60,13 +60,21 @@ export async function callApi<T>(
 
     return {
       success: false,
-      errorMessage: 'Network error. Please try again later.',
+      errorMessage: 'Мрежова грешка. Моля, опитайте по-късно.',
     } as ApiResponse<T>;
   }
 
   const { navigate } = state.navigation;
 
   const { status } = fetchResponse;
+  if (status === 502) {
+    return {
+      success: false,
+      errorMessage:
+        'Не може да се осъществи връзка към сървъра. Моля, опитайте по-късно.',
+    } as ApiResponse<T>;
+  }
+
   if (status === 401 || status === 403) {
     toast.error('Нямате право на достъп до този ресурс.');
 
@@ -121,7 +129,7 @@ export async function callApi<T>(
     reportError(err);
     return {
       success: false,
-      errorMessage: 'Error while reading data from the server.',
+      errorMessage: 'Грешка при четене на данни от сървъра.',
     } as ApiResponse<T>;
   }
 }
