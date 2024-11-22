@@ -210,9 +210,8 @@ namespace EventManager.API.Controllers
             var now = DateTime.Now;
             var expiresOn = now.AddHours(12);
 
-            var webSession = new WebSessionBaseForm
+            var webSession = new WebSessionNew
             {
-                WebSessionCreatedOnDateTime = now,
                 WebSessionExpireOnDateTime = expiresOn,
                 UserId = user.UserId,
             };
