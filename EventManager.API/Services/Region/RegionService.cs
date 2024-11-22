@@ -14,9 +14,14 @@ namespace EventManager.API.Services.Region
             _db = db;
         }
 
-        public Task<long> CreateRegionAsync(RegionBaseForm region, long? currentUserId)
+        public Task<long> CreateRegionAsync(RegionNew region, long? currentUserId)
         {
             return _db.Regions.X_CreateAsync(region, currentUserId);
+        }
+
+        public Task UpdateRegionAsync(long regionId, RegionUpdate region, long? currentUserId)
+        {
+            return _db.Regions.X_UpdateAsync(regionId, region, currentUserId);
         }
 
         public Task DeleteRegionAsync(long regionId, long? currentUserId)
@@ -37,11 +42,6 @@ namespace EventManager.API.Services.Region
         public Task<bool> RegionExistsAsync(Expression<Func<RegionPoco, bool>> predicate)
         {
             return _db.Regions.AnyAsync(predicate);
-        }
-
-        public Task UpdateRegionAsync(long regionId, RegionBaseForm region, long? currentUserId)
-        {
-            return _db.Regions.X_UpdateAsync(regionId, region, currentUserId);
         }
 
         public Task<List<RegionPoco>> GetUserRegionsHelping(long userId)

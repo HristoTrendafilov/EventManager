@@ -1,4 +1,10 @@
-import { type ChangeEvent, useCallback, useEffect, useState } from 'react';
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 import { getRegions } from '~Infrastructure/ApiRequests/regions-request';
 import type { RegionView } from '~Infrastructure/api-types';
@@ -17,7 +23,6 @@ const defaultValues: RegionsCatalogFilter = {
 
 export function RegionsCatalog() {
   const [regions, setRegions] = useState<RegionView[]>([]);
-  const [filteredRegions, setFilteredRegions] = useState<RegionView[]>([]);
   const [error, setError] = useState<string | undefined>();
   const [filter, setFilter] = useState<RegionsCatalogFilter>(defaultValues);
 
@@ -42,31 +47,20 @@ export function RegionsCatalog() {
     }
 
     setRegions(response.data);
-    setFilteredRegions(response.data);
   }, []);
 
   const handleFilterNameChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
       setFilter({ regionName: value });
-
-      if (value) {
-        const newFilteredRegions = regions.filter((x) =>
-          x.regionName.toLowerCase().startsWith(value.toLowerCase())
-        );
-        setFilteredRegions(newFilteredRegions);
-      } else {
-        setFilteredRegions(regions);
-      }
     },
-    [regions]
+    []
   );
 
   const handleOnCreated = useCallback(
     (region: RegionView) => {
       const newRegions = [region, ...regions];
       setRegions(newRegions);
-      setFilteredRegions(newRegions);
       setFilter(defaultValues);
       closeFormModal();
     },
@@ -80,7 +74,6 @@ export function RegionsCatalog() {
       );
 
       setRegions(newRegions);
-      setFilteredRegions(newRegions);
       closeFormModal();
     },
     [closeFormModal, regions]
@@ -90,6 +83,18 @@ export function RegionsCatalog() {
     void loadRegions();
   }, [loadRegions]);
 
+  const displayedRegions = useMemo(
+    () =>
+      regions.filter((x) =>
+        filter.regionName
+          ? x.regionName
+              .toLowerCase()
+              .startsWith(filter.regionName.toLowerCase())
+          : true
+      ),
+    [regions, filter.regionName]
+  );
+
   return (
     <div className="mw-700px m-50auto">
       <div className="container">
@@ -98,7 +103,7 @@ export function RegionsCatalog() {
             <div>Региони</div>
             <button
               type="button"
-              className="btn btn-success "
+              className="btn btn-success"
               onClick={() => showFormModal()}
             >
               Нов регион
@@ -114,8 +119,8 @@ export function RegionsCatalog() {
 
             <hr />
 
-            {filteredRegions.length > 0 &&
-              filteredRegions.map((x) => (
+            {displayedRegions.length > 0 ? (
+              displayedRegions.map((x) => (
                 <div key={x.regionId} className="card mb-2">
                   <div className="card-body p-2">
                     <div className="row align-items-center">
@@ -137,7 +142,10 @@ export function RegionsCatalog() {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p>No regions found</p>
+            )}
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import {
   createRegion,
-  getRegionView,
+  getRegionForUpdate,
   updateRegion,
 } from '~Infrastructure/ApiRequests/regions-request';
 import {
@@ -57,7 +57,7 @@ export function RegionModal(props: RegionModalProps) {
 
   const loadRegion = useCallback(
     async (paramRegionId: number) => {
-      const response = await getRegionView(paramRegionId);
+      const response = await getRegionForUpdate(paramRegionId);
       if (!response.success) {
         setError(response.errorMessage);
         return;

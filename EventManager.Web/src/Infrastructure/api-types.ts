@@ -63,6 +63,10 @@ export interface RoleView {
   roleNameBg: string;
 }
 
+export interface RegionForUpdate {
+  regionName: string;
+}
+
 export interface RegionView {
   regionId: number;
   regionName: string;
@@ -175,7 +179,6 @@ export type RoleFilterType = z.infer<typeof RoleFilterSchema>;
 
 export const RegionBaseFormSchema = z.object({
   regionName: z.string().min(1, { message: "Името на региона е задължително." }),
-  regionCreatedOnDateTime: z.coerce.date(),
 });
 export type RegionBaseFormType = z.infer<typeof RegionBaseFormSchema>;
 

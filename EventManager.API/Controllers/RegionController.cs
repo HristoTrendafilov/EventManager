@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventManager.API.Controllers
 {
+    [Role(UserRole.Admin)]
     [ApiController]
     [Route("api/regions")]
     public class RegionController : ControllerBase
@@ -47,9 +48,8 @@ namespace EventManager.API.Controllers
         }
 
         [Authorize]
-        [Role(UserRole.Admin)]
         [HttpPost("new")]
-        public async Task<ActionResult> CreateRegion(RegionBaseForm region)
+        public async Task<ActionResult> CreateRegion(RegionNew region)
         {
             if (await _regionService.RegionExistsAsync(x => x.RegionName == region.RegionName))
             {
@@ -65,9 +65,8 @@ namespace EventManager.API.Controllers
         }
 
         [Authorize]
-        [Role(UserRole.Admin)]
         [HttpPut("{regionId}/update")]
-        public async Task<ActionResult> UpdateRegion(long regionId, RegionBaseForm region)
+        public async Task<ActionResult> UpdateRegion(long regionId, RegionUpdate region)
         {
             if (await _regionService.RegionExistsAsync(x => x.RegionName == region.RegionName && x.RegionId != regionId))
             {
@@ -78,6 +77,21 @@ namespace EventManager.API.Controllers
 
             var regionPoco = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
             var regionToReturn = _mapper.CreateObject<RegionView>(regionPoco);
+
+            return Ok(regionToReturn);
+        }
+
+        [Authorize]
+        [HttpGet("{regionId}/update")]
+        public async Task<ActionResult> GetRegionForUpdate(long regionId)
+        {
+            if (!await _regionService.RegionExistsAsync(x => x.RegionId == regionId))
+            {
+                return NotFound();
+            }
+ 
+            var regionPoco = await _regionService.GetRegionAsync(x => x.RegionId == regionId);
+            var regionToReturn = _mapper.CreateObject<RegionForUpdate>(regionPoco);
 
             return Ok(regionToReturn);
         }
