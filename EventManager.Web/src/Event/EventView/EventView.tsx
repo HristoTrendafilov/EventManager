@@ -173,9 +173,7 @@ export function EventViewComponent() {
 
                   <hr />
 
-                  <div className="d-flex justify-content-center">
-                    {event.eventDescription}
-                  </div>
+                  <div className="pre-wrap">{event.eventDescription}</div>
                 </div>
               </div>
             </div>

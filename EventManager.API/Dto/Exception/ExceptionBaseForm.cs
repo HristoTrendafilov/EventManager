@@ -8,8 +8,6 @@ namespace EventManager.API.Dto.Exception
 
         public string ExceptionMessage { get; set; }
 
-        public DateTime ExceptionCreatedOnDateTime { get; set; }
-
         public bool ExceptionIsResolved { get; set; }
 
         [Nullable]

@@ -26,7 +26,7 @@ namespace EventManager.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> GetAllCrudLogs(CrudLogFilter filter)
+        public async Task<ActionResult> GetAllCrudLogsView(CrudLogFilter filter)
         {
             var predicate = PredicateBuilder.True<VCrudLogPoco>()
                 .And(x => x.CrudLogCreatedOnDateTime.Date == filter.ActionDateTime.Date);

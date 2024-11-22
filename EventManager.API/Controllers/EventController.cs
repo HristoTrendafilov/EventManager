@@ -55,11 +55,6 @@ namespace EventManager.API.Controllers
         [HttpGet("{eventId}/subscribers")]
         public async Task<ActionResult> GetEventSubscribers(long eventId)
         {
-            if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
-            {
-                return NotFound();
-            }
-
             var subscribers = await _eventService.GetAllEventSubscribersViewAsync(eventId);
             var subscribersToReturn = _mapper.CreateList<UserEventView>(subscribers);
 
@@ -98,18 +93,18 @@ namespace EventManager.API.Controllers
         [HttpGet("{eventId}/update")]
         public async Task<ActionResult> GetEventForUpdate(long eventId)
         {
-            if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
+            var eventView = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
+            if (eventView == null)
             {
                 return NotFound();
             }
 
-            var eventPoco = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
-            if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.EventCreatedByUserId))
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, eventView.EventCreatedByUserId))
             {
                 return Unauthorized();
             }
 
-            var eventToReturn = _mapper.CreateObject<EventForUpdate>(eventPoco);
+            var eventToReturn = _mapper.CreateObject<EventForUpdate>(eventView);
 
             return Ok(eventToReturn);
         }
@@ -119,17 +114,12 @@ namespace EventManager.API.Controllers
         [HttpPut("{eventId}/update")]
         public async Task<ActionResult> UpdateEvent(long eventId, [FromForm] EventForUpdate @event)
         {
-            if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
-            {
-                return NotFound();
-            }
-
             if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName && x.EventId != eventId))
             {
                 return BadRequest($"Вече съществува събитие с име: {@event.EventName}");
             }
 
-            var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
+            var eventPoco = await _eventService.GetEventPocoAsync(x => x.EventId == eventId);
             if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.EventCreatedByUserId))
             {
                 return Unauthorized();
@@ -185,7 +175,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            var eventPoco = await _eventService.GetEventAsync(x => x.EventId == eventId);
+            var eventPoco = await _eventService.GetEventPocoAsync(x => x.EventId == eventId);
 
             if (!await _sharedService.IsUserAuthorizedToEdit(User, eventPoco.EventCreatedByUserId))
             {
@@ -225,6 +215,12 @@ namespace EventManager.API.Controllers
         public async Task<ActionResult> UnsubscribeUserFromEvent(long eventId)
         {
             var currentUserId = User.X_CurrentUserId();
+
+            if (!await _eventService.UserSubscriptionExists(x => x.UserId == currentUserId.Value && x.EventId == eventId))
+            {
+                return BadRequest($"Не съществува записан потребител с ID: {currentUserId.Value}");
+            }
+
             var userEventId = await _eventService.UnsubscribeUser(currentUserId.Value, eventId, currentUserId);
 
             return Ok(new PrimaryKeyResponse { PrimaryKey = userEventId });

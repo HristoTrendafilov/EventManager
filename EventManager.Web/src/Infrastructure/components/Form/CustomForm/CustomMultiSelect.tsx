@@ -21,6 +21,7 @@ export interface CustomMultiSelectProps extends ComponentProps<'select'> {
   options: SelectInputOption[];
   isNumber?: boolean;
   error?: string;
+  readonly?: boolean;
 }
 
 export const CustomMultiSelect = forwardRef<
@@ -37,6 +38,7 @@ export const CustomMultiSelect = forwardRef<
     isNumber = false,
     searchable,
     error,
+    readonly,
   } = props;
   const { control, getFieldState } = useFormContext();
   const state = getFieldState(name);
@@ -55,6 +57,8 @@ export const CustomMultiSelect = forwardRef<
             ref={ref}
             inputId={name}
             name={name}
+            isClearable={!readonly}
+            openMenuOnClick={!readonly}
             required={props.required}
             isLoading={loading}
             blurInputOnSelect={false}

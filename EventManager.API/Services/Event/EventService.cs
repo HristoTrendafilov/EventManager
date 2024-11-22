@@ -37,7 +37,7 @@ namespace EventManager.API.Services.Event
 
                 if (@event.MainImage != null)
                 {
-                    await this.CreateEventImageAsync(@event.MainImage, eventId, currentUserId);
+                    await CreateEventImageAsync(@event.MainImage, eventId, currentUserId);
                 }
 
                 return eventId;
@@ -52,8 +52,8 @@ namespace EventManager.API.Services.Event
 
                 if (@event.MainImage != null)
                 {
-                    await this.DeleteEventMainImageAsync(eventId, currentUserId);
-                    await this.CreateEventImageAsync(@event.MainImage, eventId, currentUserId);
+                    await DeleteEventMainImageAsync(eventId, currentUserId);
+                    await CreateEventImageAsync(@event.MainImage, eventId, currentUserId);
                 }
             });
         }
@@ -140,7 +140,7 @@ namespace EventManager.API.Services.Event
             return (events, paginationMetadata);
         }
 
-        public Task<EventPoco> GetEventAsync(Expression<Func<EventPoco, bool>> predicate)
+        public Task<EventPoco> GetEventPocoAsync(Expression<Func<EventPoco, bool>> predicate)
         {
             return _db.Events.FirstOrDefaultAsync(predicate);
         }

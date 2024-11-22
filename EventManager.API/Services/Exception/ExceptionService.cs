@@ -15,7 +15,7 @@ namespace EventManager.API.Services.Exception
             _db = db;
         }
 
-        public Task<long> CreateExceptionAsync(ExceptionBaseForm exception, long? currentUserId)
+        public Task<long> CreateExceptionAsync(ExceptionNew exception, long? currentUserId)
         {
             return _db.Exceptions.X_CreateAsync(exception, currentUserId);
         }

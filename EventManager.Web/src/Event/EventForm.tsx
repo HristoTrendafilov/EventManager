@@ -103,9 +103,9 @@ export function Event() {
       <div className="container">
         <div className="mw-800px m-50auto">
           <div className="card">
-            <h2 className="card-header">
-              {eventId ? 'Редакция на събитие' : 'Ново събитие'}
-            </h2>
+            <h3 className="card-header">
+              {eventId ? `Редакция на събитие (#${eventId})` : 'Ново събитие'}
+            </h3>
 
             <div className="card-body">
               <CustomForm form={form} onSubmit={handleSubmit}>

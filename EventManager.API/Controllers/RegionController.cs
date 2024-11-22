@@ -3,14 +3,12 @@ using EventManager.API.Helpers;
 using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Region;
 using EventManager.BOL;
-using EventManager.DAL;
 using EventManager.API.Dto.Region;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManager.API.Controllers
 {
-    [Role(UserRole.Admin)]
     [ApiController]
     [Route("api/regions")]
     public class RegionController : ControllerBase
@@ -18,7 +16,7 @@ namespace EventManager.API.Controllers
         private readonly IRegionService _regionService;
         private readonly Mapper _mapper;
 
-        public RegionController(IRegionService regionService, Mapper mapper, PostgresConnection db)
+        public RegionController(IRegionService regionService, Mapper mapper)
         {
             _regionService = regionService;
             _mapper = mapper;
@@ -47,6 +45,7 @@ namespace EventManager.API.Controllers
             return Ok(regionToReturn);
         }
 
+        [Role(UserRole.Admin)]
         [Authorize]
         [HttpPost("new")]
         public async Task<ActionResult> CreateRegion(RegionNew region)
@@ -64,6 +63,7 @@ namespace EventManager.API.Controllers
             return Ok(regionToReturn);
         }
 
+        [Role(UserRole.Admin)]
         [Authorize]
         [HttpPut("{regionId}/update")]
         public async Task<ActionResult> UpdateRegion(long regionId, RegionUpdate region)
@@ -81,6 +81,7 @@ namespace EventManager.API.Controllers
             return Ok(regionToReturn);
         }
 
+        [Role(UserRole.Admin)]
         [Authorize]
         [HttpGet("{regionId}/update")]
         public async Task<ActionResult> GetRegionForUpdate(long regionId)

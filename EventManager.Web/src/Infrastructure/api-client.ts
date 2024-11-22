@@ -66,7 +66,8 @@ export async function callApi<T>(
 
   const { navigate } = state.navigation;
 
-  if (fetchResponse.status === 401 || fetchResponse.status === 403) {
+  const { status } = fetchResponse;
+  if (status === 401 || status === 403) {
     toast.error('Нямате право на достъп до този ресурс.');
 
     if (navigate) {
@@ -74,6 +75,12 @@ export async function callApi<T>(
     }
 
     return {} as ApiResponse<T>;
+  }
+
+  if (status === 404) {
+    if (navigate) {
+      navigate('/not-found');
+    }
   }
 
   const tokenExpired = fetchResponse.headers.get('TokenExpired');

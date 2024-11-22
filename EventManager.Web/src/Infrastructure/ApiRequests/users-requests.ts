@@ -5,10 +5,10 @@ import type {
   RoleView,
   UserForUpdate,
   UserForWeb,
+  UserUpdatePasswordType,
   UserView,
 } from '~Infrastructure/api-types';
 import type { UserLogin } from '~User/Login';
-import type { UserUpdatePassword } from '~User/UserUpdate/UserSecurity';
 
 export function registerUser(user: FormData) {
   return callApi('/users', 'POST', user);
@@ -55,7 +55,7 @@ export function updateUserUsername(userId: number, username: string) {
 
 export function updateUserPassword(
   userId: number,
-  password: UserUpdatePassword
+  password: UserUpdatePasswordType
 ) {
   return callApi(
     `/users/${userId}/update/password`,

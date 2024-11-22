@@ -10,7 +10,7 @@ namespace EventManager.API.Services.Event
         Task<VEventPoco> GetEventViewAsync(Expression<Func<VEventPoco, bool>> predicate);
         Task<(List<VEventPoco> events, PaginationMetadata metadata)> GetPaginationEventsAsync
             (Expression<Func<VEventPoco, bool>> predicate, int pageNumber, int pageSize);
-        Task<EventPoco> GetEventAsync(Expression<Func<EventPoco, bool>> predicate);
+        Task<EventPoco> GetEventPocoAsync(Expression<Func<EventPoco, bool>> predicate);
         Task<List<VEventPoco>> GetAllEventsViewAsync(Expression<Func<VEventPoco, bool>> predicate);
         Task<long> CreateEventAsync(EventNew newEvent, long? currentUserId);
         Task UpdateEventAsync(long eventId, EventBaseForm updateEvent, long? currentUserId);

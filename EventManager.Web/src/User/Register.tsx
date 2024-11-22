@@ -194,6 +194,7 @@ export function Register() {
                             {...form.register('regionId')}
                             label="Живея в"
                             isNumber
+                            searchable={false}
                             required
                           />
                           <RegionMultiSelect
@@ -201,6 +202,7 @@ export function Register() {
                             label="Искам да помагам в"
                             isNumber
                             required
+                            searchable={false}
                           />
                         </div>
                       </div>

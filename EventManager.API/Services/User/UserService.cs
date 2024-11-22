@@ -30,11 +30,7 @@ namespace EventManager.API.Services.User
 
                 var userId = await _db.Users.X_CreateAsync(user, currentUserId);
 
-                foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
-                {
-                    var userRegionHelping = new UserRegionHelpingNew { UserId = userId, RegionId = userRegionHelpingId };
-                    await this.CreateUserRegionHelpingAsync(userRegionHelping, currentUserId);
-                }
+                await SaveUserRegionsHelping(userId, user.UserRegionsHelpingIds);
 
                 return userId;
             });
@@ -77,18 +73,23 @@ namespace EventManager.API.Services.User
                     user.UserProfilePictureFileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, currentUserId);
                 }
 
-                await _db.UsersRegionsHelping.X_DeleteAsync(x => x.UserId == userId, currentUserId);
-                foreach (var userRegionHelpingId in user.UserRegionsHelpingIds)
-                {
-                    var userRegionHelping = new UserRegionHelpingNew { UserId = userId, RegionId = userRegionHelpingId };
-                    await this.CreateUserRegionHelpingAsync(userRegionHelping, currentUserId);
-                }
+                await SaveUserRegionsHelping(userId, user.UserRegionsHelpingIds);
 
                 await _db.Users.X_UpdateAsync(userId, user, currentUserId);
             });
         }
 
-        public Task<UserPoco> GetUserAsync(Expression<Func<UserPoco, bool>> predicate)
+        private async Task SaveUserRegionsHelping(long userId, List<long> userRegionsHelpingIds)
+        {
+            await _db.UsersRegionsHelping.X_DeleteAsync(x => x.UserId == userId, userId);
+            foreach (var userRegionHelpingId in userRegionsHelpingIds)
+            {
+                var userRegionHelping = new UserRegionHelpingNew { UserId = userId, RegionId = userRegionHelpingId };
+                await CreateUserRegionHelpingAsync(userRegionHelping, userId);
+            }
+        }
+
+        public Task<UserPoco> GetUserPocoAsync(Expression<Func<UserPoco, bool>> predicate)
         {
             return _db.Users.FirstOrDefaultAsync(predicate);
         }
@@ -136,7 +137,8 @@ namespace EventManager.API.Services.User
                     var userRole = new UserRolePoco
                     {
                         UserId = userRoles.UserId,
-                        RoleId = roleId
+                        RoleId = roleId,
+                        UserRoleCreatedOnDateTime = DateTime.Now
                     };
 
                     await _db.UsersRoles.X_CreateAsync(userRole, currentUserId);
@@ -147,13 +149,6 @@ namespace EventManager.API.Services.User
         public Task<List<RolePoco>> GetAllRolesAsync(Expression<Func<RolePoco, bool>> predicate)
         {
             return _db.Roles.Where(predicate).ToListAsync();
-        }
-
-        public Task<List<RegionPoco>> GetAllUserRegionsHelping(long userId)
-        {
-            return (from userRegionsHelping in _db.UsersRegionsHelping.Where(x => x.UserId == userId)
-                    join regions in _db.Regions on userRegionsHelping.RegionId equals regions.RegionId
-                    select regions).ToListAsync();
         }
 
         public async Task<byte[]> GetUserProfilePictureAsync(long userId)

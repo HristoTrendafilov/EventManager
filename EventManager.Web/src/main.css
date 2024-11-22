@@ -107,3 +107,7 @@ body,
 .mt-minus-10px {
   margin-top: -10px;
 }
+
+.pre-wrap {
+  white-space: pre-wrap;
+}

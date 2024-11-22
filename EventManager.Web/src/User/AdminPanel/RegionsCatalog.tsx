@@ -59,8 +59,7 @@ export function RegionsCatalog() {
 
   const handleOnCreated = useCallback(
     (region: RegionView) => {
-      const newRegions = [region, ...regions];
-      setRegions(newRegions);
+      setRegions([region, ...regions]);
       setFilter(defaultValues);
       closeFormModal();
     },
@@ -144,7 +143,7 @@ export function RegionsCatalog() {
                 </div>
               ))
             ) : (
-              <p>No regions found</p>
+              <p>Няма намерени региони</p>
             )}
           </div>
         </div>

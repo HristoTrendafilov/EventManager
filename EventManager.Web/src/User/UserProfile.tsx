@@ -89,7 +89,7 @@ export function UserProfile() {
                     </button>
                     <div className="mt-3">
                       <h4>{userView.username}</h4>
-                      <p className="text-secondary mb-1">
+                      <p className="text-secondary mb-1 pre-wrap">
                         {userView.userShortDescription}
                       </p>
                       {userView.canEdit && (

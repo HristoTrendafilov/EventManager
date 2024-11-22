@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Home } from '~Home/Home';
 import { type UserState, userSelector } from '~Infrastructure/redux/user-slice';
+import { NotFound } from '~NotFound/NotFound';
 
 import { CustomRoutes } from './CustomRoutes';
 import { type RouteTable, table } from './routes';
@@ -56,6 +57,7 @@ export function RenderRouteTable() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="*" element={<NotFound />} />
       {table.map((x) => (
         <Route
           key={x.location}

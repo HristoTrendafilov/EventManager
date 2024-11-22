@@ -151,7 +151,7 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече съществува потребителското име: {username}");
             }
 
-            var user = await _userService.GetUserAsync(x => x.UserId == userId);
+            var user = await _userService.GetUserPocoAsync(x => x.UserId == userId);
             if (user == null)
             {
                 return NotFound();
@@ -177,7 +177,7 @@ namespace EventManager.API.Controllers
                 return BadRequest("Паролите не съвпадат");
             }
 
-            var user = await _userService.GetUserAsync(x => x.UserId == userId);
+            var user = await _userService.GetUserPocoAsync(x => x.UserId == userId);
             if (user == null)
             {
                 return NotFound();
@@ -197,7 +197,7 @@ namespace EventManager.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> LoginUser(UserLogin userLogin)
         {
-            var user = await _userService.GetUserAsync(x => x.Username == userLogin.Username && x.UserPassword == userLogin.Password);
+            var user = await _userService.GetUserPocoAsync(x => x.Username == userLogin.Username && x.UserPassword == userLogin.Password);
             if (user == null)
             {
                 return BadRequest("Неправилно потребителско име или парола.");

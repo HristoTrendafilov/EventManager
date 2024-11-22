@@ -22,6 +22,7 @@ export interface CustomSelectProps extends ComponentProps<'select'> {
   options: SelectInputOption[];
   isNumber?: boolean;
   error?: string;
+  readonly?: boolean;
 }
 
 export const CustomSelect = forwardRef<
@@ -39,6 +40,7 @@ export const CustomSelect = forwardRef<
     required,
     isNumber = false,
     error,
+    readonly,
   } = props;
   const { control, getFieldState } = useFormContext();
   const state = getFieldState(name);
@@ -70,6 +72,8 @@ export const CustomSelect = forwardRef<
             id={name}
             isLoading={loading}
             isDisabled={disabled}
+            isClearable={!readonly}
+            openMenuOnClick={!readonly}
             value={
               options.find((x) => {
                 if (isNumber) {

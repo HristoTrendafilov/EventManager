@@ -1,42 +1,29 @@
 import { useCallback, useState } from 'react';
 import toast from 'react-hot-toast';
-import { z } from 'zod';
 
 import { updateUserPassword } from '~Infrastructure/ApiRequests/users-requests';
+import {
+  UserUpdatePasswordSchema,
+  type UserUpdatePasswordType,
+} from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
 
-const schema = z.object({
-  oldPassword: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
-  newPassword: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
-  newPasswordRepeated: z
-    .string()
-    .min(5, 'Полето трябва да е минимум 5 символа'),
-});
-
-export type UserUpdatePassword = z.infer<typeof schema>;
-
 interface UserSecurityProps {
   userId: number;
 }
-
-const defaultValues: UserUpdatePassword = {
-  oldPassword: '',
-  newPassword: '',
-  newPasswordRepeated: '',
-};
 
 export function UserSecurity(props: UserSecurityProps) {
   const [error, setError] = useState<string | undefined>();
 
   const { userId } = props;
 
-  const form = useZodForm({ schema });
+  const form = useZodForm({ schema: UserUpdatePasswordSchema });
 
   const handleSubmit = useCallback(
-    async (password: UserUpdatePassword) => {
+    async (password: UserUpdatePasswordType) => {
       setError(undefined);
 
       const response = await updateUserPassword(userId, password);
@@ -46,7 +33,11 @@ export function UserSecurity(props: UserSecurityProps) {
       }
 
       toast.success('Успешно променихте паролата си.');
-      form.reset(defaultValues);
+      form.reset({
+        currentPassword: '',
+        newPassword: '',
+        newPasswordRepeated: '',
+      });
     },
     [form, userId]
   );
@@ -58,7 +49,7 @@ export function UserSecurity(props: UserSecurityProps) {
       <h4 className="mb-3">Промяна на парола</h4>
       <CustomForm form={form} onSubmit={handleSubmit}>
         <CustomInput
-          {...form.register('oldPassword')}
+          {...form.register('currentPassword')}
           label="Текуща парола"
           type="password"
           required

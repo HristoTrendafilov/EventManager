@@ -32,11 +32,10 @@ namespace EventManager.API.Middlewares
             {
                 _logger.LogError(new EventId(), ex, ex.Message);
 
-                await _exceptionService.CreateExceptionAsync(new ExceptionBaseForm
+                await _exceptionService.CreateExceptionAsync(new ExceptionNew
                 {
                     Exception = ex.ToString(),
                     ExceptionMessage = ex.Message,
-                    ExceptionCreatedOnDateTime = DateTime.Now,
                     UserId = context.User.X_CurrentUserId()
                 }, context.User.X_CurrentUserId());
 
