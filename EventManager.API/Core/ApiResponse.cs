@@ -2,17 +2,19 @@
 {
     public class ApiResponse<T>
     {
-        public ApiResponse(T data, string errorMessage = null)
+        public ApiResponse(T data) : this(data, null) { }
+
+        public ApiResponse(T data, string errorMessage)
         {
             Data = data;
             ErrorMessage = errorMessage;
             ValidationPropertyErrors = new List<ValidationPropertyError>();
         }
 
-        public T Data { get; set; }
+        public T Data { get; }
         public string ErrorMessage { get; set; }
-        public List<ValidationPropertyError> ValidationPropertyErrors { get; set; }
-        public bool Success => ErrorMessage == null && ValidationPropertyErrors.Count == 0;
+        public List<ValidationPropertyError> ValidationPropertyErrors { get; }
+        public bool Success => string.IsNullOrEmpty(ErrorMessage) && !HasValidationErrors;
         public bool HasValidationErrors => ValidationPropertyErrors.Count > 0;
     }
 

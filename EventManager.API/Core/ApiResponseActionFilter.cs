@@ -11,70 +11,75 @@ public class ApiResponseActionFilter : IActionFilter
 
     public void OnActionExecuted(ActionExecutedContext context)
     {
-        // Check if the result is a NoContentResult (204 No Content)
-        if (context.Result is NoContentResult)
+        switch (context.Result)
         {
-            // Return an empty ApiResponse with success: true and data: null
-            var apiResponse = new ApiResponse<object>(null);
+            case NoContentResult:
+                HandleNoContentResult(context);
+                break;
+            case UnauthorizedResult unauthorizedResult:
+                HandleUnauthorizedResult(context, unauthorizedResult);
+                break;
+            case NotFoundResult notFoundResult:
+                HandleNotFoundResult(context, notFoundResult);
+                break;
+            case ObjectResult objectResult:
+                HandleObjectResult(context, objectResult);
+                break;
+        }
+    }
 
+    private static void HandleNoContentResult(ActionExecutedContext context)
+    {
+        var apiResponse = new ApiResponse<object>(null);
+        context.Result = new JsonResult(apiResponse)
+        {
+            StatusCode = StatusCodes.Status200OK
+        };
+    }
+
+    private static void HandleUnauthorizedResult(ActionExecutedContext context, UnauthorizedResult unauthorizedResult)
+    {
+        var apiErrorResponse = new ApiResponse<object>(null, "Нямате право на достъп до този ресурс.");
+        context.Result = new JsonResult(apiErrorResponse)
+        {
+            StatusCode = unauthorizedResult.StatusCode
+        };
+    }
+
+    private static void HandleNotFoundResult(ActionExecutedContext context, NotFoundResult notFoundResult)
+    {
+        var apiErrorResponse = new ApiResponse<object>(null, "Ресурсът, който търсите, не може да бъде намерен.");
+        context.Result = new JsonResult(apiErrorResponse)
+        {
+            StatusCode = notFoundResult.StatusCode
+        };
+    }
+
+    private static void HandleObjectResult(ActionExecutedContext context, ObjectResult objectResult)
+    {
+        if (objectResult.StatusCode >= 200 && objectResult.StatusCode <= 299)
+        {
+            var apiResponse = new ApiResponse<object>(objectResult.Value);
             context.Result = new JsonResult(apiResponse)
             {
-                StatusCode = StatusCodes.Status200OK  // Set the status code to 204
+                StatusCode = objectResult.StatusCode
             };
         }
-        else if (context.Result is UnauthorizedResult unauthorizedResult)
+        else if (objectResult.StatusCode >= 400 && objectResult.StatusCode <= 499)
         {
-            var apiErrorResponse = new ApiResponse<object>(null, "Нямате право на достъп до този ресурс.");
-
+            var apiErrorResponse = new ApiResponse<object>(null, objectResult.Value?.ToString());
             context.Result = new JsonResult(apiErrorResponse)
             {
-                StatusCode = unauthorizedResult.StatusCode
+                StatusCode = objectResult.StatusCode
             };
         }
-        else if (context.Result is NotFoundResult notFound)
+        else if (objectResult.StatusCode >= 500 && objectResult.Value is ProblemDetails problemDetails)
         {
-            var apiErrorResponse = new ApiResponse<object>(null, "Ресурсът, който търсите, не може да бъде намерен.");
-
+            var apiErrorResponse = new ApiResponse<object>(null, problemDetails.Detail);
             context.Result = new JsonResult(apiErrorResponse)
             {
-                StatusCode = notFound.StatusCode
+                StatusCode = objectResult.StatusCode
             };
-        }
-        // Check if the result is an ObjectResult (typically used in API responses)
-        else if (context.Result is ObjectResult objectResult)
-        {
-            // Only wrap the response if the status code is 200
-            if (objectResult.StatusCode >= 200 && objectResult.StatusCode <= 299)
-            {
-                var apiResponse = new ApiResponse<object>(objectResult.Value);
-
-                context.Result = new JsonResult(apiResponse)
-                {
-                    StatusCode = objectResult.StatusCode
-                };
-            }
-            else if (objectResult.StatusCode >= 400 && objectResult.StatusCode <= 499)
-            {
-                // For errors (status code 400 or higher), wrap the error message
-                var apiErrorResponse = new ApiResponse<object>(null, objectResult.Value?.ToString());
-
-                context.Result = new JsonResult(apiErrorResponse)
-                {
-                    StatusCode = objectResult.StatusCode
-                };
-            }
-            else if (objectResult.StatusCode >= 500)
-            {
-                if (objectResult.Value is ProblemDetails problemDetails)
-                {
-                    var apiErrorResponse = new ApiResponse<object>(null, problemDetails.Detail);
-
-                    context.Result = new JsonResult(apiErrorResponse)
-                    {
-                        StatusCode = objectResult.StatusCode
-                    };
-                }
-            }
         }
     }
 }

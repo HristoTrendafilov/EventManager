@@ -3,8 +3,6 @@ using EventManager.API.Dto.WebSession;
 using LinqToDB;
 using System.Linq.Expressions;
 using System.Net;
-using Newtonsoft.Json;
-using EventManager.API.Services.Exception;
 
 namespace EventManager.API.Services.WebSession
 {
@@ -75,7 +73,19 @@ namespace EventManager.API.Services.WebSession
             var ipInfoResponse = await httpClient.GetStringAsync($"http://ip-api.com/json/{ipAddress}");
 
             return (ipAddress, ipInfoResponse);
+        }
 
+        public async Task RevokeUserSessionsAsync(long userId)
+        {
+            var activeSessions = await _db.WebSessions
+                .Where(ws => ws.UserId == userId && ws.WebSessionLogoutDateTime == null)
+                .ToListAsync();
+
+            foreach (var session in activeSessions)
+            {
+                session.WebSessionRevoked = true;
+                await _db.WebSessions.X_UpdateAsync(session.WebSessionId, session, userId);
+            }
         }
     }
 }

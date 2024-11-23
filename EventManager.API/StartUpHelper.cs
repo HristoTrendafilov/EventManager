@@ -27,6 +27,7 @@ using System.Net.Http.Headers;
 using EventManager.API.Middlewares;
 using EventManager.API.Services.FileStorage;
 using EventManager.API.Helpers.Extensions;
+using LinqToDB.Common.Internal.Cache;
 
 namespace EventManager.API
 {
@@ -89,6 +90,8 @@ namespace EventManager.API
         public static WebApplicationBuilder RegisterServices(this WebApplicationBuilder builder)
         {
             var services = builder.Services;
+
+            services.AddMemoryCache(); // Register IMemoryCache
 
             services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
             services.AddTransient<IEmailService, EmailService>();
@@ -173,11 +176,6 @@ namespace EventManager.API
                         apiErrorResponse.ErrorMessage = clientMessage;
 
                         return new UnprocessableEntityObjectResult(apiErrorResponse);
-
-                        //return new UnprocessableEntityObjectResult(validationProblemDetails)
-                        //{
-                        //    ContentTypes = { "application/problem+json" }
-                        //};
                     };
                 });
 
@@ -212,7 +210,6 @@ namespace EventManager.API
                         ValidAudience = builder.Configuration["Authentication:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(
                            Convert.FromBase64String(builder.Configuration["Authentication:SecretForKey"] ?? "")),
-                        // ClockSkew is the leeway for the expiration validation (default is 5 minutes)
                         ClockSkew = TimeSpan.Zero, // Set to zero to avoid any extra time after token expiration
                     };
 
@@ -220,62 +217,70 @@ namespace EventManager.API
                     {
                         OnTokenValidated = async context =>
                         {
-                            var claimsPrincipal = context.Principal;
-                            if (claimsPrincipal != null)
-                            {
-                                var webSessionId = claimsPrincipal.X_WebSessionId();
-                                var userId = claimsPrincipal.X_CurrentUserId();
-
-                                if (webSessionId.HasValue)
-                                {
-                                    var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
-                                    var webSession = await webSessionService.GetWebSessionAsync(x => x.WebSessionId == webSessionId.Value);
-
-                                    if (webSession.WebSessionRevoked)
-                                    {
-                                        await webSessionService.CloseWebSessionAsync(webSessionId.Value, userId);
-
-                                        context.Response.StatusCode = StatusCodes.Status204NoContent;
-                                        context.Response.Headers.Append("TokenExpired", "true");
-
-                                    }
-                                }
-                            }
+                            await HandleTokenValidatedAsync(context);
                         },
                         OnAuthenticationFailed = async context =>
                         {
-                            if (context.Exception is SecurityTokenExpiredException)
-                            {
-                                var authorization = context.Request.Headers.Authorization;
-
-                                if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
-                                {
-                                    var handler = new JwtSecurityTokenHandler();
-                                    var tokenS = handler.ReadToken(headerValue.Parameter) as JwtSecurityToken;
-
-                                    var webSessionId = tokenS.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.WebSessionId)?.Value;
-                                    var userId = tokenS.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.UserId)?.Value;
-
-                                    if (!string.IsNullOrWhiteSpace(webSessionId) && !string.IsNullOrWhiteSpace(userId))
-                                    {
-                                        var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
-                                        await webSessionService.CloseWebSessionAsync(long.Parse(webSessionId), long.Parse(userId));
-                                    }
-                                }
-
-                                context.Response.OnStarting(() =>
-                                {
-                                    context.Response.StatusCode = StatusCodes.Status204NoContent;
-                                    context.Response.Headers.Append("TokenExpired", "true");
-                                    return Task.CompletedTask;
-                                });
-                            }
+                            await HandleAuthenticationFailedAsync(context);
                         }
                     };
-
                 });
 
             return builder;
+        }
+
+        private static async Task HandleTokenValidatedAsync(TokenValidatedContext context)
+        {
+            var claimsPrincipal = context.Principal;
+            if (claimsPrincipal != null)
+            {
+                var webSessionId = claimsPrincipal.X_WebSessionId();
+                var userId = claimsPrincipal.X_CurrentUserId();
+
+                if (webSessionId.HasValue)
+                {
+                    var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
+                    var webSession = await webSessionService.GetWebSessionAsync(x => x.WebSessionId == webSessionId.Value);
+
+                    if (webSession.WebSessionRevoked)
+                    {
+                        await webSessionService.CloseWebSessionAsync(webSessionId.Value, userId);
+
+                        context.Response.StatusCode = StatusCodes.Status204NoContent;
+                        context.Response.Headers.Append("TokenExpired", "true");
+                    }
+                }
+            }
+        }
+
+        private static async Task HandleAuthenticationFailedAsync(AuthenticationFailedContext context)
+        {
+            if (context.Exception is SecurityTokenExpiredException)
+            {
+                var authorization = context.Request.Headers.Authorization;
+
+                if (AuthenticationHeaderValue.TryParse(authorization, out var headerValue))
+                {
+                    var handler = new JwtSecurityTokenHandler();
+                    var tokenS = handler.ReadToken(headerValue.Parameter) as JwtSecurityToken;
+
+                    var webSessionId = tokenS?.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.WebSessionId)?.Value;
+                    var userId = tokenS?.Claims.FirstOrDefault(a => a.Type == CustomClaimTypes.UserId)?.Value;
+
+                    if (!string.IsNullOrWhiteSpace(webSessionId) && !string.IsNullOrWhiteSpace(userId))
+                    {
+                        var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
+                        await webSessionService.CloseWebSessionAsync(long.Parse(webSessionId), long.Parse(userId));
+                    }
+                }
+
+                context.Response.OnStarting(() =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status204NoContent;
+                    context.Response.Headers.Append("TokenExpired", "true");
+                    return Task.CompletedTask;
+                });
+            }
         }
 
         public static WebApplication ConfigurePipeline(this WebApplication app)

@@ -12,5 +12,6 @@ namespace EventManager.API.Services.WebSession
         Task<bool> WebSessionExistsAsync(Expression<Func<WebSessionPoco, bool>> predicate);
         Task<(string ipAddress, string ipInfo)> GetUserIpInfoAsync(HttpContext context);
         Task<List<VWebSessionPoco>> GetUserLastActiveWebSessions(long userId);
+        Task RevokeUserSessionsAsync(long userId);
     }
 }
