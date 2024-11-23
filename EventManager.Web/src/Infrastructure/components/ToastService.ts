@@ -1,5 +1,4 @@
 import { type ToastOptions, type TypeOptions, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 class ToastService {
   // Default options for all toasts

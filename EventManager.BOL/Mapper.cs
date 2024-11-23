@@ -1,14 +1,23 @@
-﻿namespace EventManager.BOL
+﻿using System.Reflection;
+
+namespace EventManager.BOL
 {
     public class Mapper
     {
+        private static readonly Dictionary<Type, PropertyInfo[]> PropertyCache = new();
+
         public static void ObjectToObject(object source, object destination)
         {
+            if (source == null || destination == null)
+            {
+                throw new ArgumentNullException(source == null ? nameof(source) : nameof(destination));
+            }
+
             var sourceType = source.GetType();
             var destinationType = destination.GetType();
 
-            var sourceProperties = sourceType.GetProperties();
-            var destinationProperties = destinationType.GetProperties();
+            var sourceProperties = GetCachedProperties(sourceType);
+            var destinationProperties = GetCachedProperties(destinationType);
 
             foreach (var sourceProperty in sourceProperties)
             {
@@ -18,43 +27,31 @@
                 if (destinationProperty != null && destinationProperty.CanWrite)
                 {
                     var value = sourceProperty.GetValue(source);
-                    destinationProperty.SetValue(destination, value);
+                    if (value != null && destinationProperty.PropertyType.IsAssignableFrom(value.GetType()))
+                    {
+                        destinationProperty.SetValue(destination, value);
+                    }
                 }
             }
         }
 
-        public static TDestination CreateObject<TDestination>(object source) where TDestination : class
+        public static TDestination CreateObject<TDestination>(object source) where TDestination : class, new()
         {
             if (source == null)
             {
                 return default;
             }
 
-            var sourceType = source.GetType();
-            var destinationType = typeof(TDestination);
-            var destinationObject = Activator.CreateInstance<TDestination>();
-
-            var destinationProperties = destinationType.GetProperties();
-
-            foreach (var destinationProperty in destinationProperties)
-            {
-                var sourceProperty = sourceType.GetProperty(destinationProperty.Name);
-
-                if (sourceProperty != null)
-                {
-                    var value = sourceProperty.GetValue(source);
-                    destinationProperty.SetValue(destinationObject, value);
-                }
-            }
-
+            var destinationObject = new TDestination();
+            ObjectToObject(source, destinationObject);
             return destinationObject;
         }
 
-        public static List<TDestination> CreateList<TDestination>(IEnumerable<object> sourceList) where TDestination : class
+        public static List<TDestination> CreateList<TDestination>(IEnumerable<object> sourceList) where TDestination : class, new()
         {
             var destinationList = new List<TDestination>();
 
-            foreach (object sourceItem in sourceList)
+            foreach (var sourceItem in sourceList)
             {
                 var destinationItem = CreateObject<TDestination>(sourceItem);
                 if (destinationItem != null)
@@ -64,6 +61,17 @@
             }
 
             return destinationList;
+        }
+
+        private static PropertyInfo[] GetCachedProperties(Type type)
+        {
+            if (!PropertyCache.TryGetValue(type, out var properties))
+            {
+                properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                PropertyCache[type] = properties;
+            }
+
+            return properties;
         }
     }
 }

@@ -8,20 +8,12 @@ export function isString(value: unknown): value is string {
   return typeof value === 'string';
 }
 
-export function getClientErrorMessage(error: unknown): string {
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return 'Системна грешка. Миля, опитайте по-късно или се свържете със системния администратор.';
-}
-
 export function formatDate(date: Date | string): string {
   if (isString(date)) {
     date = new Date(date);
   }
 
-  return date.toLocaleDateString('en-GB', {
+  return date.toLocaleDateString('bg-BG', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -33,7 +25,7 @@ export function formatDateTime(date: Date | string): string {
     date = new Date(date);
   }
 
-  return date.toLocaleDateString('en-GB', {
+  return date.toLocaleDateString('bg-BG', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
@@ -87,17 +79,6 @@ export const objectToFormData = <T extends object>(obj: T): FormData => {
   appendToFormData(formData, obj);
   return formData;
 };
-
-export const fileToBase64 = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const base64String = (reader.result as string).split(',')[1];
-      resolve(base64String);
-    };
-    reader.onerror = reject;
-  });
 
 export const convertToFileList = (files: File[]): FileList => {
   const dataTransfer = new DataTransfer();

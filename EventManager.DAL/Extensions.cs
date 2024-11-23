@@ -18,15 +18,15 @@ namespace EventManager.DAL
             var primaryKey = await linqToDbTable.DataContext.InsertWithInt64IdentityAsync(poco);
 
             var primaryKeyProperty = typeof(T).GetProperties()
-                .FirstOrDefault(x => x.GetCustomAttributes(typeof(PrimaryKeyAttribute), true).Any());
+                .FirstOrDefault(x => x.GetCustomAttributes(typeof(PrimaryKeyAttribute), true).Length != 0);
             primaryKeyProperty.SetValue(poco, primaryKey);
 
             var crudLog = new CrudLogPoco
             {
-                CrudLogPocoBeforeAction = JsonConvert.SerializeObject(new T(), Formatting.Indented),
-                CrudLogPocoAfterAction = JsonConvert.SerializeObject(poco, Formatting.Indented),
+                CrudLogPocoBeforeAction = JsonConvert.SerializeObject(new T()),
+                CrudLogPocoAfterAction = JsonConvert.SerializeObject(poco),
                 CrudLogTable = linqToDbTable.TableName,
-                CrudLogActionType = (int)CrudActionType.Insert,
+                CrudLogActionType = (int)CrudActionType.Create,
                 CrudLogTablePrimaryKey = primaryKey,
                 CrudLogCreatedByUserId = currentUserId,
                 CrudLogCreatedOnDateTime = DateTime.Now,
@@ -47,7 +47,7 @@ namespace EventManager.DAL
 
             var crudLog = new CrudLogPoco
             {
-                CrudLogPocoBeforeAction = JsonConvert.SerializeObject(poco, Formatting.Indented),
+                CrudLogPocoBeforeAction = JsonConvert.SerializeObject(poco),
                 CrudLogTable = linqToDbTable.TableName,
                 CrudLogActionType = (int)CrudActionType.Update,
                 CrudLogTablePrimaryKey = primaryKey,
@@ -56,7 +56,7 @@ namespace EventManager.DAL
             };
 
             Mapper.ObjectToObject(model, poco);
-            crudLog.CrudLogPocoAfterAction = JsonConvert.SerializeObject(poco, Formatting.Indented);
+            crudLog.CrudLogPocoAfterAction = JsonConvert.SerializeObject(poco);
 
             await linqToDbTable.DataContext.UpdateAsync(poco);
             await linqToDbTable.DataContext.InsertWithInt64IdentityAsync(crudLog);
@@ -82,7 +82,7 @@ namespace EventManager.DAL
 
                     return new CrudLogPoco
                     {
-                        CrudLogPocoBeforeAction = JsonConvert.SerializeObject(model, Formatting.Indented),
+                        CrudLogPocoBeforeAction = JsonConvert.SerializeObject(model),
                         CrudLogTable = linqToDbTable.TableName,
                         CrudLogActionType = (int)CrudActionType.Delete,
                         CrudLogTablePrimaryKey = Convert.ToInt64(primaryKeyValue),
@@ -122,7 +122,7 @@ namespace EventManager.DAL
     public enum CrudActionType
     {
         None = 0,
-        Insert = 1,
+        Create = 1,
         Update = 2,
         Delete = 3,
     }

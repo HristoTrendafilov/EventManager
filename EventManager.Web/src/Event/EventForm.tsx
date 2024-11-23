@@ -19,6 +19,7 @@ import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomFor
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+import { setValidationErrors } from '~Infrastructure/components/Form/formUtils';
 import { objectToFormData } from '~Infrastructure/utils';
 import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
 import noImage from '~asset/no-image.png';
@@ -76,13 +77,18 @@ export function Event() {
       }
 
       if (!response.success) {
-        setError(response.errorMessage);
+        if (response.hasValidationErrors) {
+          setValidationErrors(response.validationPropertyErrors, form.setError);
+        } else {
+          setError(response.errorMessage);
+        }
+
         return;
       }
 
       navigate(CustomRoutes.eventsView(response.data.primaryKey));
     },
-    [eventId, navigate]
+    [eventId, form.setError, navigate]
   );
 
   useEffect(() => {
