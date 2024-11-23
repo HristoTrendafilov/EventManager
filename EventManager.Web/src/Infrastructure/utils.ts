@@ -27,7 +27,7 @@ export function formatDateTime(date: Date | string): string {
 
   return date.toLocaleDateString('bg-BG', {
     day: '2-digit',
-    month: '2-digit',
+    month: 'long',
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',

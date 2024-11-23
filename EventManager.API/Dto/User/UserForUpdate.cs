@@ -1,4 +1,5 @@
-﻿using EventManager.API.Helpers;
+﻿using EventManager.API.Dto.WebSession;
+using EventManager.API.Helpers;
 using LinqToDB.Mapping;
 
 namespace EventManager.API.Dto.User
@@ -9,6 +10,7 @@ namespace EventManager.API.Dto.User
         public UserForUpdate()
         {
             UserRegionsHelpingIds = new List<long>();
+            WebSessions = new List<WebSessionView>();
         }
 
         public bool HasProfilePicture { get; set; }
@@ -31,5 +33,7 @@ namespace EventManager.API.Dto.User
         public string UserShortDescription { get; set; }
 
         public List<long> UserRegionsHelpingIds { get; set; }
+
+        public List<WebSessionView> WebSessions { get; set; }
     }
 }

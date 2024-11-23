@@ -15,6 +15,24 @@ export interface PrimaryKeyResponse {
   primaryKey: number;
 }
 
+export interface WebSessionView {
+  webSessionIpInfo: string | null;
+  webSessionId: number;
+  webSessionCreatedOnDateTime: Date;
+  userId: number;
+  webSessionExpireOnDateTime: Date;
+  webSessionUserIpAddress: string | null;
+  webSessionLogoutDateTime: Date | null;
+  webSessionRevoked: boolean;
+  ipInfoCountryCode: string;
+  ipInfoCountry: string;
+  ipInfoRegionName: string;
+  ipInfoCity: string;
+  ipInfoPostCode: string;
+  ipInfoLat: string;
+  ipInfoLon: string;
+}
+
 export interface UserForUpdate {
   hasProfilePicture: boolean;
   username: string;
@@ -25,6 +43,7 @@ export interface UserForUpdate {
   userPhoneNumber: string | null;
   userShortDescription: string | null;
   userRegionsHelpingIds: number[];
+  webSessions: WebSessionView[];
 }
 
 export interface UserForWeb {
@@ -102,6 +121,7 @@ export interface EventView {
   eventCreatedOnDateTime: Date;
   hasMainImage: boolean;
   eventHasEnded: boolean;
+  eventHasStarted: boolean;
 }
 
 export interface UserEventView {

@@ -4,21 +4,24 @@ import { updateUserPassword } from '~Infrastructure/ApiRequests/users-requests';
 import {
   UserUpdatePasswordSchema,
   type UserUpdatePasswordType,
+  type WebSessionView,
 } from '~Infrastructure/api-types';
 import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
 import { toastService } from '~Infrastructure/components/ToastService';
+import { formatDateTime } from '~Infrastructure/utils';
 
 interface UserSecurityProps {
   userId: number;
+  lastActiveWebSessions: WebSessionView[];
 }
 
 export function UserSecurity(props: UserSecurityProps) {
   const [error, setError] = useState<string | undefined>();
 
-  const { userId } = props;
+  const { userId, lastActiveWebSessions } = props;
 
   const form = useZodForm({ schema: UserUpdatePasswordSchema });
 
@@ -76,9 +79,31 @@ export function UserSecurity(props: UserSecurityProps) {
       {error && <ErrorMessage error={error} />}
       <hr />
       <h4>Последно активни сесии</h4>
-      <div className="text-muted">
-        Това е лист от от устройства, от които сте влизали в акаунта си
-      </div>
+      <p className="text-muted">
+        Това е лист от локации, от които сте влезли в последно време.
+      </p>
+      {lastActiveWebSessions.length > 0 &&
+        lastActiveWebSessions.map((x) => (
+          <div key={x.webSessionId} className="card mb-2">
+            <div className="card-header d-flex justify-content-between">
+              <div>
+                {x.ipInfoCountry} ({x.ipInfoCountryCode})
+              </div>
+              <div>
+                Координати: {x.ipInfoLat}, {x.ipInfoLon}
+              </div>
+            </div>
+            <div className="card-body p-2">
+              <div>
+                град: {x.ipInfoCity} ({x.ipInfoPostCode})
+              </div>
+              <div>регион: {x.ipInfoRegionName}</div>
+              <div className="d-flex justify-content-end">
+                {formatDateTime(x.webSessionCreatedOnDateTime)}
+              </div>
+            </div>
+          </div>
+        ))}
     </div>
   );
 }

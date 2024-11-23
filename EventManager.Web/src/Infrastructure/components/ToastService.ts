@@ -21,22 +21,18 @@ class ToastService {
     toast(message, { type, ...this.defaultOptions, ...options });
   }
 
-  // Success toast
   success(message: string, options?: ToastOptions) {
     this.showToast('success', message, options);
   }
 
-  // Info toast
   info(message: string, options?: ToastOptions) {
     this.showToast('info', message, options);
   }
 
-  // Warning toast
   warning(message: string, options?: ToastOptions) {
     this.showToast('warning', message, options);
   }
 
-  // Error toast
   error(message: string, options?: ToastOptions) {
     this.showToast('error', message, options);
   }

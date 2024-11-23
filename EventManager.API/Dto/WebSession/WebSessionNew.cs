@@ -8,5 +8,7 @@
         }
 
         public DateTime WebSessionCreatedOnDateTime { get; set; }
+
+        public string WebSessionIpInfo { get; set; }
     }
 }

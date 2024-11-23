@@ -176,8 +176,11 @@ export function UserUpdate() {
                     onUserUpdate={loadUser}
                   />
                 )}
-                {activeTab === 'security' && (
-                  <UserSecurity userId={Number(userId)} />
+                {user && activeTab === 'security' && (
+                  <UserSecurity
+                    userId={Number(userId)}
+                    lastActiveWebSessions={user.webSessions}
+                  />
                 )}
               </div>
             </div>

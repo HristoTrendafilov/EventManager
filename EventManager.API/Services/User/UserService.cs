@@ -58,24 +58,29 @@ namespace EventManager.API.Services.User
         {
             await _db.WithTransactionAsync(async () =>
             {
-                var userView = await _db.VUsers.FirstOrDefaultAsync(x => x.UserId == userId);
+                var profilePictureId = await _db.Users
+                    .Where(x => x.UserId == userId)
+                    .Select(x => x.UserProfilePictureFileId)
+                    .FirstOrDefaultAsync();
 
                 if (user.ProfilePicture != null)
                 {
-                    var profilePictureFilePath = userView.FileStoragePath;
+                    var newProfilePictureFileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, currentUserId);
+                    user.UserProfilePictureFileId = newProfilePictureFileId;
 
-                    if (!string.IsNullOrWhiteSpace(profilePictureFilePath) && File.Exists(profilePictureFilePath))
+                    await _db.Users.X_UpdateAsync(userId, user, currentUserId);
+
+                    if (profilePictureId.HasValue)
                     {
-                        File.Delete(profilePictureFilePath);
-                        await _db.Files.X_DeleteAsync(x => x.FileId == userView.UserProfilePictureFileId, currentUserId);
+                        await _fileStorageService.DeleteFileAsync(profilePictureId.Value, currentUserId);
                     }
-
-                    user.UserProfilePictureFileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, currentUserId);
+                }
+                else
+                {
+                    await _db.Users.X_UpdateAsync(userId, user, currentUserId);
                 }
 
                 await SaveUserRegionsHelping(userId, user.UserRegionsHelpingIds);
-
-                await _db.Users.X_UpdateAsync(userId, user, currentUserId);
             });
         }
 

@@ -1,6 +1,6 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import bg from 'date-fns/locale/bg';
+import { bg } from 'date-fns/locale';
 import {
   type ComponentProps,
   forwardRef,
@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import DatePicker, { registerLocale } from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import '~Infrastructure/components/Form/DateInput/DateInput.css';
@@ -29,8 +29,6 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
 
     const [open, setOpen] = useState<boolean>(false);
     const [previousDate, setPreviousDate] = useState<Date | null>(null);
-
-    registerLocale('bg', bg);
 
     const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -96,8 +94,10 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
                   selected={
                     field.value ? new Date(field.value as string) : null
                   }
-                  dateFormat={showTime ? 'Pp' : 'P'} // Use only date format when showTime is false
-                  locale="bg"
+                  dateFormat={
+                    showTime ? "d MMMM yyyy 'г.' HH:mm" : "d MMMM yyyy 'г.'"
+                  } // Custom date format
+                  locale={bg} // Set locale to Bulgarian
                   timeFormat="HH:mm"
                   timeIntervals={timeInterval ?? 15}
                   showYearDropdown

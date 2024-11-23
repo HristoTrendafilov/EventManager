@@ -1,5 +1,4 @@
-﻿using EventManager.BOL;
-using EventManager.DAL;
+﻿using EventManager.DAL;
 using EventManager.API.Dto.Exception;
 using LinqToDB;
 using System.Linq.Expressions;
@@ -18,6 +17,18 @@ namespace EventManager.API.Services.Exception
         public Task<long> CreateExceptionAsync(ExceptionNew exception, long? currentUserId)
         {
             return _db.Exceptions.X_CreateAsync(exception, currentUserId);
+        }
+
+        public Task<long> CreateExceptionAsync(System.Exception ex, long? currentUserId)
+        {
+            var newException = new ExceptionNew
+            {
+                Exception = ex.ToString(),
+                ExceptionMessage = ex.Message,
+                UserId = currentUserId
+            };
+
+            return _db.Exceptions.X_CreateAsync(newException, currentUserId);
         }
 
         public async Task DeleteExceptionAsync(long exceptionId, long? currentUserId)

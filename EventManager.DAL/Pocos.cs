@@ -1,3 +1,4 @@
+using LinqToDB;
 using LinqToDB.Mapping;
 
 namespace EventManager.DAL
@@ -293,6 +294,10 @@ namespace EventManager.DAL
 
 		[Column(Name = "web_session_revoked")]
 		public virtual bool WebSessionRevoked { get; set; }
+
+		[Nullable]
+		[Column(Name = "web_session_ip_info", DataType = DataType.Json)]
+		public virtual string WebSessionIpInfo { get; set; }
 	}
 
 	[Table(Name = "v_regions")]
@@ -306,56 +311,6 @@ namespace EventManager.DAL
 
 		[Column(Name = "region_created_on_date_time")]
 		public virtual DateTime RegionCreatedOnDateTime { get; set; }
-	}
-
-	[Table(Name = "v_web_sessions")]
-	public class VWebSessionPoco
-	{
-		[Column(Name = "web_sessions_id")]
-		public virtual long WebSessionId { get; set; }
-
-		[Column(Name = "web_session_created_on_date_time")]
-		public virtual DateTime WebSessionCreatedOnDateTime { get; set; }
-
-		[Column(Name = "user_id")]
-		public virtual long UserId { get; set; }
-
-		[Column(Name = "web_session_expires_on_date_time")]
-		public virtual DateTime WebSessionExpireOnDateTime { get; set; }
-
-		[Nullable]
-		[Column(Name = "web_session_user_ip_address")]
-		public virtual string WebSessionUserIpAddress { get; set; }
-
-		[Nullable]
-		[Column(Name = "web_session_logout_date_time")]
-		public virtual DateTime? WebSessionLogoutDateTime { get; set; }
-
-		[Column(Name = "web_session_revoked")]
-		public virtual bool WebSessionRevoked { get; set; }
-	}
-
-	[Table(Name = "v_exceptions")]
-	public class VExceptionPoco
-	{
-		[Column(Name = "exception_id")]
-		public virtual long ExceptionId { get; set; }
-
-		[Column(Name = "exception")]
-		public virtual string Exception { get; set; }
-
-		[Column(Name = "exception_message")]
-		public virtual string ExceptionMessage { get; set; }
-
-		[Column(Name = "exception_created_on_date_time")]
-		public virtual DateTime ExceptionCreatedOnDateTime { get; set; }
-
-		[Column(Name = "exception_is_resolved")]
-		public virtual bool ExceptionIsResolved { get; set; }
-
-		[Nullable]
-		[Column(Name = "user_id")]
-		public virtual long? UserId { get; set; }
 	}
 
 	[Table(Name = "v_events")]
@@ -398,6 +353,84 @@ namespace EventManager.DAL
 
 		[Column(Name = "event_has_ended")]
 		public virtual bool EventHasEnded { get; set; }
+
+		[Column(Name = "event_has_started")]
+		public virtual bool EventHasStarted { get; set; }
+	}
+
+	[Table(Name = "v_exceptions")]
+	public class VExceptionPoco
+	{
+		[Column(Name = "exception_id")]
+		public virtual long ExceptionId { get; set; }
+
+		[Column(Name = "exception")]
+		public virtual string Exception { get; set; }
+
+		[Column(Name = "exception_message")]
+		public virtual string ExceptionMessage { get; set; }
+
+		[Column(Name = "exception_created_on_date_time")]
+		public virtual DateTime ExceptionCreatedOnDateTime { get; set; }
+
+		[Column(Name = "exception_is_resolved")]
+		public virtual bool ExceptionIsResolved { get; set; }
+
+		[Nullable]
+		[Column(Name = "user_id")]
+		public virtual long? UserId { get; set; }
+	}
+
+	[Table(Name = "v_web_sessions")]
+	public class VWebSessionPoco
+	{
+		[Column(Name = "web_sessions_id")]
+		public virtual long WebSessionId { get; set; }
+
+		[Column(Name = "web_session_created_on_date_time")]
+		public virtual DateTime WebSessionCreatedOnDateTime { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "web_session_expires_on_date_time")]
+		public virtual DateTime WebSessionExpireOnDateTime { get; set; }
+
+		[Nullable]
+		[Column(Name = "web_session_user_ip_address")]
+		public virtual string WebSessionUserIpAddress { get; set; }
+
+		[Nullable]
+		[Column(Name = "web_session_logout_date_time")]
+		public virtual DateTime? WebSessionLogoutDateTime { get; set; }
+
+		[Column(Name = "web_session_revoked")]
+		public virtual bool WebSessionRevoked { get; set; }
+
+		[Nullable]
+		[Column(Name = "web_session_ip_info")]
+		public virtual string WebSessionIpInfo { get; set; }
+
+		[Column(Name = "ip_info_country_code")]
+		public virtual string IpInfoCountryCode { get; set; }
+
+		[Column(Name = "ip_info_country")]
+		public virtual string IpInfoCountry { get; set; }
+
+		[Column(Name = "ip_info_region_name")]
+		public virtual string IpInfoRegionName { get; set; }
+
+		[Column(Name = "ip_info_city")]
+		public virtual string IpInfoCity { get; set; }
+
+		[Column(Name = "ip_info_post_code")]
+		public virtual string IpInfoPostCode { get; set; }
+
+		[Column(Name = "ip_info_lat")]
+		public virtual string IpInfoLat { get; set; }
+
+		[Column(Name = "ip_info_lon")]
+		public virtual string IpInfoLon { get; set; }
 	}
 
 	[Table(Name = "v_crud_logs")]

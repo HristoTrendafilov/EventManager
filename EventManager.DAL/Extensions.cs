@@ -17,10 +17,6 @@ namespace EventManager.DAL
             var poco = Mapper.CreateObject<T>(model);
             var primaryKey = await linqToDbTable.DataContext.InsertWithInt64IdentityAsync(poco);
 
-            var primaryKeyProperty = typeof(T).GetProperties()
-                .FirstOrDefault(x => x.GetCustomAttributes(typeof(PrimaryKeyAttribute), true).Length != 0);
-            primaryKeyProperty.SetValue(poco, primaryKey);
-
             var crudLog = new CrudLogPoco
             {
                 CrudLogPocoBeforeAction = JsonConvert.SerializeObject(new T()),

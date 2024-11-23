@@ -18,6 +18,8 @@ using EventManager.API.Services.Region;
 using EventManager.DAL;
 using System.Data;
 using EventManager.API.Dto.User.Role;
+using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace EventManager.API.Controllers
 {
@@ -103,6 +105,9 @@ namespace EventManager.API.Controllers
 
             var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
             userToReturn.UserRegionsHelpingIds = userRegionsHelping.Select(x => x.RegionId).ToList();
+
+            var webSessionsPoco = await _webSessionService.GetUserLastActiveWebSessions(userId);
+            userToReturn.WebSessions = Mapper.CreateList<WebSessionView>(webSessionsPoco);
 
             return Ok(userToReturn);
         }
@@ -207,11 +212,14 @@ namespace EventManager.API.Controllers
             var now = DateTime.Now;
             var expiresOn = now.AddHours(12);
 
+            var (ipAddress, ipInfo) = await _webSessionService.GetUserIpInfoAsync(HttpContext);
+
             var webSession = new WebSessionNew
             {
                 WebSessionExpireOnDateTime = expiresOn,
                 UserId = user.UserId,
-                WebSessionUserIpAddress = HttpContext.Request.Headers["X-Forwarded-For"].ToString()
+                WebSessionUserIpAddress = ipAddress,
+                WebSessionIpInfo = ipInfo,
             };
 
             var webSessionId = await _webSessionService.CreateWebSession(webSession);
@@ -237,7 +245,7 @@ namespace EventManager.API.Controllers
 
             var userRoles = await _userService.GetAllUserRolesAsync(user.UserId);
 
-            var response = new UserForWeb
+            var userForWeb = new UserForWeb
             {
                 UserId = user.UserId,
                 Username = user.Username,
@@ -247,7 +255,7 @@ namespace EventManager.API.Controllers
                 IsEventCreator = userRoles.Any(x => x.RoleId == (int)UserRole.EventCreator),
             };
 
-            return Ok(response);
+            return Ok(userForWeb);
         }
 
         [HttpPost]
