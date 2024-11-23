@@ -58,13 +58,13 @@ namespace EventManager.API.Services.User
         {
             await _db.WithTransactionAsync(async () =>
             {
-                var profilePictureId = await _db.Users
-                    .Where(x => x.UserId == userId)
-                    .Select(x => x.UserProfilePictureFileId)
-                    .FirstOrDefaultAsync();
-
                 if (user.ProfilePicture != null)
                 {
+                    var profilePictureId = await _db.Users
+                        .Where(x => x.UserId == userId)
+                        .Select(x => x.UserProfilePictureFileId)
+                        .FirstOrDefaultAsync();
+
                     var newProfilePictureFileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, currentUserId);
                     user.UserProfilePictureFileId = newProfilePictureFileId;
 

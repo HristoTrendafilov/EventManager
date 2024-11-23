@@ -3,7 +3,6 @@ using Serilog;
 using Serilog.Formatting.Json;
 using EventManager.API.Core;
 using EventManager.API.Services.User;
-using EventManager.BOL;
 using LinqToDB.AspNet;
 using EventManager.DAL;
 using LinqToDB;
@@ -26,10 +25,7 @@ using EventManager.API.Services.Shared;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using EventManager.API.Middlewares;
-using EventManager.API.Helpers;
-using EventManager.API.Dto;
 using EventManager.API.Services.FileStorage;
-using Newtonsoft.Json.Linq;
 using EventManager.API.Helpers.Extensions;
 
 namespace EventManager.API

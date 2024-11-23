@@ -18,8 +18,6 @@ using EventManager.API.Services.Region;
 using EventManager.DAL;
 using System.Data;
 using EventManager.API.Dto.User.Role;
-using Newtonsoft.Json.Linq;
-using System.Net;
 
 namespace EventManager.API.Controllers
 {
