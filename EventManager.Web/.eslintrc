@@ -15,6 +15,8 @@
     "airbnb",
     "plugin:eslint-comments/recommended",
     "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
     "prettier"
   ],
   "plugins": [
@@ -36,6 +38,17 @@
     "import/internal-regex": "^(~|src)",
     "react": {
       "version": "detect"
+    },
+    "import/resolver": {
+      "alias": {
+        "map": [
+          ["~", "./src"]
+        ],
+        "extensions": [".ts", ".tsx", ".js", ".jsx", ".json"]
+      },
+      "typescript": {
+        "alwaysTryTypes": true
+      }
     }
   },
   "reportUnusedDisableDirectives": true,
@@ -82,13 +95,12 @@
     "import/no-duplicates": ["error", { "prefer-inline": true }],
     "import/extensions": [
       "error",
-      "always",
+      "ignorePackages",
       {
-        "ignorePackages": true,
-        "pattern": {
-          "js": "never",
-          "jsx": "never"
-        }
+        "ts": "never",
+        "tsx": "never",
+        "js": "never",
+        "jsx": "never"
       }
     ],
     "import/order": [

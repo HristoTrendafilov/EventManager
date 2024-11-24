@@ -25,5 +25,5 @@ cd ..
 Start-Process dotnet -ArgumentList "run --project ./EventManager.API/EventManager.API.csproj --launch-profile `"Development https`""
 
 # Start the frontend
-npm start --prefix ./EventManager.Web
+npm run dev --prefix ./EventManager.Web
 
