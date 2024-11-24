@@ -16,7 +16,6 @@ export interface PrimaryKeyResponse {
 }
 
 export interface WebSessionView {
-  webSessionIpInfo: string | null;
   webSessionId: number;
   webSessionCreatedOnDateTime: Date;
   userId: number;

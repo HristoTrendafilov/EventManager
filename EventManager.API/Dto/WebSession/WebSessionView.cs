@@ -1,6 +1,6 @@
 ﻿using EventManager.API.Helpers;
 using EventManager.DAL;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace EventManager.API.Dto.WebSession
 {

@@ -45,7 +45,7 @@ string GenerateTypeScriptInterface(Type classType)
 {
     var interfaceName = classType.Name;
     var properties = classType.GetProperties()
-        .Where(x => !x.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any());
+        .Where(x => x.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Length == 0);
 
     var sb = new StringBuilder();
     sb.AppendLine($"export interface {interfaceName} {{");
