@@ -6,6 +6,7 @@ import type {
   UserForUpdate,
   UserForWeb,
   UserUpdatePasswordType,
+  UserUpdateUsernameType,
   UserView,
 } from '~/Infrastructure/api-types';
 import type { UserLogin } from '~/User/Login';
@@ -46,10 +47,14 @@ export function getUserProfilePicture(userId: number) {
   return callApi<Blob>(`/users/${userId}/profile-picture`, 'GET');
 }
 
-export function updateUserUsername(userId: number, username: string) {
+export function updateUserUsername(
+  userId: number,
+  user: UserUpdateUsernameType
+) {
   return callApi(
-    `/users/${userId}/update/username?username=${username}`,
-    'PUT'
+    `/users/${userId}/update/username`,
+    'PUT',
+    JSON.stringify(user)
   );
 }
 

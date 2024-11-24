@@ -187,6 +187,11 @@ export const UserUpdatePersonalDataSchema = z.object({
 });
 export type UserUpdatePersonalDataType = z.infer<typeof UserUpdatePersonalDataSchema>;
 
+export const UserUpdateUsernameSchema = z.object({
+  username: z.string().min(1, { message: "Потребителско име е задължително" }),
+});
+export type UserUpdateUsernameType = z.infer<typeof UserUpdateUsernameSchema>;
+
 export const RoleBaseFormSchema = z.object({
   userId: z.number().int().min(1, { message: "Потребителят е задължителен." }),
   rolesIds: z.number().int().array(),

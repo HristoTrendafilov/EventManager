@@ -1,8 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { z } from 'zod';
 
 import { updateUserUsername } from '~/Infrastructure/ApiRequests/users-requests';
+import {
+  UserUpdateUsernameSchema,
+  type UserUpdateUsernameType,
+} from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
@@ -13,12 +16,6 @@ import {
   updateUsername,
   userSelector,
 } from '~/Infrastructure/redux/user-slice';
-
-const schema = z.object({
-  username: z.string().min(5, 'Полето трябва да е минимум 5 символа'),
-});
-
-export type UpdateUserUsername = z.infer<typeof schema>;
 
 interface UserAccountSettingsProps {
   userId: number;
@@ -32,7 +29,10 @@ export function UserAccountSettings(props: UserAccountSettingsProps) {
 
   const { userId, username, onUserUpdate } = props;
 
-  const form = useZodForm({ schema, defaultValues: { username } });
+  const form = useZodForm({
+    schema: UserUpdateUsernameSchema,
+    defaultValues: { username },
+  });
 
   const user = useSelector(userSelector);
   const dispatch = useAppDispatch();
@@ -42,10 +42,10 @@ export function UserAccountSettings(props: UserAccountSettingsProps) {
   }, [isLocked]);
 
   const handleSubmit = useCallback(
-    async (updateUser: UpdateUserUsername) => {
+    async (updateUser: UserUpdateUsernameType) => {
       setError(undefined);
 
-      const response = await updateUserUsername(userId, updateUser.username);
+      const response = await updateUserUsername(userId, updateUser);
       if (!response.success) {
         setError(response.errorMessage);
         return;

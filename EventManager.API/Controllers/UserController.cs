@@ -139,16 +139,16 @@ namespace EventManager.API.Controllers
 
         [Authorize]
         [HttpPut("{userId}/update/username")]
-        public async Task<ActionResult> UpdateUserUsername(long userId, string username)
+        public async Task<ActionResult> UpdateUserUsername(long userId, UserUpdateUsername update)
         {
             if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
             {
                 return Unauthorized();
             }
 
-            if (await _userService.UserExistsAsync(x => x.Username == username && x.UserId != userId))
+            if (await _userService.UserExistsAsync(x => x.Username == update.Username && x.UserId != userId))
             {
-                return BadRequest($"Вече съществува потребителското име: {username}");
+                return BadRequest($"Вече съществува потребителското име: {update.Username}");
             }
 
             var user = await _userService.GetUserPocoAsync(x => x.UserId == userId);
@@ -157,7 +157,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            user.Username = username;
+            user.Username = update.Username;
             await _userService.UpdateUserAsync(userId, user, User.X_CurrentUserId());
 
             return NoContent();
