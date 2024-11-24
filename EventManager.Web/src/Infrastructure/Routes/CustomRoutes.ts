@@ -71,4 +71,8 @@ export class CustomRoutes {
 
     return '/events/search/:page?';
   }
+
+  static aboutUs() {
+    return '/about-us';
+  }
 }

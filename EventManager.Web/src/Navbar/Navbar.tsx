@@ -203,6 +203,16 @@ export function Navbar() {
                   Събития
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link
+                  className="nav-link"
+                  to={CustomRoutes.aboutUs()}
+                  data-bs-dismiss="offcanvas"
+                  onClick={handleLinkClick}
+                >
+                  За нас
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

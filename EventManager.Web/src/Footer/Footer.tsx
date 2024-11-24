@@ -25,7 +25,7 @@ export function Footer() {
             <h5>Бързи линкове</h5>
             <ul className="list-unstyled">
               <li>
-                <Link to="/about-us" className="text-white">
+                <Link to={CustomRoutes.aboutUs()} className="text-white">
                   За нас
                 </Link>
               </li>

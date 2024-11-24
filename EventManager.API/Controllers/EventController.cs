@@ -110,7 +110,7 @@ namespace EventManager.API.Controllers
         [Authorize]
         [Role(UserRole.EventCreator)]
         [HttpPut("{eventId}/update")]
-        public async Task<ActionResult> UpdateEvent(long eventId, [FromForm] EventForUpdate @event)
+        public async Task<ActionResult> UpdateEvent(long eventId, [FromForm] EventUpdate @event)
         {
             if (await _eventService.EventExistsAsync(x => x.EventName == @event.EventName && x.EventId != eventId))
             {

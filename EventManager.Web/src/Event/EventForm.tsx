@@ -128,6 +128,7 @@ export function Event() {
                       isNumber
                       required
                       searchable={false}
+                      clearable={false}
                     />
                     <CustomDateInput
                       {...form.register('eventStartDateTime')}

@@ -24,13 +24,10 @@ namespace EventManager.BOL
                 var destinationProperty = destinationProperties
                     .FirstOrDefault(x => x.Name.Equals(sourceProperty.Name, StringComparison.CurrentCultureIgnoreCase));
 
-                if (destinationProperty != null && destinationProperty.CanWrite)
+                if (destinationProperty != null)
                 {
                     var value = sourceProperty.GetValue(source);
-                    if (value != null && destinationProperty.PropertyType.IsAssignableFrom(value.GetType()))
-                    {
-                        destinationProperty.SetValue(destination, value);
-                    }
+                    destinationProperty.SetValue(destination, value);
                 }
             }
         }

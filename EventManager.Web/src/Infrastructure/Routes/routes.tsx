@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { AboutUs } from '~AboutUs/AboutUs';
 import { Event } from '~Event/EventForm';
 import { EventSearch } from '~Event/EventSearch/EventSearch';
 import { EventViewComponent } from '~Event/EventView/EventView';
@@ -93,6 +94,12 @@ export const table: RouteTable[] = [
   {
     location: CustomRoutes.eventsSearchPage(),
     component: <EventSearch />,
+    requiresLogin: false,
+    role: 'None',
+  },
+  {
+    location: CustomRoutes.aboutUs(),
+    component: <AboutUs />,
     requiresLogin: false,
     role: 'None',
   },

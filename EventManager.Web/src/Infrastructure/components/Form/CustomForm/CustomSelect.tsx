@@ -23,6 +23,7 @@ export interface CustomSelectProps extends ComponentProps<'select'> {
   isNumber?: boolean;
   error?: string;
   readonly?: boolean;
+  clearable?: boolean;
 }
 
 export const CustomSelect = forwardRef<
@@ -41,6 +42,7 @@ export const CustomSelect = forwardRef<
     isNumber = false,
     error,
     readonly,
+    clearable,
   } = props;
   const { control, getFieldState } = useFormContext();
   const state = getFieldState(name);
@@ -72,7 +74,7 @@ export const CustomSelect = forwardRef<
             id={name}
             isLoading={loading}
             isDisabled={disabled}
-            isClearable={!readonly}
+            isClearable={clearable}
             openMenuOnClick={!readonly}
             value={
               options.find((x) => {
@@ -86,7 +88,7 @@ export const CustomSelect = forwardRef<
             options={options}
             noOptionsMessage={() => 'Няма повече елементи за избор'}
             isSearchable={searchable}
-            placeholder={<div>{placeholder ?? 'Избор...'}</div>}
+            placeholder={<div>{placeholder ?? ''}</div>}
             onChange={(
               newSelections: SingleValue<SelectInputOption>,
               _: ActionMeta<SelectInputOption>
