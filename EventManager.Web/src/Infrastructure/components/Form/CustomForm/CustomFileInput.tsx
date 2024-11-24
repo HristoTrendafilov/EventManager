@@ -5,6 +5,8 @@ import {
   type ComponentProps,
   forwardRef,
   useCallback,
+  useEffect,
+  useRef,
   useState,
 } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -30,6 +32,8 @@ export const CustomFileInput = forwardRef<
 
   const { getFieldState, formState, resetField } = useFormContext();
   const state = getFieldState(props.name, formState);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -63,29 +67,43 @@ export const CustomFileInput = forwardRef<
     }
   }, [resetField, onFileRemoved, props]);
 
+  useEffect(() => {
+    if (state.error && wrapperRef.current) {
+      wrapperRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [state.error]);
+
   return (
-    <div className={`file-input-wrapper ${wrapperClassName ?? ''}`}>
-      <label className="file-input-label" htmlFor={props.name}>
-        {props.label}
-      </label>
-      <div className="file-input">
-        <div className="file-input-names">{selectedFileName}</div>
-        <input
-          {...rest}
-          ref={ref}
-          id={props.name}
-          type="file"
-          multiple={false}
-          onChange={handleChange}
-        />
-        <div className="clear-button-wrapper">
-          <button
-            type="button"
-            className="clear-button"
-            onClick={handleClearInput}
-          >
-            X
-          </button>
+    <div
+      className={`file-input-wrapper ${wrapperClassName ? 'mb-0' : ''}`}
+      ref={wrapperRef}
+    >
+      <div className={wrapperClassName ?? ''}>
+        <label className="file-input-label" htmlFor={props.name}>
+          {props.label}
+        </label>
+        <div className="file-input">
+          <div className="file-input-names">{selectedFileName}</div>
+          <input
+            {...rest}
+            ref={ref}
+            id={props.name}
+            type="file"
+            multiple={false}
+            onChange={handleChange}
+          />
+          <div className="clear-button-wrapper">
+            <button
+              type="button"
+              className="clear-button"
+              onClick={handleClearInput}
+            >
+              X
+            </button>
+          </div>
         </div>
       </div>
 

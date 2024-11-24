@@ -17,7 +17,7 @@ export const CustomFileInputButton = forwardRef<
   }, [name]);
 
   return (
-    <div className={className}>
+    <div className={`d-flex flex-column align-items-center ${className}`}>
       <button
         type="button"
         className="btn btn-success"

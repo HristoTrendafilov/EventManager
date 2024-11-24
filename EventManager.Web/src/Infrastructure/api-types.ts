@@ -209,7 +209,7 @@ export const EventBaseFormSchema = z.object({
   regionId: z.number().int().min(1, { message: "Регионът на събитието е задължителен." }).max(9.223372036854776E+18, { message: "Регионът на събитието е задължителен." }),
   eventDescription: z.string().nullable(),
   eventEndDateTime: z.coerce.date().nullable().nullable(),
-  mainImage: z.instanceof(FileList).nullable(),
+  mainImage: z.instanceof(FileList).nullable().refine(fileList => { if (fileList && fileList.length > 0) { return Array.from(fileList).every(file => file.size <= 1048576); } return true; }, { message: "Максималният размер за файл е 1MB" }),
 });
 export type EventBaseFormType = z.infer<typeof EventBaseFormSchema>;
 

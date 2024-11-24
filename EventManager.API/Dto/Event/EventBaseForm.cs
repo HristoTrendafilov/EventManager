@@ -23,6 +23,7 @@ namespace EventManager.API.Dto.Event
         public virtual DateTime? EventEndDateTime { get; set; }
 
         [Nullable]
+        [MaxFileSize(1 * 1024 * 1024, ErrorMessage = "Максималният размер за файл е 1MB")]
         public virtual IFormFile MainImage { get; set; }
     }
 }

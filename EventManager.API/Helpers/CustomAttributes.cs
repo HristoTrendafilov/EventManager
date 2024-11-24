@@ -21,6 +21,29 @@ namespace EventManager.API.Helpers
         }
     }
 
+    public class MaxFileSizeAttribute : ValidationAttribute
+    {
+        public readonly int _maxFileSize;
+
+        public MaxFileSizeAttribute(int maxFileSize)
+        {
+            _maxFileSize = maxFileSize;
+        }
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (value is IFormFile file)
+            {
+                if (file.Length > _maxFileSize)
+                {
+                    return new ValidationResult(ErrorMessage);
+                }
+            }
+
+            return ValidationResult.Success;
+        }
+    }
+
     public class RoleAttribute : TypeFilterAttribute
     {
         public RoleAttribute(UserRole role) : base(typeof(RoleAccessFilter))

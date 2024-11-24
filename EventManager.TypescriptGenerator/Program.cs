@@ -10,8 +10,8 @@ using System.Text;
 var classes = Assembly.GetAssembly(typeof(Global))?.GetTypes()  // Use any class from the referenced assembly
  .Where(t => t.IsClass).ToList();
 
-var interfaceClasses = classes.Where(x => x.GetCustomAttributes(typeof(GenerateTypeScriptInterfaceAttribute), false).Any());
-var zodSchemaClasses = classes.Where(x => x.GetCustomAttributes(typeof(GenerateZodSchemaAttribute), false).Any());
+var interfaceClasses = classes.Where(x => x.GetCustomAttributes(typeof(GenerateTypeScriptInterfaceAttribute), false).Length != 0);
+var zodSchemaClasses = classes.Where(x => x.GetCustomAttributes(typeof(GenerateZodSchemaAttribute), false).Length != 0);
 
 var fileBuilder = new StringBuilder();
 fileBuilder.AppendLine("// eslint-disable-next-line eslint-comments/disable-enable-pair");
@@ -139,10 +139,10 @@ string GenerateZodSchema(Type classType)
 {
     var className = classType.Name;
     var properties = classType.GetProperties()
-              .Where(x => !x.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Any());
+              .Where(x => x.GetCustomAttributes(typeof(JsonIgnoreAttribute), false).Length == 0);
 
     var req = classType.GetProperties()
-        .Where(x => x.GetCustomAttributes(typeof(ValidationAttribute), false).Any())
+        .Where(x => x.GetCustomAttributes(typeof(ValidationAttribute), false).Length != 0)
         .ToList();
 
     var sb = new StringBuilder();
@@ -164,11 +164,6 @@ string GenerateZodSchema(Type classType)
 
 string ConvertToZodType(Type propertyType, bool isNullable, IEnumerable<ValidationAttribute> validationAttributes)
 {
-    if (isNullable && validationAttributes.Any())
-    {
-        throw new Exception("WARNING! Detected nullable property with validation attributes!");
-    }
-
     if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
     {
         var underlyingType = propertyType.GetGenericArguments()[0];
@@ -236,6 +231,11 @@ string ConvertToZodType(Type propertyType, bool isNullable, IEnumerable<Validati
 
                 case EmailAddressAttribute emailAttr:
                     schemaProperty += $".email({{ message: \"{errorMessage}\" }})";
+                    break;
+
+                case MaxFileSizeAttribute fileSizeAttr:
+                    var maxSize = fileSizeAttr._maxFileSize;
+                    schemaProperty += $".refine(fileList => {{ if (fileList && fileList.length > 0) {{ return Array.from(fileList).every(file => file.size <= {maxSize}); }} return true; }}, {{ message: \"{errorMessage}\" }})";
                     break;
 
                 case RangeAttribute rangeAttr:
