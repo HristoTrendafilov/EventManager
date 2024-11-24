@@ -8,7 +8,7 @@ namespace EventManager.API.Dto.Event
     public class EventBaseForm
     {
         [Required(ErrorMessage = "Името на събитието е задължително.")]
-         public virtual string EventName { get; set; }
+        public virtual string EventName { get; set; }
 
         [Range(typeof(DateTime), "01-01-1971", "01-01-3000", ErrorMessage = "Дата на събитието е задължителна.")]
         public virtual DateTime EventStartDateTime { get; set; }

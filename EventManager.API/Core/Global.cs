@@ -9,5 +9,8 @@ namespace EventManager.API.Core
 
         public static string EmailTemplatesFolder = Path.Combine(BinFolder, "Services", "Email", "Templates");
         public static string EmailVerificationTemplate = Path.Combine(EmailTemplatesFolder, "EmailVerificationTemplate.html");
+
+        public static DateTime SystemMinDateTime = new DateTime(1900, 1, 1);
+        public static DateTime SystemMaxDateTime = new DateTime(3000, 1, 1);
     }
 }

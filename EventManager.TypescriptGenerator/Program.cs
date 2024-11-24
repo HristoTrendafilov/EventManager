@@ -167,7 +167,7 @@ string ConvertToZodType(Type propertyType, bool isNullable, IEnumerable<Validati
     if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
     {
         var underlyingType = propertyType.GetGenericArguments()[0];
-        return $"{ConvertToZodType(underlyingType, isNullable, validationAttributes)}.nullable()";
+        return $"{ConvertToZodType(underlyingType, isNullable, validationAttributes)}";
     }
 
     // Check if the type is a generic collection (e.g., List<T> or ICollection<T>)
