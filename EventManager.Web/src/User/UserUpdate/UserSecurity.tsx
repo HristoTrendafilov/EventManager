@@ -1,17 +1,17 @@
 import { useCallback, useState } from 'react';
 
-import { updateUserPassword } from '~Infrastructure/ApiRequests/users-requests';
+import { updateUserPassword } from '~/Infrastructure/ApiRequests/users-requests';
 import {
   UserUpdatePasswordSchema,
   type UserUpdatePasswordType,
   type WebSessionView,
-} from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { toastService } from '~Infrastructure/components/ToastService';
-import { formatDateTime } from '~Infrastructure/utils';
+} from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import { toastService } from '~/Infrastructure/components/ToastService';
+import { formatDateTime } from '~/Infrastructure/utils';
 
 interface UserSecurityProps {
   userId: number;

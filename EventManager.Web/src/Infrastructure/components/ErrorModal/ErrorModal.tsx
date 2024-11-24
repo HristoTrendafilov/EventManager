@@ -1,4 +1,4 @@
-import { Modal } from '~Infrastructure/components/Modal/Modal';
+import { Modal } from '~/Infrastructure/components/Modal/Modal';
 
 import './ErrorModal.css';
 

@@ -1,6 +1,6 @@
 import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import type { UserForWeb } from '~Infrastructure/api-types';
+import type { UserForWeb } from '~/Infrastructure/api-types';
 
 import type { ApplicationState } from './store';
 

@@ -3,9 +3,12 @@ import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Home } from '~Home/Home';
-import { type UserState, userSelector } from '~Infrastructure/redux/user-slice';
-import { NotFound } from '~NotFound/NotFound';
+import { Home } from '~/Home/Home';
+import {
+  type UserState,
+  userSelector,
+} from '~/Infrastructure/redux/user-slice';
+import { NotFound } from '~/NotFound/NotFound';
 
 import { CustomRoutes } from './CustomRoutes';
 import { type RouteTable, table } from './routes';

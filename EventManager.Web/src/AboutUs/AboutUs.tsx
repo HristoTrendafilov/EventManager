@@ -1,5 +1,5 @@
-import HristoTrendafilov from '~asset/Hristo-Trendafilov.png';
-import VladimirIvanov from '~asset/Vladimir-Ivanov.png';
+import HristoTrendafilov from '~/asset/Hristo-Trendafilov.png';
+import VladimirIvanov from '~/asset/Vladimir-Ivanov.png';
 
 export function AboutUs() {
   return (

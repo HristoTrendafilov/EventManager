@@ -8,10 +8,10 @@ import Select, {
   type SingleValue,
 } from 'react-select';
 
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import type { SelectInputOption } from '~Infrastructure/components/Form/SelectInput/selectInputUtils';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import type { SelectInputOption } from '~/Infrastructure/components/Form/SelectInput/selectInputUtils';
 
-import '~Infrastructure/components/Form/SelectInput/SelectInput.css';
+import '~/Infrastructure/components/Form/SelectInput/SelectInput.css';
 
 export interface CustomSelectProps extends ComponentProps<'select'> {
   name: string;

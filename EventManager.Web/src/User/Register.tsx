@@ -1,21 +1,21 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { registerUser } from '~Infrastructure/ApiRequests/users-requests';
-import { ImageCropModal } from '~Infrastructure/ImageCropping/ImageCropper';
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
-import { UserNewSchema, type UserNewType } from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomFileInputButton } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
-import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { toastService } from '~Infrastructure/components/ToastService';
-import { convertToFileList, objectToFormData } from '~Infrastructure/utils';
-import { RegionMultiSelect } from '~Shared/SmartSelects/Region/RegionMultiSelect';
-import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
-import noUserLogo from '~asset/no-user-logo.png';
+import { registerUser } from '~/Infrastructure/ApiRequests/users-requests';
+import { ImageCropModal } from '~/Infrastructure/ImageCropping/ImageCropper';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
+import { UserNewSchema, type UserNewType } from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
+import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import { toastService } from '~/Infrastructure/components/ToastService';
+import { convertToFileList, objectToFormData } from '~/Infrastructure/utils';
+import { RegionMultiSelect } from '~/Shared/SmartSelects/Region/RegionMultiSelect';
+import { RegionSelect } from '~/Shared/SmartSelects/Region/RegionSelect';
+import noUserLogo from '~/asset/no-user-logo.png';
 
 export function Register() {
   const [error, setError] = useState<string>();

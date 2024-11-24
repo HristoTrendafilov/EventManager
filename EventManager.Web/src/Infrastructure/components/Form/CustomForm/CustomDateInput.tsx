@@ -12,8 +12,8 @@ import {
 import DatePicker from 'react-datepicker';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import '~Infrastructure/components/Form/DateInput/DateInput.css';
-import '~Infrastructure/components/Form/SharedForm.css';
+import '~/Infrastructure/components/Form/DateInput/DateInput.css';
+import '~/Infrastructure/components/Form/SharedForm.css';
 
 interface CustomDateInputProps extends ComponentProps<'input'> {
   name: string;

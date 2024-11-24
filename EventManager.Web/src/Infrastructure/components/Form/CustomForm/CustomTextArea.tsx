@@ -10,8 +10,8 @@ import {
 } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import '~Infrastructure/components/Form/SharedForm.css';
-import '~Infrastructure/components/Form/TextArea/TextArea.css';
+import '~/Infrastructure/components/Form/SharedForm.css';
+import '~/Infrastructure/components/Form/TextArea/TextArea.css';
 
 interface CustomTextAreaProps extends ComponentProps<'textarea'> {
   name: string;

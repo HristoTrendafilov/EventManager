@@ -3,7 +3,7 @@ import { faList, faLocation, faUser } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 
 interface AdminPanelNav {
   location: string;

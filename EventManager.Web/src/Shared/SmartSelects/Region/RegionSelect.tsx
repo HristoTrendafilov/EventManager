@@ -1,12 +1,12 @@
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 import type { SelectInstance } from 'react-select';
 
-import { getRegions } from '~Infrastructure/ApiRequests/regions-request';
-import { CustomSelect } from '~Infrastructure/components/Form/CustomForm/CustomSelect';
+import { getRegions } from '~/Infrastructure/ApiRequests/regions-request';
+import { CustomSelect } from '~/Infrastructure/components/Form/CustomForm/CustomSelect';
 import type {
   CustomSelectInputProps,
   SelectInputOption,
-} from '~Infrastructure/components/Form/SelectInput/selectInputUtils';
+} from '~/Infrastructure/components/Form/SelectInput/selectInputUtils';
 
 export const RegionSelect = forwardRef<
   SelectInstance<SelectInputOption>,

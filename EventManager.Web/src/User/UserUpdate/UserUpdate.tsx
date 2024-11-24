@@ -6,9 +6,9 @@ import { useParams } from 'react-router-dom';
 import {
   getUserForUpdate,
   getUserProfilePicture,
-} from '~Infrastructure/ApiRequests/users-requests';
-import type { UserForUpdate } from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+} from '~/Infrastructure/ApiRequests/users-requests';
+import type { UserForUpdate } from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 
 import { UserAccountSettings } from './AccountSettings';
 import { UpdatePersonalData } from './UpdatePersonalData';

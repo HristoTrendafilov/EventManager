@@ -6,10 +6,10 @@ import {
   useState,
 } from 'react';
 
-import { getRegions } from '~Infrastructure/ApiRequests/regions-request';
-import type { RegionView } from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { TextInput } from '~Infrastructure/components/Form/TextInput/TextInput';
+import { getRegions } from '~/Infrastructure/ApiRequests/regions-request';
+import type { RegionView } from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { TextInput } from '~/Infrastructure/components/Form/TextInput/TextInput';
 
 import { RegionModal } from './RegionModal';
 

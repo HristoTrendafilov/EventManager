@@ -11,15 +11,15 @@ import {
   getEventView,
   subscribeUserToEvent,
   unsubscribeUserFromEvent,
-} from '~Infrastructure/ApiRequests/events-requests';
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
-import type { EventView, UserEventView } from '~Infrastructure/api-types';
-import { ConfirmModal } from '~Infrastructure/components/ConfirmModal/ConfirmModal';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { ImageGalleryModal } from '~Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
-import { userSelector } from '~Infrastructure/redux/user-slice';
-import { formatDateTime } from '~Infrastructure/utils';
-import noImage from '~asset/no-image.png';
+} from '~/Infrastructure/ApiRequests/events-requests';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
+import type { EventView, UserEventView } from '~/Infrastructure/api-types';
+import { ConfirmModal } from '~/Infrastructure/components/ConfirmModal/ConfirmModal';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { ImageGalleryModal } from '~/Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
+import { userSelector } from '~/Infrastructure/redux/user-slice';
+import { formatDateTime } from '~/Infrastructure/utils';
+import noImage from '~/asset/no-image.png';
 
 import { EventUserCard } from './EventUserCard';
 

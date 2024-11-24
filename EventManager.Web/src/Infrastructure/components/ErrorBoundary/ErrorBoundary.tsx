@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import { Modal } from '~Infrastructure/components/Modal/Modal';
+import { Modal } from '~/Infrastructure/components/Modal/Modal';
 
 import { type WithRouterProps, withRouter } from './RouterWrapper';
 

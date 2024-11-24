@@ -1,5 +1,5 @@
-import type { CustomMultiSelectProps } from '~Infrastructure/components/Form/CustomForm/CustomMultiSelect';
-import type { CustomSelectProps } from '~Infrastructure/components/Form/CustomForm/CustomSelect';
+import type { CustomMultiSelectProps } from '~/Infrastructure/components/Form/CustomForm/CustomMultiSelect';
+import type { CustomSelectProps } from '~/Infrastructure/components/Form/CustomForm/CustomSelect';
 
 import type { MultiSelectInputProps } from './MultiSelectInput';
 import type { SelectInputProps } from './SelectInput';

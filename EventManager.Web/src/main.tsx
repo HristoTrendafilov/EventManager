@@ -10,12 +10,12 @@ import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { Footer } from '~Footer/Footer';
-import { RenderRouteTable } from '~Infrastructure/Routes/RouteTable';
-import { ErrorBoundary } from '~Infrastructure/components/ErrorBoundary/ErrorBoundary';
-import { NavigatorSetter } from '~Infrastructure/components/NavigationSetter';
-import { store } from '~Infrastructure/redux/store';
-import { Navbar } from '~Navbar/Navbar';
+import { Footer } from '~/Footer/Footer';
+import { RenderRouteTable } from '~/Infrastructure/Routes/RouteTable';
+import { ErrorBoundary } from '~/Infrastructure/components/ErrorBoundary/ErrorBoundary';
+import { NavigatorSetter } from '~/Infrastructure/components/NavigationSetter';
+import { store } from '~/Infrastructure/redux/store';
+import { Navbar } from '~/Navbar/Navbar';
 
 import './main.css';
 

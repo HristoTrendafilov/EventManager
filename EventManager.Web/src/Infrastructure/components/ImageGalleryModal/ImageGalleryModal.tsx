@@ -1,6 +1,6 @@
 import ImageGallery, { type ReactImageGalleryItem } from 'react-image-gallery';
 
-import { Modal } from '~Infrastructure/components/Modal/Modal';
+import { Modal } from '~/Infrastructure/components/Modal/Modal';
 
 import './ImageGalleryModal.css';
 

@@ -1,8 +1,8 @@
 import { useEffect, useId, useState } from 'react';
 import Select, { type ActionMeta, type MultiValue } from 'react-select';
 
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import type { SelectInputOption } from '~Infrastructure/components/Form/SelectInput/selectInputUtils';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import type { SelectInputOption } from '~/Infrastructure/components/Form/SelectInput/selectInputUtils';
 
 import './SelectInput.css';
 

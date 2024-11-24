@@ -9,8 +9,8 @@ import {
 } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import '~Infrastructure/components/Form/FileInput/FileInput.css';
-import '~Infrastructure/components/Form/SharedForm.css';
+import '~/Infrastructure/components/Form/FileInput/FileInput.css';
+import '~/Infrastructure/components/Form/SharedForm.css';
 
 export interface CustomFileInputProps extends ComponentProps<'input'> {
   name: string;

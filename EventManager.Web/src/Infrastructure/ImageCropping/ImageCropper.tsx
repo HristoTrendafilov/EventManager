@@ -2,8 +2,8 @@
 import { useCallback, useState } from 'react';
 import Cropper, { type Area } from 'react-easy-crop';
 
-import { Modal } from '~Infrastructure/components/Modal/Modal';
-import { reportError } from '~Infrastructure/utils';
+import { Modal } from '~/Infrastructure/components/Modal/Modal';
+import { reportError } from '~/Infrastructure/utils';
 
 import './ImageCropper.css';
 

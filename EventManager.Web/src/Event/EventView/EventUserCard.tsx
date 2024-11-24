@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getUserProfilePicture } from '~Infrastructure/ApiRequests/users-requests';
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
-import type { UserEventView } from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { formatDateTime } from '~Infrastructure/utils';
-import noUserLogo from '~asset/no-user-logo.png';
+import { getUserProfilePicture } from '~/Infrastructure/ApiRequests/users-requests';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
+import type { UserEventView } from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { formatDateTime } from '~/Infrastructure/utils';
+import noUserLogo from '~/asset/no-user-logo.png';
 
 import './EventUserCard.css';
 

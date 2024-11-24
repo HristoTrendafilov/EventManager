@@ -4,17 +4,17 @@ import {
   createRegion,
   getRegionForUpdate,
   updateRegion,
-} from '~Infrastructure/ApiRequests/regions-request';
+} from '~/Infrastructure/ApiRequests/regions-request';
 import {
   RegionBaseFormSchema,
   type RegionBaseFormType,
   type RegionView,
-} from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { Modal } from '~Infrastructure/components/Modal/Modal';
+} from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import { Modal } from '~/Infrastructure/components/Modal/Modal';
 
 interface RegionModalProps {
   regionId: number | undefined;

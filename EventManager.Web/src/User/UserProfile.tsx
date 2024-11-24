@@ -4,12 +4,12 @@ import { Link, useParams } from 'react-router-dom';
 import {
   getUserProfilePicture,
   getUserView,
-} from '~Infrastructure/ApiRequests/users-requests';
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
-import type { UserView } from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { ImageGalleryModal } from '~Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
-import noUserLogo from '~asset/no-user-logo.png';
+} from '~/Infrastructure/ApiRequests/users-requests';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
+import type { UserView } from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { ImageGalleryModal } from '~/Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
+import noUserLogo from '~/asset/no-user-logo.png';
 
 export function UserProfile() {
   const [userView, setUserView] = useState<UserView | undefined>();

@@ -2,7 +2,7 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { CSSProperties } from 'react';
 
-import { isString } from '~Infrastructure/utils';
+import { isString } from '~/Infrastructure/utils';
 
 import './ErrorMessage.css';
 

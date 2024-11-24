@@ -9,8 +9,8 @@ import Select, {
   type SingleValue,
 } from 'react-select';
 
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import type { SelectInputOption } from '~Infrastructure/components/Form/SelectInput/selectInputUtils';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import type { SelectInputOption } from '~/Infrastructure/components/Form/SelectInput/selectInputUtils';
 
 export interface CustomMultiSelectProps extends ComponentProps<'select'> {
   name: string;

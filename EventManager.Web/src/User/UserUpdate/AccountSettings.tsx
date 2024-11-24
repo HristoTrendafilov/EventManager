@@ -2,14 +2,17 @@ import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { z } from 'zod';
 
-import { updateUserUsername } from '~Infrastructure/ApiRequests/users-requests';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { toastService } from '~Infrastructure/components/ToastService';
-import { useAppDispatch } from '~Infrastructure/redux/store';
-import { updateUsername, userSelector } from '~Infrastructure/redux/user-slice';
+import { updateUserUsername } from '~/Infrastructure/ApiRequests/users-requests';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import { toastService } from '~/Infrastructure/components/ToastService';
+import { useAppDispatch } from '~/Infrastructure/redux/store';
+import {
+  updateUsername,
+  userSelector,
+} from '~/Infrastructure/redux/user-slice';
 
 const schema = z.object({
   username: z.string().min(5, 'Полето трябва да е минимум 5 символа'),

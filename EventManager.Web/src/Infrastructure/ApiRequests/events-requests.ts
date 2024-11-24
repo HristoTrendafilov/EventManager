@@ -1,11 +1,11 @@
-import { callApi } from '~Infrastructure/api-client';
+import { callApi } from '~/Infrastructure/api-client';
 import type {
   EventForUpdate,
   EventSearchFilterType,
   EventView,
   PrimaryKeyResponse,
   UserEventView,
-} from '~Infrastructure/api-types';
+} from '~/Infrastructure/api-types';
 
 export function getEventView(eventId: number) {
   return callApi<EventView>(`/events/${eventId}/view`, 'GET');

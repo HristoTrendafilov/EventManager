@@ -1,23 +1,23 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { updateUserPersonalData } from '~Infrastructure/ApiRequests/users-requests';
-import { ImageCropModal } from '~Infrastructure/ImageCropping/ImageCropper';
+import { updateUserPersonalData } from '~/Infrastructure/ApiRequests/users-requests';
+import { ImageCropModal } from '~/Infrastructure/ImageCropping/ImageCropper';
 import {
   type UserForUpdate,
   UserUpdatePersonalDataSchema,
   type UserUpdatePersonalDataType,
-} from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomFileInputButton } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
-import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { toastService } from '~Infrastructure/components/ToastService';
-import { convertToFileList, objectToFormData } from '~Infrastructure/utils';
-import { RegionMultiSelect } from '~Shared/SmartSelects/Region/RegionMultiSelect';
-import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
-import noUserLogo from '~asset/no-user-logo.png';
+} from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
+import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import { toastService } from '~/Infrastructure/components/ToastService';
+import { convertToFileList, objectToFormData } from '~/Infrastructure/utils';
+import { RegionMultiSelect } from '~/Shared/SmartSelects/Region/RegionMultiSelect';
+import { RegionSelect } from '~/Shared/SmartSelects/Region/RegionSelect';
+import noUserLogo from '~/asset/no-user-logo.png';
 
 interface UpdatePersonalDataProps {
   userId: number;

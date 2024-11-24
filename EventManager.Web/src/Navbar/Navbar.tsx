@@ -2,15 +2,15 @@ import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { logoutUser } from '~Infrastructure/ApiRequests/users-requests';
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
-import { ErrorModal } from '~Infrastructure/components/ErrorModal/ErrorModal';
-import { useAppDispatch } from '~Infrastructure/redux/store';
+import { logoutUser } from '~/Infrastructure/ApiRequests/users-requests';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
+import { ErrorModal } from '~/Infrastructure/components/ErrorModal/ErrorModal';
+import { useAppDispatch } from '~/Infrastructure/redux/store';
 import {
   type UserState,
   removeUser,
   userSelector,
-} from '~Infrastructure/redux/user-slice';
+} from '~/Infrastructure/redux/user-slice';
 
 import './Navbar.css';
 

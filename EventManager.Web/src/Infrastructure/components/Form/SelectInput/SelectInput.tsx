@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import Select, { type ActionMeta, type SingleValue } from 'react-select';
 
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 
 import type { SelectInputOption } from './selectInputUtils';
 

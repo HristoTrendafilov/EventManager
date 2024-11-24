@@ -10,8 +10,8 @@ import {
 } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import '~Infrastructure/components/Form/SharedForm.css';
-import '~Infrastructure/components/Form/TextInput/TextInput.css';
+import '~/Infrastructure/components/Form/SharedForm.css';
+import '~/Infrastructure/components/Form/TextInput/TextInput.css';
 
 interface CustomInputProps extends ComponentProps<'input'> {
   name: string;

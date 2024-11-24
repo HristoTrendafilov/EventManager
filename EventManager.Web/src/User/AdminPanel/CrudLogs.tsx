@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getCrudLogs } from '~Infrastructure/ApiRequests/crud-logs-requests';
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
+import { getCrudLogs } from '~/Infrastructure/ApiRequests/crud-logs-requests';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 import {
   CrudLogFilterSchema,
   type CrudLogFilterType,
   type CrudLogView,
-} from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomDateInput } from '~Infrastructure/components/Form/CustomForm/CustomDateInput';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomSelect } from '~Infrastructure/components/Form/CustomForm/CustomSelect';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import type { SelectInputOption } from '~Infrastructure/components/Form/SelectInput/selectInputUtils';
-import { formatDateTime } from '~Infrastructure/utils';
+} from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomDateInput } from '~/Infrastructure/components/Form/CustomForm/CustomDateInput';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomSelect } from '~/Infrastructure/components/Form/CustomForm/CustomSelect';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import type { SelectInputOption } from '~/Infrastructure/components/Form/SelectInput/selectInputUtils';
+import { formatDateTime } from '~/Infrastructure/utils';
 
 const accordionBackColor = new Map<number, string>([
   [1, 'success'],

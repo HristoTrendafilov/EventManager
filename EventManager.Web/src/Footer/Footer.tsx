@@ -6,7 +6,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 
 export function Footer() {
   return (

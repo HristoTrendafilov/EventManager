@@ -4,18 +4,18 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 
-import { getEventSearch } from '~Infrastructure/ApiRequests/events-requests';
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
+import { getEventSearch } from '~/Infrastructure/ApiRequests/events-requests';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 import {
   EventSearchFilterSchema,
   type EventSearchFilterType,
   type EventView,
   type PaginationMetadata,
-} from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+} from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
 
 import { EventSearchCard } from './EventSearchCard';
 

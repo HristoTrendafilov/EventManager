@@ -1,9 +1,9 @@
-import { callApi } from '~Infrastructure/api-client';
+import { callApi } from '~/Infrastructure/api-client';
 import type {
   RegionBaseFormType,
   RegionForUpdate,
   RegionView,
-} from '~Infrastructure/api-types';
+} from '~/Infrastructure/api-types';
 
 export function getRegions() {
   return callApi<RegionView[]>('/regions', 'GET');

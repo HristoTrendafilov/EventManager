@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { getHomeView } from '~Infrastructure/ApiRequests/home-requests';
-import type { EventView } from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
+import { getHomeView } from '~/Infrastructure/ApiRequests/home-requests';
+import type { EventView } from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 
 import { CarouselEvent } from './CarouselEvent';
 

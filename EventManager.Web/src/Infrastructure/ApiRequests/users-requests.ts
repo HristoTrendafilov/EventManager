@@ -1,4 +1,4 @@
-import { callApi } from '~Infrastructure/api-client';
+import { callApi } from '~/Infrastructure/api-client';
 import type {
   RoleBaseFormType,
   RoleFilterType,
@@ -7,8 +7,8 @@ import type {
   UserForWeb,
   UserUpdatePasswordType,
   UserView,
-} from '~Infrastructure/api-types';
-import type { UserLogin } from '~User/Login';
+} from '~/Infrastructure/api-types';
+import type { UserLogin } from '~/User/Login';
 
 export function registerUser(user: FormData) {
   return callApi('/users', 'POST', user);

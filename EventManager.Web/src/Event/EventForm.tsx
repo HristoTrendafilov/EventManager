@@ -6,23 +6,23 @@ import {
   getEventForUpdate,
   getEventMainImage,
   updateEvent,
-} from '~Infrastructure/ApiRequests/events-requests';
-import { CustomRoutes } from '~Infrastructure/Routes/CustomRoutes';
+} from '~/Infrastructure/ApiRequests/events-requests';
+import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 import {
   EventBaseFormSchema,
   type EventBaseFormType,
-} from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomFileInputButton } from '~Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
-import { CustomDateInput } from '~Infrastructure/components/Form/CustomForm/CustomDateInput';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
-import { CustomTextArea } from '~Infrastructure/components/Form/CustomForm/CustomTextArea';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { setValidationErrors } from '~Infrastructure/components/Form/formUtils';
-import { objectToFormData } from '~Infrastructure/utils';
-import { RegionSelect } from '~Shared/SmartSelects/Region/RegionSelect';
-import noImage from '~asset/no-image.png';
+} from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
+import { CustomDateInput } from '~/Infrastructure/components/Form/CustomForm/CustomDateInput';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
+import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import { setValidationErrors } from '~/Infrastructure/components/Form/formUtils';
+import { objectToFormData } from '~/Infrastructure/utils';
+import { RegionSelect } from '~/Shared/SmartSelects/Region/RegionSelect';
+import noImage from '~/asset/no-image.png';
 
 import './EventForm.css';
 

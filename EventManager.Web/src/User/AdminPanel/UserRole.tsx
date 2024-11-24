@@ -1,16 +1,16 @@
 import { useCallback, useState } from 'react';
 
-import { saveUserRoles } from '~Infrastructure/ApiRequests/users-requests';
+import { saveUserRoles } from '~/Infrastructure/ApiRequests/users-requests';
 import {
   RoleBaseFormSchema,
   type RoleBaseFormType,
   type RoleView,
   type UserView,
-} from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
-import { toastService } from '~Infrastructure/components/ToastService';
+} from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import { toastService } from '~/Infrastructure/components/ToastService';
 
 interface UserRoleProps {
   user: UserView;

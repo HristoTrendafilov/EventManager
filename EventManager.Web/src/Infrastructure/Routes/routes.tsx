@@ -1,18 +1,18 @@
 import React from 'react';
 
-import { AboutUs } from '~AboutUs/AboutUs';
-import { Event } from '~Event/EventForm';
-import { EventSearch } from '~Event/EventSearch/EventSearch';
-import { EventViewComponent } from '~Event/EventView/EventView';
-import type { UserRole } from '~Infrastructure/redux/user-slice';
-import { AdminPanel } from '~User/AdminPanel/AdminPanel';
-import { CrudLogs } from '~User/AdminPanel/CrudLogs';
-import { RegionsCatalog } from '~User/AdminPanel/RegionsCatalog';
-import { UsersRolesCatalog } from '~User/AdminPanel/UsersRolesCatalog';
-import { Login } from '~User/Login';
-import { Register } from '~User/Register';
-import { UserProfile } from '~User/UserProfile';
-import { UserUpdate } from '~User/UserUpdate/UserUpdate';
+import { AboutUs } from '~/AboutUs/AboutUs';
+import { Event } from '~/Event/EventForm';
+import { EventSearch } from '~/Event/EventSearch/EventSearch';
+import { EventViewComponent } from '~/Event/EventView/EventView';
+import type { UserRole } from '~/Infrastructure/redux/user-slice';
+import { AdminPanel } from '~/User/AdminPanel/AdminPanel';
+import { CrudLogs } from '~/User/AdminPanel/CrudLogs';
+import { RegionsCatalog } from '~/User/AdminPanel/RegionsCatalog';
+import { UsersRolesCatalog } from '~/User/AdminPanel/UsersRolesCatalog';
+import { Login } from '~/User/Login';
+import { Register } from '~/User/Register';
+import { UserProfile } from '~/User/UserProfile';
+import { UserUpdate } from '~/User/UserUpdate/UserUpdate';
 
 import { CustomRoutes } from './CustomRoutes';
 

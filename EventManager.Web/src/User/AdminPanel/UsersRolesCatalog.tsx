@@ -3,17 +3,17 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   getAllRoles,
   getUsersForRoles,
-} from '~Infrastructure/ApiRequests/users-requests';
+} from '~/Infrastructure/ApiRequests/users-requests';
 import {
   RoleFilterSchema,
   type RoleFilterType,
   type RoleView,
   type UserView,
-} from '~Infrastructure/api-types';
-import { ErrorMessage } from '~Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomForm } from '~Infrastructure/components/Form/CustomForm/CustomForm';
-import { CustomInput } from '~Infrastructure/components/Form/CustomForm/CustomInput';
-import { useZodForm } from '~Infrastructure/components/Form/CustomForm/UseZedForm';
+} from '~/Infrastructure/api-types';
+import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
+import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
+import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
+import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
 
 import { UserRole } from './UserRole';
 
