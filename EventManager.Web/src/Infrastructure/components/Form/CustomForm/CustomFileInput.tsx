@@ -13,11 +13,13 @@ import { useFormContext } from 'react-hook-form';
 
 import '~/Infrastructure/components/Form/FileInput/FileInput.css';
 import '~/Infrastructure/components/Form/SharedForm.css';
+import type { FileType } from '~/Infrastructure/components/Form/formUtils';
 
 export interface CustomFileInputProps extends ComponentProps<'input'> {
   name: string;
   label: string;
   wrapperClassName?: string;
+  fileType: FileType;
   onFileChosen?: (file: File) => void;
   onFileRemoved?: () => void;
 }
@@ -26,7 +28,8 @@ export const CustomFileInput = forwardRef<
   HTMLInputElement,
   CustomFileInputProps
 >((props, ref) => {
-  const { wrapperClassName, onFileChosen, onFileRemoved, ...rest } = props;
+  const { wrapperClassName, onFileChosen, onFileRemoved, fileType, ...rest } =
+    props;
 
   const [selectedFileName, setSelectedFileName] = useState<string | null>();
 
@@ -92,6 +95,7 @@ export const CustomFileInput = forwardRef<
             ref={ref}
             id={props.name}
             type="file"
+            accept={fileType}
             multiple={false}
             onChange={handleChange}
           />

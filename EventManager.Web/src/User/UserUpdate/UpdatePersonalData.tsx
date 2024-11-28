@@ -8,12 +8,15 @@ import {
   type UserUpdatePersonalDataType,
 } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
+import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomFileInputButton';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import { FileType } from '~/Infrastructure/components/Form/formUtils';
 import { toastService } from '~/Infrastructure/components/ToastService';
+import { useAppDispatch } from '~/Infrastructure/redux/store';
+import { updateProfilePicture } from '~/Infrastructure/redux/user-slice';
 import { convertToFileList, objectToFormData } from '~/Infrastructure/utils';
 import { RegionMultiSelect } from '~/Shared/SmartSelects/Region/RegionMultiSelect';
 import { RegionSelect } from '~/Shared/SmartSelects/Region/RegionSelect';
@@ -34,6 +37,8 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
   const [showCropImageModal, setShowCropImageModal] = useState<boolean>(false);
 
   const { user, userId, userProfilePicture, onUserUpdate } = props;
+
+  const dispatch = useAppDispatch();
 
   const form = useZodForm({
     schema: UserUpdatePersonalDataSchema,
@@ -59,10 +64,18 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
         return;
       }
 
+      if (personalData.profilePicture) {
+        dispatch(
+          updateProfilePicture({
+            profilePicture: personalData.profilePicture[0],
+          })
+        );
+      }
+
       onUserUpdate();
       toastService.success('Успешно променени данни.');
     },
-    [onUserUpdate, userId]
+    [dispatch, onUserUpdate, userId]
   );
 
   const closeImageCropModal = useCallback(() => {
@@ -111,6 +124,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           </div>
           <CustomFileInputButton
             {...form.register('profilePicture')}
+            fileType={FileType.Images}
             label="Избери нова профилна снимка"
             className="d-flex justify-content-center mb-3 mt-2"
             onFileChosen={onProfilePictureChange}

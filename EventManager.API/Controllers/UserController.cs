@@ -251,6 +251,7 @@ namespace EventManager.API.Controllers
                 WebSessionId = webSessionId,
                 IsAdmin = userRoles.Any(x => x.RoleId == (int)UserRole.Admin),
                 IsEventCreator = userRoles.Any(x => x.RoleId == (int)UserRole.EventCreator),
+                HasProfilePicture = user.UserProfilePictureFileId.HasValue,
             };
 
             return Ok(userForWeb);

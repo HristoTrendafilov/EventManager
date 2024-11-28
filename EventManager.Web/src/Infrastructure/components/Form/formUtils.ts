@@ -10,3 +10,10 @@ export function setValidationErrors<T extends FieldValues>(
     setError(error.propertyName as Path<T>, { message: error.errorMessage });
   });
 }
+
+export enum FileType {
+  Images = 'image/*',
+  Excel = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel',
+  PDFs = 'application/pdf',
+  All = '*/*',
+}

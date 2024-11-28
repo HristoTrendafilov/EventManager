@@ -117,14 +117,14 @@ namespace EventManager.API
                 .WriteTo.Logger(lc =>
                 {
                     lc.WriteTo.File(
-                        Path.Combine(Global.ProjectFolder, builder.Configuration["SerilogSettings:LogsDirectory"]),
+                        Path.Combine(builder.Configuration["SerilogSettings:LogsDirectory"]),
                         rollingInterval: RollingInterval.Day);
                 })
                 .WriteTo.Logger(lc =>
                 {
                     lc.Filter.ByIncludingOnly(logEvent => logEvent.Exception != null).WriteTo.File(
                         new JsonFormatter(),
-                        Path.Combine(Global.ProjectFolder, builder.Configuration["SerilogSettings:JsonLogsDirectory"]),
+                        Path.Combine(builder.Configuration["SerilogSettings:JsonLogsDirectory"]),
                         rollingInterval: RollingInterval.Day);
                 });
 

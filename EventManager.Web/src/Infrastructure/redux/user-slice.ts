@@ -12,6 +12,7 @@ export interface UserState {
   isAdmin: boolean;
   isEventCreator: boolean;
   token: string;
+  profilePicture: string | null;
 }
 
 const initialUserState: UserState = {
@@ -22,6 +23,7 @@ const initialUserState: UserState = {
   isAdmin: false,
   isEventCreator: false,
   token: '',
+  profilePicture: null,
 };
 
 export type UserRole = 'None' | 'Admin' | 'EventCreator';
@@ -42,6 +44,10 @@ function getInitialState(): UserState {
   return userState;
 }
 
+const updateLocalStorage = (state: UserState) => {
+  localStorage.setItem(localStorageKey, JSON.stringify(state));
+};
+
 export const userSlice = createSlice({
   name: 'user',
   initialState: getInitialState(),
@@ -57,7 +63,7 @@ export const userSlice = createSlice({
       state.isLoggedIn = true;
       state.token = payload.token;
 
-      localStorage.setItem(localStorageKey, JSON.stringify(state));
+      updateLocalStorage(state);
     },
     removeUser: () => {
       localStorage.removeItem(localStorageKey);
@@ -66,8 +72,19 @@ export const userSlice = createSlice({
     updateUsername: (state, action: PayloadAction<{ username: string }>) => {
       state.username = action.payload.username;
     },
+    updateProfilePicture: (
+      state,
+      action: PayloadAction<{ profilePicture: Blob | File }>
+    ) => {
+      if (state.profilePicture) {
+        URL.revokeObjectURL(state.profilePicture);
+      }
+      state.profilePicture = URL.createObjectURL(action.payload.profilePicture);
+      updateLocalStorage(state);
+    },
   },
 });
 
 export const userSelector = (state: ApplicationState) => state.user;
-export const { setUser, removeUser, updateUsername } = userSlice.actions;
+export const { setUser, removeUser, updateUsername, updateProfilePicture } =
+  userSlice.actions;

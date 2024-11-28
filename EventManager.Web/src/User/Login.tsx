@@ -3,14 +3,20 @@ import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
 
-import { loginUser } from '~/Infrastructure/ApiRequests/users-requests';
+import {
+  getUserProfilePicture,
+  loginUser,
+} from '~/Infrastructure/ApiRequests/users-requests';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
 import { useAppDispatch } from '~/Infrastructure/redux/store';
-import { setUser } from '~/Infrastructure/redux/user-slice';
+import {
+  setUser,
+  updateProfilePicture,
+} from '~/Infrastructure/redux/user-slice';
 
 const schema = z.object({
   username: z.string(),
@@ -35,6 +41,19 @@ export function Login() {
       if (!response.success) {
         setError(response.errorMessage);
         return;
+      }
+
+      if (response.data.hasProfilePicture) {
+        const profilePictureResponse = await getUserProfilePicture(
+          response.data.userId
+        );
+        if (profilePictureResponse.success) {
+          dispatch(
+            updateProfilePicture({
+              profilePicture: profilePictureResponse.data,
+            })
+          );
+        }
       }
 
       dispatch(setUser(response.data));

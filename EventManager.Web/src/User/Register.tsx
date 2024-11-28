@@ -6,7 +6,7 @@ import { ImageCropModal } from '~/Infrastructure/ImageCropping/ImageCropper';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 import { UserNewSchema, type UserNewType } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
+import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomFileInputButton';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';

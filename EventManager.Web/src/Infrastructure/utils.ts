@@ -34,6 +34,17 @@ export function formatDateTime(date: Date | string): string {
   });
 }
 
+export const formatToISO = (date: Date | null): string => {
+  if (date) {
+    const localDate = new Date(
+      date.getTime() - date.getTimezoneOffset() * 60000
+    );
+    return localDate.toISOString().slice(0, 16);
+  }
+
+  return '';
+};
+
 function appendToFormData<T extends object>(
   formData: FormData,
   obj: T,
@@ -58,10 +69,7 @@ function appendToFormData<T extends object>(
       //   });
       // }
       else if (value instanceof Date) {
-        formData.append(
-          formKey,
-          value.toLocaleString('bg-BG', { timeZone: 'Europe/Sofia' })
-        );
+        formData.append(formKey, formatToISO(value)); // Format the date before appending
       } else if (typeof value === 'object') {
         // Recursively append objects
         appendToFormData(formData, value, formKey);

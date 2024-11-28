@@ -13,13 +13,16 @@ import {
   type EventBaseFormType,
 } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
-import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomButtonFileInput';
 import { CustomDateInput } from '~/Infrastructure/components/Form/CustomForm/CustomDateInput';
+import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomFileInputButton';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
-import { setValidationErrors } from '~/Infrastructure/components/Form/formUtils';
+import {
+  FileType,
+  setValidationErrors,
+} from '~/Infrastructure/components/Form/formUtils';
 import { objectToFormData } from '~/Infrastructure/utils';
 import { RegionSelect } from '~/Shared/SmartSelects/Region/RegionSelect';
 import noImage from '~/asset/no-image.png';
@@ -154,6 +157,7 @@ export function Event() {
                         <CustomFileInputButton
                           {...form.register('mainImage')}
                           label="Главна снимка"
+                          fileType={FileType.Images}
                           onFileChosen={onMainImageChosen}
                         />
                       </div>

@@ -14,6 +14,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import '~/Infrastructure/components/Form/DateInput/DateInput.css';
 import '~/Infrastructure/components/Form/SharedForm.css';
+import { formatToISO } from '~/Infrastructure/utils';
 
 interface CustomDateInputProps extends ComponentProps<'input'> {
   name: string;
@@ -32,7 +33,8 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
 
     const wrapperRef = useRef<HTMLDivElement>(null);
 
-    const { getFieldState, formState, control, setValue } = useFormContext();
+    const { getFieldState, formState, control, setValue, getValues, watch } =
+      useFormContext();
     const state = getFieldState(name, formState);
 
     const isTimeChanged = useCallback(
@@ -70,7 +72,8 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
                 <DatePicker
                   ref={ref}
                   onChange={(date) => {
-                    field.onChange(date);
+                    const formatted = formatToISO(date);
+                    field.onChange(formatted);
 
                     if (!showTime) {
                       setOpen(false);
@@ -82,7 +85,7 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
                         setOpen(false);
                       }
 
-                      setPreviousDate(date); // Update previous date
+                      setPreviousDate(date);
                     }
                   }}
                   onInputClick={() => {
@@ -96,7 +99,7 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
                   }
                   dateFormat={
                     showTime ? "d MMMM yyyy 'г.' HH:mm" : "d MMMM yyyy 'г.'"
-                  } // Custom date format
+                  }
                   locale={bg} // Set locale to Bulgarian
                   timeFormat="HH:mm"
                   timeIntervals={timeInterval ?? 15}

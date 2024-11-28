@@ -11,35 +11,41 @@ import {
   removeUser,
   userSelector,
 } from '~/Infrastructure/redux/user-slice';
+import noUserLogo from '~/asset/no-user-logo.png';
 
 import './Navbar.css';
 
 interface NavUserDropdownProps {
   user: UserState;
   loading: boolean;
-  isInOffcanvas: boolean;
   handleLogout: () => void;
   handleNavClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 function NavUserDropdown(props: NavUserDropdownProps) {
-  const { user, loading, isInOffcanvas, handleLogout, handleNavClick } = props;
+  const { user, loading, handleLogout, handleNavClick } = props;
 
   return (
-    <div className={`dropdown ${!isInOffcanvas && 'd-none d-md-flex'}`}>
+    <div className="dropdown">
       <button
-        className="btn btn-secondary dropdown-toggle"
+        className="dropdown-toggle profile-picture-dropdown"
         type="button"
         data-bs-toggle="dropdown"
         aria-expanded="false"
+        aria-label="User profile dropdown"
       >
-        {user.username}
+        <img
+          height={45}
+          width={45}
+          className="rounded-circle"
+          src={user.profilePicture ?? noUserLogo}
+          alt=""
+        />
       </button>
-      <ul className="dropdown-menu dropdown-menu-start dropdown-menu-md-end p-2">
+      <ul className="dropdown-menu dropdown-menu-end p-2">
         <li>
           <Link
             to={CustomRoutes.usersView(user.userId)}
-            data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
             onClick={handleNavClick}
           >
             Към профила
@@ -47,22 +53,14 @@ function NavUserDropdown(props: NavUserDropdownProps) {
         </li>
         {(user.isAdmin || user.isEventCreator) && (
           <li>
-            <Link
-              to={CustomRoutes.eventsNew()}
-              data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
-              onClick={handleNavClick}
-            >
+            <Link to={CustomRoutes.eventsNew()} onClick={handleNavClick}>
               Създай събитие
             </Link>
           </li>
         )}
         {user.isAdmin && (
           <li>
-            <Link
-              to={CustomRoutes.usersAdminPanel()}
-              data-bs-dismiss={`${isInOffcanvas ? 'offcanvas' : 'none'}`}
-              onClick={handleNavClick}
-            >
+            <Link to={CustomRoutes.usersAdminPanel()} onClick={handleNavClick}>
               Админ панел
             </Link>
           </li>
@@ -133,7 +131,7 @@ export function Navbar() {
           <span className="navbar-toggler-icon" />
         </button>
         <Link className="navbar-brand me-auto" to="/">
-          EventManager
+          ihelp
         </Link>
 
         <div className="d-flex gap-2 order-0 order-md-1">
@@ -145,7 +143,6 @@ export function Navbar() {
             <NavUserDropdown
               user={user}
               loading={logoutLoading}
-              isInOffcanvas={false}
               handleLogout={handleLogout}
               handleNavClick={handleLinkClick}
             />
@@ -160,17 +157,7 @@ export function Navbar() {
         >
           <div className="offcanvas-header pb-0">
             <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
-              {user.isLoggedIn ? (
-                <NavUserDropdown
-                  user={user}
-                  loading={logoutLoading}
-                  isInOffcanvas
-                  handleLogout={handleLogout}
-                  handleNavClick={handleLinkClick}
-                />
-              ) : (
-                <div>EventManager</div>
-              )}
+              ihelp
             </h5>
 
             <button

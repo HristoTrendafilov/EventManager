@@ -34,6 +34,7 @@ export function Home() {
         id="carouselExampleCaptions"
         className="carousel slide"
         data-bs-ride="carousel"
+        data-bs-interval="2000" // Set the interval to 2000 milliseconds (2 seconds)
       >
         <div className="carousel-indicators">
           {incomingEvents.map((x, i) => (

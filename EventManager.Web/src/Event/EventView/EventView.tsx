@@ -197,9 +197,7 @@ export function EventViewComponent() {
                             type="button"
                             className="btn btn-success"
                             onClick={subscribeUser}
-                            disabled={
-                              event.eventHasEnded || event.eventHasStarted
-                            }
+                            disabled={event.eventHasEnded}
                           >
                             Запиши се
                           </button>
@@ -208,9 +206,7 @@ export function EventViewComponent() {
                             type="button"
                             className="btn btn-warning"
                             onClick={showConfirmModal}
-                            disabled={
-                              event.eventHasEnded || event.eventHasStarted
-                            }
+                            disabled={event.eventHasEnded}
                           >
                             Отпиши ме
                           </button>
