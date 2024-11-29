@@ -11,6 +11,6 @@ namespace EventManager.API.Dto.User
         public long WebSessionId { get; set; }
         public bool IsAdmin { get; set; }
         public bool IsEventCreator { get; set; }
-        public bool HasProfilePicture { get; set; }
+        public string ProfilePictureBase64 { get; set; }
     }
 }

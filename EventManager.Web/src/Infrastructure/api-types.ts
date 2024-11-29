@@ -52,7 +52,7 @@ export interface UserForWeb {
   webSessionId: number;
   isAdmin: boolean;
   isEventCreator: boolean;
-  hasProfilePicture: boolean;
+  profilePictureBase64: string;
 }
 
 export interface UserView {

@@ -251,8 +251,13 @@ namespace EventManager.API.Controllers
                 WebSessionId = webSessionId,
                 IsAdmin = userRoles.Any(x => x.RoleId == (int)UserRole.Admin),
                 IsEventCreator = userRoles.Any(x => x.RoleId == (int)UserRole.EventCreator),
-                HasProfilePicture = user.UserProfilePictureFileId.HasValue,
             };
+
+            if (user.UserProfilePictureFileId.HasValue)
+            {
+                var bytes = await _userService.GetUserProfilePictureAsync(user.UserId);
+                userForWeb.ProfilePictureBase64 = Convert.ToBase64String(bytes);
+            }
 
             return Ok(userForWeb);
         }

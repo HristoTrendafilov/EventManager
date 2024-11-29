@@ -38,7 +38,11 @@ function NavUserDropdown(props: NavUserDropdownProps) {
           height={45}
           width={45}
           className="rounded-circle"
-          src={user.profilePicture ?? noUserLogo}
+          src={
+            user.profilePicture
+              ? `data:image/jpeg;base64,${user.profilePicture}`
+              : noUserLogo
+          }
           alt=""
         />
       </button>

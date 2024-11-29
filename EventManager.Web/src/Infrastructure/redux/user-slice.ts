@@ -62,6 +62,7 @@ export const userSlice = createSlice({
       state.isEventCreator = payload.isEventCreator;
       state.isLoggedIn = true;
       state.token = payload.token;
+      state.profilePicture = payload.profilePictureBase64;
 
       updateLocalStorage(state);
     },
@@ -74,12 +75,9 @@ export const userSlice = createSlice({
     },
     updateProfilePicture: (
       state,
-      action: PayloadAction<{ profilePicture: Blob | File }>
+      action: PayloadAction<{ profilePicture: string }>
     ) => {
-      if (state.profilePicture) {
-        URL.revokeObjectURL(state.profilePicture);
-      }
-      state.profilePicture = URL.createObjectURL(action.payload.profilePicture);
+      state.profilePicture = action.payload.profilePicture;
       updateLocalStorage(state);
     },
   },

@@ -17,7 +17,11 @@ import { FileType } from '~/Infrastructure/components/Form/formUtils';
 import { toastService } from '~/Infrastructure/components/ToastService';
 import { useAppDispatch } from '~/Infrastructure/redux/store';
 import { updateProfilePicture } from '~/Infrastructure/redux/user-slice';
-import { convertToFileList, objectToFormData } from '~/Infrastructure/utils';
+import {
+  convertToFileList,
+  fileToBase64,
+  objectToFormData,
+} from '~/Infrastructure/utils';
 import { RegionMultiSelect } from '~/Shared/SmartSelects/Region/RegionMultiSelect';
 import { RegionSelect } from '~/Shared/SmartSelects/Region/RegionSelect';
 import noUserLogo from '~/asset/no-user-logo.png';
@@ -65,11 +69,8 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
       }
 
       if (personalData.profilePicture) {
-        dispatch(
-          updateProfilePicture({
-            profilePicture: personalData.profilePicture[0],
-          })
-        );
+        const base64 = await fileToBase64(personalData.profilePicture[0]);
+        dispatch(updateProfilePicture({ profilePicture: base64 }));
       }
 
       onUserUpdate();
