@@ -1,6 +1,12 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type ComponentProps, forwardRef } from 'react';
+import {
+  type ComponentProps,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import Select, {
   type ActionMeta,
@@ -43,8 +49,28 @@ export const CustomMultiSelect = forwardRef<
   const { control, getFieldState } = useFormContext();
   const state = getFieldState(name);
 
+  const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      // Check if click is outside wrapper
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setMenuIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="select-input-wrapper">
+    <div className="select-input-wrapper" ref={wrapperRef}>
       <label className="select-input-label" htmlFor={name}>
         {label}
       </label>
@@ -61,6 +87,7 @@ export const CustomMultiSelect = forwardRef<
             openMenuOnClick={!readonly}
             required={props.required}
             isLoading={loading}
+            menuIsOpen={menuIsOpen}
             blurInputOnSelect={false}
             isDisabled={disabled}
             value={options.filter((x) => {
@@ -89,7 +116,24 @@ export const CustomMultiSelect = forwardRef<
                   isNumber ? Number(selection.value) : selection.value
                 )
               );
+
+              if (!searchable) {
+                const input = document.getElementById(name);
+                if (input) {
+                  input.blur();
+                }
+              }
             }}
+            onMenuOpen={() => {
+              if (!searchable) {
+                // Blur the input to prevent the keyboard from opening
+                const input = document.getElementById(name);
+                if (input) {
+                  input.blur();
+                }
+              }
+            }}
+            onFocus={() => setMenuIsOpen(true)}
             styles={{
               control: (baseStyles, inputState) => ({
                 ...baseStyles,
