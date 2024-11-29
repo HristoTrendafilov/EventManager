@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Home } from '~/Home/Home';
@@ -56,22 +56,35 @@ function UserAccessBoundary(props: UserAccessBoundaryProps) {
   return <Navigate to="/" />;
 }
 
+function ScrollToTop() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top when location changes
+  }, [location]);
+
+  return null; // Doesn't render anything
+}
+
 export function RenderRouteTable() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="*" element={<NotFound />} />
-      {table.map((x) => (
-        <Route
-          key={x.location}
-          path={x.location}
-          element={
-            <UserAccessBoundary key={uuidv4()} routeTable={x}>
-              {x.component}
-            </UserAccessBoundary>
-          }
-        />
-      ))}
-    </Routes>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="*" element={<NotFound />} />
+        {table.map((x) => (
+          <Route
+            key={x.location}
+            path={x.location}
+            element={
+              <UserAccessBoundary key={uuidv4()} routeTable={x}>
+                {x.component}
+              </UserAccessBoundary>
+            }
+          />
+        ))}
+      </Routes>
+    </>
   );
 }

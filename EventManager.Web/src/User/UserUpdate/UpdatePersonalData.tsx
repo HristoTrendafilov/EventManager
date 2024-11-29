@@ -169,7 +169,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           label="Искам да помагам в"
           isNumber
           required
-          searchable
+          searchable={false}
         />
 
         <hr />
