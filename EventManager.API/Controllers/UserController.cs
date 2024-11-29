@@ -210,7 +210,8 @@ namespace EventManager.API.Controllers
             var now = DateTime.Now;
             var expiresOn = now.AddHours(12);
 
-            var (ipAddress, ipInfo) = await _webSessionService.GetUserIpInfoAsync(HttpContext);
+            var ipAddress = HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            var ipInfo = await _webSessionService.GetUserIpInfoAsync(ipAddress);
 
             var webSession = new WebSessionNew
             {

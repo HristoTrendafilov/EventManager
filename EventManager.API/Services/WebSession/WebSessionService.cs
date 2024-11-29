@@ -47,32 +47,12 @@ namespace EventManager.API.Services.WebSession
                 .ToListAsync();
         }
 
-        public async Task<(string ipAddress, string ipInfo)> GetUserIpInfoAsync(HttpContext context)
+        public async Task<string> GetUserIpInfoAsync(string ipAddress)
         {
-            var ipAddress = string.Empty;
-            var remoteIpAddress = context.Connection.RemoteIpAddress;
-
             using var httpClient = new HttpClient();
-
-            if (IPAddress.IsLoopback(remoteIpAddress))
-            {
-                // Get the public IP address for testing purposes
-                ipAddress = await httpClient.GetStringAsync("https://api.ipify.org");
-            }
-            else
-            {
-                // Get the IP address from the header passed from Nginx
-                ipAddress = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-                if (string.IsNullOrEmpty(ipAddress))
-                {
-                    ipAddress = remoteIpAddress?.ToString();
-                }
-            }
-
-            // Fetch IP information
             var ipInfoResponse = await httpClient.GetStringAsync($"http://ip-api.com/json/{ipAddress}");
 
-            return (ipAddress, ipInfoResponse);
+            return ipInfoResponse;
         }
 
         public async Task RevokeUserSessionsAsync(long userId)

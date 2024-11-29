@@ -10,7 +10,7 @@ namespace EventManager.API.Services.WebSession
         Task<long> CreateWebSession(WebSessionNew webSession);
         Task CloseWebSessionAsync(long webSessionId, long? currentUserId);
         Task<bool> WebSessionExistsAsync(Expression<Func<WebSessionPoco, bool>> predicate);
-        Task<(string ipAddress, string ipInfo)> GetUserIpInfoAsync(HttpContext context);
+        Task<string> GetUserIpInfoAsync(string ipAddress);
         Task<List<VWebSessionPoco>> GetUserLastActiveWebSessions(long userId);
         Task RevokeUserSessionsAsync(long userId);
     }
