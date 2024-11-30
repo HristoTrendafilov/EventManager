@@ -61,11 +61,36 @@ namespace EventManager.API.Services.Email
 
     public class EmailOptions
     {
+        public EmailOptions()
+        {
+            EmailTo = new List<string>();
+        }
+
         public string EmailFrom { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
         public bool IsBodyHtml { get; set; }
 
         public List<string> EmailTo { get; set; }
+    }
+
+    public class  EmailQueueOptions
+    {
+        public EmailQueueOptions()
+        {
+            Replacements = new Dictionary<string, string>();
+            EmailTo = new List<string>();
+        }
+
+        public string EmailFrom { get; set; }
+        public List<string> EmailTo { get; set; }
+        public string Subject { get; set; }
+        public string Content { get; set; }
+        public bool isBodyHtml { get; set; }
+
+        public string TemplateFileName { get; set; }
+        public Dictionary<string,string> Replacements { get; set; }
+
+        public long? CreatedByUserId { get; set; }
     }
 }

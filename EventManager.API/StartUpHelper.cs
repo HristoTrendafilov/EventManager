@@ -28,7 +28,7 @@ using EventManager.API.Middlewares;
 using EventManager.API.Services.FileStorage;
 using EventManager.API.Helpers.Extensions;
 using LinqToDB.Common.Internal.Cache;
-using EventManager.API.Core.BackgroundServices;
+using EventManager.API.BackgroundServices;
 
 namespace EventManager.API
 {

@@ -115,10 +115,6 @@ namespace EventManager.DAL
 		public virtual DateTime UserCreatedOnDateTime { get; set; }
 
 		[Nullable]
-		[Column(Name = "user_created_by_user_id")]
-		public virtual long? UserCreatedByUserId { get; set; }
-
-		[Nullable]
 		[Column(Name = "user_short_description")]
 		public virtual string UserShortDescription { get; set; }
 
@@ -552,10 +548,6 @@ namespace EventManager.DAL
 
 		[Column(Name = "user_created_on_date_time")]
 		public virtual DateTime UserCreatedOnDateTime { get; set; }
-
-		[Nullable]
-		[Column(Name = "user_created_by_user_id")]
-		public virtual long? UserCreatedByUserId { get; set; }
 
 		[Nullable]
 		[Column(Name = "user_short_description")]

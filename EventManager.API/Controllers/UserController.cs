@@ -18,8 +18,7 @@ using EventManager.API.Services.Region;
 using EventManager.DAL;
 using System.Data;
 using EventManager.API.Dto.User.Role;
-using Microsoft.AspNetCore.Hosting;
-using EventManager.API.Core.BackgroundServices;
+using EventManager.API.BackgroundServices;
 
 namespace EventManager.API.Controllers
 {
@@ -293,41 +292,25 @@ namespace EventManager.API.Controllers
                 }
             }
 
-            var currentUserId = User.X_CurrentUserId();
-            var verificationSecret = Guid.NewGuid().ToString();
+            var userId = await _userService.CreateUserAsync(user, User.X_CurrentUserId());
 
-            user.UserCreatedByUserId = currentUserId;
-            user.UserEmailVerificationSecret = verificationSecret;
-            var userId = await _userService.CreateUserAsync(user, currentUserId);
-
-            // Return response to the client
-            var response = NoContent();
-
-            // Send email in the background
-            var filePath = Path.Combine(Global.EmailTemplatesFolder, "EmailVerificationTemplate.html");
-
-            // Read the HTML file content
-            var emailContent = await System.IO.File.ReadAllTextAsync(filePath);
-            emailContent = emailContent.Replace("{{Username}}", user.Username);
-            emailContent = emailContent.Replace("{{EmailVerificationSecret}}", verificationSecret);
-            emailContent = emailContent.Replace("{{UserID}}", userId.ToString());
-
-            var domain = _webHostEnvironment.IsDevelopment() ? "http://localhost" : "https://ihelp.bg";
-            emailContent = emailContent.Replace("{{domain}}", domain);
-
-            // Use the emailContent as needed, for example, sending an email
-            var emailOptions = new EmailOptions
+            _emailQueueService.QueueEmail(new EmailQueueOptions
             {
+                TemplateFileName = "EmailVerificationTemplate.html",
                 EmailFrom = "no-reply@ihelp.bg",
                 EmailTo = new List<string> { user.UserEmail },
                 Subject = "Регистрация в ihelp.bg",
-                Content = emailContent,
-                IsBodyHtml = true
-            };
+                isBodyHtml = true,
+                Replacements = new Dictionary<string, string>
+                {
+                    { "{{username}}", user.Username },
+                    { "{{verificationSecret}}", user.UserEmailVerificationSecret },
+                    { "{{userId}}", userId.ToString() },
+                    { "{{domain}}", _webHostEnvironment.IsDevelopment() ? "http://localhost" : "https://ihelp.bg" }
+                }
+            });
 
-            _emailQueueService.QueueEmail(emailOptions);
-
-            return response;
+            return NoContent();
         }
 
         [HttpPost("email-verification")]
