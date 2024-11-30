@@ -299,30 +299,37 @@ namespace EventManager.API.Controllers
             user.UserEmailVerificationSecret = verificationSecret;
             var userId = await _userService.CreateUserAsync(user, currentUserId);
 
-            var filePath = Path.Combine(Global.EmailTemplatesFolder, "EmailVerificationTemplate.html");
+            // Return response to the client
+            var response = NoContent();
 
-            // Read the HTML file content
-            var emailContent = await System.IO.File.ReadAllTextAsync(filePath);
-            emailContent = emailContent.Replace("{{Username}}", user.Username);
-            emailContent = emailContent.Replace("{{EmailVerificationSecret}}", verificationSecret);
-            emailContent = emailContent.Replace("{{UserID}}", userId.ToString());
-
-            var domain = _webHostEnvironment.IsDevelopment() ? "http://localhost" : "https://ihelp.bg";
-            emailContent = emailContent.Replace("{{domain}}", domain);
-
-            // Use the emailContent as needed, for example, sending an email
-            var emailOptions = new EmailOptions
+            // Send email in the background
+            _ = Task.Run(async () =>
             {
-                EmailFrom = "no-reply@ihelp.bg",
-                EmailTo = new List<string> { user.UserEmail },
-                Subject = "Регистрация в ihelp.bg",
-                Content = emailContent,
-                IsBodyHtml = true
-            };
+                var filePath = Path.Combine(Global.EmailTemplatesFolder, "EmailVerificationTemplate.html");
 
-            await _emailService.SendEmailAsync(emailOptions);
+                // Read the HTML file content
+                var emailContent = await System.IO.File.ReadAllTextAsync(filePath);
+                emailContent = emailContent.Replace("{{Username}}", user.Username);
+                emailContent = emailContent.Replace("{{EmailVerificationSecret}}", verificationSecret);
+                emailContent = emailContent.Replace("{{UserID}}", userId.ToString());
 
-            return NoContent();
+                var domain = _webHostEnvironment.IsDevelopment() ? "http://localhost" : "https://ihelp.bg";
+                emailContent = emailContent.Replace("{{domain}}", domain);
+
+                // Use the emailContent as needed, for example, sending an email
+                var emailOptions = new EmailOptions
+                {
+                    EmailFrom = "no-reply@ihelp.bg",
+                    EmailTo = new List<string> { user.UserEmail },
+                    Subject = "Регистрация в ihelp.bg",
+                    Content = emailContent,
+                    IsBodyHtml = true
+                };
+
+                await _emailService.SendEmailAsync(emailOptions);
+            });
+
+            return response;
         }
 
         [HttpPost("email-verification")]

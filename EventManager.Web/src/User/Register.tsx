@@ -11,6 +11,7 @@ import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomFo
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
+import { FileType } from '~/Infrastructure/components/Form/formUtils';
 import { toastService } from '~/Infrastructure/components/ToastService';
 import { convertToFileList, objectToFormData } from '~/Infrastructure/utils';
 import { RegionMultiSelect } from '~/Shared/SmartSelects/Region/RegionMultiSelect';
@@ -44,7 +45,8 @@ export function Register() {
       }
 
       toastService.success(
-        'Успешна регистрация. Моля, потвърдете имейла си, за да влезете в системата.'
+        'Успешна регистрация. Моля, потвърдете имейла си, за да влезете в системата.',
+        { autoClose: 15000 }
       );
       navigate(CustomRoutes.usersLogin());
     },
@@ -116,6 +118,7 @@ export function Register() {
                     {...form.register('profilePicture')}
                     label="Избери профилна снимка"
                     onFileChosen={onProfilePictureChosen}
+                    fileType={FileType.Images}
                   />
                 </div>
               </div>
