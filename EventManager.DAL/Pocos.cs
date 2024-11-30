@@ -213,6 +213,29 @@ namespace EventManager.DAL
 		public virtual DateTime CrudLogCreatedOnDateTime { get; set; }
 	}
 
+	[Table(Name = "emails")]
+	public class EmailPoco
+	{
+		[PrimaryKey, Identity]
+		[Column(Name = "email_id")]
+		public virtual long EmailId { get; set; }
+
+		[Column(Name = "email_from")]
+		public virtual string EmailFrom { get; set; }
+
+		[Column(Name = "email_to")]
+		public virtual string EmailTo { get; set; }
+
+		[Column(Name = "email_subject")]
+		public virtual string EmailSubject { get; set; }
+
+		[Column(Name = "email_content")]
+		public virtual string EmailContent { get; set; }
+
+		[Column(Name = "email_created_on_date_time")]
+		public virtual DateTime EmailCreatedOnDateTime { get; set; }
+	}
+
 	[Table(Name = "exceptions")]
 	public class ExceptionPoco
 	{

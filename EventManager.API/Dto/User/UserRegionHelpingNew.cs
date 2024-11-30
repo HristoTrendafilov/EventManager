@@ -4,6 +4,11 @@ namespace EventManager.API.Dto.User
 {
     public class UserRegionHelpingNew
     {
+        public UserRegionHelpingNew()
+        {
+            UserRegionCreatedOnDateTime = DateTime.Now;
+        }
+
         public long UserRegionHelpingId { get; set; }
 
         [Required(ErrorMessage = "Потребителят е задължителен.")]
@@ -11,5 +16,7 @@ namespace EventManager.API.Dto.User
 
         [Required(ErrorMessage = "Регионът е задължителен.")]
         public long RegionId { get; set; }
+
+        public DateTime UserRegionCreatedOnDateTime { get; set; }
     }
 }

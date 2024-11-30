@@ -1,19 +1,38 @@
-﻿using System.Net;
+﻿using EventManager.DAL;
+using System.Net;
 using System.Net.Mail;
 
 namespace EventManager.API.Services.Email
 {
     public class EmailService : IEmailService
     {
+        private readonly PostgresConnection _db;
         private readonly IConfiguration _config;
 
-        public EmailService(IConfiguration config)
+        public EmailService(PostgresConnection db, IConfiguration config)
         {
+            _db = db;
             _config = config;
         }
 
-        public async Task SendEmailAsync(EmailOptions options)
+        public async Task CreateEmailAsync(EmailPoco email, long? currentUserId)
         {
+            await _db.Emails.X_CreateAsync(email, currentUserId);
+        }
+
+        public async Task SendEmailAsync(EmailOptions options, long? currentUserId)
+        {
+            var poco = new EmailPoco
+            {
+                EmailFrom = options.EmailFrom,
+                EmailTo = string.Join(',', options.EmailTo),
+                EmailSubject = options.Subject,
+                EmailContent = options.Content,
+                EmailCreatedOnDateTime = DateTime.Now,
+            };
+
+            await CreateEmailAsync(poco, currentUserId);
+
             using var client = new SmtpClient()
             {
                 Host = _config["SmtpEmailConfig:SmtpServer"],

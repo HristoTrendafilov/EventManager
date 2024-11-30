@@ -16,6 +16,7 @@ namespace EventManager.DAL
 		public IQueryable<EventImagePoco> EventImages => DataExtensions.GetTable<EventImagePoco>(this);
 		public IQueryable<FilePoco> Files => DataExtensions.GetTable<FilePoco>(this);
 		public IQueryable<CrudLogPoco> CrudLogs => DataExtensions.GetTable<CrudLogPoco>(this);
+		public IQueryable<EmailPoco> Emails => DataExtensions.GetTable<EmailPoco>(this);
 		public IQueryable<ExceptionPoco> Exceptions => DataExtensions.GetTable<ExceptionPoco>(this);
 		public IQueryable<EventPoco> Events => DataExtensions.GetTable<EventPoco>(this);
 		public IQueryable<WebSessionPoco> WebSessions => DataExtensions.GetTable<WebSessionPoco>(this);

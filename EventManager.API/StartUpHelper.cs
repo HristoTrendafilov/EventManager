@@ -28,6 +28,7 @@ using EventManager.API.Middlewares;
 using EventManager.API.Services.FileStorage;
 using EventManager.API.Helpers.Extensions;
 using LinqToDB.Common.Internal.Cache;
+using EventManager.API.Core.BackgroundServices;
 
 namespace EventManager.API
 {
@@ -91,8 +92,6 @@ namespace EventManager.API
         {
             var services = builder.Services;
 
-            services.AddMemoryCache(); // Register IMemoryCache
-
             services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
             services.AddTransient<IEmailService, EmailService>();
 
@@ -104,6 +103,10 @@ namespace EventManager.API
             services.AddScoped<IWebSessionService, WebSessionService>();
             services.AddScoped<ISharedService, SharedService>();
             services.AddScoped<IFileService, FileService>();
+
+            services.AddSingleton<EmailQueueService>();
+            services.AddHostedService(provider => provider.GetRequiredService<EmailQueueService>());
+
 
             return builder;
         }

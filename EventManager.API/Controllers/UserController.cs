@@ -19,6 +19,7 @@ using EventManager.DAL;
 using System.Data;
 using EventManager.API.Dto.User.Role;
 using Microsoft.AspNetCore.Hosting;
+using EventManager.API.Core.BackgroundServices;
 
 namespace EventManager.API.Controllers
 {
@@ -27,29 +28,29 @@ namespace EventManager.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IEmailService _emailService;
         private readonly IWebSessionService _webSessionService;
         private readonly ISharedService _sharedService;
         private readonly IConfiguration _configuration;
         private readonly IRegionService _regionService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly EmailQueueService _emailQueueService;
 
         public UserController(
             IUserService userService,
-            IEmailService emailService,
             IWebSessionService webSessionService,
             ISharedService sharedService,
             IConfiguration configuration,
             IRegionService regionService,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            EmailQueueService emailQueueService)
         {
             _userService = userService;
-            _emailService = emailService;
             _webSessionService = webSessionService;
             _sharedService = sharedService;
             _configuration = configuration;
             _regionService = regionService;
             _webHostEnvironment = webHostEnvironment;
+            _emailQueueService = emailQueueService;
         }
 
         [HttpGet("{userId}/view")]
@@ -303,31 +304,28 @@ namespace EventManager.API.Controllers
             var response = NoContent();
 
             // Send email in the background
-            _ = Task.Run(async () =>
+            var filePath = Path.Combine(Global.EmailTemplatesFolder, "EmailVerificationTemplate.html");
+
+            // Read the HTML file content
+            var emailContent = await System.IO.File.ReadAllTextAsync(filePath);
+            emailContent = emailContent.Replace("{{Username}}", user.Username);
+            emailContent = emailContent.Replace("{{EmailVerificationSecret}}", verificationSecret);
+            emailContent = emailContent.Replace("{{UserID}}", userId.ToString());
+
+            var domain = _webHostEnvironment.IsDevelopment() ? "http://localhost" : "https://ihelp.bg";
+            emailContent = emailContent.Replace("{{domain}}", domain);
+
+            // Use the emailContent as needed, for example, sending an email
+            var emailOptions = new EmailOptions
             {
-                var filePath = Path.Combine(Global.EmailTemplatesFolder, "EmailVerificationTemplate.html");
+                EmailFrom = "no-reply@ihelp.bg",
+                EmailTo = new List<string> { user.UserEmail },
+                Subject = "Регистрация в ihelp.bg",
+                Content = emailContent,
+                IsBodyHtml = true
+            };
 
-                // Read the HTML file content
-                var emailContent = await System.IO.File.ReadAllTextAsync(filePath);
-                emailContent = emailContent.Replace("{{Username}}", user.Username);
-                emailContent = emailContent.Replace("{{EmailVerificationSecret}}", verificationSecret);
-                emailContent = emailContent.Replace("{{UserID}}", userId.ToString());
-
-                var domain = _webHostEnvironment.IsDevelopment() ? "http://localhost" : "https://ihelp.bg";
-                emailContent = emailContent.Replace("{{domain}}", domain);
-
-                // Use the emailContent as needed, for example, sending an email
-                var emailOptions = new EmailOptions
-                {
-                    EmailFrom = "no-reply@ihelp.bg",
-                    EmailTo = new List<string> { user.UserEmail },
-                    Subject = "Регистрация в ihelp.bg",
-                    Content = emailContent,
-                    IsBodyHtml = true
-                };
-
-                await _emailService.SendEmailAsync(emailOptions);
-            });
+            _emailQueueService.QueueEmail(emailOptions);
 
             return response;
         }
