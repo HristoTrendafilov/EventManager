@@ -30,10 +30,13 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
 
     const [open, setOpen] = useState<boolean>(false);
     const [previousDate, setPreviousDate] = useState<Date | null>(null);
+    const [inputElement, setInputElement] = useState<HTMLInputElement | null>(
+      null
+    );
 
     const wrapperRef = useRef<HTMLDivElement>(null);
 
-    const { getFieldState, formState, control, setValue, getValues, watch } =
+    const { getFieldState, formState, control, setValue, clearErrors } =
       useFormContext();
     const state = getFieldState(name, formState);
 
@@ -50,13 +53,19 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
     }, [props.name, setValue]);
 
     useEffect(() => {
-      if (state.error && wrapperRef.current) {
-        wrapperRef.current.scrollIntoView({
+      setInputElement(document.getElementById(name) as HTMLInputElement | null);
+
+      if (state.error && inputElement && !inputElement.value) {
+        clearErrors(name);
+        setOpen(true);
+        inputElement.focus();
+
+        wrapperRef.current?.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
         });
       }
-    }, [state.error]);
+    }, [inputElement, state.error, clearErrors, name]);
 
     return (
       <>
@@ -77,6 +86,7 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
 
                     if (!showTime) {
                       setOpen(false);
+
                       return;
                     }
 
@@ -102,12 +112,11 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
                   }
                   locale={bg} // Set locale to Bulgarian
                   timeFormat="HH:mm"
-                  timeIntervals={timeInterval ?? 15}
+                  timeIntervals={timeInterval ?? 30}
                   showYearDropdown
                   required={required}
-                  onFocus={(e) => e.target.blur()}
                   open={open}
-                  shouldCloseOnSelect
+                  readOnly
                 />
               )}
             />
@@ -124,7 +133,7 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
             )}
           </div>
         </div>
-        {state.error && (
+        {state.error && state.error.message !== 'Invalid date' && (
           <p className="input-validation-error mt-minus-10px">
             <FontAwesomeIcon icon={faExclamationTriangle} />
             {state.error.message?.toString()}

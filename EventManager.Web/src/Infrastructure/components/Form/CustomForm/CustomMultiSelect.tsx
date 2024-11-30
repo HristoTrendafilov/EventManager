@@ -50,11 +50,14 @@ export const CustomMultiSelect = forwardRef<
   const state = getFieldState(name);
 
   const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
+  const [inputElement, setInputElement] = useState<HTMLElement | null>(null);
+
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      // Check if click is outside wrapper
+    setInputElement(document.getElementById(name));
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (
         wrapperRef.current &&
         !wrapperRef.current.contains(event.target as Node)
@@ -64,10 +67,12 @@ export const CustomMultiSelect = forwardRef<
     };
 
     document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, []);
+  }, [name]);
 
   return (
     <div className="select-input-wrapper" ref={wrapperRef}>
@@ -117,20 +122,13 @@ export const CustomMultiSelect = forwardRef<
                 )
               );
 
-              if (!searchable) {
-                const input = document.getElementById(name);
-                if (input) {
-                  input.blur();
-                }
+              if (!searchable && inputElement) {
+                inputElement.blur();
               }
             }}
             onMenuOpen={() => {
-              if (!searchable) {
-                // Blur the input to prevent the keyboard from opening
-                const input = document.getElementById(name);
-                if (input) {
-                  input.blur();
-                }
+              if (!searchable && inputElement) {
+                inputElement.blur();
               }
             }}
             onFocus={() => setMenuIsOpen(true)}
