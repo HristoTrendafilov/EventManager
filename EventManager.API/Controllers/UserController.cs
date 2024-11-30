@@ -18,6 +18,7 @@ using EventManager.API.Services.Region;
 using EventManager.DAL;
 using System.Data;
 using EventManager.API.Dto.User.Role;
+using Microsoft.AspNetCore.Hosting;
 
 namespace EventManager.API.Controllers
 {
@@ -31,6 +32,7 @@ namespace EventManager.API.Controllers
         private readonly ISharedService _sharedService;
         private readonly IConfiguration _configuration;
         private readonly IRegionService _regionService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public UserController(
             IUserService userService,
@@ -38,7 +40,8 @@ namespace EventManager.API.Controllers
             IWebSessionService webSessionService,
             ISharedService sharedService,
             IConfiguration configuration,
-            IRegionService regionService)
+            IRegionService regionService,
+            IWebHostEnvironment webHostEnvironment)
         {
             _userService = userService;
             _emailService = emailService;
@@ -46,6 +49,7 @@ namespace EventManager.API.Controllers
             _sharedService = sharedService;
             _configuration = configuration;
             _regionService = regionService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet("{userId}/view")]
@@ -264,34 +268,84 @@ namespace EventManager.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> RegisterUser([FromForm] UserNew userNew)
+        public async Task<ActionResult> RegisterUser([FromForm] UserNew user)
         {
-            if (userNew.PasswordRepeated != userNew.PasswordRepeated)
+            if (user.UserPassword != user.PasswordRepeated)
             {
                 return BadRequest($"Паролите не съвпадат");
             }
 
-            if (await _userService.UserExistsAsync(x => x.Username == userNew.Username))
+            if (await _userService.UserExistsAsync(x => x.Username == user.Username))
             {
-                return BadRequest($"Вече съществува потребителското име: {userNew.Username}");
+                return BadRequest($"Вече съществува потребителското име: {user.Username}");
             }
-            if (await _userService.UserExistsAsync(x => x.UserEmail == userNew.UserEmail))
+            if (await _userService.UserExistsAsync(x => x.UserEmail == user.UserEmail))
             {
-                return BadRequest($"Вече съществува потребител с имейл: {userNew.UserEmail}");
+                return BadRequest($"Вече съществува потребител с имейл: {user.UserEmail}");
             }
 
-            if (!string.IsNullOrWhiteSpace(userNew.UserPhoneNumber))
+            if (!string.IsNullOrWhiteSpace(user.UserPhoneNumber))
             {
-                if (await _userService.UserExistsAsync(x => x.UserPhoneNumber == userNew.UserPhoneNumber))
+                if (await _userService.UserExistsAsync(x => x.UserPhoneNumber == user.UserPhoneNumber))
                 {
-                    return BadRequest($"Вече съществува потребител с телефонен номер: {userNew.UserPhoneNumber}");
+                    return BadRequest($"Вече съществува потребител с телефонен номер: {user.UserPhoneNumber}");
                 }
             }
 
             var currentUserId = User.X_CurrentUserId();
+            var verificationSecret = Guid.NewGuid().ToString();
 
-            userNew.UserCreatedByUserId = currentUserId;
-            await _userService.CreateUserAsync(userNew, currentUserId);
+            user.UserCreatedByUserId = currentUserId;
+            user.UserEmailVerificationSecret = verificationSecret;
+            var userId = await _userService.CreateUserAsync(user, currentUserId);
+
+            var filePath = Path.Combine(Global.EmailTemplatesFolder, "EmailVerificationTemplate.html");
+
+            // Read the HTML file content
+            var emailContent = await System.IO.File.ReadAllTextAsync(filePath);
+            emailContent = emailContent.Replace("{{Username}}", user.Username);
+            emailContent = emailContent.Replace("{{EmailVerificationSecret}}", verificationSecret);
+            emailContent = emailContent.Replace("{{UserID}}", userId.ToString());
+
+            var domain = _webHostEnvironment.IsDevelopment() ? "http://localhost" : "https://ihelp.bg";
+            emailContent = emailContent.Replace("{{domain}}", domain);
+
+            // Use the emailContent as needed, for example, sending an email
+            var emailOptions = new EmailOptions
+            {
+                EmailFrom = "no-reply@ihelp.bg",
+                EmailTo = new List<string> { user.UserEmail },
+                Subject = "Регистрация в ihelp.bg",
+                Content = emailContent,
+                IsBodyHtml = true
+            };
+
+            await _emailService.SendEmailAsync(emailOptions);
+
+            return NoContent();
+        }
+
+        [HttpPost("email-verification")]
+        public async Task<ActionResult> UserVerifyEmail(UserVerifyEmail verification)
+        {
+            var user = await _userService.GetUserPocoAsync(x => x.UserId == verification.UserId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (user.UserEmailVerificationSecret != verification.EmailVerificationSecret)
+            {
+                return BadRequest($"Неправилни параметри.");
+            }
+
+            if (user.UserIsEmailVerified)
+            {
+                return BadRequest($"Имейлът Ви е вече потвърден.");
+            }
+
+            user.UserIsEmailVerified = true;
+            await _userService.UpdateUserAsync(verification.UserId, user, User.X_CurrentUserId());
 
             return NoContent();
         }

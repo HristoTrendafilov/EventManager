@@ -2,6 +2,6 @@
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(SendEmailOptions options);
+        Task SendEmailAsync(EmailOptions options);
     }
 }

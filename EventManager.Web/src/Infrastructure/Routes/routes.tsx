@@ -9,6 +9,7 @@ import { AdminPanel } from '~/User/AdminPanel/AdminPanel';
 import { CrudLogs } from '~/User/AdminPanel/CrudLogs';
 import { RegionsCatalog } from '~/User/AdminPanel/RegionsCatalog';
 import { UsersRolesCatalog } from '~/User/AdminPanel/UsersRolesCatalog';
+import { EmailVerification } from '~/User/EmailVerification';
 import { Login } from '~/User/Login';
 import { Register } from '~/User/Register';
 import { UserProfile } from '~/User/UserProfile';
@@ -71,6 +72,12 @@ export const table: RouteTable[] = [
     location: CustomRoutes.usersUpdate(),
     component: <UserUpdate />,
     requiresLogin: true,
+    role: 'None',
+  },
+  {
+    location: CustomRoutes.usersEmailVerification(),
+    component: <EmailVerification />,
+    requiresLogin: false,
     role: 'None',
   },
   {

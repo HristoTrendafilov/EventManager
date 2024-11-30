@@ -79,4 +79,13 @@
     <ProjectReference Include="..\EventManager.DAL\EventManager.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Services\Email\Templates\EmailVerificationTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Services\Email\Templates\NewEventTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

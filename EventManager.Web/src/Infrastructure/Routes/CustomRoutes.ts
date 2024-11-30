@@ -12,6 +12,10 @@ export class CustomRoutes {
     return '/users/admin-panel';
   }
 
+  static usersEmailVerification() {
+    return '/users/verify-email/:userId/:token';
+  }
+
   static usersAdminPanelRegions() {
     return '/users/admin-panel/regions';
   }

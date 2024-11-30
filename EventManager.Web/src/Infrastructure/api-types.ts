@@ -55,6 +55,11 @@ export interface UserForWeb {
   profilePictureBase64: string;
 }
 
+export interface UserVerifyEmail {
+  userId: number;
+  emailVerificationSecret: string;
+}
+
 export interface UserView {
   canEdit: boolean;
   regionsHelping: RegionView[];

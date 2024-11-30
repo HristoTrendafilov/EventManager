@@ -110,6 +110,8 @@ namespace EventManager.API
 
         public static WebApplicationBuilder ConfigureSerilog(this WebApplicationBuilder builder)
         {
+            var aa = Global.BinFolder;
+
             Enum.TryParse(builder.Configuration["SerilogSettings:LogLevel"], out LogEventLevel minimumLevel);
             var serilogConfig = new LoggerConfiguration()
                 .MinimumLevel.Is(minimumLevel)

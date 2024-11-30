@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using System.Net;
+using System.Net.Mail;
 
 namespace EventManager.API.Services.Email
 {
@@ -11,67 +12,41 @@ namespace EventManager.API.Services.Email
             _config = config;
         }
 
-        public async Task SendEmailAsync(SendEmailOptions options)
+        public async Task SendEmailAsync(EmailOptions options)
         {
             using var client = new SmtpClient()
             {
-                Host = _config["SmtpEmailConfig:Host"],
-                Port = int.Parse(_config["SmtpEmailConfig:HostPort"]),
+                Host = _config["SmtpEmailConfig:SmtpServer"],
+                Port = int.Parse(_config["SmtpEmailConfig:Port"]),
                 DeliveryMethod = SmtpDeliveryMethod.Network,
+                EnableSsl = true,
+                Credentials = new NetworkCredential(
+                    _config["SmtpEmailConfig:Username"],
+                    _config["SmtpEmailConfig:Password"]
+                ),
             };
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(options.EmailFrom),
+                From = new MailAddress(options.EmailFrom, "ihelp"),
                 Subject = options.Subject,
-                Body = options.Message,
+                Body = options.Content,
                 IsBodyHtml = options.IsBodyHtml,
             };
 
-            mailMessage.To.Add(string.Join(", ", options.EmailsTo));
+            mailMessage.To.Add(string.Join(',', options.EmailTo));
+
             await client.SendMailAsync(mailMessage);
         }
     }
 
-    public class SendEmailOptions
+    public class EmailOptions
     {
-        public SendEmailOptions(SendFromEmail email, string subject, string message)
-        {
-            this.Subject = subject;
-            this.Message = message;
-
-            if (email == SendFromEmail.Official)
-            {
-                this.EmailFrom = StartUpHelper._configuration["SmtpEmailConfig:OfficialEmail"];
-            }
-            else if (email == SendFromEmail.Noreply)
-            {
-                this.EmailFrom = StartUpHelper._configuration["SmtpEmailConfig:NoReplyEmail"];
-            }
-
-            this.IsBodyHtml = true;
-            this.EmailsTo = new List<string>();
-        }
-
         public string EmailFrom { get; set; }
-
         public string Subject { get; set; }
-
-        public string Message { get; set; }
-
+        public string Content { get; set; }
         public bool IsBodyHtml { get; set; }
 
-        public List<string> EmailsTo { get; set; }
-
-        public void AddEmailsToSend(params string[] emails)
-        {
-            this.EmailsTo.AddRange(emails);
-        }
-    }
-
-    public enum SendFromEmail
-    {
-        Official,
-        Noreply
+        public List<string> EmailTo { get; set; }
     }
 }

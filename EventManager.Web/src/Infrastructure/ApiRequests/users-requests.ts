@@ -7,6 +7,7 @@ import type {
   UserForWeb,
   UserUpdatePasswordType,
   UserUpdateUsernameType,
+  UserVerifyEmail,
   UserView,
 } from '~/Infrastructure/api-types';
 import type { UserLogin } from '~/User/Login';
@@ -79,4 +80,12 @@ export function updateUserPersonalData(userId: number, user: FormData) {
 
 export function loginUser(req: UserLogin) {
   return callApi<UserForWeb>('/users/login', 'POST', JSON.stringify(req));
+}
+
+export function verifyUserEmail(req: UserVerifyEmail) {
+  return callApi<UserForWeb>(
+    '/users/email-verification',
+    'POST',
+    JSON.stringify(req)
+  );
 }

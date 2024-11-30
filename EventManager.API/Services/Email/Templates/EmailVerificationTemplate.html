@@ -6,21 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
     <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
     <title></title> <!-- The title tag shows in email notifications, like Android 4.4. -->
-
-    <style>
-    </style>
 </head>
 
 <body width="100%" style="background-color: #f1f1f1;">
     <center>
-        <img src="https://ihelp.bg/ProjectLogo.png" style="height: 200px;" />
         <h2 style="margin-top: 5px">Остава още една стъпка до това да се включите в кауза, която да помогне на обществото</h2>
     </center>
     <h3 style="padding: 0px 0px 0px 10px">
         С този имейл можете да потвърдите акаунта си за потребител: {{Username}}
     </h3>
     <center style="padding: 0px 0px 20px 0px">
-        <a href="https://ihelp.bg/user/verify-email/{{UserID}}/{{EmailVerificationSecret}}" target="_blank" style="padding: 8px 12px; border: 1px solid #ED2939;border-radius: 8px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #000000;text-decoration: none;font-weight:bold;display: inline-block; background: #FFFFFF">
+        <a href="{{domain}}/users/verify-email/{{UserID}}/{{EmailVerificationSecret}}" target="_blank" style="padding: 8px 12px; border: 1px solid #ED2939;border-radius: 8px;font-family: Helvetica, Arial, sans-serif;font-size: 14px; color: #000000;text-decoration: none;font-weight:bold;display: inline-block; background: #FFFFFF">
             Потвърди
         </a>
     </center>

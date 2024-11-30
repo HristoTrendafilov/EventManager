@@ -11,7 +11,6 @@ namespace EventManager.API.Dto.User
         public UserNew()
         {
             UserCreatedOnDateTime = DateTime.Now;
-            UserEmailVerificationSecret = Guid.NewGuid().ToString();
             UserRegionsHelpingIds = new List<long>();
         }
 

@@ -92,8 +92,8 @@ export function Footer() {
         </div>
         <div className="text-center mt-4">
           <p>
-            &copy; {new Date().getFullYear()} Aspire Technologies. Всички права
-            са запазени.
+            &copy; {new Date().getFullYear()} Inspire Solutions. Всички права са
+            запазени.
           </p>
         </div>
       </div>
