@@ -33,8 +33,6 @@ namespace EventManager.API.Dto.User
         public override bool UserIsEmailVerified { get; set; }
         [JsonIgnore]
         public override DateTime UserCreatedOnDateTime { get; set; }
-        [JsonIgnore]
-        public override long? UserCreatedByUserId { get; set; }
         #endregion JsonIgnore
     }
 }

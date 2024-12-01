@@ -300,7 +300,7 @@ namespace EventManager.API.Controllers
                 EmailFrom = "no-reply@ihelp.bg",
                 EmailTo = new List<string> { user.UserEmail },
                 Subject = "Регистрация в ihelp.bg",
-                isBodyHtml = true,
+                IsBodyHtml = true,
                 Replacements = new Dictionary<string, string>
                 {
                     { "{{username}}", user.Username },

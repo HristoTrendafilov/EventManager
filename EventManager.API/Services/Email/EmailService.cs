@@ -15,11 +15,6 @@ namespace EventManager.API.Services.Email
             _config = config;
         }
 
-        public async Task CreateEmailAsync(EmailPoco email, long? currentUserId)
-        {
-            await _db.Emails.X_CreateAsync(email, currentUserId);
-        }
-
         public async Task SendEmailAsync(EmailOptions options, long? currentUserId)
         {
             var poco = new EmailPoco
@@ -30,7 +25,6 @@ namespace EventManager.API.Services.Email
                 EmailContent = options.Content,
                 EmailCreatedOnDateTime = DateTime.Now,
             };
-
             await CreateEmailAsync(poco, currentUserId);
 
             using var client = new SmtpClient()
@@ -51,11 +45,15 @@ namespace EventManager.API.Services.Email
                 Subject = options.Subject,
                 Body = options.Content,
                 IsBodyHtml = options.IsBodyHtml,
+                To = { string.Join(',', options.EmailTo) },
             };
 
-            mailMessage.To.Add(string.Join(',', options.EmailTo));
-
             await client.SendMailAsync(mailMessage);
+        }
+
+        public async Task CreateEmailAsync(EmailPoco email, long? currentUserId)
+        {
+            await _db.Emails.X_CreateAsync(email, currentUserId);
         }
     }
 
@@ -72,25 +70,5 @@ namespace EventManager.API.Services.Email
         public bool IsBodyHtml { get; set; }
 
         public List<string> EmailTo { get; set; }
-    }
-
-    public class  EmailQueueOptions
-    {
-        public EmailQueueOptions()
-        {
-            Replacements = new Dictionary<string, string>();
-            EmailTo = new List<string>();
-        }
-
-        public string EmailFrom { get; set; }
-        public List<string> EmailTo { get; set; }
-        public string Subject { get; set; }
-        public string Content { get; set; }
-        public bool isBodyHtml { get; set; }
-
-        public string TemplateFileName { get; set; }
-        public Dictionary<string,string> Replacements { get; set; }
-
-        public long? CreatedByUserId { get; set; }
     }
 }

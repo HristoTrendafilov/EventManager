@@ -1,3 +1,12 @@
+import {
+  faCirclePlus,
+  faHome,
+  faMagnifyingGlass,
+  faPeopleRoof,
+  faUser,
+  faUserTie,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -47,25 +56,57 @@ function NavUserDropdown(props: NavUserDropdownProps) {
         />
       </button>
       <ul className="dropdown-menu dropdown-menu-end p-2">
-        <li>
+        <li className="mb-1">
           <Link
             to={CustomRoutes.usersView(user.userId)}
             onClick={handleNavClick}
+            className="unset-anchor"
           >
-            Към профила
+            <div className="d-flex align-items-center">
+              <FontAwesomeIcon
+                className="me-2 fa-fw fa-border"
+                size="lg"
+                icon={faUser}
+              />
+              <span>Към профила</span>
+            </div>
           </Link>
         </li>
         {(user.isAdmin || user.isEventCreator) && (
-          <li>
-            <Link to={CustomRoutes.eventsNew()} onClick={handleNavClick}>
-              Създай събитие
+          <li className="mb-1">
+            <Link
+              className="unset-anchor"
+              to={CustomRoutes.eventsNew()}
+              onClick={handleNavClick}
+            >
+              <div className="d-flex align-items-center">
+                <FontAwesomeIcon
+                  className="me-2 fa-fw fa-border"
+                  color="green"
+                  size="lg"
+                  icon={faCirclePlus}
+                />
+                <span>Създай събитие</span>
+              </div>
             </Link>
           </li>
         )}
         {user.isAdmin && (
-          <li>
-            <Link to={CustomRoutes.usersAdminPanel()} onClick={handleNavClick}>
-              Админ панел
+          <li className="mb-1">
+            <Link
+              className="unset-anchor"
+              to={CustomRoutes.usersAdminPanel()}
+              onClick={handleNavClick}
+            >
+              <div className="d-flex align-items-center">
+                <FontAwesomeIcon
+                  className="me-2 fa-fw fa-border"
+                  color="blue"
+                  size="lg"
+                  icon={faUserTie}
+                />
+                <span>Админ панел</span>
+              </div>
             </Link>
           </li>
         )}
@@ -121,11 +162,11 @@ export function Navbar() {
   }, [dispatch, navigate]);
 
   return (
-    <nav className="navbar bg-light fixed-top navbar-expand-md px-md-5">
+    <nav className="navbar fixed-top navbar-expand-md px-md-5">
       <div className="container-fluid">
         <button
           id="offcanvasBtn"
-          className="navbar-toggler me-3"
+          className="navbar-toggler"
           type="button"
           data-bs-toggle="offcanvas"
           data-bs-target="#offcanvasNavbar"
@@ -159,20 +200,20 @@ export function Navbar() {
           id="offcanvasNavbar"
           aria-labelledby="offcanvasNavbarLabel"
         >
-          <div className="offcanvas-header pb-0">
-            <h5 className="offcanvas-title" id="offcanvasNavbarLabel">
+          <div className="offcanvas-header pb-2">
+            <h3 className="offcanvas-title" id="offcanvasNavbarLabel">
               ihelp
-            </h5>
+            </h3>
 
             <button
               type="button"
-              className="btn-close"
+              className="btn-close bg-white"
               data-bs-dismiss="offcanvas"
               aria-label="Close"
             />
           </div>
           <hr className="d-md-none mt-1" />
-          <div className="offcanvas-body pt-0">
+          <div className="offcanvas-body ms-md-3 pt-0">
             <ul className="navbar-nav flex-grow-1 pe-3">
               <li className="nav-item">
                 <Link
@@ -181,7 +222,14 @@ export function Navbar() {
                   data-bs-dismiss="offcanvas"
                   onClick={handleLinkClick}
                 >
-                  Начало
+                  <div className="d-flex flex-md-column align-items-center">
+                    <FontAwesomeIcon
+                      className="me-3 me-md-0 fa-fw"
+                      size="lg"
+                      icon={faHome}
+                    />
+                    <span>Начало</span>
+                  </div>
                 </Link>
               </li>
               <li className="nav-item">
@@ -191,7 +239,14 @@ export function Navbar() {
                   data-bs-dismiss="offcanvas"
                   onClick={handleLinkClick}
                 >
-                  Събития
+                  <div className="d-flex flex-md-column align-items-center">
+                    <FontAwesomeIcon
+                      className="me-3 me-md-0 fa-fw"
+                      size="lg"
+                      icon={faMagnifyingGlass}
+                    />
+                    <span>Събития</span>
+                  </div>
                 </Link>
               </li>
               <li className="nav-item">
@@ -201,7 +256,14 @@ export function Navbar() {
                   data-bs-dismiss="offcanvas"
                   onClick={handleLinkClick}
                 >
-                  За нас
+                  <div className="d-flex flex-md-column align-items-center">
+                    <FontAwesomeIcon
+                      className="me-3 me-md-0 fa-fw"
+                      size="lg"
+                      icon={faPeopleRoof}
+                    />
+                    <span> За нас</span>
+                  </div>
                 </Link>
               </li>
             </ul>

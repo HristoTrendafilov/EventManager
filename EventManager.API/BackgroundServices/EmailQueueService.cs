@@ -52,7 +52,7 @@ namespace EventManager.API.BackgroundServices
                         EmailTo = queueOptions.EmailTo,
                         Subject = queueOptions.Subject,
                         Content = emailContent,
-                        IsBodyHtml = queueOptions.isBodyHtml,
+                        IsBodyHtml = queueOptions.IsBodyHtml,
                     };
 
                     await emailService.SendEmailAsync(emailOptions, queueOptions.CreatedByUserId);
@@ -68,4 +68,20 @@ namespace EventManager.API.BackgroundServices
         }
     }
 
+    public class EmailQueueOptions
+    {
+        public EmailQueueOptions()
+        {
+            Replacements = new Dictionary<string, string>();
+            EmailTo = new List<string>();
+        }
+
+        public string EmailFrom { get; set; }
+        public List<string> EmailTo { get; set; }
+        public string Subject { get; set; }
+        public bool IsBodyHtml { get; set; }
+        public string TemplateFileName { get; set; }
+        public Dictionary<string, string> Replacements { get; set; }
+        public long? CreatedByUserId { get; set; }
+    }
 }

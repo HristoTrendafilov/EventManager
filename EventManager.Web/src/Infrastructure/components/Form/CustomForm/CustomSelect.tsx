@@ -10,7 +10,6 @@ import Select, {
 
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import type { SelectInputOption } from '~/Infrastructure/components/Form/SelectInput/selectInputUtils';
-
 import '~/Infrastructure/components/Form/SelectInput/SelectInput.css';
 
 export interface CustomSelectProps extends ComponentProps<'select'> {
@@ -88,7 +87,7 @@ export const CustomSelect = forwardRef<
             options={options}
             noOptionsMessage={() => 'Няма повече елементи за избор'}
             isSearchable={searchable}
-            placeholder={<div>{placeholder ?? ''}</div>}
+            placeholder={<div>{placeholder ?? 'Избор...'}</div>}
             onChange={(
               newSelections: SingleValue<SelectInputOption>,
               _: ActionMeta<SelectInputOption>
