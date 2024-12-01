@@ -29,6 +29,7 @@ using EventManager.API.Services.FileStorage;
 using EventManager.API.Helpers.Extensions;
 using LinqToDB.Common.Internal.Cache;
 using EventManager.API.BackgroundServices;
+using EventManager.API.Services.Cache;
 
 namespace EventManager.API
 {
@@ -92,9 +93,11 @@ namespace EventManager.API
         {
             var services = builder.Services;
 
-            services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
-            services.AddTransient<IEmailService, EmailService>();
+            builder.Services.AddMemoryCache();
 
+            services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
+
+            services.AddTransient<IEmailService, EmailService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IRegionService, RegionService>();
@@ -103,6 +106,7 @@ namespace EventManager.API
             services.AddScoped<IWebSessionService, WebSessionService>();
             services.AddScoped<ISharedService, SharedService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<ICacheService, CacheService>();
 
             services.AddSingleton<EmailQueueService>();
             services.AddHostedService(provider => provider.GetRequiredService<EmailQueueService>());
@@ -245,12 +249,19 @@ namespace EventManager.API
                 if (webSessionId.HasValue)
                 {
                     var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
-                    var webSession = await webSessionService.GetWebSessionAsync(x => x.WebSessionId == webSessionId.Value);
+                    var cacheService = context.HttpContext.RequestServices.GetRequiredService<ICacheService>();
+
+                    var cacheKey = $"WebSession_{webSessionId.Value}";
+                    var webSession = cacheService.Get<WebSessionPoco>(cacheKey);
+
+                    if (webSession == null)
+                    {
+                        webSession = await webSessionService.GetWebSessionAsync(x => x.WebSessionId == webSessionId.Value);
+                        cacheService.Set(cacheKey, webSession, TimeSpan.FromHours(12));
+                    }
 
                     if (webSession.WebSessionRevoked)
                     {
-                        await webSessionService.CloseWebSessionAsync(webSessionId.Value, userId);
-
                         context.Response.StatusCode = StatusCodes.Status204NoContent;
                         context.Response.Headers.Append("TokenExpired", "true");
                     }

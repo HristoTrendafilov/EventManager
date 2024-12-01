@@ -5,6 +5,8 @@ using LinqToDB;
 using System.Linq.Expressions;
 using EventManager.API.Services.FileStorage;
 using EventManager.API.Dto.User.Role;
+using EventManager.API.Services.Cache;
+using EventManager.API.Services.WebSession;
 
 namespace EventManager.API.Services.User
 {
@@ -12,11 +14,19 @@ namespace EventManager.API.Services.User
     {
         private readonly PostgresConnection _db;
         private readonly IFileService _fileStorageService;
+        private readonly ICacheService _cacheService;
+        private readonly IWebSessionService _webSessionService;
 
-        public UserService(PostgresConnection db, IFileService fileStorageService)
+        public UserService(
+            PostgresConnection db, 
+            IFileService fileStorageService, 
+            ICacheService cacheService, 
+            IWebSessionService webSessionService)
         {
             _db = db;
             _fileStorageService = fileStorageService;
+            _cacheService = cacheService;
+            _webSessionService = webSessionService;
         }
 
         public async Task<long> CreateUserAsync(UserNew user, long? currentUserId)
@@ -134,11 +144,26 @@ namespace EventManager.API.Services.User
 
         public async Task SaveUserRoles(RoleBaseForm userRoles, long? currentUserId)
         {
+            var existingRoles = await _db.UsersRoles
+                   .Where(x => x.UserId == userRoles.UserId && x.RoleId != (int)UserRole.Admin)
+                   .ToListAsync();
+
+            var rolesToDelete = existingRoles
+                .Where(x => !userRoles.RolesIds.Contains(x.RoleId))
+                .ToList();
+
+            var rolesToAdd = userRoles.RolesIds
+                .Where(roleId => !existingRoles.Any(x => x.RoleId == roleId))
+                .ToList();
+
             await _db.WithTransactionAsync(async () =>
             {
-                await _db.UsersRoles.X_DeleteAsync(x => x.UserId == userRoles.UserId && x.RoleId != (int)UserRole.Admin, currentUserId);
+                foreach (var role in rolesToDelete)
+                {
+                    await _db.UsersRoles.X_DeleteAsync(x => x.UserRoleId == role.UserRoleId, currentUserId);
+                }
 
-                foreach (var roleId in userRoles.RolesIds)
+                foreach (var roleId in rolesToAdd)
                 {
                     var userRole = new UserRolePoco
                     {
@@ -149,7 +174,12 @@ namespace EventManager.API.Services.User
 
                     await _db.UsersRoles.X_CreateAsync(userRole, currentUserId);
                 }
+
+                await _webSessionService.RevokeUserSessionsAsync(userRoles.UserId);
             });
+
+            var cacheKey = $"UserPrivileges_{userRoles.UserId}";
+            _cacheService.Remove(cacheKey);
         }
 
         public Task<List<RolePoco>> GetAllRolesAsync(Expression<Func<RolePoco, bool>> predicate)

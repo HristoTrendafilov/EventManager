@@ -3,16 +3,19 @@ using EventManager.API.Dto.WebSession;
 using LinqToDB;
 using System.Linq.Expressions;
 using System.Net;
+using EventManager.API.Services.Cache;
 
 namespace EventManager.API.Services.WebSession
 {
     public class WebSessionService : IWebSessionService
     {
         private readonly PostgresConnection _db;
+        private readonly ICacheService _cacheService;
 
-        public WebSessionService(PostgresConnection db)
+        public WebSessionService(PostgresConnection db, ICacheService cacheService)
         {
             _db = db;
+            _cacheService = cacheService;
         }
 
         public Task<long> CreateWebSession(WebSessionNew webSession)
@@ -31,6 +34,7 @@ namespace EventManager.API.Services.WebSession
             webSessionPoco.WebSessionLogoutDateTime = DateTime.Now;
 
             await _db.WebSessions.X_UpdateAsync(webSessionId, webSessionPoco, currentUserId);
+            _cacheService.Remove($"WebSession_{webSessionId}");
         }
 
         public Task<WebSessionPoco> GetWebSessionAsync(Expression<Func<WebSessionPoco, bool>> predicate)
@@ -58,13 +62,14 @@ namespace EventManager.API.Services.WebSession
         public async Task RevokeUserSessionsAsync(long userId)
         {
             var activeSessions = await _db.WebSessions
-                .Where(ws => ws.UserId == userId && ws.WebSessionLogoutDateTime == null)
+                .Where(x => x.UserId == userId && x.WebSessionLogoutDateTime == null)
                 .ToListAsync();
 
             foreach (var session in activeSessions)
             {
                 session.WebSessionRevoked = true;
                 await _db.WebSessions.X_UpdateAsync(session.WebSessionId, session, userId);
+                _cacheService.Remove($"WebSession_{session.WebSessionId}");
             }
         }
     }
