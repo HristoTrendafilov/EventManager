@@ -38,7 +38,7 @@ export function CrudLogs() {
   const [error, setError] = useState<string | undefined>();
   const [crudLogsView, setCrudLogsView] = useState<CrudLogView[]>([]);
 
-  const form = useZodForm({ schema: CrudLogFilterSchema, defaultValues });
+  const { form } = useZodForm({ schema: CrudLogFilterSchema, defaultValues });
 
   const loadCrudLogs = useCallback(async (filter: CrudLogFilterType) => {
     setError(undefined);

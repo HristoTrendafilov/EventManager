@@ -28,7 +28,7 @@ export function RegionModal(props: RegionModalProps) {
 
   const [error, setError] = useState<string | undefined>();
 
-  const form = useZodForm({
+  const { form } = useZodForm({
     schema: RegionBaseFormSchema,
   });
 

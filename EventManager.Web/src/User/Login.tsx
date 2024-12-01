@@ -8,6 +8,7 @@ import {
   UserLoginSchema,
   type UserLoginType,
 } from '~/Infrastructure/api-types';
+import { SubmitButton } from '~/Infrastructure/components/Buttons/SubmitButton';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
@@ -21,7 +22,7 @@ export function Login() {
 
   const [error, setError] = useState<string | undefined>();
 
-  const form = useZodForm({ schema: UserLoginSchema });
+  const { form, isSubmitting } = useZodForm({ schema: UserLoginSchema });
 
   const handleLogin = useCallback(
     async (data: UserLoginType) => {
@@ -58,19 +59,14 @@ export function Login() {
                 required
               />
 
-              <div className="d-flex justify-content-center">
-                <button type="submit" className="btn btn-primary w-200px">
-                  Вход
-                </button>
-              </div>
+              <SubmitButton
+                text="Вход"
+                className="d-flex justify-content-center"
+                isSubmitting={isSubmitting}
+              />
             </CustomForm>
+            {error && <ErrorMessage error={error} />}
           </div>
-
-          {error && (
-            <div className="card-footer">
-              <ErrorMessage error={error} />
-            </div>
-          )}
         </div>
         <div className="mt-1">
           <span className="me-2">Все още нямате регистрация?</span>

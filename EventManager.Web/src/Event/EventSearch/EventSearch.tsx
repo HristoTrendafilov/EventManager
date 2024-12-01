@@ -36,7 +36,7 @@ export function EventSearch() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { page } = useParams();
-  const form = useZodForm({
+  const { form } = useZodForm({
     schema: EventSearchFilterSchema,
     defaultValues: page
       ? {

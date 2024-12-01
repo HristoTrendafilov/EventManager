@@ -22,7 +22,7 @@ export function UsersRolesCatalog() {
   const [roles, setRoles] = useState<RoleView[]>([]);
   const [error, setError] = useState<string | undefined>();
 
-  const form = useZodForm({ schema: RoleFilterSchema });
+  const { form } = useZodForm({ schema: RoleFilterSchema });
 
   const loadRoles = useCallback(async () => {
     const response = await getAllRoles();

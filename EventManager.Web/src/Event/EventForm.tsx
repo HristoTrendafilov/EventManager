@@ -36,7 +36,7 @@ export function Event() {
   const { eventId } = useParams();
   const navigate = useNavigate();
 
-  const form = useZodForm({ schema: EventBaseFormSchema });
+  const { form } = useZodForm({ schema: EventBaseFormSchema });
 
   const loadEvent = useCallback(
     async (paramEventId: number) => {

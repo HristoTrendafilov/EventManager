@@ -23,7 +23,7 @@ export function UserSecurity(props: UserSecurityProps) {
 
   const { userId, lastActiveWebSessions } = props;
 
-  const form = useZodForm({ schema: UserUpdatePasswordSchema });
+  const { form } = useZodForm({ schema: UserUpdatePasswordSchema });
 
   const handleSubmit = useCallback(
     async (password: UserUpdatePasswordType) => {

@@ -31,9 +31,15 @@ export const useZodForm = <Z extends ZodObject<ZodRawShape>>({
 }: UseZodFormProps<Z>) => {
   const defaultValues = getDefaultValuesFromSchema(schema);
 
-  return useForm({
+  const form = useForm({
     ...formProps,
     defaultValues: { ...defaultValues, ...formProps.defaultValues }, // Merge with user-provided defaults
     resolver: zodResolver(schema),
   });
+
+  const {
+    formState: { isSubmitting },
+  } = form;
+
+  return { form, isSubmitting };
 };

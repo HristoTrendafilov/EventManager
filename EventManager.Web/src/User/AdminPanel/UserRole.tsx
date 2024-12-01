@@ -22,7 +22,7 @@ export function UserRole(props: UserRoleProps) {
 
   const [error, setError] = useState<string | undefined>();
 
-  const form = useZodForm({
+  const { form } = useZodForm({
     schema: RoleBaseFormSchema,
     defaultValues: { userId: user.userId, rolesIds: user.userRolesIds || [] },
   });

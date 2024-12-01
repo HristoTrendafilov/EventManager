@@ -44,7 +44,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
 
   const dispatch = useAppDispatch();
 
-  const form = useZodForm({
+  const { form } = useZodForm({
     schema: UserUpdatePersonalDataSchema,
     defaultValues: user,
   });

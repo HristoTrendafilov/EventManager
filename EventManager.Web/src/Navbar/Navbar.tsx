@@ -162,7 +162,7 @@ export function Navbar() {
   }, [dispatch, navigate]);
 
   return (
-    <nav className="navbar fixed-top navbar-expand-md px-md-5">
+    <nav className="navbar navbar-expand-md px-md-5">
       <div className="container-fluid">
         <button
           id="offcanvasBtn"
@@ -179,9 +179,12 @@ export function Navbar() {
           ihelp
         </Link>
 
-        <div className="d-flex gap-2 order-0 order-md-1">
+        <div className="order-0 order-md-1">
           {!user.isLoggedIn ? (
-            <Link to={CustomRoutes.usersLogin()} className="btn btn-warning">
+            <Link
+              to={CustomRoutes.usersLogin()}
+              className="btn btn-warning w-100px"
+            >
               Вход
             </Link>
           ) : (

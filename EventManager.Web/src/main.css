@@ -38,7 +38,7 @@ body,
 }
 
 #main {
-  margin-top: 4.6rem;
+  padding-top: 70px; /* Adjust this value to match your navbar height */
 }
 
 .unset-btn {

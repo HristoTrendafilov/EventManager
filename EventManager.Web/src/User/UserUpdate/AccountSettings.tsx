@@ -29,7 +29,7 @@ export function UserAccountSettings(props: UserAccountSettingsProps) {
 
   const { userId, username, onUserUpdate } = props;
 
-  const form = useZodForm({
+  const { form } = useZodForm({
     schema: UserUpdateUsernameSchema,
     defaultValues: { username },
   });
