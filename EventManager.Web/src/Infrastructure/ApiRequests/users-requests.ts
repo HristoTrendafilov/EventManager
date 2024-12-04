@@ -44,10 +44,6 @@ export function getUserForUpdate(userId: number) {
   return callApi<UserForUpdate>(`/users/${userId}/update`, 'GET');
 }
 
-export function getUserProfilePicture(userId: number) {
-  return callApi<Blob>(`/users/${userId}/profile-picture`, 'GET');
-}
-
 export function updateUserUsername(
   userId: number,
   user: UserUpdateUsernameType

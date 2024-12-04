@@ -245,9 +245,9 @@ namespace EventManager.API
                 var webSessionId = claimsPrincipal.X_WebSessionId();
                 if (webSessionId.HasValue)
                 {
-                    var cacheService = context.HttpContext.RequestServices.GetRequiredService<ICacheService>();
+                    var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
 
-                    var webSession = await cacheService.GetOrAddWebSessionAsync(webSessionId.Value);
+                    var webSession = await webSessionService.CacheGetOrAddWebSessionAsync(webSessionId.Value);
                     if (webSession.WebSessionRevoked)
                     {
                         context.Response.StatusCode = StatusCodes.Status204NoContent;

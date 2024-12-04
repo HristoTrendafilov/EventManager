@@ -1,17 +1,17 @@
 ﻿using EventManager.API.Core;
 using EventManager.API.Helpers.Extensions;
-using EventManager.API.Services.Cache;
+using EventManager.API.Services.User;
 using System.Security.Claims;
 
 namespace EventManager.API.Services.Shared
 {
     public class SharedService : ISharedService
     {
-        private readonly ICacheService _cacheService;
+        private readonly IUserService _userService;
 
-        public SharedService(ICacheService cacheService)
+        public SharedService(IUserService userService)
         {
-            _cacheService = cacheService;
+            _userService = userService;
         }
 
         public async Task<bool> IsUserAuthorizedToEdit(ClaimsPrincipal user, long createdByUserId)
@@ -26,7 +26,7 @@ namespace EventManager.API.Services.Shared
                 return true;
             }
 
-            var roles = await _cacheService.GetOrAddWebUserRolesAsync(currentUserId);
+            var roles = await _userService.CacheGetOrAddWebUserRolesAsync(currentUserId);
             return roles.Any(role => role.RoleId == (int)UserRole.Admin);
         }
     }

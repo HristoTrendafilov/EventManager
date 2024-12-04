@@ -179,7 +179,7 @@ namespace EventManager.API.Services.User
                 await _webSessionService.RevokeUserSessionsAsync(userRoles.UserId);
             });
 
-            _cacheService.RemoveUserRoles(userRoles.UserId);
+            CacheRemoveUserRoles(userRoles.UserId);
         }
 
         public Task<List<RolePoco>> GetAllRolesAsync(Expression<Func<RolePoco, bool>> predicate)
@@ -187,20 +187,22 @@ namespace EventManager.API.Services.User
             return _db.Roles.Where(predicate).ToListAsync();
         }
 
-        public async Task<byte[]> GetUserProfilePictureAsync(long userId)
+        public async Task<List<RolePoco>> CacheGetOrAddWebUserRolesAsync(long userId)
         {
-            var user = await _db.VUsers.FirstOrDefaultAsync(x => x.UserId == userId);
-            if (user == null)
-            {
-                return null;
-            }
+            var cacheKey = $"UserRoles_{userId}";
 
-            if (!File.Exists(user.FileStorageRelativePath))
+            var roles = _cacheService.Get<List<RolePoco>>(cacheKey);
+            if (roles == null)
             {
-                return null;
+                roles = await GetAllUserRolesAsync(userId);
+                _cacheService.Set(cacheKey, roles, TimeSpan.FromHours(12));
             }
+            return roles;
+        }
 
-            return await File.ReadAllBytesAsync(user.FileStorageRelativePath);
+        public void CacheRemoveUserRoles(long userId)
+        {
+            _cacheService.Remove($"UserRoles_{userId}");
         }
     }
 }

@@ -7,11 +7,11 @@ namespace EventManager.API.Services.Event
 {
     public interface IEventService
     {
-        Task<VEventPoco> GetEventViewAsync(Expression<Func<VEventPoco, bool>> predicate);
+        Task<EventView> GetEventViewAsync(Expression<Func<VEventPoco, bool>> predicate, bool includeMainImageUrl);
         Task<(List<VEventPoco> events, PaginationMetadata metadata)> GetPaginationEventsAsync
             (Expression<Func<VEventPoco, bool>> predicate, int pageNumber, int pageSize);
         Task<EventPoco> GetEventPocoAsync(Expression<Func<EventPoco, bool>> predicate);
-        Task<List<VEventPoco>> GetAllEventsViewAsync(Expression<Func<VEventPoco, bool>> predicate);
+        Task<List<EventView>> GetAllEventsViewAsync(Expression<Func<VEventPoco, bool>> predicate, bool includeMainImageUrl);
         Task<long> CreateEventAsync(EventNew newEvent, long? currentUserId);
         Task UpdateEventAsync(long eventId, EventBaseForm updateEvent, long? currentUserId);
         Task DeleteEventAsync(long eventId, long? currentUserId);

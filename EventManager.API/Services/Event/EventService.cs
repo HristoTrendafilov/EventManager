@@ -5,28 +5,48 @@ using EventManager.API.Dto.User;
 using LinqToDB;
 using System.Linq.Expressions;
 using EventManager.API.Services.FileStorage;
+using EventManager.BOL;
 
 namespace EventManager.API.Services.Event
 {
     public class EventService : IEventService
     {
         private readonly PostgresConnection _db;
-        private readonly IFileService _fileStorageService;
+        private readonly IFileService _fileService;
 
         public EventService(PostgresConnection db, IFileService fileStorageService)
         {
             _db = db;
-            _fileStorageService = fileStorageService;
+            _fileService = fileStorageService;
         }
 
-        public Task<VEventPoco> GetEventViewAsync(Expression<Func<VEventPoco, bool>> predicate)
+        public async Task<EventView> GetEventViewAsync(Expression<Func<VEventPoco, bool>> predicate, bool includeMainImageUrl)
         {
-            return _db.VEvents.FirstOrDefaultAsync(predicate);
+            var eventViewPoco = await _db.VEvents.FirstOrDefaultAsync(predicate);
+            var eventView = Mapper.CreateObject<EventView>(eventViewPoco);
+
+            if (includeMainImageUrl)
+            {
+                eventView.MainImageUrl = _fileService.CreatePublicFileUrl(eventView.MainImageRelativePath, FileService.NO_IMAGE_FILE);
+            }
+
+            return eventView;
         }
 
-        public Task<List<VEventPoco>> GetAllEventsViewAsync(Expression<Func<VEventPoco, bool>> predicate)
+        public async Task<List<EventView>> GetAllEventsViewAsync(Expression<Func<VEventPoco, bool>> predicate, bool includeMainImageUrl)
         {
-            return _db.VEvents.Where(predicate).ToListAsync();
+            var eventsViewPoco = await _db.VEvents.Where(predicate).ToListAsync();
+            var eventsView = Mapper.CreateList<EventView>(eventsViewPoco);
+
+            if (includeMainImageUrl)
+            {
+                foreach (var @event in eventsView)
+                {
+                    @event.MainImageUrl = _fileService.CreatePublicFileUrl(@event.MainImageRelativePath, FileService.NO_IMAGE_FILE);
+                }
+            }
+
+            return eventsView;
         }
 
         public async Task<long> CreateEventAsync(EventNew @event, long? currentUserId)
@@ -60,7 +80,7 @@ namespace EventManager.API.Services.Event
 
         private async Task CreateEventImageAsync(IFormFile file, long eventId, long? currentUserId)
         {
-            var fileId = await _fileStorageService.CreateFileAsync(file, FileType.Public, currentUserId);
+            var fileId = await _fileService.CreateFileAsync(file, FileType.Public, currentUserId);
 
             var image = new EventImagePoco
             {
@@ -84,7 +104,7 @@ namespace EventManager.API.Services.Event
             await _db.WithTransactionAsync(async () =>
             {
                 await _db.EventImages.X_DeleteAsync(x => x.EventImageId == mainImage.EventImageId, currentUserId);
-                await _fileStorageService.DeleteFileAsync(mainImage.FileId, currentUserId);
+                await _fileService.DeleteFileAsync(mainImage.FileId, currentUserId);
             });
         }
 

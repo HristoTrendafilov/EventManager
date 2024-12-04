@@ -1,7 +1,6 @@
 ﻿using EventManager.API.Core;
 using EventManager.API.Helpers;
 using EventManager.API.Helpers.Extensions;
-using EventManager.API.Services.Email;
 using EventManager.API.Services.Shared;
 using EventManager.API.Services.User;
 using EventManager.API.Services.WebSession;
@@ -72,23 +71,6 @@ namespace EventManager.API.Controllers
             userView.RegionsHelping = Mapper.CreateList<RegionView>(userRegionsHelping);
 
             return Ok(userView);
-        }
-
-        [HttpGet("{userId}/profile-picture")]
-        public async Task<ActionResult> GetUserProfilePicture(long userId)
-        {
-            if (!await _userService.UserExistsAsync(x => x.UserId == userId))
-            {
-                return NotFound();
-            }
-
-            var profilePicture = await _userService.GetUserProfilePictureAsync(userId);
-            if (profilePicture == null)
-            {
-                return NotFound();
-            }
-
-            return File(profilePicture, "application/octet-stream");
         }
 
         [Authorize]

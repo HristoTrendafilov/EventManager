@@ -35,21 +35,18 @@ namespace EventManager.API.Controllers
         [HttpGet("{eventId}/view")]
         public async Task<ActionResult> GetEventView(long eventId)
         {
-            var eventViewPoco = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
-            if (eventViewPoco == null)
+            var eventView = await _eventService.GetEventViewAsync(x => x.EventId == eventId, true);
+            if (eventView == null)
             {
                 return NotFound();
             }
 
-            var eventView = Mapper.CreateObject<EventView>(eventViewPoco);
+            var currentUserId = User.X_CurrentUserId();
+
             eventView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, eventView.EventCreatedByUserId);
             eventView.MainImageUrl = _fileService.CreatePublicFileUrl(eventView.MainImageRelativePath, FileService.NO_IMAGE_FILE);
-
-            var currentUserId = User.X_CurrentUserId();
-            if (currentUserId.HasValue)
-            {
-                eventView.IsUserSubscribed = await _eventService.UserSubscriptionExists(x => x.EventId == eventId && x.UserId == currentUserId.Value);
-            }
+            eventView.IsUserSubscribed = currentUserId.HasValue && 
+                await _eventService.UserSubscriptionExists(x => x.EventId == eventId && x.UserId == currentUserId.Value);
 
             return Ok(eventView);
         }
@@ -99,7 +96,7 @@ namespace EventManager.API.Controllers
         [HttpGet("{eventId}/update")]
         public async Task<ActionResult> GetEventForUpdate(long eventId)
         {
-            var eventView = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
+            var eventView = await _eventService.GetEventViewAsync(x => x.EventId == eventId, true);
             if (eventView == null)
             {
                 return NotFound();
@@ -219,7 +216,7 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече е записан потребител с ID: {currentUserId.Value}");
             }
 
-            var eventView = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
+            var eventView = await _eventService.GetEventViewAsync(x => x.EventId == eventId, false);
             if (eventView.EventHasEnded)
             {
                 return BadRequest("Събитието вече е приключило. Не може да се запишете");

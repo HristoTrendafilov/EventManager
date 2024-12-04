@@ -44,7 +44,7 @@
     "@babel/core": "^7.22.8",
     "@babel/preset-env": "^7.22.7",
     "@babel/preset-react": "^7.22.5",
-    "@babel/preset-typescript": "^7.22.5", 
+    "@babel/preset-typescript": "^7.22.5",
     "@testing-library/dom": "^9.3.1",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.0.0",
@@ -84,6 +84,7 @@
     "react-refresh": "^0.14.0",
     "typescript": "^5.1.6",
     "undici": "^5.27.2",
-    "vite": "^5.4.11"
+    "vite": "^5.4.11",
+    "vite-plugin-checker": "^0.8.0"
   }
 }

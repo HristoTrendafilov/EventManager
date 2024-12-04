@@ -62,7 +62,7 @@ export const userSlice = createSlice({
       state.isEventCreator = payload.isEventCreator;
       state.isLoggedIn = true;
       state.token = payload.token;
-      state.profilePicture = payload.profilePictureBase64;
+      state.profilePicture = payload.profilePictureUrl;
 
       updateLocalStorage(state);
     },

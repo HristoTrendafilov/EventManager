@@ -13,5 +13,7 @@ namespace EventManager.API.Services.WebSession
         Task<string> GetUserIpInfoAsync(string ipAddress);
         Task<List<VWebSessionPoco>> GetUserLastActiveWebSessions(long userId);
         Task RevokeUserSessionsAsync(long userId);
+        Task<WebSessionPoco> CacheGetOrAddWebSessionAsync(long webSessionId);
+        void CacheRemoveWebSession(long webSessionId);
     }
 }
