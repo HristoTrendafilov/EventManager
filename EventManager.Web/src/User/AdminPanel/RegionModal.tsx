@@ -90,15 +90,15 @@ export function RegionModal(props: RegionModalProps) {
                   required
                 />
                 <div className="d-flex gap-2">
-                  <button type="submit" className="btn btn-primary w-100">
-                    Запис
-                  </button>
                   <button
                     type="button"
                     className="btn btn-warning w-100"
                     onClick={onCancel}
                   >
                     Изход
+                  </button>
+                  <button type="submit" className="btn btn-primary w-100">
+                    Запис
                   </button>
                 </div>
               </CustomForm>

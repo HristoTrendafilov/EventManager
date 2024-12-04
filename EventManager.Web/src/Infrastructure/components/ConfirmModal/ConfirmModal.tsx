@@ -19,17 +19,17 @@ export function ConfirmModal(props: ConfirmModalProps) {
             <div className="card-footer d-flex gap-3">
               <button
                 type="button"
-                className="btn btn-success w-100"
-                onClick={onConfirm}
-              >
-                Потвърждавам
-              </button>
-              <button
-                type="button"
                 className="btn btn-warning w-100"
                 onClick={onCancel}
               >
                 Отказ
+              </button>
+              <button
+                type="button"
+                className="btn btn-success w-100"
+                onClick={onConfirm}
+              >
+                Потвърждавам
               </button>
             </div>
           </div>

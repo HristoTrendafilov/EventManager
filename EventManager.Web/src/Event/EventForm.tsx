@@ -24,12 +24,13 @@ import {
 } from '~/Infrastructure/components/Form/formUtils';
 import { objectToFormData } from '~/Infrastructure/utils';
 import { RegionSelect } from '~/Shared/SmartSelects/Region/RegionSelect';
+import noImage from '~/asset/no-image.png';
 
 import './EventForm.css';
 
 export function Event() {
   const [error, setError] = useState<string | undefined>();
-  const [mainImage, setMainImage] = useState<string>();
+  const [mainImage, setMainImage] = useState<string>(noImage);
 
   const { eventId } = useParams();
   const navigate = useNavigate();
