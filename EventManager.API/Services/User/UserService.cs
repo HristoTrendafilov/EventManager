@@ -18,9 +18,9 @@ namespace EventManager.API.Services.User
         private readonly IWebSessionService _webSessionService;
 
         public UserService(
-            PostgresConnection db, 
-            IFileService fileStorageService, 
-            ICacheService cacheService, 
+            PostgresConnection db,
+            IFileService fileStorageService,
+            ICacheService cacheService,
             IWebSessionService webSessionService)
         {
             _db = db;
@@ -35,7 +35,8 @@ namespace EventManager.API.Services.User
             {
                 if (user.ProfilePicture != null)
                 {
-                    user.UserProfilePictureFileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, currentUserId);
+                    var fileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, FileType.Public, currentUserId);
+                    user.UserProfilePictureFileId = fileId;
                 }
 
                 var userId = await _db.Users.X_CreateAsync(user, currentUserId);
@@ -75,8 +76,8 @@ namespace EventManager.API.Services.User
 
                 if (user.ProfilePicture != null)
                 {
-                    var newProfilePictureFileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, currentUserId);
-                    user.UserProfilePictureFileId = newProfilePictureFileId;
+                    var fileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, FileType.Public, currentUserId);
+                    user.UserProfilePictureFileId = fileId;
 
                     await _db.Users.X_UpdateAsync(userId, user, currentUserId);
 
@@ -178,8 +179,7 @@ namespace EventManager.API.Services.User
                 await _webSessionService.RevokeUserSessionsAsync(userRoles.UserId);
             });
 
-            var cacheKey = $"UserPrivileges_{userRoles.UserId}";
-            _cacheService.Remove(cacheKey);
+            _cacheService.RemoveUserRoles(userRoles.UserId);
         }
 
         public Task<List<RolePoco>> GetAllRolesAsync(Expression<Func<RolePoco, bool>> predicate)
@@ -195,12 +195,12 @@ namespace EventManager.API.Services.User
                 return null;
             }
 
-            if (!File.Exists(user.FileStoragePath))
+            if (!File.Exists(user.FileStorageRelativePath))
             {
                 return null;
             }
 
-            return await File.ReadAllBytesAsync(user.FileStoragePath);
+            return await File.ReadAllBytesAsync(user.FileStorageRelativePath);
         }
     }
 }

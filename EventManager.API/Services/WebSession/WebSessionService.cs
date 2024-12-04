@@ -34,7 +34,7 @@ namespace EventManager.API.Services.WebSession
             webSessionPoco.WebSessionLogoutDateTime = DateTime.Now;
 
             await _db.WebSessions.X_UpdateAsync(webSessionId, webSessionPoco, currentUserId);
-            _cacheService.Remove($"WebSession_{webSessionId}");
+            _cacheService.RemoveWebSession(webSessionId);
         }
 
         public Task<WebSessionPoco> GetWebSessionAsync(Expression<Func<WebSessionPoco, bool>> predicate)
@@ -69,7 +69,7 @@ namespace EventManager.API.Services.WebSession
             {
                 session.WebSessionRevoked = true;
                 await _db.WebSessions.X_UpdateAsync(session.WebSessionId, session, userId);
-                _cacheService.Remove($"WebSession_{session.WebSessionId}");
+                _cacheService.RemoveWebSession(session.WebSessionId);
             }
         }
     }

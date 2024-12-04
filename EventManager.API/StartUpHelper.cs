@@ -27,7 +27,6 @@ using System.Net.Http.Headers;
 using EventManager.API.Middlewares;
 using EventManager.API.Services.FileStorage;
 using EventManager.API.Helpers.Extensions;
-using LinqToDB.Common.Internal.Cache;
 using EventManager.API.BackgroundServices;
 using EventManager.API.Services.Cache;
 
@@ -244,22 +243,11 @@ namespace EventManager.API
             if (claimsPrincipal != null)
             {
                 var webSessionId = claimsPrincipal.X_WebSessionId();
-                var userId = claimsPrincipal.X_CurrentUserId();
-
                 if (webSessionId.HasValue)
                 {
-                    var webSessionService = context.HttpContext.RequestServices.GetRequiredService<IWebSessionService>();
                     var cacheService = context.HttpContext.RequestServices.GetRequiredService<ICacheService>();
 
-                    var cacheKey = $"WebSession_{webSessionId.Value}";
-                    var webSession = cacheService.Get<WebSessionPoco>(cacheKey);
-
-                    if (webSession == null)
-                    {
-                        webSession = await webSessionService.GetWebSessionAsync(x => x.WebSessionId == webSessionId.Value);
-                        cacheService.Set(cacheKey, webSession, TimeSpan.FromHours(12));
-                    }
-
+                    var webSession = await cacheService.GetOrAddWebSessionAsync(webSessionId.Value);
                     if (webSession.WebSessionRevoked)
                     {
                         context.Response.StatusCode = StatusCodes.Status204NoContent;

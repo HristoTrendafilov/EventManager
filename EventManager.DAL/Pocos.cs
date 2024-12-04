@@ -171,8 +171,8 @@ namespace EventManager.DAL
 		[Column(Name = "file_extension")]
 		public virtual string FileExtension { get; set; }
 
-		[Column(Name = "file_storage_path")]
-		public virtual string FileStoragePath { get; set; }
+		[Column(Name = "file_storage_relative_path")]
+		public virtual string FileStorageRelativePath { get; set; }
 
 		[Column(Name = "file_created_on_date_time")]
 		public virtual DateTime FileCreatedOnDateTime { get; set; }
@@ -332,51 +332,6 @@ namespace EventManager.DAL
 		public virtual DateTime RegionCreatedOnDateTime { get; set; }
 	}
 
-	[Table(Name = "v_events")]
-	public class VEventPoco
-	{
-		[Column(Name = "event_id")]
-		public virtual long EventId { get; set; }
-
-		[Column(Name = "event_name")]
-		public virtual string EventName { get; set; }
-
-		[Nullable]
-		[Column(Name = "event_description")]
-		public virtual string EventDescription { get; set; }
-
-		[Column(Name = "event_start_date_time")]
-		public virtual DateTime EventStartDateTime { get; set; }
-
-		[Nullable]
-		[Column(Name = "event_end_date_time")]
-		public virtual DateTime? EventEndDateTime { get; set; }
-
-		[Column(Name = "region_id")]
-		public virtual long RegionId { get; set; }
-
-		[Column(Name = "event_created_by_user_id")]
-		public virtual long EventCreatedByUserId { get; set; }
-
-		[Column(Name = "region_name")]
-		public virtual string RegionName { get; set; }
-
-		[Column(Name = "created_by_username")]
-		public virtual string CreatedByUsername { get; set; }
-
-		[Column(Name = "event_created_on_date_time")]
-		public virtual DateTime EventCreatedOnDateTime { get; set; }
-
-		[Column(Name = "has_main_image")]
-		public virtual bool HasMainImage { get; set; }
-
-		[Column(Name = "event_has_ended")]
-		public virtual bool EventHasEnded { get; set; }
-
-		[Column(Name = "event_has_started")]
-		public virtual bool EventHasStarted { get; set; }
-	}
-
 	[Table(Name = "v_exceptions")]
 	public class VExceptionPoco
 	{
@@ -507,6 +462,51 @@ namespace EventManager.DAL
 		public virtual bool HasProfilePicture { get; set; }
 	}
 
+	[Table(Name = "v_events")]
+	public class VEventPoco
+	{
+		[Column(Name = "event_id")]
+		public virtual long EventId { get; set; }
+
+		[Column(Name = "event_name")]
+		public virtual string EventName { get; set; }
+
+		[Nullable]
+		[Column(Name = "event_description")]
+		public virtual string EventDescription { get; set; }
+
+		[Column(Name = "event_start_date_time")]
+		public virtual DateTime EventStartDateTime { get; set; }
+
+		[Nullable]
+		[Column(Name = "event_end_date_time")]
+		public virtual DateTime? EventEndDateTime { get; set; }
+
+		[Column(Name = "region_id")]
+		public virtual long RegionId { get; set; }
+
+		[Column(Name = "event_created_by_user_id")]
+		public virtual long EventCreatedByUserId { get; set; }
+
+		[Column(Name = "region_name")]
+		public virtual string RegionName { get; set; }
+
+		[Column(Name = "created_by_username")]
+		public virtual string CreatedByUsername { get; set; }
+
+		[Column(Name = "event_created_on_date_time")]
+		public virtual DateTime EventCreatedOnDateTime { get; set; }
+
+		[Column(Name = "event_has_ended")]
+		public virtual bool EventHasEnded { get; set; }
+
+		[Column(Name = "event_has_started")]
+		public virtual bool EventHasStarted { get; set; }
+
+		[Column(Name = "main_image_relative_path")]
+		public virtual string MainImageRelativePath { get; set; }
+	}
+
 	[Table(Name = "v_users")]
 	public class VUserPoco
 	{
@@ -566,8 +566,8 @@ namespace EventManager.DAL
 		[Column(Name = "region_name")]
 		public virtual string RegionName { get; set; }
 
-		[Column(Name = "file_storage_path")]
-		public virtual string FileStoragePath { get; set; }
+		[Column(Name = "file_storage_relative_path")]
+		public virtual string FileStorageRelativePath { get; set; }
 	}
 
 	[Table(Name = "v_event_images")]

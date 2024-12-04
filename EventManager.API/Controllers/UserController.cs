@@ -19,6 +19,7 @@ using EventManager.DAL;
 using System.Data;
 using EventManager.API.Dto.User.Role;
 using EventManager.API.BackgroundServices;
+using EventManager.API.Services.FileStorage;
 
 namespace EventManager.API.Controllers
 {
@@ -32,6 +33,7 @@ namespace EventManager.API.Controllers
         private readonly IConfiguration _configuration;
         private readonly IRegionService _regionService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IFileService _fileService;
         private readonly EmailQueueService _emailQueueService;
 
         public UserController(
@@ -41,6 +43,7 @@ namespace EventManager.API.Controllers
             IConfiguration configuration,
             IRegionService regionService,
             IWebHostEnvironment webHostEnvironment,
+            IFileService fileService,
             EmailQueueService emailQueueService)
         {
             _userService = userService;
@@ -49,6 +52,7 @@ namespace EventManager.API.Controllers
             _configuration = configuration;
             _regionService = regionService;
             _webHostEnvironment = webHostEnvironment;
+            _fileService = fileService;
             _emailQueueService = emailQueueService;
         }
 
@@ -201,7 +205,7 @@ namespace EventManager.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> LoginUser(UserLogin userLogin)
         {
-            var user = await _userService.GetUserPocoAsync(x => x.Username == userLogin.Username && x.UserPassword == userLogin.Password);
+            var user = await _userService.GetUserViewAsync(x => x.Username == userLogin.Username && x.UserPassword == userLogin.Password);
             if (user == null)
             {
                 return BadRequest("Неправилно потребителско име или парола.");
@@ -256,13 +260,8 @@ namespace EventManager.API.Controllers
                 WebSessionId = webSessionId,
                 IsAdmin = userRoles.Any(x => x.RoleId == (int)UserRole.Admin),
                 IsEventCreator = userRoles.Any(x => x.RoleId == (int)UserRole.EventCreator),
+                ProfilePictureUrl = _fileService.CreatePublicFileUrl(user.FileStorageRelativePath, FileService.NO_USER_LOGO),
             };
-
-            if (user.UserProfilePictureFileId.HasValue)
-            {
-                var bytes = await _userService.GetUserProfilePictureAsync(user.UserId);
-                userForWeb.ProfilePictureBase64 = Convert.ToBase64String(bytes);
-            }
 
             return Ok(userForWeb);
         }

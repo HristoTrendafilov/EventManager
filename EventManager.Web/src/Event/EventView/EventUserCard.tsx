@@ -21,7 +21,7 @@ export function EventUserCard(props: EventUserCardProps) {
   const [error, setError] = useState<string>();
 
   const loadProfilePicture = useCallback(async () => {
-    const response = await getUserProfilePicture(user.userId!);
+    const response = await getUserProfilePicture(user.userId);
     if (!response.success) {
       setError(response.errorMessage);
       return;
@@ -45,7 +45,7 @@ export function EventUserCard(props: EventUserCardProps) {
 
   return (
     <Link
-      to={CustomRoutes.usersView(user.userId!)}
+      to={CustomRoutes.usersView(user.userId)}
       className="event-user-card-wrapper unset-anchor"
     >
       <div className="d-flex border border-1 align-items-center p-1">
@@ -53,7 +53,7 @@ export function EventUserCard(props: EventUserCardProps) {
         <div className="d-flex flex-column ms-2">
           <div>{user.username}</div>
           <div className="fst-italic">
-            {formatDateTime(user.userSubscribedOnDateTime!)}
+            {formatDateTime(user.userSubscribedOnDateTime)}
           </div>
         </div>
       </div>

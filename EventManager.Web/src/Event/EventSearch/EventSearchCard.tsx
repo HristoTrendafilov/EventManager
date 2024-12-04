@@ -1,11 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getEventMainImage } from '~/Infrastructure/ApiRequests/events-requests';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 import type { EventView } from '~/Infrastructure/api-types';
-import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
-import noImage from '~/asset/no-image.png';
 
 import './EventSearchCard.css';
 
@@ -16,37 +12,11 @@ interface EventSearchCardProps {
 export function EventSearchCard(props: EventSearchCardProps) {
   const { event } = props;
 
-  const [error, setError] = useState<string | undefined>();
-  const [mainImage, setMainImage] = useState<string>(noImage);
-
-  const loadMainImage = useCallback(async () => {
-    const response = await getEventMainImage(Number(event.eventId));
-    if (!response.success) {
-      setError(response.errorMessage);
-      return;
-    }
-
-    setMainImage(URL.createObjectURL(response.data));
-  }, [event.eventId]);
-
-  useEffect(() => {
-    if (event.hasMainImage) {
-      void loadMainImage();
-    }
-  }, [event.hasMainImage, loadMainImage]);
-
-  useEffect(
-    () => () => {
-      URL.revokeObjectURL(mainImage);
-    },
-    [mainImage]
-  );
-
   return (
     <div className="event-search-card-wrapper mt-3">
       <div className="container">
         <Link
-          to={CustomRoutes.eventsView(event.eventId!)}
+          to={CustomRoutes.eventsView(event.eventId)}
           className=" unset-anchor"
         >
           <div className="row border">
@@ -54,7 +24,7 @@ export function EventSearchCard(props: EventSearchCardProps) {
               <div className="d-flex" style={{ height: '215px' }}>
                 <img
                   className="object-fit-cover object-pos-center w-100"
-                  src={mainImage}
+                  src={event.mainImageUrl}
                   alt="main"
                 />
               </div>
@@ -70,7 +40,6 @@ export function EventSearchCard(props: EventSearchCardProps) {
           </div>
         </Link>
       </div>
-      {error && <ErrorMessage error={error} />}
     </div>
   );
 }

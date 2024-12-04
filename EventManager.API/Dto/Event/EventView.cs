@@ -13,6 +13,7 @@ namespace EventManager.API.Dto.Event
 
         public bool CanEdit { get; set; }
         public bool IsUserSubscribed { get; set; }
+        public string MainImageUrl { get; set; }
         public List<UserEventView> Subscribers { get; set; }
     }
 }

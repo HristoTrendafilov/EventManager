@@ -60,7 +60,7 @@ namespace EventManager.API.Services.Event
 
         private async Task CreateEventImageAsync(IFormFile file, long eventId, long? currentUserId)
         {
-            var fileId = await _fileStorageService.CreateFileAsync(file, currentUserId);
+            var fileId = await _fileStorageService.CreateFileAsync(file, FileType.Public, currentUserId);
 
             var image = new EventImagePoco
             {

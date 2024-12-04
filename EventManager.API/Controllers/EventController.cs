@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using EventManager.API.Dto;
 using Newtonsoft.Json.Serialization;
 using EventManager.DAL;
+using EventManager.API.Services.FileStorage;
 
 namespace EventManager.API.Controllers
 {
@@ -22,11 +23,13 @@ namespace EventManager.API.Controllers
 
         private readonly IEventService _eventService;
         private readonly ISharedService _sharedService;
+        private readonly IFileService _fileService;
 
-        public EventController(IEventService eventService, ISharedService sharedService)
+        public EventController(IEventService eventService, ISharedService sharedService, IFileService fileService)
         {
             _eventService = eventService;
             _sharedService = sharedService;
+            _fileService = fileService;
         }
 
         [HttpGet("{eventId}/view")]
@@ -40,6 +43,7 @@ namespace EventManager.API.Controllers
 
             var eventView = Mapper.CreateObject<EventView>(eventViewPoco);
             eventView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, eventView.EventCreatedByUserId);
+            eventView.MainImageUrl = _fileService.CreatePublicFileUrl(eventView.MainImageRelativePath, FileService.NO_IMAGE_FILE);
 
             var currentUserId = User.X_CurrentUserId();
             if (currentUserId.HasValue)
@@ -82,6 +86,10 @@ namespace EventManager.API.Controllers
             }));
 
             var eventsToReturn = Mapper.CreateList<EventView>(events);
+            foreach (var @event in eventsToReturn)
+            {
+                @event.MainImageUrl = _fileService.CreatePublicFileUrl(@event.MainImageRelativePath, FileService.NO_IMAGE_FILE);
+            }
 
             return Ok(eventsToReturn);
         }
@@ -211,7 +219,7 @@ namespace EventManager.API.Controllers
                 return BadRequest($"Вече е записан потребител с ID: {currentUserId.Value}");
             }
 
-            var eventView = await _eventService.GetEventViewAsync(x => x.EventId ==  eventId);
+            var eventView = await _eventService.GetEventViewAsync(x => x.EventId == eventId);
             if (eventView.EventHasEnded)
             {
                 return BadRequest("Събитието вече е приключило. Не може да се запишете");

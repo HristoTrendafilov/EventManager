@@ -6,7 +6,6 @@ import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
 import {
-  getEventMainImage,
   getEventSubscribers,
   getEventView,
   subscribeUserToEvent,
@@ -19,7 +18,6 @@ import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMess
 import { ImageGalleryModal } from '~/Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
 import { userSelector } from '~/Infrastructure/redux/user-slice';
 import { formatDateTime } from '~/Infrastructure/utils';
-import noImage from '~/asset/no-image.png';
 
 import { EventUserCard } from './EventUserCard';
 
@@ -32,7 +30,6 @@ export function EventViewComponent() {
   >();
 
   const [event, setEvent] = useState<EventView | undefined>();
-  const [mainImage, setMainImage] = useState<string>(noImage);
   const [isUserSubscribed, setIsUserSubscribed] = useState<boolean>(false);
   const [subscribers, setSubscribers] = useState<UserEventView[]>([]);
   const [gallery, setGallery] = useState<boolean>(false);
@@ -101,16 +98,6 @@ export function EventViewComponent() {
     setIsUserSubscribed(eventViewResponse.data.isUserSubscribed);
 
     await loadSubscribers();
-
-    if (eventViewResponse.data.hasMainImage) {
-      const mainImageResponse = await getEventMainImage(Number(eventId));
-      if (!mainImageResponse.success) {
-        setError(mainImageResponse.errorMessage);
-        return;
-      }
-
-      setMainImage(URL.createObjectURL(mainImageResponse.data));
-    }
   }, [eventId, loadSubscribers]);
 
   const showGallery = useCallback(() => {
@@ -125,13 +112,6 @@ export function EventViewComponent() {
     void loadEvent();
   }, [loadEvent]);
 
-  useEffect(
-    () => () => {
-      URL.revokeObjectURL(mainImage);
-    },
-    [mainImage]
-  );
-
   return (
     <div className="event-view-wrapper">
       {event && (
@@ -142,7 +122,7 @@ export function EventViewComponent() {
             <div className="col-lg-8">
               <button className="unset-btn" type="button" onClick={showGallery}>
                 <div className="main-image-wrapper">
-                  <img src={mainImage} alt="main" />
+                  <img src={event.mainImageUrl} alt="main" />
                 </div>
               </button>
 
@@ -243,10 +223,10 @@ export function EventViewComponent() {
 
       {error && <ErrorMessage error={error} />}
 
-      {gallery && (
+      {gallery && event && (
         <div>
           <ImageGalleryModal
-            items={[{ original: mainImage }]}
+            items={[{ original: event.mainImageUrl }]}
             onCloseButtonClick={closeGallery}
           />
         </div>

@@ -9,6 +9,6 @@ namespace EventManager.API.Dto.File
         [Nullable]
         public virtual string FileExtension { get; set; }
 
-        public virtual string FileStoragePath { get; set; }
+        public virtual string FileStorageRelativePath { get; set; }
     }
 }
