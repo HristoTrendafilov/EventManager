@@ -24,6 +24,8 @@ namespace EventManager.API.Dto.User
 
         public string UserLastName { get; set; }
 
+        public string ProfilePictureUrl { get; set; }
+
         public long RegionId { get; set; }
 
         [Nullable]

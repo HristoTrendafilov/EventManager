@@ -8,7 +8,7 @@ namespace EventManager.API.Services.User
     public interface IUserService
     {
         Task<UserPoco> GetUserPocoAsync(Expression<Func<UserPoco, bool>> predicate);
-        Task<VUserPoco> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate);
+        Task<UserView> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate);
         Task<List<VUserPoco>> GetAllUsersViewAsync(Expression<Func<VUserPoco, bool>> predicate);
         Task<long> CreateUserAsync(UserNew user, long? currentUserId);
         Task UpdateUserAsync(long userId, UserPoco user, long? currentUserId);

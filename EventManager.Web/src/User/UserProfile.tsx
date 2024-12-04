@@ -1,20 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import {
-  getUserProfilePicture,
-  getUserView,
-} from '~/Infrastructure/ApiRequests/users-requests';
+import { getUserView } from '~/Infrastructure/ApiRequests/users-requests';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 import type { UserView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { ImageGalleryModal } from '~/Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
-import noUserLogo from '~/asset/no-user-logo.png';
 
 export function UserProfile() {
   const [userView, setUserView] = useState<UserView | undefined>();
   const [error, setError] = useState<string | undefined>();
-  const [profilePicture, setProfilePicture] = useState<string>(noUserLogo);
   const [showGallery, setShowGallery] = useState<boolean>(false);
 
   const { userId } = useParams();
@@ -27,18 +22,6 @@ export function UserProfile() {
     }
 
     setUserView(userViewResponse.data);
-
-    if (userViewResponse.data.hasProfilePicture) {
-      const profilePictureResponse = await getUserProfilePicture(
-        Number(userId)
-      );
-      if (!profilePictureResponse.success) {
-        setError(profilePictureResponse.errorMessage);
-        return;
-      }
-
-      setProfilePicture(URL.createObjectURL(profilePictureResponse.data));
-    }
   }, [userId]);
 
   const handleShowGallery = useCallback(() => {
@@ -52,13 +35,6 @@ export function UserProfile() {
   useEffect(() => {
     void fetchUserView();
   }, [fetchUserView]);
-
-  useEffect(
-    () => () => {
-      URL.revokeObjectURL(profilePicture);
-    },
-    [profilePicture]
-  );
 
   return (
     <div className="user-profile-wrapper">
@@ -83,7 +59,7 @@ export function UserProfile() {
                         className="rounded-circle object-fit-cover"
                         height={200}
                         width={200}
-                        src={profilePicture}
+                        src={userView.profilePictureUrl}
                         alt="profile"
                       />
                     </button>
@@ -161,10 +137,10 @@ export function UserProfile() {
           </div>
         )}
       </div>
-      {showGallery && (
+      {showGallery && userView && (
         <div>
           <ImageGalleryModal
-            items={[{ original: profilePicture }]}
+            items={[{ original: userView.profilePictureUrl }]}
             onCloseButtonClick={handleCloseGallery}
           />
         </div>

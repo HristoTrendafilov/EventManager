@@ -6,7 +6,7 @@ namespace EventManager.API.Dto.Event
     [GenerateTypeScriptInterface]
     public class EventForUpdate : EventBaseForm
     {
-        public bool HasMainImage { get; set; }
+        public string MainImageUrl { get; set; }
 
         #region JsonIgnore
         [JsonIgnore]

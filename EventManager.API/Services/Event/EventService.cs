@@ -194,15 +194,27 @@ namespace EventManager.API.Services.Event
             return _db.UsersEvents.AnyAsync(predicate);
         }
 
-        public Task<List<VUserEventPoco>> GetAllEventSubscribersViewAsync(long eventId)
+        public async Task<List<UserEventView>> GetAllEventSubscribersViewAsync(long eventId)
         {
-            return _db.VUsersEvents.Where(x => x.EventId == eventId)
+            var userEventsPoco = await _db.VUsersEvents.Where(x => x.EventId == eventId)
                 .OrderByDescending(x => x.UserSubscribedOnDateTime).ToListAsync();
+
+            var userEvents = Mapper.CreateList<UserEventView>(userEventsPoco);
+            foreach (var userEvent in userEvents)
+            {
+                userEvent.UserProfilePictureUrl = _fileService.CreatePublicFileUrl(userEvent.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
+            }
+
+            return userEvents;
         }
 
-        public Task<VUserEventPoco> GetEventSubscriberViewAsync(Expression<Func<VUserEventPoco, bool>> predicate)
+        public async Task<UserEventView> GetEventSubscriberViewAsync(Expression<Func<VUserEventPoco, bool>> predicate)
         {
-            return _db.VUsersEvents.FirstOrDefaultAsync(predicate);
+            var userEventPoco = await _db.VUsersEvents.FirstOrDefaultAsync(predicate);
+            var userEvent = Mapper.CreateObject<UserEventView>(userEventPoco);
+            userEvent.UserProfilePictureUrl = _fileService.CreatePublicFileUrl(userEvent.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
+
+            return userEvent;
         }
 
         public async Task<byte[]> GetEventMainImageAsync(long eventId)

@@ -3,10 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import {
-  getUserForUpdate,
-  getUserProfilePicture,
-} from '~/Infrastructure/ApiRequests/users-requests';
+import { getUserForUpdate } from '~/Infrastructure/ApiRequests/users-requests';
 import type { UserForUpdate } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 
@@ -28,9 +25,6 @@ export function UserUpdate() {
   const [activeTab, setActiveTab] = useState<UserUpdateTabName>('profile');
   const [error, setError] = useState<string | undefined>();
   const [user, setUser] = useState<UserForUpdate | undefined>();
-  const [userProfilePicture, setUserProfilePicture] = useState<
-    string | undefined
-  >();
 
   const { userId } = useParams();
 
@@ -48,18 +42,6 @@ export function UserUpdate() {
     }
 
     setUser(userResponse.data);
-
-    if (userResponse.data.hasProfilePicture) {
-      const profilePictureResponse = await getUserProfilePicture(
-        Number(userId)
-      );
-      if (!profilePictureResponse.success) {
-        setError(profilePictureResponse.errorMessage);
-        return;
-      }
-
-      setUserProfilePicture(URL.createObjectURL(profilePictureResponse.data));
-    }
   }, [userId]);
 
   useEffect(() => {
@@ -165,7 +147,7 @@ export function UserUpdate() {
                   <UpdatePersonalData
                     user={user}
                     userId={Number(userId)}
-                    userProfilePicture={userProfilePicture}
+                    userProfilePicture={user.profilePictureUrl}
                     onUserUpdate={loadUser}
                   />
                 )}

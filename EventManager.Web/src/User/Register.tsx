@@ -11,7 +11,7 @@ import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomFo
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
-import { FileType } from '~/Infrastructure/components/Form/formUtils';
+import { FileInputTypeEnum } from '~/Infrastructure/components/Form/formUtils';
 import { toastService } from '~/Infrastructure/components/ToastService';
 import { convertToFileList, objectToFormData } from '~/Infrastructure/utils';
 import { RegionMultiSelect } from '~/Shared/SmartSelects/Region/RegionMultiSelect';
@@ -118,7 +118,7 @@ export function Register() {
                     {...form.register('profilePicture')}
                     label="Избери профилна снимка"
                     onFileChosen={onProfilePictureChosen}
-                    fileType={FileType.Images}
+                    fileType={FileInputTypeEnum.Images}
                   />
                 </div>
               </div>

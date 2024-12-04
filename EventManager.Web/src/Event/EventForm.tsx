@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router';
 import {
   createEvent,
   getEventForUpdate,
-  getEventMainImage,
   updateEvent,
 } from '~/Infrastructure/ApiRequests/events-requests';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
@@ -20,18 +19,17 @@ import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomI
 import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
 import {
-  FileType,
+  FileInputTypeEnum,
   setValidationErrors,
 } from '~/Infrastructure/components/Form/formUtils';
 import { objectToFormData } from '~/Infrastructure/utils';
 import { RegionSelect } from '~/Shared/SmartSelects/Region/RegionSelect';
-import noImage from '~/asset/no-image.png';
 
 import './EventForm.css';
 
 export function Event() {
   const [error, setError] = useState<string | undefined>();
-  const [mainImage, setMainImage] = useState<string>(noImage);
+  const [mainImage, setMainImage] = useState<string>();
 
   const { eventId } = useParams();
   const navigate = useNavigate();
@@ -46,23 +44,17 @@ export function Event() {
         return;
       }
 
+      setMainImage(eventResponse.data.mainImageUrl);
       form.reset(eventResponse.data);
-
-      if (eventResponse.data.hasMainImage) {
-        const imageResponse = await getEventMainImage(paramEventId);
-        if (!imageResponse.success) {
-          setError(imageResponse.errorMessage);
-          return;
-        }
-
-        setMainImage(URL.createObjectURL(imageResponse.data));
-      }
     },
     [form]
   );
 
   const onMainImageChosen = (file: File) => {
-    URL.revokeObjectURL(mainImage);
+    if (mainImage) {
+      URL.revokeObjectURL(mainImage);
+    }
+
     setMainImage(URL.createObjectURL(file));
   };
 
@@ -102,7 +94,9 @@ export function Event() {
 
   useEffect(
     () => () => {
-      URL.revokeObjectURL(mainImage);
+      if (mainImage) {
+        URL.revokeObjectURL(mainImage);
+      }
     },
     [mainImage]
   );
@@ -157,7 +151,7 @@ export function Event() {
                         <CustomFileInputButton
                           {...form.register('mainImage')}
                           label="Главна снимка"
-                          fileType={FileType.Images}
+                          fileType={FileInputTypeEnum.Images}
                           onFileChosen={onMainImageChosen}
                         />
                       </div>

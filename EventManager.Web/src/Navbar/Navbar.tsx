@@ -20,7 +20,6 @@ import {
   removeUser,
   userSelector,
 } from '~/Infrastructure/redux/user-slice';
-import noUserLogo from '~/asset/no-user-logo.png';
 
 import './Navbar.css';
 
@@ -47,11 +46,7 @@ function NavUserDropdown(props: NavUserDropdownProps) {
           height={45}
           width={45}
           className="rounded-circle"
-          src={
-            user.profilePicture
-              ? `data:image/jpeg;base64,${user.profilePicture}`
-              : noUserLogo
-          }
+          src={user.profilePicture}
           alt=""
         />
       </button>

@@ -22,11 +22,11 @@ namespace EventManager.API.Dto.User
         public List<RoleView> UserRoles { get; set; }
         public List<long> UserRolesIds => this.UserRoles.Select(x => x.RoleId).ToList();
 
+        public string ProfilePictureUrl { get; set; }
+
         #region JsonIgnore
         [JsonIgnore]
         public override string UserPassword { get; set; }
-        [JsonIgnore]
-        public override long? UserProfilePictureFileId { get; set; }
         [JsonIgnore]
         public override string UserEmailVerificationSecret { get; set; }
         [JsonIgnore]

@@ -12,7 +12,7 @@ export interface UserState {
   isAdmin: boolean;
   isEventCreator: boolean;
   token: string;
-  profilePicture: string | null;
+  profilePicture: string;
 }
 
 const initialUserState: UserState = {
@@ -23,7 +23,7 @@ const initialUserState: UserState = {
   isAdmin: false,
   isEventCreator: false,
   token: '',
-  profilePicture: null,
+  profilePicture: '',
 };
 
 export type UserRole = 'None' | 'Admin' | 'EventCreator';

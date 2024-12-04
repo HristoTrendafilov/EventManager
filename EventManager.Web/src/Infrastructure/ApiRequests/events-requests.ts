@@ -23,10 +23,6 @@ export function createEvent(event: FormData) {
   return callApi<PrimaryKeyResponse>(`/events/new`, 'POST', event);
 }
 
-export function getEventMainImage(eventId: number) {
-  return callApi<Blob>(`/events/${eventId}/main-image`, 'GET');
-}
-
 export function subscribeUserToEvent(eventId: number) {
   return callApi<UserEventView>(`/events/${eventId}/subscription`, 'POST');
 }

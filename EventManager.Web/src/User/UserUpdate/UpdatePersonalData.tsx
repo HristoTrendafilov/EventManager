@@ -13,7 +13,7 @@ import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomFo
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
-import { FileType } from '~/Infrastructure/components/Form/formUtils';
+import { FileInputTypeEnum } from '~/Infrastructure/components/Form/formUtils';
 import { toastService } from '~/Infrastructure/components/ToastService';
 import { useAppDispatch } from '~/Infrastructure/redux/store';
 import { updateProfilePicture } from '~/Infrastructure/redux/user-slice';
@@ -125,7 +125,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           </div>
           <CustomFileInputButton
             {...form.register('profilePicture')}
-            fileType={FileType.Images}
+            fileType={FileInputTypeEnum.Images}
             label="Избери нова профилна снимка"
             className="d-flex justify-content-center mb-3 mt-2"
             onFileChosen={onProfilePictureChange}

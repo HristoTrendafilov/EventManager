@@ -13,13 +13,13 @@ import { useFormContext } from 'react-hook-form';
 
 import '~/Infrastructure/components/Form/FileInput/FileInput.css';
 import '~/Infrastructure/components/Form/SharedForm.css';
-import type { FileType } from '~/Infrastructure/components/Form/formUtils';
+import type { FileInputTypeEnum } from '~/Infrastructure/components/Form/formUtils';
 
 export interface CustomFileInputProps extends ComponentProps<'input'> {
   name: string;
   label: string;
   wrapperClassName?: string;
-  fileType: FileType;
+  fileType: FileInputTypeEnum;
   onFileChosen?: (file: File) => void;
   onFileRemoved?: () => void;
 }

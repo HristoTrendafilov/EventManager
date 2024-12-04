@@ -138,23 +138,6 @@ namespace EventManager.API.Controllers
             return Ok(new PrimaryKeyResponse { PrimaryKey = eventId });
         }
 
-        [HttpGet("{eventId}/main-image")]
-        public async Task<ActionResult> GetEventMainImage(long eventId)
-        {
-            if (!await _eventService.EventExistsAsync(x => x.EventId == eventId))
-            {
-                return NotFound();
-            }
-
-            var mainImage = await _eventService.GetEventMainImageAsync(eventId);
-            if (mainImage == null)
-            {
-                return NotFound();
-            }
-
-            return File(mainImage, "application/octet-stream");
-        }
-
         [Authorize]
         [Role(UserRole.EventCreator)]
         [HttpPost("new")]

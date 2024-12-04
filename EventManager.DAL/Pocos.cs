@@ -440,28 +440,6 @@ namespace EventManager.DAL
 		public virtual string Username { get; set; }
 	}
 
-	[Table(Name = "v_users_events")]
-	public class VUserEventPoco
-	{
-		[Column(Name = "user_event_id")]
-		public virtual long UserEventId { get; set; }
-
-		[Column(Name = "user_id")]
-		public virtual long UserId { get; set; }
-
-		[Column(Name = "user_subscribed_on_date_time")]
-		public virtual DateTime UserSubscribedOnDateTime { get; set; }
-
-		[Column(Name = "event_id")]
-		public virtual long EventId { get; set; }
-
-		[Column(Name = "username")]
-		public virtual string Username { get; set; }
-
-		[Column(Name = "has_profile_picture")]
-		public virtual bool HasProfilePicture { get; set; }
-	}
-
 	[Table(Name = "v_events")]
 	public class VEventPoco
 	{
@@ -505,6 +483,28 @@ namespace EventManager.DAL
 
 		[Column(Name = "main_image_relative_path")]
 		public virtual string MainImageRelativePath { get; set; }
+	}
+
+	[Table(Name = "v_users_events")]
+	public class VUserEventPoco
+	{
+		[Column(Name = "user_event_id")]
+		public virtual long UserEventId { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "user_subscribed_on_date_time")]
+		public virtual DateTime UserSubscribedOnDateTime { get; set; }
+
+		[Column(Name = "event_id")]
+		public virtual long EventId { get; set; }
+
+		[Column(Name = "username")]
+		public virtual string Username { get; set; }
+
+		[Column(Name = "user_profile_picture_relative_path")]
+		public virtual string UserProfilePictureRelativePath { get; set; }
 	}
 
 	[Table(Name = "v_users")]
@@ -560,14 +560,11 @@ namespace EventManager.DAL
 		[Column(Name = "user_full_name")]
 		public virtual string UserFullName { get; set; }
 
-		[Column(Name = "has_profile_picture")]
-		public virtual bool HasProfilePicture { get; set; }
-
 		[Column(Name = "region_name")]
 		public virtual string RegionName { get; set; }
 
-		[Column(Name = "file_storage_relative_path")]
-		public virtual string FileStorageRelativePath { get; set; }
+		[Column(Name = "user_profile_picture_relative_path")]
+		public virtual string UserProfilePictureRelativePath { get; set; }
 	}
 
 	[Table(Name = "v_event_images")]

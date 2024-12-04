@@ -7,6 +7,7 @@ using EventManager.API.Services.FileStorage;
 using EventManager.API.Dto.User.Role;
 using EventManager.API.Services.Cache;
 using EventManager.API.Services.WebSession;
+using EventManager.BOL;
 
 namespace EventManager.API.Services.User
 {
@@ -111,9 +112,13 @@ namespace EventManager.API.Services.User
             return _db.Users.FirstOrDefaultAsync(predicate);
         }
 
-        public Task<VUserPoco> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate)
+        public async Task<UserView> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate)
         {
-            return _db.VUsers.FirstOrDefaultAsync(predicate);
+            var userViewPoco = await _db.VUsers.FirstOrDefaultAsync(predicate);
+            var userView = Mapper.CreateObject<UserView>(userViewPoco);
+            userView.ProfilePictureUrl = _fileStorageService.CreatePublicFileUrl(userView.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
+
+            return userView;
         }
 
         public Task<List<VUserPoco>> GetAllUsersViewAsync(Expression<Func<VUserPoco, bool>> predicate)

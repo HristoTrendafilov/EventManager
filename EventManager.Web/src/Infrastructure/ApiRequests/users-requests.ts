@@ -5,12 +5,12 @@ import type {
   RoleView,
   UserForUpdate,
   UserForWeb,
+  UserLoginType,
   UserUpdatePasswordType,
   UserUpdateUsernameType,
   UserVerifyEmail,
   UserView,
 } from '~/Infrastructure/api-types';
-import type { UserLogin } from '~/User/Login';
 
 export function registerUser(user: FormData) {
   return callApi('/users', 'POST', user);
@@ -74,7 +74,7 @@ export function updateUserPersonalData(userId: number, user: FormData) {
   );
 }
 
-export function loginUser(req: UserLogin) {
+export function loginUser(req: UserLoginType) {
   return callApi<UserForWeb>('/users/login', 'POST', JSON.stringify(req));
 }
 

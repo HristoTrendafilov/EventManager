@@ -7,7 +7,12 @@ import checker from 'vite-plugin-checker';
 export default defineConfig({
   plugins: [
     react(),
-    checker({ typescript: true, eslint: { files: ['./src'] } }),
+    checker({
+      typescript: true,
+      eslint: {
+        lintCommand: 'eslint "./src/**/*.{ts,tsx}"', // Specify the lint command
+      },
+    }),
   ],
   server: {
     port: 3000,

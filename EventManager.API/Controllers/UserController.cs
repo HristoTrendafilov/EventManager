@@ -58,14 +58,13 @@ namespace EventManager.API.Controllers
         [HttpGet("{userId}/view")]
         public async Task<ActionResult> GetUserView(long userId)
         {
-            var userViewPoco = await _userService.GetUserViewAsync(x => x.UserId == userId);
-            if (userViewPoco == null)
+            var userView = await _userService.GetUserViewAsync(x => x.UserId == userId);
+            if (userView == null)
             {
                 return NotFound();
             }
 
-            var userView = Mapper.CreateObject<UserView>(userViewPoco);
-            userView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
+             userView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
 
             var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
             userView.RegionsHelping = Mapper.CreateList<RegionView>(userRegionsHelping);
@@ -82,13 +81,12 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-            var userView = await _userService.GetUserViewAsync(x => x.UserId == userId);
-
             if (!await _sharedService.IsUserAuthorizedToEdit(User, userId))
             {
                 return Unauthorized();
             }
 
+            var userView = await _userService.GetUserViewAsync(x => x.UserId == userId);
             var userToReturn = Mapper.CreateObject<UserForUpdate>(userView);
 
             var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
@@ -242,7 +240,7 @@ namespace EventManager.API.Controllers
                 WebSessionId = webSessionId,
                 IsAdmin = userRoles.Any(x => x.RoleId == (int)UserRole.Admin),
                 IsEventCreator = userRoles.Any(x => x.RoleId == (int)UserRole.EventCreator),
-                ProfilePictureUrl = _fileService.CreatePublicFileUrl(user.FileStorageRelativePath, FileService.NO_USER_LOGO),
+                ProfilePictureUrl = user.ProfilePictureUrl,
             };
 
             return Ok(userForWeb);
