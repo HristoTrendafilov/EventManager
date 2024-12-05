@@ -103,6 +103,12 @@ export interface RegionView {
   regionCreatedOnDateTime: Date;
 }
 
+export interface OrganizationForUpdate {
+  organizationLogoUrl: string;
+  organizationName: string;
+  organizationDescription: string;
+}
+
 export interface OrganizationView {
   organizationLogoUrl: string;
   organizationId: number;
@@ -110,6 +116,7 @@ export interface OrganizationView {
   organizationDescription: string;
   organizationLogoFileId: number;
   organizationCreatedOnDateTime: Date;
+  organizationCreatedByUserId: number;
   fileStorageRelativePath: string;
 }
 
@@ -243,7 +250,7 @@ export type RegionBaseFormType = z.infer<typeof RegionBaseFormSchema>;
 export const OrganizationBaseFormSchema = z.object({
   organizationName: z.string().min(1, { message: "Името на организацията е задължително" }),
   organizationDescription: z.string().min(1, { message: "Описанието на организацията е задължително" }),
-  organizationLogoFile: z.instanceof(FileList).min(1, { message: "Логото на организацията е задължително" }).refine(fileList => { if (fileList && fileList.length > 0) { return Array.from(fileList).every(file => file.size <= 1048576); } return true; }, { message: "Максималният размер за файл е 1MB" }),
+  organizationLogoFile: z.instanceof(FileList).refine(fileList => fileList && fileList.length > 0, { message: "Логото на организацията е задължително" }).refine(fileList => { if (fileList && fileList.length > 0) { return Array.from(fileList).every(file => file.size <= 1048576); } return true; }, { message: "Максималният размер за файл е 1MB" }),
 });
 export type OrganizationBaseFormType = z.infer<typeof OrganizationBaseFormSchema>;
 

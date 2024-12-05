@@ -5,6 +5,8 @@ import { Event } from '~/Event/EventForm';
 import { EventSearch } from '~/Event/EventSearch/EventSearch';
 import { EventViewComponent } from '~/Event/EventView/EventView';
 import type { UserRole } from '~/Infrastructure/redux/user-slice';
+import { OrganizationsCatalog } from '~/Organizations/OrganizationsCatalog';
+import { OrganizationsSearch } from '~/Organizations/OrganizationsSearch';
 import { AdminPanel } from '~/User/AdminPanel/AdminPanel';
 import { CrudLogs } from '~/User/AdminPanel/CrudLogs';
 import { RegionsCatalog } from '~/User/AdminPanel/RegionsCatalog';
@@ -47,6 +49,12 @@ export const table: RouteTable[] = [
   {
     location: CustomRoutes.usersAdminPanelRegions(),
     component: <RegionsCatalog />,
+    requiresLogin: true,
+    role: 'Admin',
+  },
+  {
+    location: CustomRoutes.usersAdminPanelOrganizations(),
+    component: <OrganizationsCatalog />,
     requiresLogin: true,
     role: 'Admin',
   },
@@ -107,6 +115,12 @@ export const table: RouteTable[] = [
   {
     location: CustomRoutes.aboutUs(),
     component: <AboutUs />,
+    requiresLogin: false,
+    role: 'None',
+  },
+  {
+    location: CustomRoutes.organizationsSearchPage(),
+    component: <OrganizationsSearch />,
     requiresLogin: false,
     role: 'None',
   },

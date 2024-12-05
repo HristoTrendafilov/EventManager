@@ -104,3 +104,13 @@ export const fileToBase64 = (file: File): Promise<string> =>
     };
     reader.onerror = (error) => reject(error);
   });
+
+export const urlToFileList = async (url: string): Promise<FileList> => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const file = new File([blob], 'url.jpg', { type: blob.type });
+
+  const dataTransfer = new DataTransfer();
+  dataTransfer.items.add(file);
+  return dataTransfer.files;
+};

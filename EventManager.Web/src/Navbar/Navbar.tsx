@@ -2,6 +2,7 @@ import {
   faCirclePlus,
   faHome,
   faMagnifyingGlass,
+  faNetworkWired,
   faPeopleRoof,
   faUser,
   faUserTie,
@@ -247,6 +248,23 @@ export function Navbar() {
                   </div>
                 </Link>
               </li>
+              <li>
+                <Link
+                  className="nav-link"
+                  to={CustomRoutes.organizationsSearchBase()}
+                  data-bs-dismiss="offcanvas"
+                  onClick={handleLinkClick}
+                >
+                  <div className="d-flex flex-md-column align-items-center">
+                    <FontAwesomeIcon
+                      className="me-3 me-md-0 fa-fw"
+                      size="lg"
+                      icon={faNetworkWired}
+                    />
+                    <span>Организации</span>
+                  </div>
+                </Link>
+              </li>
               <li className="nav-item">
                 <Link
                   className="nav-link"
@@ -260,7 +278,7 @@ export function Navbar() {
                       size="lg"
                       icon={faPeopleRoof}
                     />
-                    <span> За нас</span>
+                    <span>За нас</span>
                   </div>
                 </Link>
               </li>

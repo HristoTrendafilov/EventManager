@@ -1,5 +1,6 @@
 import { callApi } from '~/Infrastructure/api-client';
 import type {
+  OrganizationForUpdate,
   OrganizationView,
   PrimaryKeyResponse,
   UserOrganizationView,
@@ -13,19 +14,22 @@ export function updateOrganization(
   organizationId: number,
   organization: FormData
 ) {
-  return callApi<PrimaryKeyResponse>(
+  return callApi<OrganizationView>(
     `/organizations/${organizationId}/update`,
     'PUT',
     organization
   );
 }
 
-export function createOrganization(organization: FormData) {
-  return callApi<PrimaryKeyResponse>(
-    `/organizations/new`,
-    'POST',
-    organization
+export function getOrganizationForUpdate(organizationId: number) {
+  return callApi<OrganizationForUpdate>(
+    `/organizations/${organizationId}/update`,
+    'GET'
   );
+}
+
+export function createOrganization(organization: FormData) {
+  return callApi<OrganizationView>(`/organizations/new`, 'POST', organization);
 }
 
 export function subscribeUserToOrganization(organizationId: number) {

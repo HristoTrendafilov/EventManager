@@ -1,6 +1,7 @@
 ﻿using EventManager.API.Core;
 using EventManager.API.Helpers;
 using LinqToDB.Mapping;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
@@ -210,7 +211,14 @@ string ConvertToZodType(Type propertyType, bool isNullable, IEnumerable<Validati
             switch (attribute)
             {
                 case RequiredAttribute:
-                    schemaProperty += $".min(1, {{ message: \"{errorMessage}\" }})";
+                    if (propertyType == typeof(IFormFile))
+                    {
+                        schemaProperty += $".refine(fileList => fileList && fileList.length > 0, {{ message: \"{errorMessage}\" }})";
+                    }
+                    else
+                    {
+                        schemaProperty += $".min(1, {{ message: \"{errorMessage}\" }})";
+                    }
                     break;
 
                 case MinLengthAttribute minLengthAttr:

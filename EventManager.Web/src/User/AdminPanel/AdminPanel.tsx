@@ -1,5 +1,10 @@
 import type { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faList, faLocation, faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faList,
+  faLocation,
+  faNetworkWired,
+  faUser,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router-dom';
 
@@ -31,17 +36,23 @@ const navigation: AdminPanelNav[] = [
     icon: faUser,
     color: 'primary',
   },
+  {
+    location: CustomRoutes.usersAdminPanelOrganizations(),
+    name: 'Организации',
+    icon: faNetworkWired,
+    color: 'info',
+  },
 ];
 
 export function AdminPanel() {
   return (
     <div className="admin-panel-wrapper mt-4">
-      <div className="container" style={{ maxWidth: '600px' }}>
+      <div className="container mw-700px">
         <div className="card">
           <div className="card-body">
             <div className="row g-2">
               {navigation.map((x) => (
-                <div key={x.location} className="col-md-6">
+                <div key={x.location} className="col-sm-6">
                   <Link to={x.location} className="card unset-anchor">
                     <div
                       className={`card-body d-flex border border-black bg-${x.color} flex-wrap flex-column justify-content-center align-content-center`}

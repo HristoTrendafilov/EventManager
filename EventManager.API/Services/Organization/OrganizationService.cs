@@ -39,20 +39,17 @@ namespace EventManager.API.Services.Organization
         {
             await _db.WithTransactionAsync(async () =>
             {
-                if (organization.OrganizationLogoFile != null)
-                {
-                    var logoFileId = await _db.Organizations
-                        .Where(x => x.OrganizationId == organizationId)
-                        .Select(x => x.OrganizationLogoFileId)
-                        .FirstOrDefaultAsync();
+                var oldLogoFileId = await _db.Organizations
+                    .Where(x => x.OrganizationId == organizationId)
+                    .Select(x => x.OrganizationLogoFileId)
+                    .FirstOrDefaultAsync();
 
-                    await _fileService.DeleteFileAsync(logoFileId, currentUserId);
 
-                    var fileId = await _fileService.CreateFileAsync(organization.OrganizationLogoFile, FileType.Public, currentUserId);
-                    organization.OrganizationLogoFileId = fileId;
-                }
-
+                var fileId = await _fileService.CreateFileAsync(organization.OrganizationLogoFile, FileType.Public, currentUserId);
+                organization.OrganizationLogoFileId = fileId;
                 await _db.Organizations.X_UpdateAsync(organizationId, organization, currentUserId);
+
+                await _fileService.DeleteFileAsync(oldLogoFileId, currentUserId);
             });
         }
 

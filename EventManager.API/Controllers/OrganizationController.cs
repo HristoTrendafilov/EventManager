@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EventManager.API.Dto.Organization;
 using EventManager.API.Services.Shared;
+using EventManager.API.Dto.Event;
+using EventManager.BOL;
 
 namespace EventManager.API.Controllers
 {
@@ -41,8 +43,9 @@ namespace EventManager.API.Controllers
             }
 
             var organizationId = await _organizationService.CreateOrganizationAsync(organization, User.X_CurrentUserId());
+            var organizationView = await _organizationService.GetOrganizationViewAsync(x => x.OrganizationId == organizationId);
 
-            return Ok(new PrimaryKeyResponse { PrimaryKey = organizationId });
+            return Ok(organizationView);
         }
 
         [HttpPut("{organizationId}/update")]
@@ -60,8 +63,28 @@ namespace EventManager.API.Controllers
             }
 
             await _organizationService.UpdateOrganizationAsync(organizationId, organization, User.X_CurrentUserId());
+            var organizationView = await _organizationService.GetOrganizationViewAsync(x => x.OrganizationId == organizationId);
 
-            return NoContent();
+            return Ok(organizationView);
+        }
+
+        [HttpGet("{organizationId}/update")]
+        public async Task<ActionResult> GetOrganizationForUpdate(long organizationId)
+        {
+            var organizationView = await _organizationService.GetOrganizationViewAsync(x => x.OrganizationId == organizationId);
+            if (organizationView == null)
+            {
+                return NotFound();
+            }
+
+            if (!await _sharedService.IsUserAuthorizedToEdit(User, organizationView.OrganizationCreatedByUserId))
+            {
+                return Unauthorized();
+            }
+
+            var organizationToReturn = Mapper.CreateObject<OrganizationForUpdate>(organizationView);
+
+            return Ok(organizationToReturn);
         }
 
         [HttpPost("{organizationId}/subscription")]

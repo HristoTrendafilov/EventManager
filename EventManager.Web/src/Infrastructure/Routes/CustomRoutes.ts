@@ -28,6 +28,10 @@ export class CustomRoutes {
     return '/users/admin-panel/user-roles';
   }
 
+  static usersAdminPanelOrganizations() {
+    return '/users/admin-panel/organizations';
+  }
+
   static usersView(userId?: number) {
     if (userId) {
       return `/users/${userId}/view`;
@@ -78,5 +82,17 @@ export class CustomRoutes {
 
   static aboutUs() {
     return '/about-us';
+  }
+
+  static organizationsSearchBase() {
+    return '/organizations/search';
+  }
+
+  static organizationsSearchPage(page?: number) {
+    if (page) {
+      return `/organizations/search/${page}`;
+    }
+
+    return '/organizations/search/:page?';
   }
 }
