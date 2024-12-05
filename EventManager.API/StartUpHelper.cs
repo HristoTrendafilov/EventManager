@@ -29,6 +29,7 @@ using EventManager.API.Services.FileStorage;
 using EventManager.API.Helpers.Extensions;
 using EventManager.API.BackgroundServices;
 using EventManager.API.Services.Cache;
+using EventManager.API.Services.Organization;
 
 namespace EventManager.API
 {
@@ -106,6 +107,7 @@ namespace EventManager.API
             services.AddScoped<ISharedService, SharedService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<ICacheService, CacheService>();
+            services.AddScoped<IOrganizationService, OrganizationService>();
 
             services.AddSingleton<EmailQueueService>();
             services.AddHostedService(provider => provider.GetRequiredService<EmailQueueService>());

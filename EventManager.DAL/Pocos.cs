@@ -157,6 +157,47 @@ namespace EventManager.DAL
 		public virtual DateTime EventImageCreatedOnDateTime { get; set; }
 	}
 
+	[Table(Name = "organizations")]
+	public class OrganizationPoco
+	{
+		[PrimaryKey, Identity]
+		[Column(Name = "organization_id")]
+		public virtual long OrganizationId { get; set; }
+
+		[Column(Name = "organization_name")]
+		public virtual string OrganizationName { get; set; }
+
+		[Column(Name = "organization_description")]
+		public virtual string OrganizationDescription { get; set; }
+
+		[Column(Name = "organization_logo_file_id")]
+		public virtual long OrganizationLogoFileId { get; set; }
+
+		[Column(Name = "organization_created_on_date_time")]
+		public virtual DateTime OrganizationCreatedOnDateTime { get; set; }
+
+		[Column(Name = "organization_created_by_user_id")]
+		public virtual long OrganizationCreatedByUserId { get; set; }
+	}
+
+	[Table(Name = "users_organization")]
+	public class UserOrganizationPoco
+	{
+		[PrimaryKey, Identity]
+		[Column(Name = "user_organization_id")]
+		public virtual long UserOrganizationId { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "organization_id")]
+		public virtual long OrganizationId { get; set; }
+
+		[Nullable]
+		[Column(Name = "user_organization_created_on_date_time")]
+		public virtual DateTime? UserOrganizationCreatedOnDateTime { get; set; }
+	}
+
 	[Table(Name = "files")]
 	public class FilePoco
 	{
@@ -332,6 +373,28 @@ namespace EventManager.DAL
 		public virtual DateTime RegionCreatedOnDateTime { get; set; }
 	}
 
+	[Table(Name = "v_organizations")]
+	public class VOrganizationPoco
+	{
+		[Column(Name = "organization_id")]
+		public virtual long OrganizationId { get; set; }
+
+		[Column(Name = "organization_name")]
+		public virtual string OrganizationName { get; set; }
+
+		[Column(Name = "organization_description")]
+		public virtual string OrganizationDescription { get; set; }
+
+		[Column(Name = "organization_logo_file_id")]
+		public virtual long OrganizationLogoFileId { get; set; }
+
+		[Column(Name = "organization_created_on_date_time")]
+		public virtual DateTime OrganizationCreatedOnDateTime { get; set; }
+
+		[Column(Name = "file_storage_relative_path")]
+		public virtual string FileStorageRelativePath { get; set; }
+	}
+
 	[Table(Name = "v_exceptions")]
 	public class VExceptionPoco
 	{
@@ -438,6 +501,29 @@ namespace EventManager.DAL
 
 		[Column(Name = "username")]
 		public virtual string Username { get; set; }
+	}
+
+	[Table(Name = "v_users_organizations")]
+	public class VUserOrganizationPoco
+	{
+		[Column(Name = "user_organization_id")]
+		public virtual long UserOrganizationId { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "organization_id")]
+		public virtual long OrganizationId { get; set; }
+
+		[Nullable]
+		[Column(Name = "user_organization_created_on_date_time")]
+		public virtual DateTime? UserOrganizationCreatedOnDateTime { get; set; }
+
+		[Column(Name = "username")]
+		public virtual string Username { get; set; }
+
+		[Column(Name = "organization_name")]
+		public virtual string OrganizationName { get; set; }
 	}
 
 	[Table(Name = "v_events")]

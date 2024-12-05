@@ -64,7 +64,7 @@ namespace EventManager.API.Controllers
                 return NotFound();
             }
 
-             userView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
+            userView.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, userId);
 
             var userRegionsHelping = await _regionService.GetUserRegionsHelping(userId);
             userView.RegionsHelping = Mapper.CreateList<RegionView>(userRegionsHelping);
@@ -122,7 +122,13 @@ namespace EventManager.API.Controllers
 
             await _userService.UpdateUserPersonalDataAsync(userId, user, User.X_CurrentUserId());
 
-            return NoContent();
+            var userView = await _userService.GetUserViewAsync(x => x.UserId == userId);
+            var response = new UserUpdatePersonalDataResponse
+            {
+                ProfilePictureUrl = _fileService.CreatePublicFileUrl(userView.UserProfilePictureRelativePath, FileService.NO_USER_LOGO),
+            };
+
+            return Ok(response);
         }
 
         [Authorize]

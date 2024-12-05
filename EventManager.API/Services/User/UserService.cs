@@ -14,7 +14,7 @@ namespace EventManager.API.Services.User
     public class UserService : IUserService
     {
         private readonly PostgresConnection _db;
-        private readonly IFileService _fileStorageService;
+        private readonly IFileService _fileService;
         private readonly ICacheService _cacheService;
         private readonly IWebSessionService _webSessionService;
 
@@ -25,7 +25,7 @@ namespace EventManager.API.Services.User
             IWebSessionService webSessionService)
         {
             _db = db;
-            _fileStorageService = fileStorageService;
+            _fileService = fileStorageService;
             _cacheService = cacheService;
             _webSessionService = webSessionService;
         }
@@ -36,7 +36,7 @@ namespace EventManager.API.Services.User
             {
                 if (user.ProfilePicture != null)
                 {
-                    var fileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, FileType.Public, currentUserId);
+                    var fileId = await _fileService.CreateFileAsync(user.ProfilePicture, FileType.Public, currentUserId);
                     user.UserProfilePictureFileId = fileId;
                 }
 
@@ -77,14 +77,14 @@ namespace EventManager.API.Services.User
 
                 if (user.ProfilePicture != null)
                 {
-                    var fileId = await _fileStorageService.CreateFileAsync(user.ProfilePicture, FileType.Public, currentUserId);
+                    var fileId = await _fileService.CreateFileAsync(user.ProfilePicture, FileType.Public, currentUserId);
                     user.UserProfilePictureFileId = fileId;
 
                     await _db.Users.X_UpdateAsync(userId, user, currentUserId);
 
                     if (profilePictureId.HasValue)
                     {
-                        await _fileStorageService.DeleteFileAsync(profilePictureId.Value, currentUserId);
+                        await _fileService.DeleteFileAsync(profilePictureId.Value, currentUserId);
                     }
                 }
                 else
@@ -116,7 +116,7 @@ namespace EventManager.API.Services.User
         {
             var userViewPoco = await _db.VUsers.FirstOrDefaultAsync(predicate);
             var userView = Mapper.CreateObject<UserView>(userViewPoco);
-            userView.ProfilePictureUrl = _fileStorageService.CreatePublicFileUrl(userView.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
+            userView.ProfilePictureUrl = _fileService.CreatePublicFileUrl(userView.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
 
             return userView;
         }

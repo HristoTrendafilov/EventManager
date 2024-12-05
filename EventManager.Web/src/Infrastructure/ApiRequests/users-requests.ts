@@ -7,6 +7,7 @@ import type {
   UserForWeb,
   UserLoginType,
   UserUpdatePasswordType,
+  UserUpdatePersonalDataResponse,
   UserUpdateUsernameType,
   UserVerifyEmail,
   UserView,
@@ -67,7 +68,7 @@ export function updateUserPassword(
 }
 
 export function updateUserPersonalData(userId: number, user: FormData) {
-  return callApi<UserView>(
+  return callApi<UserUpdatePersonalDataResponse>(
     `/users/${userId}/update/personal-data`,
     'PUT',
     user
