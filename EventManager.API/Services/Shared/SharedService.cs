@@ -26,7 +26,7 @@ namespace EventManager.API.Services.Shared
                 return true;
             }
 
-            var roles = await _userService.CacheGetOrAddWebUserRolesAsync(currentUserId);
+            var roles = await _userService.CacheGetOrAddUserRolesAsync(currentUserId);
             return roles.Any(role => role.RoleId == (int)UserRole.Admin);
         }
     }

@@ -143,11 +143,6 @@ namespace EventManager.API.Services.User
                     select roles).ToListAsync();
         }
 
-        public Task<bool> IsUserAdmin(long userId)
-        {
-            return _db.UsersRoles.Where(x => x.UserId == userId && x.RoleId == (int)UserRole.Admin).AnyAsync();
-        }
-
         public async Task SaveUserRoles(RoleBaseForm userRoles, long? currentUserId)
         {
             var existingRoles = await _db.UsersRoles
@@ -192,7 +187,7 @@ namespace EventManager.API.Services.User
             return _db.Roles.Where(predicate).ToListAsync();
         }
 
-        public async Task<List<RolePoco>> CacheGetOrAddWebUserRolesAsync(long userId)
+        public async Task<List<RolePoco>> CacheGetOrAddUserRolesAsync(long userId)
         {
             var cacheKey = $"UserRoles_{userId}";
 

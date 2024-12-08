@@ -51,7 +51,7 @@ export function UserProfile() {
                 <div className="card-body">
                   <div className="d-flex flex-column align-items-center text-center">
                     <button
-                      className="unset-btn"
+                      className="unset-btn d-flex justify-content-center"
                       type="button"
                       onClick={handleShowGallery}
                     >
@@ -65,14 +65,9 @@ export function UserProfile() {
                     </button>
                     <div className="mt-3">
                       <h4>{userView.username}</h4>
-                      <p className="text-secondary mb-1 pre-wrap">
-                        {userView.userShortDescription}
-                      </p>
+                      <p className="text-secondary mb-1 pre-wrap">{userView.userShortDescription}</p>
                       {userView.canEdit && (
-                        <Link
-                          to={CustomRoutes.usersUpdate(Number(userId))}
-                          className="btn btn-primary w-200px"
-                        >
+                        <Link to={CustomRoutes.usersUpdate(Number(userId))} className="btn btn-primary w-200px">
                           Редакция
                         </Link>
                       )}
@@ -88,36 +83,28 @@ export function UserProfile() {
                     <div className="col-sm-3">
                       <h6 className="mb-0">Имена</h6>
                     </div>
-                    <div className="col-sm-9 text-secondary">
-                      {userView.userFullName}
-                    </div>
+                    <div className="col-sm-9 text-secondary">{userView.userFullName}</div>
                   </div>
                   <hr />
                   <div className="row">
                     <div className="col-sm-3">
                       <h6 className="mb-0">Имейл</h6>
                     </div>
-                    <div className="col-sm-9 text-secondary">
-                      {userView.userEmail}
-                    </div>
+                    <div className="col-sm-9 text-secondary">{userView.userEmail}</div>
                   </div>
                   <hr />
                   <div className="row">
                     <div className="col-sm-3">
                       <h6 className="mb-0">Телефон</h6>
                     </div>
-                    <div className="col-sm-9 text-secondary">
-                      {userView.userPhoneNumber}
-                    </div>
+                    <div className="col-sm-9 text-secondary">{userView.userPhoneNumber}</div>
                   </div>
                   <hr />
                   <div className="row">
                     <div className="col-sm-3">
                       <h6 className="mb-0">Живея в</h6>
                     </div>
-                    <div className="col-sm-9 text-secondary">
-                      {userView.regionName}
-                    </div>
+                    <div className="col-sm-9 text-secondary">{userView.regionName}</div>
                   </div>
                   <hr />
                   <div className="row">
@@ -125,9 +112,7 @@ export function UserProfile() {
                       <h6 className="mb-0">Помагам в</h6>
                     </div>
                     <div className="col-sm-9 text-secondary">
-                      {userView.regionsHelping
-                        .map((list) => list.regionName)
-                        .join(' | ')}
+                      {userView.regionsHelping.map((list) => list.regionName).join(' | ')}
                     </div>
                   </div>
                   <hr />

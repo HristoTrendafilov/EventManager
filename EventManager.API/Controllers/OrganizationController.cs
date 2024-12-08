@@ -12,8 +12,6 @@ using EventManager.BOL;
 
 namespace EventManager.API.Controllers
 {
-    [Authorize]
-    [Role(UserRole.Admin)]
     [Route("api/organizations")]
     [ApiController]
     public class OrganizationController : ControllerBase
@@ -54,6 +52,8 @@ namespace EventManager.API.Controllers
             return Ok(organization);
         }
 
+        [Authorize]
+        [Role(UserRole.Admin)]
         [HttpPost("new")]
         public async Task<ActionResult> CreateOrganization([FromForm] OrganizationNew organization)
         {
@@ -68,6 +68,8 @@ namespace EventManager.API.Controllers
             return Ok(organizationView);
         }
 
+        [Authorize]
+        [Role(UserRole.Admin)]
         [HttpPut("{organizationId}/update")]
         public async Task<ActionResult> UpdateOrganization(long organizationId, [FromForm] OrganizationUpdate organization)
         {
@@ -88,6 +90,8 @@ namespace EventManager.API.Controllers
             return Ok(organizationView);
         }
 
+        [Authorize]
+        [Role(UserRole.Admin)]
         [HttpGet("{organizationId}/update")]
         public async Task<ActionResult> GetOrganizationForUpdate(long organizationId)
         {

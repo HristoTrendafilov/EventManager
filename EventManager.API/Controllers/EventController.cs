@@ -106,7 +106,7 @@ namespace EventManager.API.Controllers
             {
                 return Unauthorized();
             }
-
+             
             var eventToReturn = Mapper.CreateObject<EventForUpdate>(eventView);
 
             return Ok(eventToReturn);

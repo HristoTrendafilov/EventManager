@@ -15,12 +15,11 @@ namespace EventManager.API.Services.User
         Task UpdateUserPersonalDataAsync(long userId, UserUpdatePersonalData user, long? currentUserId);
         Task DeleteUserAsync(long userId, long? currentUserId);
         Task<bool> UserExistsAsync(Expression<Func<UserPoco, bool>> predicate);
-        Task<bool> IsUserAdmin(long userId);
 
         Task<List<RolePoco>> GetAllUserRolesAsync(long userId);
         Task<List<RolePoco>> GetAllRolesAsync(Expression<Func<RolePoco, bool>> predicate);
         Task SaveUserRoles(RoleBaseForm userClaim, long? currentUserId);
-        Task<List<RolePoco>> CacheGetOrAddWebUserRolesAsync(long userId);
+        Task<List<RolePoco>> CacheGetOrAddUserRolesAsync(long userId);
         void CacheRemoveUserRoles(long userId);
     }
 }

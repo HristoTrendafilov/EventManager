@@ -549,31 +549,6 @@ namespace EventManager.DAL
 		public virtual string UserProfilePictureRelativePath { get; set; }
 	}
 
-	[Table(Name = "v_organizations")]
-	public class VOrganizationPoco
-	{
-		[Column(Name = "organization_id")]
-		public virtual long OrganizationId { get; set; }
-
-		[Column(Name = "organization_name")]
-		public virtual string OrganizationName { get; set; }
-
-		[Column(Name = "organization_description")]
-		public virtual string OrganizationDescription { get; set; }
-
-		[Column(Name = "organization_logo_file_id")]
-		public virtual long OrganizationLogoFileId { get; set; }
-
-		[Column(Name = "organization_created_on_date_time")]
-		public virtual DateTime OrganizationCreatedOnDateTime { get; set; }
-
-		[Column(Name = "organization_created_by_user_id")]
-		public virtual long OrganizationCreatedByUserId { get; set; }
-
-		[Column(Name = "file_storage_relative_path")]
-		public virtual string FileStorageRelativePath { get; set; }
-	}
-
 	[Table(Name = "v_events")]
 	public class VEventPoco
 	{
@@ -620,6 +595,34 @@ namespace EventManager.DAL
 
 		[Column(Name = "organization_name")]
 		public virtual string OrganizationName { get; set; }
+
+		[Column(Name = "organization_id")]
+		public virtual long OrganizationId { get; set; }
+	}
+
+	[Table(Name = "v_organizations")]
+	public class VOrganizationPoco
+	{
+		[Column(Name = "organization_id")]
+		public virtual long OrganizationId { get; set; }
+
+		[Column(Name = "organization_name")]
+		public virtual string OrganizationName { get; set; }
+
+		[Column(Name = "organization_description")]
+		public virtual string OrganizationDescription { get; set; }
+
+		[Column(Name = "organization_logo_file_id")]
+		public virtual long OrganizationLogoFileId { get; set; }
+
+		[Column(Name = "organization_created_on_date_time")]
+		public virtual DateTime OrganizationCreatedOnDateTime { get; set; }
+
+		[Column(Name = "organization_created_by_user_id")]
+		public virtual long OrganizationCreatedByUserId { get; set; }
+
+		[Column(Name = "file_storage_relative_path")]
+		public virtual string FileStorageRelativePath { get; set; }
 	}
 
 	[Table(Name = "v_users_events")]
