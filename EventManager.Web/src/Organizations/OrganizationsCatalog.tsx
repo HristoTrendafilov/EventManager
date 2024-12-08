@@ -92,7 +92,7 @@ export function OrganizationsCatalog() {
         filter.organizationName
           ? x.organizationName
               .toLowerCase()
-              .startsWith(filter.organizationName.toLowerCase())
+              .includes(filter.organizationName.toLowerCase())
           : true
       ),
     [organizations, filter.organizationName]
@@ -124,32 +124,32 @@ export function OrganizationsCatalog() {
 
             {displayedOrganizations.length > 0 ? (
               displayedOrganizations.map((x) => (
-                <div key={x.organizationId} className="card mb-2">
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-md-4">
-                        <img
-                          src={x.organizationLogoUrl}
-                          className="w-100"
-                          alt=""
-                        />
-                      </div>
-                      <div className="col-md-8 d-flex flex-column">
-                        <h4>{x.organizationName}</h4>
-
-                        <div className="d-flex justify-content-center mt-auto">
-                          <button
-                            type="button"
-                            className="btn btn-primary ms-auto"
-                            onClick={() => showFormModal(x.organizationId)}
-                          >
-                            Редакция
-                          </button>
+                <button
+                  className="unset-btn"
+                  type="button"
+                  aria-label="edit"
+                  onClick={() => showFormModal(x.organizationId)}
+                  key={x.organizationId}
+                >
+                  <div key={x.organizationId} className="card mb-2">
+                    <div className="card-body p-1">
+                      <div className="row">
+                        <div className="col-4">
+                          <div className="d-flex h-100px">
+                            <img
+                              src={x.organizationLogoUrl}
+                              className="w-100 object-fit-cover"
+                              alt=""
+                            />
+                          </div>
+                        </div>
+                        <div className="col-8">
+                          <h4>{x.organizationName}</h4>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                </button>
               ))
             ) : (
               <p>Няма намерени Организации</p>

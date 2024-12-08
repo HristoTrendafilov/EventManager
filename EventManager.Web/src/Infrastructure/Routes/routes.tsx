@@ -5,6 +5,7 @@ import { Event } from '~/Event/EventForm';
 import { EventSearch } from '~/Event/EventSearch/EventSearch';
 import { EventViewComponent } from '~/Event/EventView/EventView';
 import type { UserRole } from '~/Infrastructure/redux/user-slice';
+import { OrganizationView } from '~/Organizations/OrganizationView';
 import { OrganizationsCatalog } from '~/Organizations/OrganizationsCatalog';
 import { OrganizationsSearch } from '~/Organizations/OrganizationsSearch';
 import { AdminPanel } from '~/User/AdminPanel/AdminPanel';
@@ -121,6 +122,12 @@ export const table: RouteTable[] = [
   {
     location: CustomRoutes.organizationsSearchPage(),
     component: <OrganizationsSearch />,
+    requiresLogin: false,
+    role: 'None',
+  },
+  {
+    location: CustomRoutes.organizationsView(),
+    component: <OrganizationView />,
     requiresLogin: false,
     role: 'None',
   },

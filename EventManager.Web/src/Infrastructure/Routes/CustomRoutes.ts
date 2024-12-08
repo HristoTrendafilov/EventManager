@@ -95,4 +95,12 @@ export class CustomRoutes {
 
     return '/organizations/search/:page?';
   }
+
+  static organizationsView(organizationId?: number) {
+    if (organizationId) {
+      return `/organizations/${organizationId}/view`;
+    }
+
+    return '/organizations/:organizationId/view';
+  }
 }
