@@ -62,7 +62,8 @@ namespace EventManager.API.Services.Organization
         {
             var organizationViewPoco = await _db.VOrganizations.FirstOrDefaultAsync(predicate);
             var organizationView = Mapper.CreateObject<OrganizationView>(organizationViewPoco);
-            organizationView.OrganizationLogoUrl = _fileService.CreatePublicFileUrl(organizationView.FileStorageRelativePath, FileService.NO_IMAGE_FILE);
+            organizationView.OrganizationLogoUrl = 
+                _fileService.CreatePublicFileUrl(organizationView.FileStorageRelativePath, FileService.NO_IMAGE_FILE);
 
             return organizationView;
         }
@@ -73,7 +74,8 @@ namespace EventManager.API.Services.Organization
             var organizationsView = Mapper.CreateList<OrganizationView>(organizationsViewPoco);
             foreach (var organization in organizationsView)
             {
-                organization.OrganizationLogoUrl = _fileService.CreatePublicFileUrl(organization.FileStorageRelativePath, FileService.NO_IMAGE_FILE);
+                organization.OrganizationLogoUrl = _fileService
+                    .CreatePublicFileUrl(organization.FileStorageRelativePath, FileService.NO_IMAGE_FILE);
             }
 
             return organizationsView;
@@ -89,7 +91,7 @@ namespace EventManager.API.Services.Organization
             return _db.UsersOrganization.AnyAsync(predicate);
         }
 
-        public Task<long> SubscribeUserAsync(long organizationId, long? currentUserId)
+        public Task<long> AddUserToOrganizationAsync(long organizationId, long? currentUserId)
         {
             var userOrganization = new UserOrganizationPoco
             {
@@ -100,10 +102,12 @@ namespace EventManager.API.Services.Organization
             return _db.UsersOrganization.X_CreateAsync(userOrganization, currentUserId);
         }
 
-        public async Task<long> UnsubscribeUserAsync(long userId, long organizationId, long? currentUserId)
+        public async Task<long> RemoveUserFromOrganizationAsync(long userId, long organizationId, long? currentUserId)
         {
-            var userOrganization = await _db.UsersOrganization.FirstOrDefaultAsync(x => x.UserId == userId && x.OrganizationId == organizationId);
-            await _db.UsersOrganization.X_DeleteAsync(x => x.UserOrganizationId == userOrganization.UserOrganizationId, currentUserId);
+            var userOrganization = await _db.UsersOrganization
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.OrganizationId == organizationId);
+            await _db.UsersOrganization
+                .X_DeleteAsync(x => x.UserOrganizationId == userOrganization.UserOrganizationId, currentUserId);
 
             return userOrganization.UserOrganizationId;
         }
@@ -112,6 +116,33 @@ namespace EventManager.API.Services.Organization
         {
             var userOrganizationPoco = await _db.VUsersOrganizations.FirstOrDefaultAsync(predicate);
             return Mapper.CreateObject<UserOrganizationView>(userOrganizationPoco);
+        }
+
+        public Task<long> SubscribeUserToOrganizationAsync(long organizationId, long? currentUserId)
+        {
+            var subscription = new OrganizationSubscriptionPoco
+            {
+                OrganizationId = organizationId,
+                UserId = currentUserId.Value,
+                OrganizationSubscriptionCreatedOnDateTime = DateTime.Now
+            };
+
+            return _db.OrganizationsSubscriptions.X_CreateAsync(subscription, currentUserId);
+        }
+
+        public async Task<long> UnsubscribeUserFromOrganizationAsync(long userId, long organizationId, long? currentUserId)
+        {
+            var subscription = await _db.OrganizationsSubscriptions
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.OrganizationId == organizationId);
+            await _db.OrganizationsSubscriptions
+                .X_DeleteAsync(x => x.OrganizationSubscriptionId == subscription.OrganizationSubscriptionId, currentUserId);
+
+            return subscription.OrganizationSubscriptionId;
+        }
+
+        public Task<bool> OrganizationSubscriptionExistsAsync(Expression<Func<OrganizationSubscriptionPoco, bool>> predicate)
+        {
+            return _db.OrganizationsSubscriptions.AnyAsync(predicate);
         }
     }
 }

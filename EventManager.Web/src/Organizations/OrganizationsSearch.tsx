@@ -73,7 +73,7 @@ export function OrganizationsSearch() {
             </div>
             <div
               id="collapseOne"
-              className="accordion-collapse collapse show"
+              className="accordion-collapse collapse"
               aria-labelledby="headingOne"
               data-bs-parent="#accordionExample"
             >
@@ -100,7 +100,7 @@ export function OrganizationsSearch() {
         {displayedOrganizations.length > 0 ? (
           <div className="row mt-2">
             {displayedOrganizations.map((x) => (
-              <div className="col-md-4">
+              <div key={x.organizationId} className="col-md-4">
                 <Link
                   className="unset-anchor"
                   key={x.organizationId}

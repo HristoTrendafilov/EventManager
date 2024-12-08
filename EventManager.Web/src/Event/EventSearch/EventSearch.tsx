@@ -19,8 +19,6 @@ import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedFo
 
 import { EventSearchCard } from './EventSearchCard';
 
-import './EventSearch.css';
-
 const defaultValues: EventSearchFilterType = {
   eventName: '',
   pageSize: 10,

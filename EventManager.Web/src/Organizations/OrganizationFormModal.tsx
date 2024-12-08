@@ -31,7 +31,7 @@ interface OrganizationFormModalProps {
 export function OrganizationFormModal(props: OrganizationFormModalProps) {
   const { organizationId, onCreated, onUpdated, onCancel } = props;
   const [error, setError] = useState<string | undefined>();
-  const [logo, setLogo] = useState<string>(noImage);
+  const [logo, setLogo] = useState<string | undefined>();
 
   const { form } = useZodForm({
     schema: OrganizationBaseFormSchema,
@@ -88,6 +88,8 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
   useEffect(() => {
     if (organizationId) {
       void loadOrganization(organizationId);
+    } else {
+      setLogo(noImage);
     }
   }, [loadOrganization, organizationId]);
 

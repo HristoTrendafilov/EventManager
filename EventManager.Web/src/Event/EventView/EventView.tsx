@@ -205,7 +205,9 @@ export function EventViewComponent() {
                     </div>
                   )}
 
-                  {error && <ErrorMessage error={subscriptionError} />}
+                  {subscriptionError && (
+                    <ErrorMessage error={subscriptionError} />
+                  )}
                 </div>
 
                 <div className="card-body p-2">

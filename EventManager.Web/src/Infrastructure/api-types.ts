@@ -111,6 +111,7 @@ export interface OrganizationForUpdate {
 
 export interface OrganizationView {
   organizationLogoUrl: string;
+  isUserSubscribed: boolean;
   organizationId: number;
   organizationName: string;
   organizationDescription: string;

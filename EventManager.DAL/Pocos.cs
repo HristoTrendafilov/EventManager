@@ -360,6 +360,23 @@ namespace EventManager.DAL
 		public virtual string WebSessionIpInfo { get; set; }
 	}
 
+	[Table(Name = "organizations_subscriptions")]
+	public class OrganizationSubscriptionPoco
+	{
+		[PrimaryKey, Identity]
+		[Column(Name = "organization_subscription_id")]
+		public virtual long OrganizationSubscriptionId { get; set; }
+
+		[Column(Name = "organization_id")]
+		public virtual long OrganizationId { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "organization_subscription_created_on_date_time")]
+		public virtual DateTime OrganizationSubscriptionCreatedOnDateTime { get; set; }
+	}
+
 	[Table(Name = "v_regions")]
 	public class VRegionPoco
 	{
@@ -371,6 +388,28 @@ namespace EventManager.DAL
 
 		[Column(Name = "region_created_on_date_time")]
 		public virtual DateTime RegionCreatedOnDateTime { get; set; }
+	}
+
+	[Table(Name = "v_organizations_subscriptions")]
+	public class VOrganizationSubscriptionPoco
+	{
+		[Column(Name = "organization_subscription_id")]
+		public virtual long OrganizationSubscriptionId { get; set; }
+
+		[Column(Name = "organization_id")]
+		public virtual long OrganizationId { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "organization_subscription_created_on_date_time")]
+		public virtual DateTime OrganizationSubscriptionCreatedOnDateTime { get; set; }
+
+		[Column(Name = "username")]
+		public virtual string Username { get; set; }
+
+		[Column(Name = "organization_name")]
+		public virtual string OrganizationName { get; set; }
 	}
 
 	[Table(Name = "v_exceptions")]

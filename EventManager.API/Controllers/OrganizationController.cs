@@ -28,10 +28,28 @@ namespace EventManager.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllOrganizationView()
+        public async Task<ActionResult> GetAllOrganizationsView()
         {
             var organizations = await _organizationService.GetAllOrganizationsViewAsync(x => true);
             return Ok(organizations);
+        }
+
+        [HttpGet("{organizationId}/view")]
+        public async Task<ActionResult> GetOrganizationView(long organizationId)
+        {
+            if (!await _organizationService.OrganizationExistsAsync(x => x.OrganizationId == organizationId))
+            {
+                return NotFound();
+            }
+
+            var currentUserId = User.X_CurrentUserId();
+
+            var organization = await _organizationService.GetOrganizationViewAsync(x => x.OrganizationId == organizationId);
+            organization.isUserSubscribed = currentUserId.HasValue &&
+                await _organizationService.OrganizationSubscriptionExistsAsync(x => x.OrganizationId == organizationId 
+                                                                                && x.UserId == currentUserId.Value);
+
+            return Ok(organization);
         }
 
         [HttpPost("new")]
@@ -87,20 +105,50 @@ namespace EventManager.API.Controllers
             return Ok(organizationToReturn);
         }
 
-        [HttpPost("{organizationId}/subscription")]
-        public async Task<ActionResult> SubscribeUserForOrganization(long organizationId)
+        [HttpPost("{organizationId}/members")]
+        public async Task<ActionResult> AddUserToOrganization(long organizationId)
         {
             var currentUserId = User.X_CurrentUserId();
 
             if (await _organizationService.UserOrganizationExistsAsync(x => x.UserId == currentUserId.Value && x.OrganizationId == organizationId))
             {
+                return BadRequest($"Вече е добавен потребител с ID: {currentUserId.Value}");
+            }
+
+            await _organizationService.AddUserToOrganizationAsync(organizationId, currentUserId);
+ 
+            return NoContent();
+        }
+
+        [HttpDelete("{organizationId}/members")]
+        public async Task<ActionResult> RemoveUserFromOrganization(long organizationId)
+        {
+            var currentUserId = User.X_CurrentUserId();
+
+            if (!await _organizationService.UserOrganizationExistsAsync(x => x.UserId == currentUserId.Value && x.OrganizationId == organizationId))
+            {
+                return BadRequest($"Не съществува членство на потребител с ID: {currentUserId.Value}");
+            }
+
+           await _organizationService.RemoveUserFromOrganizationAsync(currentUserId.Value, organizationId, currentUserId);
+
+            return Ok();
+        }
+
+
+        [HttpPost("{organizationId}/subscription")]
+        public async Task<ActionResult> SubscribeUserToOrganization(long organizationId)
+        {
+            var currentUserId = User.X_CurrentUserId();
+
+            if (await _organizationService.OrganizationSubscriptionExistsAsync(x => x.UserId == currentUserId.Value && x.OrganizationId == organizationId))
+            {
                 return BadRequest($"Вече е абониран потребител с ID: {currentUserId.Value}");
             }
 
-            var userOrganizationId = await _organizationService.SubscribeUserAsync(organizationId, currentUserId);
-            var userOrganizationView = await _organizationService.GetUserOrganizationViewAsync(x => x.OrganizationId == organizationId);
- 
-            return Ok(userOrganizationView);
+            await _organizationService.SubscribeUserToOrganizationAsync(organizationId, currentUserId);
+
+            return NoContent();
         }
 
         [HttpDelete("{organizationId}/subscription")]
@@ -108,14 +156,14 @@ namespace EventManager.API.Controllers
         {
             var currentUserId = User.X_CurrentUserId();
 
-            if (!await _organizationService.UserOrganizationExistsAsync(x => x.UserId == currentUserId.Value && x.OrganizationId == organizationId))
+            if (!await _organizationService.OrganizationSubscriptionExistsAsync(x => x.UserId == currentUserId.Value && x.OrganizationId == organizationId))
             {
-                return BadRequest($"Не съществува абониран потребител с ID: {currentUserId.Value}");
+                return BadRequest($"Не съществува абонамент на потребител с ID: {currentUserId.Value}");
             }
 
-            var userOrganizationId = await _organizationService.UnsubscribeUserAsync(currentUserId.Value, organizationId, currentUserId);
+            await _organizationService.UnsubscribeUserFromOrganizationAsync(currentUserId.Value, organizationId, currentUserId);
 
-            return Ok(new PrimaryKeyResponse { PrimaryKey = userOrganizationId });
+            return NoContent();
         }
     }
 }

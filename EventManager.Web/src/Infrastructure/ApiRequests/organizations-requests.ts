@@ -2,12 +2,17 @@ import { callApi } from '~/Infrastructure/api-client';
 import type {
   OrganizationForUpdate,
   OrganizationView,
-  PrimaryKeyResponse,
-  UserOrganizationView,
 } from '~/Infrastructure/api-types';
 
 export function getAllOrganizationsView() {
   return callApi<OrganizationView[]>(`/organizations`, 'GET');
+}
+
+export function getOrganizationView(organizationId: number) {
+  return callApi<OrganizationView>(
+    `/organizations/${organizationId}/view`,
+    'GET'
+  );
 }
 
 export function updateOrganization(
@@ -33,15 +38,17 @@ export function createOrganization(organization: FormData) {
 }
 
 export function subscribeUserToOrganization(organizationId: number) {
-  return callApi<UserOrganizationView>(
-    `/organizations/${organizationId}/subscription`,
-    'POST'
-  );
+  return callApi(`/organizations/${organizationId}/subscription`, 'POST');
 }
 
 export function unsubscribeUserFromOrganization(organizationId: number) {
-  return callApi<PrimaryKeyResponse>(
-    `/organizations/${organizationId}/subscription`,
-    'DELETE'
-  );
+  return callApi(`/organizations/${organizationId}/subscription`, 'DELETE');
+}
+
+export function addUserToOrganization(organizationId: number) {
+  return callApi(`/organizations/${organizationId}/members`, 'POST');
+}
+
+export function removeUserFromOrganization(organizationId: number) {
+  return callApi(`/organizations/${organizationId}/members`, 'DELETE');
 }
