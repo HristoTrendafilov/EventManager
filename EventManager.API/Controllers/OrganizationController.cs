@@ -30,7 +30,7 @@ namespace EventManager.API.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAllOrganizationsView()
         {
-            var organizations = await _organizationService.GetAllOrganizationsViewAsync(x => true);
+            var organizations = await _organizationService.GetAllOrganizationsViewAsync(x => x.OrganizationId > 1);
             return Ok(organizations);
         }
 
@@ -45,7 +45,9 @@ namespace EventManager.API.Controllers
             var currentUserId = User.X_CurrentUserId();
 
             var organization = await _organizationService.GetOrganizationViewAsync(x => x.OrganizationId == organizationId);
-            organization.isUserSubscribed = currentUserId.HasValue &&
+            organization.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, organization.OrganizationCreatedByUserId);
+
+            organization.IsUserSubscribed = currentUserId.HasValue &&
                 await _organizationService.OrganizationSubscriptionExistsAsync(x => x.OrganizationId == organizationId 
                                                                                 && x.UserId == currentUserId.Value);
 
@@ -105,6 +107,19 @@ namespace EventManager.API.Controllers
             return Ok(organizationToReturn);
         }
 
+        [HttpGet("{organizationId}/members")]
+        public async Task<ActionResult> GetOrganizationMembers(long organizationId)
+        {
+            if (!await _organizationService.OrganizationExistsAsync(x => x.OrganizationId == organizationId))
+            {
+                return NotFound();
+            }
+
+            var members = await _organizationService.GetAllOrganizationMembersViewAsync(x => x.OrganizationId == organizationId);
+
+            return Ok(members);
+        }
+
         [HttpPost("{organizationId}/members")]
         public async Task<ActionResult> AddUserToOrganization(long organizationId)
         {
@@ -134,7 +149,6 @@ namespace EventManager.API.Controllers
 
             return Ok();
         }
-
 
         [HttpPost("{organizationId}/subscription")]
         public async Task<ActionResult> SubscribeUserToOrganization(long organizationId)

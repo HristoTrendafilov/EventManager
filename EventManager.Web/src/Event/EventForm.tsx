@@ -1,16 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 
-import {
-  createEvent,
-  getEventForUpdate,
-  updateEvent,
-} from '~/Infrastructure/ApiRequests/events-requests';
+import { createEvent, getEventForUpdate, updateEvent } from '~/Infrastructure/ApiRequests/events-requests';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
-import {
-  EventBaseFormSchema,
-  type EventBaseFormType,
-} from '~/Infrastructure/api-types';
+import { EventBaseFormSchema, type EventBaseFormType } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomDateInput } from '~/Infrastructure/components/Form/CustomForm/CustomDateInput';
 import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomFileInputButton';
@@ -18,11 +12,10 @@ import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomFo
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
 import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/CustomTextArea';
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
-import {
-  FileInputTypeEnum,
-  setValidationErrors,
-} from '~/Infrastructure/components/Form/formUtils';
+import { FileInputTypeEnum, setValidationErrors } from '~/Infrastructure/components/Form/formUtils';
+import { userSelector } from '~/Infrastructure/redux/user-slice';
 import { objectToFormData } from '~/Infrastructure/utils';
+import { OrganizationSelect } from '~/Shared/SmartSelects/Organization/OrganizationSelect';
 import { RegionSelect } from '~/Shared/SmartSelects/Region/RegionSelect';
 import noImage from '~/asset/no-image.png';
 
@@ -35,7 +28,9 @@ export function Event() {
   const { eventId } = useParams();
   const navigate = useNavigate();
 
-  const { form } = useZodForm({ schema: EventBaseFormSchema });
+  const { form } = useZodForm({ schema: EventBaseFormSchema, defaultValues: { organizationId: 1 } });
+
+  const user = useSelector(userSelector);
 
   const loadEvent = useCallback(
     async (paramEventId: number) => {
@@ -107,22 +102,25 @@ export function Event() {
       <div className="container">
         <div className="mw-800px m-50auto">
           <div className="card">
-            <h3 className="card-header">
-              {eventId ? `Редакция на събитие (#${eventId})` : 'Ново събитие'}
-            </h3>
+            <h3 className="card-header">{eventId ? `Редакция на събитие (#${eventId})` : 'Ново събитие'}</h3>
 
             <div className="card-body">
               <CustomForm form={form} onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-md-6">
-                    <CustomInput
-                      {...form.register('eventName')}
-                      label="Наименование"
-                      required
-                    />
+                    <CustomInput {...form.register('eventName')} label="Наименование" required />
                     <RegionSelect
                       {...form.register('regionId')}
                       label="Регион на събитието"
+                      isNumber
+                      required
+                      searchable={false}
+                      clearable={false}
+                    />
+                    <OrganizationSelect
+                      {...form.register('organizationId')}
+                      userId={user.userId}
+                      label="Организация"
                       isNumber
                       required
                       searchable={false}
@@ -140,11 +138,7 @@ export function Event() {
                       showTime
                       nullable
                     />
-                    <CustomTextArea
-                      {...form.register('eventDescription')}
-                      label="Описание"
-                      rows={8}
-                    />
+                    <CustomTextArea {...form.register('eventDescription')} label="Описание" rows={8} />
                   </div>
                   <div className="col-md-6">
                     <div className="card">
@@ -157,11 +151,7 @@ export function Event() {
                         />
                       </div>
                       <div className="card-body p-1 main-image-wrapper">
-                        <img
-                          alt="main"
-                          className="w-100 object-fit-contain"
-                          src={mainImage}
-                        />
+                        <img alt="main" className="w-100 object-fit-contain" src={mainImage} />
                       </div>
                     </div>
                   </div>

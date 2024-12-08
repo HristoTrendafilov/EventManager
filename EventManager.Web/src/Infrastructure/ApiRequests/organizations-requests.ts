@@ -1,36 +1,20 @@
 import { callApi } from '~/Infrastructure/api-client';
-import type {
-  OrganizationForUpdate,
-  OrganizationView,
-} from '~/Infrastructure/api-types';
+import type { OrganizationForUpdate, OrganizationView, UserOrganizationView } from '~/Infrastructure/api-types';
 
 export function getAllOrganizationsView() {
   return callApi<OrganizationView[]>(`/organizations`, 'GET');
 }
 
 export function getOrganizationView(organizationId: number) {
-  return callApi<OrganizationView>(
-    `/organizations/${organizationId}/view`,
-    'GET'
-  );
+  return callApi<OrganizationView>(`/organizations/${organizationId}/view`, 'GET');
 }
 
-export function updateOrganization(
-  organizationId: number,
-  organization: FormData
-) {
-  return callApi<OrganizationView>(
-    `/organizations/${organizationId}/update`,
-    'PUT',
-    organization
-  );
+export function updateOrganization(organizationId: number, organization: FormData) {
+  return callApi<OrganizationView>(`/organizations/${organizationId}/update`, 'PUT', organization);
 }
 
 export function getOrganizationForUpdate(organizationId: number) {
-  return callApi<OrganizationForUpdate>(
-    `/organizations/${organizationId}/update`,
-    'GET'
-  );
+  return callApi<OrganizationForUpdate>(`/organizations/${organizationId}/update`, 'GET');
 }
 
 export function createOrganization(organization: FormData) {
@@ -51,4 +35,8 @@ export function addUserToOrganization(organizationId: number) {
 
 export function removeUserFromOrganization(organizationId: number) {
   return callApi(`/organizations/${organizationId}/members`, 'DELETE');
+}
+
+export function getOrganizationMembers(organizationId: number) {
+  return callApi<UserOrganizationView[]>(`/organizations/${organizationId}/members`, 'GET');
 }

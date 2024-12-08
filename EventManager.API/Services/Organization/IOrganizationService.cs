@@ -19,5 +19,7 @@ namespace EventManager.API.Services.Organization
         Task<long> SubscribeUserToOrganizationAsync(long organizationId, long? currentUserId);
         Task<long> UnsubscribeUserFromOrganizationAsync(long userId, long organizationId, long? currentUserId);
         Task<bool> OrganizationSubscriptionExistsAsync(Expression<Func<OrganizationSubscriptionPoco, bool>> predicate);
+        Task<List<UserOrganizationView>> GetAllOrganizationMembersViewAsync(Expression<Func<VUserOrganizationPoco, bool>> predicate);
+        Task<List<OrganizationView>> GetUserOrganizationsAsync(long userId, bool includeDefault);
     }
 }

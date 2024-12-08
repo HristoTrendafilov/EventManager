@@ -98,7 +98,7 @@ export function OrganizationsSearch() {
         </div>
         {error && <ErrorMessage error={error} />}
         {displayedOrganizations.length > 0 ? (
-          <div className="row mt-2">
+          <div className="row mt-2 g-3">
             {displayedOrganizations.map((x) => (
               <div key={x.organizationId} className="col-md-4">
                 <Link
@@ -106,7 +106,7 @@ export function OrganizationsSearch() {
                   key={x.organizationId}
                   to={CustomRoutes.organizationsView(x.organizationId)}
                 >
-                  <div className="card">
+                  <div className="card h-100">
                     <div className="card-header">
                       <div className="d-flex h-200px">
                         <img
@@ -115,11 +115,11 @@ export function OrganizationsSearch() {
                           alt=""
                         />
                       </div>
-                      <div className="card-body p-1">
-                        <h4 className="d-flex justify-content-center">
-                          {x.organizationName}
-                        </h4>
-                      </div>
+                    </div>
+                    <div className="card-body p-1">
+                      <h4 className="d-flex justify-content-center">
+                        {x.organizationName}
+                      </h4>
                     </div>
                   </div>
                 </Link>

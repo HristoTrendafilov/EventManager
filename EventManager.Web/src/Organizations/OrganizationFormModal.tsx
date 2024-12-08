@@ -6,8 +6,9 @@ import {
   updateOrganization,
 } from '~/Infrastructure/ApiRequests/organizations-requests';
 import {
-  OrganizationBaseFormSchema,
   type OrganizationBaseFormType,
+  OrganizationNewSchema,
+  OrganizationUpdateSchema,
   type OrganizationView,
 } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
@@ -18,7 +19,7 @@ import { CustomTextArea } from '~/Infrastructure/components/Form/CustomForm/Cust
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
 import { FileInputTypeEnum } from '~/Infrastructure/components/Form/formUtils';
 import { Modal } from '~/Infrastructure/components/Modal/Modal';
-import { objectToFormData, urlToFileList } from '~/Infrastructure/utils';
+import { objectToFormData } from '~/Infrastructure/utils';
 import noImage from '~/asset/no-image.png';
 
 interface OrganizationFormModalProps {
@@ -34,7 +35,7 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
   const [logo, setLogo] = useState<string | undefined>();
 
   const { form } = useZodForm({
-    schema: OrganizationBaseFormSchema,
+    schema: organizationId ? OrganizationUpdateSchema : OrganizationNewSchema,
   });
 
   const handleFormSubmit = useCallback(
@@ -79,8 +80,6 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
 
       form.reset(response.data);
       setLogo(response.data.organizationLogoUrl);
-      const fileList = await urlToFileList(response.data.organizationLogoUrl);
-      form.setValue('organizationLogoFile', fileList);
     },
     [form]
   );
@@ -130,11 +129,13 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
                         />
                       </div>
                       <div className="card-body p-1 main-image-wrapper">
-                        <img
-                          alt="main"
-                          className="w-100 object-fit-contain"
-                          src={logo}
-                        />
+                        <div className="d-flex h-200px">
+                          <img
+                            alt="main"
+                            className="w-100 object-fit-contain"
+                            src={logo}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

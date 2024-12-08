@@ -7,6 +7,7 @@ namespace EventManager.API.Dto.Organization
     public class OrganizationView : VOrganizationPoco
     {
         public string OrganizationLogoUrl { get; set; }
-        public bool isUserSubscribed { get; set; }
+        public bool IsUserSubscribed { get; set; }
+        public bool CanEdit { get; set; }
     }
 }

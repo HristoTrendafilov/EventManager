@@ -112,6 +112,7 @@ export interface OrganizationForUpdate {
 export interface OrganizationView {
   organizationLogoUrl: string;
   isUserSubscribed: boolean;
+  canEdit: boolean;
   organizationId: number;
   organizationName: string;
   organizationDescription: string;
@@ -122,12 +123,14 @@ export interface OrganizationView {
 }
 
 export interface UserOrganizationView {
+  userProfilePictureUrl: string;
   userOrganizationId: number;
   userId: number;
   organizationId: number;
   userOrganizationCreatedOnDateTime: Date | null;
   username: string;
   organizationName: string;
+  userProfilePictureRelativePath: string;
 }
 
 export interface HomeView {
@@ -139,6 +142,7 @@ export interface EventForUpdate {
   eventName: string;
   eventStartDateTime: Date;
   regionId: number;
+  organizationId: number;
   eventDescription: string | null;
   eventEndDateTime: Date | null;
 }
@@ -161,6 +165,7 @@ export interface EventView {
   eventHasEnded: boolean;
   eventHasStarted: boolean;
   mainImageRelativePath: string;
+  organizationName: string;
 }
 
 export interface UserEventView {
@@ -251,14 +256,29 @@ export type RegionBaseFormType = z.infer<typeof RegionBaseFormSchema>;
 export const OrganizationBaseFormSchema = z.object({
   organizationName: z.string().min(1, { message: "Името на организацията е задължително" }),
   organizationDescription: z.string().min(1, { message: "Описанието на организацията е задължително" }),
-  organizationLogoFile: z.instanceof(FileList).refine(fileList => fileList && fileList.length > 0, { message: "Логото на организацията е задължително" }).refine(fileList => { if (fileList && fileList.length > 0) { return Array.from(fileList).every(file => file.size <= 1048576); } return true; }, { message: "Максималният размер за файл е 1MB" }),
+  organizationLogoFile: z.instanceof(FileList),
 });
 export type OrganizationBaseFormType = z.infer<typeof OrganizationBaseFormSchema>;
+
+export const OrganizationNewSchema = z.object({
+  organizationLogoFile: z.instanceof(FileList).refine(fileList => fileList && fileList.length > 0, { message: "Логото на организацията е задължително" }).refine(fileList => { if (fileList && fileList.length > 0) { return Array.from(fileList).every(file => file.size <= 1048576); } return true; }, { message: "Максималният размер за файл е 1MB" }),
+  organizationName: z.string().min(1, { message: "Името на организацията е задължително" }),
+  organizationDescription: z.string().min(1, { message: "Описанието на организацията е задължително" }),
+});
+export type OrganizationNewType = z.infer<typeof OrganizationNewSchema>;
+
+export const OrganizationUpdateSchema = z.object({
+  organizationLogoFile: z.instanceof(FileList).refine(fileList => { if (fileList && fileList.length > 0) { return Array.from(fileList).every(file => file.size <= 1048576); } return true; }, { message: "Максималният размер за файл е 1MB" }),
+  organizationName: z.string().min(1, { message: "Името на организацията е задължително" }),
+  organizationDescription: z.string().min(1, { message: "Описанието на организацията е задължително" }),
+});
+export type OrganizationUpdateType = z.infer<typeof OrganizationUpdateSchema>;
 
 export const EventBaseFormSchema = z.object({
   eventName: z.string().min(1, { message: "Името на събитието е задължително." }),
   eventStartDateTime: z.coerce.date().refine(date => date >= new Date("1971-01-01") && date <= new Date("3000-01-01"), { message: "Дата на събитието е задължителна." }),
   regionId: z.number().int().min(1, { message: "Регионът на събитието е задължителен." }).max(9.223372036854776E+18, { message: "Регионът на събитието е задължителен." }),
+  organizationId: z.number().int(),
   eventDescription: z.string().nullable(),
   eventEndDateTime: z.coerce.date().nullable(),
   mainImage: z.instanceof(FileList).nullable().refine(fileList => { if (fileList && fileList.length > 0) { return Array.from(fileList).every(file => file.size <= 1048576); } return true; }, { message: "Максималният размер за файл е 1MB" }),

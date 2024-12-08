@@ -19,6 +19,7 @@ using System.Data;
 using EventManager.API.Dto.User.Role;
 using EventManager.API.BackgroundServices;
 using EventManager.API.Services.FileStorage;
+using EventManager.API.Services.Organization;
 
 namespace EventManager.API.Controllers
 {
@@ -33,6 +34,7 @@ namespace EventManager.API.Controllers
         private readonly IRegionService _regionService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IFileService _fileService;
+        private readonly IOrganizationService _organizationService;
         private readonly EmailQueueService _emailQueueService;
 
         public UserController(
@@ -43,6 +45,7 @@ namespace EventManager.API.Controllers
             IRegionService regionService,
             IWebHostEnvironment webHostEnvironment,
             IFileService fileService,
+            IOrganizationService organizationService,
             EmailQueueService emailQueueService)
         {
             _userService = userService;
@@ -52,6 +55,7 @@ namespace EventManager.API.Controllers
             _regionService = regionService;
             _webHostEnvironment = webHostEnvironment;
             _fileService = fileService;
+            _organizationService = organizationService;
             _emailQueueService = emailQueueService;
         }
 
@@ -418,6 +422,15 @@ namespace EventManager.API.Controllers
             }
 
             return Ok(usersView);
+        }
+
+        [HttpGet("{userId}/organizations/select")]
+        [Authorize]
+        public async Task<ActionResult> GetUserOrganizationsSelect(long userId)
+        {
+            var userOrganizations = await _organizationService.GetUserOrganizationsAsync(userId, true);
+
+            return Ok(userOrganizations);
         }
     }
 }

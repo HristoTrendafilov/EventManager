@@ -1,5 +1,6 @@
 ﻿using EventManager.API.Dto.Organization;
 using EventManager.API.Dto.User;
+using EventManager.API.Helpers;
 using EventManager.API.Services.FileStorage;
 using EventManager.BOL;
 using EventManager.DAL;
@@ -40,16 +41,22 @@ namespace EventManager.API.Services.Organization
             await _db.WithTransactionAsync(async () =>
             {
                 var oldLogoFileId = await _db.Organizations
-                    .Where(x => x.OrganizationId == organizationId)
-                    .Select(x => x.OrganizationLogoFileId)
-                    .FirstOrDefaultAsync();
+                     .Where(x => x.OrganizationId == organizationId)
+                     .Select(x => x.OrganizationLogoFileId)
+                     .FirstOrDefaultAsync();
 
+                if (organization.OrganizationLogoFile != null)
+                {
+                    var fileId = await _fileService.CreateFileAsync(organization.OrganizationLogoFile, FileType.Public, currentUserId);
+                    organization.OrganizationLogoFileId = fileId;
+                    await _db.Organizations.X_UpdateAsync(organizationId, organization, currentUserId);
+                    await _fileService.DeleteFileAsync(oldLogoFileId, currentUserId);
 
-                var fileId = await _fileService.CreateFileAsync(organization.OrganizationLogoFile, FileType.Public, currentUserId);
-                organization.OrganizationLogoFileId = fileId;
-                await _db.Organizations.X_UpdateAsync(organizationId, organization, currentUserId);
-
-                await _fileService.DeleteFileAsync(oldLogoFileId, currentUserId);
+                }
+                else
+                {
+                    await _db.Organizations.X_UpdateAsync(organizationId, organization, currentUserId);
+                }
             });
         }
 
@@ -118,6 +125,20 @@ namespace EventManager.API.Services.Organization
             return Mapper.CreateObject<UserOrganizationView>(userOrganizationPoco);
         }
 
+        public async Task<List<UserOrganizationView>> GetAllOrganizationMembersViewAsync(Expression<Func<VUserOrganizationPoco, bool>> predicate)
+        {
+            var usersOrganizationsPoco = await _db.VUsersOrganizations.Where(predicate).ToListAsync();
+            var usersOrganizations = Mapper.CreateList<UserOrganizationView>(usersOrganizationsPoco);
+
+            foreach (var userOrganization in usersOrganizations)
+            {
+                userOrganization.UserProfilePictureUrl = 
+                    _fileService.CreatePublicFileUrl(userOrganization.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
+            }
+
+            return usersOrganizations;
+        }
+
         public Task<long> SubscribeUserToOrganizationAsync(long organizationId, long? currentUserId)
         {
             var subscription = new OrganizationSubscriptionPoco
@@ -143,6 +164,23 @@ namespace EventManager.API.Services.Organization
         public Task<bool> OrganizationSubscriptionExistsAsync(Expression<Func<OrganizationSubscriptionPoco, bool>> predicate)
         {
             return _db.OrganizationsSubscriptions.AnyAsync(predicate);
+        }
+
+        public async Task<List<OrganizationView>> GetUserOrganizationsAsync(long userId, bool includeDefault)
+        {
+            var organizationIds = await _db.UsersOrganization.Where(x => x.UserId == userId)
+                .Select(x => x.OrganizationId)
+                .ToListAsync();
+
+            if (includeDefault)
+            {
+                organizationIds.Add(1);
+            }
+
+            var organizationsViewPoco = await _db.VOrganizations.Where(x => organizationIds.Contains(x.OrganizationId)).ToListAsync();
+            var organizationsView = Mapper.CreateList<OrganizationView>(organizationsViewPoco);
+
+            return organizationsView;
         }
     }
 }

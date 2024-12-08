@@ -16,6 +16,8 @@ namespace EventManager.API.Dto.Event
         [Range(1, long.MaxValue, ErrorMessage = "Регионът на събитието е задължителен.")]
         public virtual long RegionId { get; set; }
 
+        public virtual long OrganizationId { get; set; }
+
         [Nullable]
         public virtual string EventDescription { get; set; }
 

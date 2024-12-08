@@ -12,21 +12,26 @@ import { ConfirmModal } from '~/Infrastructure/components/ConfirmModal/ConfirmMo
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { userSelector } from '~/Infrastructure/redux/user-slice';
 
+import { OrganizationMembers } from './OrganizationMembers';
+
 export function OrganizationViewComponent() {
   const [error, setError] = useState<string | undefined>();
   const [isUserSubscribed, setIsUserSubscribed] = useState<boolean>(false);
-
-  const [subscriptionError, setSubscriptionError] = useState<
-    string | undefined
-  >();
-  const [organization, setOrganization] = useState<
-    OrganizationView | undefined
-  >();
+  const [subscriptionError, setSubscriptionError] = useState<string | undefined>();
+  const [organization, setOrganization] = useState<OrganizationView | undefined>();
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
+  const [membersModal, setMembersModal] = useState<boolean>(false);
 
   const { organizationId } = useParams();
-
   const user = useSelector(userSelector);
+
+  const showMembersModal = useCallback(() => {
+    setMembersModal(true);
+  }, []);
+
+  const closeMembersModal = useCallback(() => {
+    setMembersModal(false);
+  }, []);
 
   const showConfirmModal = useCallback(() => {
     setConfirmModal(true);
@@ -47,9 +52,7 @@ export function OrganizationViewComponent() {
   }, [organizationId]);
 
   const unsubscribeUser = useCallback(async () => {
-    const response = await unsubscribeUserFromOrganization(
-      Number(organizationId)
-    );
+    const response = await unsubscribeUserFromOrganization(Number(organizationId));
     if (!response.success) {
       setSubscriptionError(response.errorMessage);
       closeConfirmModal();
@@ -82,11 +85,7 @@ export function OrganizationViewComponent() {
         <div className="card">
           <div className="card-header">
             <div className="d-flex h-200px">
-              <img
-                src={organization.organizationLogoUrl}
-                className="w-100 object-fit-cover"
-                alt=""
-              />
+              <img src={organization.organizationLogoUrl} className="w-100 object-fit-cover" alt="" />
             </div>
             <div className="card-body">
               <h4>{organization.organizationName}</h4>
@@ -94,29 +93,26 @@ export function OrganizationViewComponent() {
               {user.isLoggedIn && (
                 <div>
                   {!isUserSubscribed ? (
-                    <button
-                      type="button"
-                      className="btn btn-success w-100"
-                      onClick={subscribeUser}
-                    >
+                    <button type="button" className="btn btn-success w-100" onClick={subscribeUser}>
                       Абонирай ме
                     </button>
                   ) : (
-                    <button
-                      type="button"
-                      className="btn btn-warning w-100"
-                      onClick={showConfirmModal}
-                    >
+                    <button type="button" className="btn btn-warning w-100" onClick={showConfirmModal}>
                       Премахни абонамент
                     </button>
                   )}
-                  {subscriptionError && (
-                    <ErrorMessage error={subscriptionError} />
-                  )}
+                  {subscriptionError && <ErrorMessage error={subscriptionError} />}
                 </div>
               )}
             </div>
           </div>
+          {organization.canEdit && (
+            <div className="card-footer">
+              <button type="button" className="btn btn-info w-100" onClick={showMembersModal}>
+                Участници
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -126,6 +122,9 @@ export function OrganizationViewComponent() {
           onCancel={closeConfirmModal}
           onConfirm={unsubscribeUser}
         />
+      )}
+      {membersModal && organization && (
+        <OrganizationMembers onClose={closeMembersModal} organizationId={organization.organizationId} />
       )}
     </div>
   );
