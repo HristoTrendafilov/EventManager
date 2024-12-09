@@ -9,7 +9,7 @@ namespace EventManager.API.Services.User
     {
         Task<UserPoco> GetUserPocoAsync(Expression<Func<UserPoco, bool>> predicate);
         Task<UserView> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate);
-        Task<List<VUserPoco>> GetAllUsersViewAsync(Expression<Func<VUserPoco, bool>> predicate);
+        Task<List<UserView>> GetAllUsersViewAsync(Expression<Func<VUserPoco, bool>> predicate, bool includeProfilePictureUrl);
         Task<long> CreateUserAsync(UserNew user, long? currentUserId);
         Task UpdateUserAsync(long userId, UserPoco user, long? currentUserId);
         Task UpdateUserPersonalDataAsync(long userId, UserUpdatePersonalData user, long? currentUserId);

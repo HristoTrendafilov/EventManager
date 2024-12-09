@@ -7,6 +7,8 @@ import type {
   UserForUpdate,
   UserForWeb,
   UserLoginType,
+  UserSearch,
+  UserSearchFilterType,
   UserUpdatePasswordType,
   UserUpdatePersonalDataResponse,
   UserUpdateUsernameType,
@@ -64,4 +66,8 @@ export function verifyUserEmail(req: UserVerifyEmail) {
 
 export function getUserOrganizationsSelect(userId: number) {
   return callApi<OrganizationView[]>(`/users/${userId}/organizations/select`, 'GET');
+}
+
+export function searchUsers(filter: UserSearchFilterType) {
+  return callApi<UserSearch[]>(`/users/search`, 'POST', JSON.stringify(filter));
 }

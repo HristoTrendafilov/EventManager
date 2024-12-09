@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { getOrganizationMembers } from '~/Infrastructure/ApiRequests/organizations-requests';
+import { addMembersToOrganization, getOrganizationMembers } from '~/Infrastructure/ApiRequests/organizations-requests';
 import type { UserOrganizationView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { Modal } from '~/Infrastructure/components/Modal/Modal';
@@ -36,6 +36,21 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
     setMembers(response.data);
   }, [organizationId]);
 
+  const addMembers = useCallback(
+    async (usersIds: number[]) => {
+      const response = await addMembersToOrganization(organizationId, { usersIds });
+      if (!response.success) {
+        closeUserSelectModal();
+        setError(response.errorMessage);
+        return;
+      }
+
+      closeUserSelectModal();
+      void loadMembers();
+    },
+    [closeUserSelectModal, loadMembers, organizationId]
+  );
+
   useEffect(() => {
     void loadMembers();
   }, [loadMembers]);
@@ -51,17 +66,24 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
                 Затвори
               </button>
             </div>
-            <div className="card-body" style={{ height: '400px', overflowY: 'auto' }}>
+            <div className="card-body h-400px overflow-auto">
+              {error && <ErrorMessage error={error} />}
+              {members.length > 0 && members.map((x) => <div>{x.username}</div>)}
+            </div>
+            <div className="card-footer">
               <button type="button" className="btn btn-success w-100" onClick={showUserSelectModal}>
                 Добави Участник
               </button>
-              {error && <ErrorMessage error={error} />}
-              <hr />
-              {members.length > 0 && members.map((x) => <div>{x.username}</div>)}
             </div>
           </div>
         </div>
-        {userSelect && <UserSelect onClose={closeUserSelectModal} />}
+        {userSelect && (
+          <UserSelect
+            onClose={closeUserSelectModal}
+            onSelected={addMembers}
+            alreadySelectedUsersIds={members.map((x) => x.userId)}
+          />
+        )}
       </div>
     </Modal>
   );

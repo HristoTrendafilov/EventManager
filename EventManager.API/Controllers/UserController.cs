@@ -410,7 +410,7 @@ namespace EventManager.API.Controllers
                 predicate = predicate.And(x => x.Username.StartsWith(filter.Username, StringComparison.CurrentCultureIgnoreCase));
             }
 
-            var usersViewPoco = await _userService.GetAllUsersViewAsync(predicate);
+            var usersViewPoco = await _userService.GetAllUsersViewAsync(predicate, false);
             var usersView = Mapper.CreateList<UserView>(usersViewPoco);
 
             foreach (var user in usersView)
@@ -431,6 +431,15 @@ namespace EventManager.API.Controllers
             var userOrganizations = await _organizationService.GetUserOrganizationsAsync(userId, true);
 
             return Ok(userOrganizations);
+        }
+
+        [HttpPost("search")]
+        public async Task<ActionResult> SearchUsers(UserSearchFilter filter)
+        {
+            var usersView = await _userService.GetAllUsersViewAsync(x => x.Username.StartsWith(filter.Username), true);
+            var users = Mapper.CreateList<UserSearch>(usersView);
+
+            return Ok(users);
         }
     }
 }

@@ -56,6 +56,13 @@ export interface UserForWeb {
   profilePictureUrl: string;
 }
 
+export interface UserSearch {
+  userId: number;
+  username: string;
+  userFullName: string;
+  profilePictureUrl: string;
+}
+
 export interface UserUpdatePersonalDataResponse {
   profilePictureUrl: string;
 }
@@ -107,6 +114,10 @@ export interface OrganizationForUpdate {
   organizationLogoUrl: string;
   organizationName: string;
   organizationDescription: string;
+}
+
+export interface OrganizationUsersNew {
+  usersIds: number[];
 }
 
 export interface OrganizationView {
@@ -166,6 +177,7 @@ export interface EventView {
   eventHasStarted: boolean;
   mainImageRelativePath: string;
   organizationName: string;
+  organizationId: number;
 }
 
 export interface UserEventView {
@@ -212,6 +224,11 @@ export const UserNewSchema = z.object({
   userShortDescription: z.string().nullable(),
 });
 export type UserNewType = z.infer<typeof UserNewSchema>;
+
+export const UserSearchFilterSchema = z.object({
+  username: z.string().min(1, { message: "Потребителското име е задължително" }),
+});
+export type UserSearchFilterType = z.infer<typeof UserSearchFilterSchema>;
 
 export const UserUpdatePasswordSchema = z.object({
   currentPassword: z.string().min(1, { message: "Текущата парола е задължителна" }),

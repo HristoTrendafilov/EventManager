@@ -121,9 +121,20 @@ namespace EventManager.API.Services.User
             return userView;
         }
 
-        public Task<List<VUserPoco>> GetAllUsersViewAsync(Expression<Func<VUserPoco, bool>> predicate)
+        public async Task<List<UserView>> GetAllUsersViewAsync(Expression<Func<VUserPoco, bool>> predicate, bool includeProfilePictureUrl)
         {
-            return _db.VUsers.Where(predicate).ToListAsync();
+            var usersViewPoco = await _db.VUsers.Where(predicate).ToListAsync();
+            var usersView = Mapper.CreateList<UserView>(usersViewPoco);
+
+            if (includeProfilePictureUrl)
+            {
+                foreach (var user in usersView)
+                {
+                    user.ProfilePictureUrl = _fileService.CreatePublicFileUrl(user.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
+                }
+            }
+
+            return usersView;
         }
 
         public Task<bool> UserExistsAsync(Expression<Func<UserPoco, bool>> predicate)

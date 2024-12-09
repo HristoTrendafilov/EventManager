@@ -98,15 +98,22 @@ namespace EventManager.API.Services.Organization
             return _db.UsersOrganization.AnyAsync(predicate);
         }
 
-        public Task<long> AddUserToOrganizationAsync(long organizationId, long? currentUserId)
+        public async Task AddUsersToOrganizationAsync(long organizationId, List<long> usersIds, long? currentUserId)
         {
-            var userOrganization = new UserOrganizationPoco
+            await _db.WithTransactionAsync(async () =>
             {
-                OrganizationId = organizationId,
-                UserId = currentUserId.Value
-            };
+                foreach (var userId in usersIds)
+                {
+                    var userOrganization = new UserOrganizationPoco
+                    {
+                        OrganizationId = organizationId,
+                        UserId = userId,
+                        UserOrganizationCreatedOnDateTime = DateTime.Now
+                    };
 
-            return _db.UsersOrganization.X_CreateAsync(userOrganization, currentUserId);
+                    await _db.UsersOrganization.X_CreateAsync(userOrganization, currentUserId);
+                }
+            });
         }
 
         public async Task<long> RemoveUserFromOrganizationAsync(long userId, long organizationId, long? currentUserId)

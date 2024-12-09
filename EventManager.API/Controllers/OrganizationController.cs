@@ -125,16 +125,9 @@ namespace EventManager.API.Controllers
         }
 
         [HttpPost("{organizationId}/members")]
-        public async Task<ActionResult> AddUserToOrganization(long organizationId)
+        public async Task<ActionResult> AddMembersToOrganization(long organizationId, OrganizationUsersNew users)
         {
-            var currentUserId = User.X_CurrentUserId();
-
-            if (await _organizationService.UserOrganizationExistsAsync(x => x.UserId == currentUserId.Value && x.OrganizationId == organizationId))
-            {
-                return BadRequest($"Вече е добавен потребител с ID: {currentUserId.Value}");
-            }
-
-            await _organizationService.AddUserToOrganizationAsync(organizationId, currentUserId);
+            await _organizationService.AddUsersToOrganizationAsync(organizationId, users.UsersIds, User.X_CurrentUserId());
  
             return NoContent();
         }

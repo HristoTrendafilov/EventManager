@@ -87,24 +87,24 @@ export function OrganizationViewComponent() {
             <div className="d-flex h-200px">
               <img src={organization.organizationLogoUrl} className="w-100 object-fit-cover" alt="" />
             </div>
-            <div className="card-body">
-              <h4>{organization.organizationName}</h4>
-              <p>{organization.organizationDescription}</p>
-              {user.isLoggedIn && (
-                <div>
-                  {!isUserSubscribed ? (
-                    <button type="button" className="btn btn-success w-100" onClick={subscribeUser}>
-                      Абонирай ме
-                    </button>
-                  ) : (
-                    <button type="button" className="btn btn-warning w-100" onClick={showConfirmModal}>
-                      Премахни абонамент
-                    </button>
-                  )}
-                  {subscriptionError && <ErrorMessage error={subscriptionError} />}
-                </div>
-              )}
-            </div>
+          </div>
+          <div className="card-body">
+            <h4>{organization.organizationName}</h4>
+            <p>{organization.organizationDescription}</p>
+            {user.isLoggedIn && (
+              <div>
+                {!isUserSubscribed ? (
+                  <button type="button" className="btn btn-success w-100" onClick={subscribeUser}>
+                    Абонирай ме
+                  </button>
+                ) : (
+                  <button type="button" className="btn btn-warning w-100" onClick={showConfirmModal}>
+                    Премахни абонамент
+                  </button>
+                )}
+                {subscriptionError && <ErrorMessage error={subscriptionError} />}
+              </div>
+            )}
           </div>
           {organization.canEdit && (
             <div className="card-footer">
