@@ -1,9 +1,9 @@
 import { callApi } from '~/Infrastructure/api-client';
 import type {
   OrganizationForUpdate,
-  OrganizationUsersNew,
+  OrganizationMemberView,
+  OrganizationMembersNew,
   OrganizationView,
-  UserOrganizationView,
 } from '~/Infrastructure/api-types';
 
 export function getAllOrganizationsView() {
@@ -34,14 +34,14 @@ export function unsubscribeUserFromOrganization(organizationId: number) {
   return callApi(`/organizations/${organizationId}/subscription`, 'DELETE');
 }
 
-export function addMembersToOrganization(organizationId: number, users: OrganizationUsersNew) {
+export function addMembersToOrganization(organizationId: number, users: OrganizationMembersNew) {
   return callApi(`/organizations/${organizationId}/members`, 'POST', JSON.stringify(users));
 }
 
-export function removeOrganizationMember(organizationId: number, userId: number) {
+export function deleteOrganizationMember(organizationId: number, userId: number) {
   return callApi(`/organizations/${organizationId}/members?userId=${userId}`, 'DELETE');
 }
 
 export function getOrganizationMembers(organizationId: number) {
-  return callApi<UserOrganizationView[]>(`/organizations/${organizationId}/members`, 'GET');
+  return callApi<OrganizationMemberView[]>(`/organizations/${organizationId}/members`, 'GET');
 }

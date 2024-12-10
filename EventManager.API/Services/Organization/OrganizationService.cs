@@ -93,53 +93,53 @@ namespace EventManager.API.Services.Organization
             return _db.Organizations.AnyAsync(predicate);
         }
 
-        public Task<bool> UserOrganizationExistsAsync(Expression<Func<UserOrganizationPoco, bool>> predicate)
+        public Task<bool> OrganizationMemberExists(Expression<Func<OrganizationMemberPoco, bool>> predicate)
         {
-            return _db.UsersOrganization.AnyAsync(predicate);
+            return _db.OrganizationsMembers.AnyAsync(predicate);
         }
 
-        public async Task AddUsersToOrganizationAsync(long organizationId, List<long> usersIds, long? currentUserId)
+        public async Task AddMembersToOrganizationAsync(long organizationId, List<long> usersIds, long? currentUserId)
         {
             await _db.WithTransactionAsync(async () =>
             {
                 foreach (var userId in usersIds)
                 {
-                    var userOrganization = new UserOrganizationPoco
+                    var organizationMember = new OrganizationMemberPoco
                     {
                         OrganizationId = organizationId,
                         UserId = userId,
-                        UserOrganizationCreatedOnDateTime = DateTime.Now
+                        CreatedOnDateTime = DateTime.Now
                     };
 
-                    await _db.UsersOrganization.X_CreateAsync(userOrganization, currentUserId);
+                    await _db.OrganizationsMembers.X_CreateAsync(organizationMember, currentUserId);
                 }
             });
         }
 
-        public async Task<long> RemoveUserFromOrganizationAsync(long userId, long organizationId, long? currentUserId)
+        public async Task<long> DeleteOrganizationMember(long userId, long organizationId, long? currentUserId)
         {
-            var userOrganization = await _db.UsersOrganization
+            var userOrganization = await _db.OrganizationsMembers
                 .FirstOrDefaultAsync(x => x.UserId == userId && x.OrganizationId == organizationId);
-            await _db.UsersOrganization
-                .X_DeleteAsync(x => x.UserOrganizationId == userOrganization.UserOrganizationId, currentUserId);
+            await _db.OrganizationsMembers
+                .X_DeleteAsync(x => x.OrganizationMemberId == userOrganization.OrganizationMemberId, currentUserId);
 
-            return userOrganization.UserOrganizationId;
+            return userOrganization.OrganizationMemberId;
         }
 
-        public async Task<UserOrganizationView> GetUserOrganizationViewAsync(Expression<Func<VUserOrganizationPoco, bool>> predicate)
+        public async Task<OrganizationMemberView> GetOrganizationMemberViewAsync(Expression<Func<VOrganizationMemberPoco, bool>> predicate)
         {
-            var userOrganizationPoco = await _db.VUsersOrganizations.FirstOrDefaultAsync(predicate);
-            return Mapper.CreateObject<UserOrganizationView>(userOrganizationPoco);
+            var organizationMemberPoco = await _db.VOrganizationsMembers.FirstOrDefaultAsync(predicate);
+            return Mapper.CreateObject<OrganizationMemberView>(organizationMemberPoco);
         }
 
-        public async Task<List<UserOrganizationView>> GetAllOrganizationMembersViewAsync(Expression<Func<VUserOrganizationPoco, bool>> predicate)
+        public async Task<List<OrganizationMemberView>> GetAllOrganizationMembersViewAsync(Expression<Func<VOrganizationMemberPoco, bool>> predicate)
         {
-            var usersOrganizationsPoco = await _db.VUsersOrganizations
+            var usersOrganizationsPoco = await _db.VOrganizationsMembers
                 .Where(predicate)
-                .OrderByDescending(x=> x.UserOrganizationCreatedOnDateTime)
+                .OrderByDescending(x=> x.CreatedOnDateTime)
                 .ToListAsync();
 
-            var usersOrganizations = Mapper.CreateList<UserOrganizationView>(usersOrganizationsPoco);
+            var usersOrganizations = Mapper.CreateList<OrganizationMemberView>(usersOrganizationsPoco);
 
             foreach (var userOrganization in usersOrganizations)
             {
@@ -179,7 +179,7 @@ namespace EventManager.API.Services.Organization
 
         public async Task<List<OrganizationView>> GetUserOrganizationsAsync(long userId, bool includeDefault)
         {
-            var organizationIds = await _db.UsersOrganization.Where(x => x.UserId == userId)
+            var organizationIds = await _db.OrganizationsMembers.Where(x => x.UserId == userId)
                 .Select(x => x.OrganizationId)
                 .ToListAsync();
 

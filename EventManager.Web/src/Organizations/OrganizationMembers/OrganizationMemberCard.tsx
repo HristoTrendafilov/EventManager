@@ -1,18 +1,18 @@
 import { useCallback, useState } from 'react';
 
-import { removeOrganizationMember } from '~/Infrastructure/ApiRequests/organizations-requests';
-import type { UserOrganizationView } from '~/Infrastructure/api-types';
+import { deleteOrganizationMember } from '~/Infrastructure/ApiRequests/organizations-requests';
+import type { OrganizationMemberView } from '~/Infrastructure/api-types';
 import { ConfirmModal } from '~/Infrastructure/components/ConfirmModal/ConfirmModal';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 
 interface OrganizationMemberCardProps {
   organizationId: number;
-  member: UserOrganizationView;
-  onRemoved: (userOrganizationId: number) => void;
+  member: OrganizationMemberView;
+  onDeleted: (organizationMemberId: number) => void;
 }
 
 export function OrganizationMemberCard(props: OrganizationMemberCardProps) {
-  const { organizationId, member, onRemoved } = props;
+  const { organizationId, member, onDeleted } = props;
 
   const [error, setError] = useState<string | undefined>();
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
@@ -28,14 +28,14 @@ export function OrganizationMemberCard(props: OrganizationMemberCardProps) {
   const handleDeleteClick = useCallback(async () => {
     closeConfirmModal();
 
-    const response = await removeOrganizationMember(organizationId, member.userId);
+    const response = await deleteOrganizationMember(organizationId, member.userId);
     if (!response.success) {
       setError(response.errorMessage);
       return;
     }
 
-    onRemoved(member.userOrganizationId);
-  }, [closeConfirmModal, member.userId, member.userOrganizationId, onRemoved, organizationId]);
+    onDeleted(member.organizationMemberId);
+  }, [closeConfirmModal, member, onDeleted, organizationId]);
 
   return (
     <div key={member.userId} className="card mb-1">

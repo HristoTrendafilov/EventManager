@@ -180,12 +180,12 @@ namespace EventManager.DAL
 		public virtual long OrganizationCreatedByUserId { get; set; }
 	}
 
-	[Table(Name = "users_organization")]
-	public class UserOrganizationPoco
+	[Table(Name = "organizations_members")]
+	public class OrganizationMemberPoco
 	{
 		[PrimaryKey, Identity]
-		[Column(Name = "user_organization_id")]
-		public virtual long UserOrganizationId { get; set; }
+		[Column(Name = "organization_member_id")]
+		public virtual long OrganizationMemberId { get; set; }
 
 		[Column(Name = "user_id")]
 		public virtual long UserId { get; set; }
@@ -194,8 +194,8 @@ namespace EventManager.DAL
 		public virtual long OrganizationId { get; set; }
 
 		[Nullable]
-		[Column(Name = "user_organization_created_on_date_time")]
-		public virtual DateTime? UserOrganizationCreatedOnDateTime { get; set; }
+		[Column(Name = "created_on_date_time")]
+		public virtual DateTime? CreatedOnDateTime { get; set; }
 	}
 
 	[Table(Name = "files")]
@@ -523,11 +523,11 @@ namespace EventManager.DAL
 		public virtual string Username { get; set; }
 	}
 
-	[Table(Name = "v_users_organizations")]
-	public class VUserOrganizationPoco
+	[Table(Name = "v_organizations_members")]
+	public class VOrganizationMemberPoco
 	{
-		[Column(Name = "user_organization_id")]
-		public virtual long UserOrganizationId { get; set; }
+		[Column(Name = "organization_member_id")]
+		public virtual long OrganizationMemberId { get; set; }
 
 		[Column(Name = "user_id")]
 		public virtual long UserId { get; set; }
@@ -536,8 +536,8 @@ namespace EventManager.DAL
 		public virtual long OrganizationId { get; set; }
 
 		[Nullable]
-		[Column(Name = "user_organization_created_on_date_time")]
-		public virtual DateTime? UserOrganizationCreatedOnDateTime { get; set; }
+		[Column(Name = "created_on_date_time")]
+		public virtual DateTime? CreatedOnDateTime { get; set; }
 
 		[Column(Name = "username")]
 		public virtual string Username { get; set; }

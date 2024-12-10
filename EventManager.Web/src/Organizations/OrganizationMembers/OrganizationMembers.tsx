@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { addMembersToOrganization, getOrganizationMembers } from '~/Infrastructure/ApiRequests/organizations-requests';
-import type { UserOrganizationView } from '~/Infrastructure/api-types';
+import type { OrganizationMemberView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { Modal } from '~/Infrastructure/components/Modal/Modal';
 import { UserSelect } from '~/User/UserSelect';
@@ -17,7 +17,7 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
   const { organizationId, onClose } = props;
 
   const [userSelect, setUserSelect] = useState<boolean>(false);
-  const [members, setMembers] = useState<UserOrganizationView[]>([]);
+  const [members, setMembers] = useState<OrganizationMemberView[]>([]);
   const [error, setError] = useState<string | undefined>();
 
   const showUserSelectModal = useCallback(() => {
@@ -38,9 +38,9 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
     setMembers(response.data);
   }, [organizationId]);
 
-  const handleRemovedMember = useCallback(
-    (userOrganizationId: number) => {
-      setMembers(members.filter((x) => x.userOrganizationId !== userOrganizationId));
+  const handleDeletedMember = useCallback(
+    (organizationMemberId: number) => {
+      setMembers(members.filter((x) => x.organizationMemberId !== organizationMemberId));
     },
     [members]
   );
@@ -83,7 +83,7 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
                     key={x.userId}
                     organizationId={organizationId}
                     member={x}
-                    onRemoved={handleRemovedMember}
+                    onDeleted={handleDeletedMember}
                   />
                 ))}
             </div>

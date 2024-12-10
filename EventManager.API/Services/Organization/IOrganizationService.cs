@@ -10,16 +10,16 @@ namespace EventManager.API.Services.Organization
         Task<List<OrganizationView>> GetAllOrganizationsViewAsync(Expression<Func<VOrganizationPoco, bool>> predicate);
         Task<OrganizationPoco> GetOrganizationPocoAsync(Expression<Func<OrganizationPoco, bool>> predicate);
         Task<OrganizationView> GetOrganizationViewAsync(Expression<Func<VOrganizationPoco, bool>> predicate);
-        Task<UserOrganizationView> GetUserOrganizationViewAsync(Expression<Func<VUserOrganizationPoco, bool>> predicate);
+        Task<OrganizationMemberView> GetOrganizationMemberViewAsync(Expression<Func<VOrganizationMemberPoco, bool>> predicate);
         Task<bool> OrganizationExistsAsync(Expression<Func<OrganizationPoco, bool>> predicate);
-        Task AddUsersToOrganizationAsync(long organizationId, List<long> usersIds, long? currentUserId);
-        Task<long> RemoveUserFromOrganizationAsync(long userId, long organizationId, long? currentUserId);
+        Task AddMembersToOrganizationAsync(long organizationId, List<long> usersIds, long? currentUserId);
+        Task<long> DeleteOrganizationMember(long userId, long organizationId, long? currentUserId);
         Task UpdateOrganizationAsync(long organizationId, OrganizationUpdate organization, long? currentUserId);
-        Task<bool> UserOrganizationExistsAsync(Expression<Func<UserOrganizationPoco, bool>> predicate);
+        Task<bool> OrganizationMemberExists(Expression<Func<OrganizationMemberPoco, bool>> predicate);
         Task<long> SubscribeUserToOrganizationAsync(long organizationId, long? currentUserId);
         Task<long> UnsubscribeUserFromOrganizationAsync(long userId, long organizationId, long? currentUserId);
         Task<bool> OrganizationSubscriptionExistsAsync(Expression<Func<OrganizationSubscriptionPoco, bool>> predicate);
-        Task<List<UserOrganizationView>> GetAllOrganizationMembersViewAsync(Expression<Func<VUserOrganizationPoco, bool>> predicate);
+        Task<List<OrganizationMemberView>> GetAllOrganizationMembersViewAsync(Expression<Func<VOrganizationMemberPoco, bool>> predicate);
         Task<List<OrganizationView>> GetUserOrganizationsAsync(long userId, bool includeDefault);
     }
 }

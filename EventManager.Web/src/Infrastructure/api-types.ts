@@ -116,8 +116,20 @@ export interface OrganizationForUpdate {
   organizationDescription: string;
 }
 
-export interface OrganizationUsersNew {
+export interface OrganizationMembersNew {
   usersIds: number[];
+}
+
+export interface OrganizationMemberView {
+  userProfilePictureUrl: string;
+  organizationMemberId: number;
+  userId: number;
+  organizationId: number;
+  createdOnDateTime: Date | null;
+  username: string;
+  organizationName: string;
+  userProfilePictureRelativePath: string;
+  userFullName: string;
 }
 
 export interface OrganizationView {
@@ -131,18 +143,6 @@ export interface OrganizationView {
   organizationCreatedOnDateTime: Date;
   organizationCreatedByUserId: number;
   fileStorageRelativePath: string;
-}
-
-export interface UserOrganizationView {
-  userProfilePictureUrl: string;
-  userOrganizationId: number;
-  userId: number;
-  organizationId: number;
-  userOrganizationCreatedOnDateTime: Date | null;
-  username: string;
-  organizationName: string;
-  userProfilePictureRelativePath: string;
-  userFullName: string;
 }
 
 export interface HomeView {

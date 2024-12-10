@@ -436,7 +436,7 @@ namespace EventManager.API.Controllers
         [HttpPost("search")]
         public async Task<ActionResult> SearchUsers(UserSearchFilter filter)
         {
-            var usersView = await _userService.GetAllUsersViewAsync(x => x.Username.StartsWith(filter.Username), true);
+            var usersView = await _userService.GetAllUsersViewAsync(x => x.Username.ToLower().StartsWith(filter.Username.ToLower()), true);
             var users = Mapper.CreateList<UserSearch>(usersView);
 
             return Ok(users);

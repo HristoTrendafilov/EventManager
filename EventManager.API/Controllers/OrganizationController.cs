@@ -125,22 +125,22 @@ namespace EventManager.API.Controllers
         }
 
         [HttpPost("{organizationId}/members")]
-        public async Task<ActionResult> AddMembersToOrganization(long organizationId, OrganizationUsersNew users)
+        public async Task<ActionResult> AddMembersToOrganization(long organizationId, OrganizationMembersNew members)
         {
-            await _organizationService.AddUsersToOrganizationAsync(organizationId, users.UsersIds, User.X_CurrentUserId());
+            await _organizationService.AddMembersToOrganizationAsync(organizationId, members.UsersIds, User.X_CurrentUserId());
 
             return NoContent();
         }
 
         [HttpDelete("{organizationId}/members")]
-        public async Task<ActionResult> RemoveUserFromOrganization(long organizationId, long userId)
+        public async Task<ActionResult> DeleteOrganizationMember(long organizationId, long userId)
         {
-            if (!await _organizationService.UserOrganizationExistsAsync(x => x.UserId == userId && x.OrganizationId == organizationId))
+            if (!await _organizationService.OrganizationMemberExists(x => x.UserId == userId && x.OrganizationId == organizationId))
             {
                 return BadRequest($"Не съществува членство на потребител с ID: {userId}");
             }
 
-            await _organizationService.RemoveUserFromOrganizationAsync(userId, organizationId, User.X_CurrentUserId());
+            await _organizationService.DeleteOrganizationMember(userId, organizationId, User.X_CurrentUserId());
 
             return NoContent();
         }
