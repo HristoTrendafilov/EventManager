@@ -142,6 +142,7 @@ export interface UserOrganizationView {
   username: string;
   organizationName: string;
   userProfilePictureRelativePath: string;
+  userFullName: string;
 }
 
 export interface HomeView {

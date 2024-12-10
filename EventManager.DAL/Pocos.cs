@@ -547,6 +547,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "user_profile_picture_relative_path")]
 		public virtual string UserProfilePictureRelativePath { get; set; }
+
+		[Column(Name = "user_full_name")]
+		public virtual string UserFullName { get; set; }
 	}
 
 	[Table(Name = "v_events")]

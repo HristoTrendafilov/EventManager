@@ -134,7 +134,11 @@ namespace EventManager.API.Services.Organization
 
         public async Task<List<UserOrganizationView>> GetAllOrganizationMembersViewAsync(Expression<Func<VUserOrganizationPoco, bool>> predicate)
         {
-            var usersOrganizationsPoco = await _db.VUsersOrganizations.Where(predicate).ToListAsync();
+            var usersOrganizationsPoco = await _db.VUsersOrganizations
+                .Where(predicate)
+                .OrderByDescending(x=> x.UserOrganizationCreatedOnDateTime)
+                .ToListAsync();
+
             var usersOrganizations = Mapper.CreateList<UserOrganizationView>(usersOrganizationsPoco);
 
             foreach (var userOrganization in usersOrganizations)

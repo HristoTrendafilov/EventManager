@@ -1,3 +1,5 @@
+import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -12,7 +14,7 @@ import { ConfirmModal } from '~/Infrastructure/components/ConfirmModal/ConfirmMo
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { userSelector } from '~/Infrastructure/redux/user-slice';
 
-import { OrganizationMembers } from './OrganizationMembers';
+import { OrganizationMembers } from './OrganizationMembers/OrganizationMembers';
 
 export function OrganizationViewComponent() {
   const [error, setError] = useState<string | undefined>();
@@ -84,6 +86,29 @@ export function OrganizationViewComponent() {
       {organization && (
         <div className="card">
           <div className="card-header">
+            {organization.canEdit && (
+              <div className="position-absolute end-0 pe-3">
+                <div className="dropdown">
+                  <button
+                    className="btn btn-danger dropdown-toggle bs-dropdown-no-icon"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                    aria-label="Actions"
+                  >
+                    <FontAwesomeIcon icon={faGear} />
+                  </button>
+                  <ul className="dropdown-menu p-2">
+                    <li>
+                      <button type="button" className="btn btn-info w-100" onClick={showMembersModal}>
+                        Участници
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
             <div className="d-flex h-200px">
               <img src={organization.organizationLogoUrl} className="w-100 object-fit-cover" alt="" />
             </div>
@@ -106,13 +131,6 @@ export function OrganizationViewComponent() {
               </div>
             )}
           </div>
-          {organization.canEdit && (
-            <div className="card-footer">
-              <button type="button" className="btn btn-info w-100" onClick={showMembersModal}>
-                Участници
-              </button>
-            </div>
-          )}
         </div>
       )}
 

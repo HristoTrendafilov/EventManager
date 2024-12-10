@@ -46,7 +46,7 @@ namespace EventManager.API.Controllers
             organization.CanEdit = await _sharedService.IsUserAuthorizedToEdit(User, organization.OrganizationCreatedByUserId);
 
             organization.IsUserSubscribed = currentUserId.HasValue &&
-                await _organizationService.OrganizationSubscriptionExistsAsync(x => x.OrganizationId == organizationId 
+                await _organizationService.OrganizationSubscriptionExistsAsync(x => x.OrganizationId == organizationId
                                                                                 && x.UserId == currentUserId.Value);
 
             return Ok(organization);
@@ -128,23 +128,21 @@ namespace EventManager.API.Controllers
         public async Task<ActionResult> AddMembersToOrganization(long organizationId, OrganizationUsersNew users)
         {
             await _organizationService.AddUsersToOrganizationAsync(organizationId, users.UsersIds, User.X_CurrentUserId());
- 
+
             return NoContent();
         }
 
         [HttpDelete("{organizationId}/members")]
-        public async Task<ActionResult> RemoveUserFromOrganization(long organizationId)
+        public async Task<ActionResult> RemoveUserFromOrganization(long organizationId, long userId)
         {
-            var currentUserId = User.X_CurrentUserId();
-
-            if (!await _organizationService.UserOrganizationExistsAsync(x => x.UserId == currentUserId.Value && x.OrganizationId == organizationId))
+            if (!await _organizationService.UserOrganizationExistsAsync(x => x.UserId == userId && x.OrganizationId == organizationId))
             {
-                return BadRequest($"Не съществува членство на потребител с ID: {currentUserId.Value}");
+                return BadRequest($"Не съществува членство на потребител с ID: {userId}");
             }
 
-           await _organizationService.RemoveUserFromOrganizationAsync(currentUserId.Value, organizationId, currentUserId);
+            await _organizationService.RemoveUserFromOrganizationAsync(userId, organizationId, User.X_CurrentUserId());
 
-            return Ok();
+            return NoContent();
         }
 
         [HttpPost("{organizationId}/subscription")]

@@ -38,8 +38,8 @@ export function addMembersToOrganization(organizationId: number, users: Organiza
   return callApi(`/organizations/${organizationId}/members`, 'POST', JSON.stringify(users));
 }
 
-export function removeUserFromOrganization(organizationId: number) {
-  return callApi(`/organizations/${organizationId}/members`, 'DELETE');
+export function removeOrganizationMember(organizationId: number, userId: number) {
+  return callApi(`/organizations/${organizationId}/members?userId=${userId}`, 'DELETE');
 }
 
 export function getOrganizationMembers(organizationId: number) {

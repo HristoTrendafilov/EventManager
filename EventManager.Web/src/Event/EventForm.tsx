@@ -28,7 +28,7 @@ export function Event() {
   const { eventId } = useParams();
   const navigate = useNavigate();
 
-  const { form } = useZodForm({ schema: EventBaseFormSchema, defaultValues: { organizationId: 1 } });
+  const { form } = useZodForm({ schema: EventBaseFormSchema });
 
   const user = useSelector(userSelector);
 

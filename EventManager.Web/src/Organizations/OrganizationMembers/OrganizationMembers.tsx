@@ -6,6 +6,8 @@ import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMess
 import { Modal } from '~/Infrastructure/components/Modal/Modal';
 import { UserSelect } from '~/User/UserSelect';
 
+import { OrganizationMemberCard } from './OrganizationMemberCard';
+
 interface OrganizationMembersProps {
   organizationId: number;
   onClose: () => void;
@@ -35,6 +37,13 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
 
     setMembers(response.data);
   }, [organizationId]);
+
+  const handleRemovedMember = useCallback(
+    (userOrganizationId: number) => {
+      setMembers(members.filter((x) => x.userOrganizationId !== userOrganizationId));
+    },
+    [members]
+  );
 
   const addMembers = useCallback(
     async (usersIds: number[]) => {
@@ -68,7 +77,15 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
             </div>
             <div className="card-body h-400px overflow-auto">
               {error && <ErrorMessage error={error} />}
-              {members.length > 0 && members.map((x) => <div>{x.username}</div>)}
+              {members.length > 0 &&
+                members.map((x) => (
+                  <OrganizationMemberCard
+                    key={x.userId}
+                    organizationId={organizationId}
+                    member={x}
+                    onRemoved={handleRemovedMember}
+                  />
+                ))}
             </div>
             <div className="card-footer">
               <button type="button" className="btn btn-success w-100" onClick={showUserSelectModal}>

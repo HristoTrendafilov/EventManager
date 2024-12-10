@@ -10,9 +10,11 @@
 
 @media (max-width: 767.98px) {
   .user-select-wrapper .users-body {
-    height: 300px; /* Adjust the height as needed */
+    height: auto;
+    max-height: 300px;
   }
   .user-select-wrapper .selected-users-body {
-    height: 300px;
+    height: auto;
+    max-height: 300px;
   }
 }
