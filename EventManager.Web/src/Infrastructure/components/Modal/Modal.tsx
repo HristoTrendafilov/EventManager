@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 import './Modal.css';
@@ -11,6 +11,14 @@ interface ModalProps {
 
 export function Modal(props: ModalProps) {
   const { children, onBackdropClick, ariaLabel } = props;
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   return createPortal(
     <div className="_modal-wrapper" role="dialog" aria-label={ariaLabel}>

@@ -188,7 +188,11 @@ namespace EventManager.API.Services.Organization
                 organizationIds.Add(1);
             }
 
-            var organizationsViewPoco = await _db.VOrganizations.Where(x => organizationIds.Contains(x.OrganizationId)).ToListAsync();
+            var organizationsViewPoco = await _db.VOrganizations
+                .Where(x => organizationIds.Contains(x.OrganizationId))
+                .OrderBy(x => x.OrganizationId)
+                .ToListAsync();
+
             var organizationsView = Mapper.CreateList<OrganizationView>(organizationsViewPoco);
 
             return organizationsView;

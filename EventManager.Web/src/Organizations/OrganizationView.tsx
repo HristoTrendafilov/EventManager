@@ -98,7 +98,7 @@ export function OrganizationViewComponent() {
                   >
                     <FontAwesomeIcon icon={faGear} />
                   </button>
-                  <ul className="dropdown-menu p-2">
+                  <ul className="dropdown-menu dropdown-menu-end p-2">
                     <li>
                       <button type="button" className="btn btn-info w-100" onClick={showMembersModal}>
                         Участници

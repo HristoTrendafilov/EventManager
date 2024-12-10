@@ -123,6 +123,7 @@ export function Event() {
                       label="Организация"
                       isNumber
                       required
+                      setDefaultUserOrganization
                       searchable={false}
                       clearable={false}
                     />
