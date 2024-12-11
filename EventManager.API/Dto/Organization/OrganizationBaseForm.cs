@@ -8,6 +8,11 @@ namespace EventManager.API.Dto.Organization
     [GenerateZodSchema]
     public class OrganizationBaseForm
     {
+        public OrganizationBaseForm()
+        {
+            OrganizationManagersIds = new List<long>();
+        }
+
         [Required(ErrorMessage = "Името на организацията е задължително")]
         public string OrganizationName { get; set; }
 
