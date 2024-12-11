@@ -30,6 +30,20 @@ namespace EventManager.API.Services.Organization
 
                 var organizationId = await _db.Organizations.X_CreateAsync(organization, currentUserId);
 
+                if (organization.OrganizationManagersIds != null)
+                {
+                    var organizationMembers = new OrganizationMembersNew
+                    {
+                        Users = organization.OrganizationManagersIds.Select(x => new OrganizationUser
+                        {
+                            UserId = x,
+                            IsManager = true
+                        }).ToList()
+                    };
+
+                    await AddMembersToOrganizationAsync(organizationId, organizationMembers, currentUserId);
+                }
+
                 return organizationId;
             });
 
@@ -55,7 +69,47 @@ namespace EventManager.API.Services.Organization
                 }
                 else
                 {
+                    organization.OrganizationLogoFileId = oldLogoFileId;
                     await _db.Organizations.X_UpdateAsync(organizationId, organization, currentUserId);
+                }
+
+                var existingMembers = await _db.OrganizationsMembers
+                   .Where(x => x.OrganizationId == organizationId)
+                   .ToListAsync();
+
+                foreach (var userId in organization.OrganizationManagersIds)
+                {
+                    var existingMember = existingMembers.FirstOrDefault(x => x.UserId == userId);
+
+                    if (existingMember != null)
+                    {
+                        if (!existingMember.IsManager)
+                        {
+                            existingMember.IsManager = true;
+                            await _db.OrganizationsMembers.X_UpdateAsync(existingMember.OrganizationMemberId, existingMember, currentUserId);
+                        }
+                    }
+                    else
+                    {
+                        var organizationMember = new OrganizationMemberPoco
+                        {
+                            OrganizationId = organizationId,
+                            UserId = userId,
+                            CreatedOnDateTime = DateTime.Now,
+                            IsManager = true
+                        };
+
+                        await _db.OrganizationsMembers.X_CreateAsync(organizationMember, currentUserId);
+                    }
+                }
+
+                var membersToDelete = existingMembers
+                    .Where(x => !organization.OrganizationManagersIds.Contains(x.UserId) && x.IsManager)
+                    .ToList();
+
+                foreach (var member in membersToDelete)
+                {
+                    await _db.OrganizationsMembers.X_DeleteAsync(x => x.OrganizationMemberId == member.OrganizationMemberId, currentUserId);
                 }
             });
         }
@@ -69,7 +123,7 @@ namespace EventManager.API.Services.Organization
         {
             var organizationViewPoco = await _db.VOrganizations.FirstOrDefaultAsync(predicate);
             var organizationView = Mapper.CreateObject<OrganizationView>(organizationViewPoco);
-            organizationView.OrganizationLogoUrl = 
+            organizationView.OrganizationLogoUrl =
                 _fileService.CreatePublicFileUrl(organizationView.FileStorageRelativePath, FileService.NO_IMAGE_FILE);
 
             return organizationView;
@@ -98,20 +152,32 @@ namespace EventManager.API.Services.Organization
             return _db.OrganizationsMembers.AnyAsync(predicate);
         }
 
-        public async Task AddMembersToOrganizationAsync(long organizationId, List<long> usersIds, long? currentUserId)
+        public async Task AddMembersToOrganizationAsync(long organizationId, OrganizationMembersNew members, long? currentUserId)
         {
             await _db.WithTransactionAsync(async () =>
             {
-                foreach (var userId in usersIds)
+                foreach (var user in members.Users)
                 {
-                    var organizationMember = new OrganizationMemberPoco
-                    {
-                        OrganizationId = organizationId,
-                        UserId = userId,
-                        CreatedOnDateTime = DateTime.Now
-                    };
+                    var existingMember = await _db.OrganizationsMembers
+                        .FirstOrDefaultAsync(x => x.UserId == user.UserId && x.OrganizationId == organizationId);
 
-                    await _db.OrganizationsMembers.X_CreateAsync(organizationMember, currentUserId);
+                    if (existingMember != null && user.IsManager)
+                    {
+                        existingMember.IsManager = true;
+                        await _db.OrganizationsMembers.X_UpdateAsync(existingMember.OrganizationMemberId, existingMember, currentUserId);
+                    }
+                    else
+                    {
+                        var organizationMember = new OrganizationMemberPoco
+                        {
+                            OrganizationId = organizationId,
+                            UserId = user.UserId,
+                            CreatedOnDateTime = DateTime.Now,
+                            IsManager = user.IsManager
+                        };
+
+                        await _db.OrganizationsMembers.X_CreateAsync(organizationMember, currentUserId);
+                    }
                 }
             });
         }
@@ -136,14 +202,14 @@ namespace EventManager.API.Services.Organization
         {
             var usersOrganizationsPoco = await _db.VOrganizationsMembers
                 .Where(predicate)
-                .OrderByDescending(x=> x.CreatedOnDateTime)
+                .OrderByDescending(x => x.CreatedOnDateTime)
                 .ToListAsync();
 
             var usersOrganizations = Mapper.CreateList<OrganizationMemberView>(usersOrganizationsPoco);
 
             foreach (var userOrganization in usersOrganizations)
             {
-                userOrganization.UserProfilePictureUrl = 
+                userOrganization.UserProfilePictureUrl =
                     _fileService.CreatePublicFileUrl(userOrganization.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
             }
 

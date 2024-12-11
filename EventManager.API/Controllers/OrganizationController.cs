@@ -108,6 +108,10 @@ namespace EventManager.API.Controllers
 
             var organizationToReturn = Mapper.CreateObject<OrganizationForUpdate>(organizationView);
 
+            var organizationManagersView = await _organizationService
+                .GetAllOrganizationMembersViewAsync(x => x.OrganizationId == organizationId && x.IsManager);
+            organizationToReturn.OrganizationManagers = Mapper.CreateList<OrganizationUser>(organizationManagersView);
+
             return Ok(organizationToReturn);
         }
 
@@ -127,7 +131,7 @@ namespace EventManager.API.Controllers
         [HttpPost("{organizationId}/members")]
         public async Task<ActionResult> AddMembersToOrganization(long organizationId, OrganizationMembersNew members)
         {
-            await _organizationService.AddMembersToOrganizationAsync(organizationId, members.UsersIds, User.X_CurrentUserId());
+            await _organizationService.AddMembersToOrganizationAsync(organizationId, members, User.X_CurrentUserId());
 
             return NoContent();
         }

@@ -1,17 +1,11 @@
-import {
-  type ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { getAllOrganizationsView } from '~/Infrastructure/ApiRequests/organizations-requests';
 import type { OrganizationView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { TextInput } from '~/Infrastructure/components/Form/TextInput/TextInput';
 
-import { OrganizationFormModal } from './OrganizationFormModal';
+import { OrganizationFormModal } from './OrganizationForm/OrganizationFormModal';
 
 interface OrganizationsCatalogFilter {
   organizationName: string;
@@ -25,12 +19,9 @@ export function OrganizationsCatalog() {
   const [organizations, setOrganizations] = useState<OrganizationView[]>([]);
 
   const [error, setError] = useState<string | undefined>();
-  const [filter, setFilter] =
-    useState<OrganizationsCatalogFilter>(defaultValues);
+  const [filter, setFilter] = useState<OrganizationsCatalogFilter>(defaultValues);
 
-  const [organizationIdForEdit, setOrganizationIdForEdit] = useState<
-    number | undefined
-  >();
+  const [organizationIdForEdit, setOrganizationIdForEdit] = useState<number | undefined>();
   const [formModal, setFormModal] = useState<boolean>(false);
 
   const closeFormModal = useCallback(() => {
@@ -64,13 +55,10 @@ export function OrganizationsCatalog() {
     [closeFormModal, organizations]
   );
 
-  const handleFilterNameChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.target;
-      setFilter({ organizationName: value });
-    },
-    []
-  );
+  const handleFilterNameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFilter({ organizationName: value });
+  }, []);
 
   const loadOrganizations = useCallback(async () => {
     const response = await getAllOrganizationsView();
@@ -90,9 +78,7 @@ export function OrganizationsCatalog() {
     () =>
       organizations.filter((x) =>
         filter.organizationName
-          ? x.organizationName
-              .toLowerCase()
-              .includes(filter.organizationName.toLowerCase())
+          ? x.organizationName.toLowerCase().includes(filter.organizationName.toLowerCase())
           : true
       ),
     [organizations, filter.organizationName]
@@ -104,11 +90,7 @@ export function OrganizationsCatalog() {
         <div className="card">
           <h4 className="card-header d-flex justify-content-between align-items-center">
             <div>Организации</div>
-            <button
-              type="button"
-              className="btn btn-success"
-              onClick={() => showFormModal()}
-            >
+            <button type="button" className="btn btn-success" onClick={() => showFormModal()}>
               Нова организация
             </button>
           </h4>
@@ -136,11 +118,7 @@ export function OrganizationsCatalog() {
                       <div className="row">
                         <div className="col-4">
                           <div className="d-flex h-100px">
-                            <img
-                              src={x.organizationLogoUrl}
-                              className="w-100 object-fit-cover"
-                              alt=""
-                            />
+                            <img src={x.organizationLogoUrl} className="w-100 object-fit-cover" alt="" />
                           </div>
                         </div>
                         <div className="col-8">

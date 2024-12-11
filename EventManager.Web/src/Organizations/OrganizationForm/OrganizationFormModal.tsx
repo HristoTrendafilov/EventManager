@@ -9,7 +9,9 @@ import {
   type OrganizationBaseFormType,
   OrganizationNewSchema,
   OrganizationUpdateSchema,
+  type OrganizationUser,
   type OrganizationView,
+  type UserSearch,
 } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomFileInputButton } from '~/Infrastructure/components/Form/CustomForm/CustomFileInputButton';
@@ -20,7 +22,10 @@ import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedFo
 import { FileInputTypeEnum } from '~/Infrastructure/components/Form/formUtils';
 import { Modal } from '~/Infrastructure/components/Modal/Modal';
 import { objectToFormData } from '~/Infrastructure/utils';
+import { UserSelect } from '~/User/UserSelect';
 import noImage from '~/asset/no-image.png';
+
+import { OrganizationManagerCard } from './OrganizationManagerCard';
 
 interface OrganizationFormModalProps {
   organizationId: number | undefined;
@@ -33,10 +38,20 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
   const { organizationId, onCreated, onUpdated, onCancel } = props;
   const [error, setError] = useState<string | undefined>();
   const [logo, setLogo] = useState<string | undefined>();
+  const [managers, setManagers] = useState<OrganizationUser[]>([]);
+  const [userSelect, setUserSelect] = useState<boolean>(false);
 
   const { form } = useZodForm({
     schema: organizationId ? OrganizationUpdateSchema : OrganizationNewSchema,
   });
+
+  const showUserSelectModal = useCallback(() => {
+    setUserSelect(true);
+  }, []);
+
+  const closeUserSelectModal = useCallback(() => {
+    setUserSelect(false);
+  }, []);
 
   const handleFormSubmit = useCallback(
     async (organization: OrganizationBaseFormType) => {
@@ -62,6 +77,40 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
     [onCreated, onUpdated, organizationId]
   );
 
+  const addManagers = useCallback(
+    (users: UserSearch[]) => {
+      closeUserSelectModal();
+
+      const newManagers: OrganizationUser[] = users.map((x) => ({
+        userId: x.userId,
+        userFullName: x.userFullName,
+        userProfilePictureUrl: x.profilePictureUrl,
+        username: x.username,
+        isManager: true,
+      }));
+
+      setManagers([...newManagers, ...managers]);
+      form.setValue(
+        'organizationManagersIds',
+        [...newManagers, ...managers].map((x) => x.userId)
+      );
+    },
+    [closeUserSelectModal, form, managers]
+  );
+
+  const handleManagerDeleted = useCallback(
+    (userId: number) => {
+      const newManagers = managers.filter((x) => x.userId !== userId);
+      setManagers(newManagers);
+
+      form.setValue(
+        'organizationManagersIds',
+        newManagers.map((x) => x.userId)
+      );
+    },
+    [form, managers]
+  );
+
   const onLogoChosen = (file: File) => {
     if (logo) {
       URL.revokeObjectURL(logo);
@@ -80,6 +129,7 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
 
       form.reset(response.data);
       setLogo(response.data.organizationLogoUrl);
+      setManagers(response.data.organizationManagers);
     },
     [form]
   );
@@ -95,28 +145,31 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
   return (
     <Modal onBackdropClick={onCancel}>
       <div className="container">
-        <div className="mw-700px m-70auto">
+        <div className="mw-800px m-70auto">
           <div className="card mt-4">
             <h3 className="card-header">
-              {organizationId
-                ? `Редакция на организация (#${organizationId})`
-                : 'Нова организация'}
+              {organizationId ? `Редакция на организация (#${organizationId})` : 'Нова организация'}
             </h3>
             <div className="card-body">
               <CustomForm form={form} onSubmit={handleFormSubmit}>
-                <div className="row">
+                <div className="row g-2">
                   <div className="col-md-6">
-                    <CustomInput
-                      label="Наименование"
-                      {...form.register('organizationName')}
-                      required
-                    />
-                    <CustomTextArea
-                      label="Описание"
-                      {...form.register('organizationDescription')}
-                      rows={5}
-                      required
-                    />
+                    <CustomInput label="Наименование" {...form.register('organizationName')} required />
+                    <CustomTextArea label="Описание" {...form.register('organizationDescription')} rows={5} required />
+                    <div className="card">
+                      <div className="card-header d-flex justify-content-between align-items-center">
+                        <h5>Мениджъри</h5>
+                        <button type="button" className="btn btn-success" onClick={showUserSelectModal}>
+                          Добави
+                        </button>
+                      </div>
+                      <div className="card-body">
+                        {managers.length > 0 &&
+                          managers.map((x) => (
+                            <OrganizationManagerCard key={x.userId} member={x} onDeleted={handleManagerDeleted} />
+                          ))}
+                      </div>
+                    </div>
                   </div>
                   <div className="col-md-6">
                     <div className="card">
@@ -130,11 +183,7 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
                       </div>
                       <div className="card-body p-1 main-image-wrapper">
                         <div className="d-flex h-200px">
-                          <img
-                            alt="main"
-                            className="w-100 object-fit-contain"
-                            src={logo}
-                          />
+                          <img alt="main" className="w-100 object-fit-contain" src={logo} />
                         </div>
                       </div>
                     </div>
@@ -142,11 +191,7 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
                 </div>
 
                 <div className="d-flex gap-2 mt-2">
-                  <button
-                    type="button"
-                    className="btn btn-warning w-100"
-                    onClick={onCancel}
-                  >
+                  <button type="button" className="btn btn-warning w-100" onClick={onCancel}>
                     Изход
                   </button>
                   <button type="submit" className="btn btn-primary w-100">
@@ -159,6 +204,13 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
           </div>
         </div>
       </div>
+      {userSelect && (
+        <UserSelect
+          onClose={closeUserSelectModal}
+          onSelected={addManagers}
+          alreadySelectedUsersIds={managers.map((x) => x.userId)}
+        />
+      )}
     </Modal>
   );
 }

@@ -12,7 +12,7 @@ import './UserSelect.css';
 
 interface UserSelectProps {
   onClose: () => void;
-  onSelected: (usersIds: number[]) => void;
+  onSelected: (users: UserSearch[]) => void;
   alreadySelectedUsersIds?: number[];
 }
 
@@ -62,7 +62,7 @@ export function UserSelect(props: UserSelectProps) {
       return;
     }
 
-    onSelected(selectedUsers.map((x) => x.userId));
+    onSelected(selectedUsers);
   }, [onSelected, selectedUsers]);
 
   return (

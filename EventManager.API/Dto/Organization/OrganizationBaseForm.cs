@@ -1,4 +1,5 @@
 ﻿using EventManager.API.Helpers;
+using LinqToDB.Mapping;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,6 +15,9 @@ namespace EventManager.API.Dto.Organization
         public string OrganizationDescription { get; set; }
 
         public virtual IFormFile OrganizationLogoFile { get; set; }
+
+        [Nullable]
+        public virtual List<long> OrganizationManagersIds { get; set; }
 
         #region JsonIgnore
         [JsonIgnore]

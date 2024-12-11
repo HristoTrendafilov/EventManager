@@ -12,7 +12,7 @@ namespace EventManager.API.Services.Organization
         Task<OrganizationView> GetOrganizationViewAsync(Expression<Func<VOrganizationPoco, bool>> predicate);
         Task<OrganizationMemberView> GetOrganizationMemberViewAsync(Expression<Func<VOrganizationMemberPoco, bool>> predicate);
         Task<bool> OrganizationExistsAsync(Expression<Func<OrganizationPoco, bool>> predicate);
-        Task AddMembersToOrganizationAsync(long organizationId, List<long> usersIds, long? currentUserId);
+        Task AddMembersToOrganizationAsync(long organizationId, OrganizationMembersNew members, long? currentUserId);
         Task<long> DeleteOrganizationMember(long userId, long organizationId, long? currentUserId);
         Task UpdateOrganizationAsync(long organizationId, OrganizationUpdate organization, long? currentUserId);
         Task<bool> OrganizationMemberExists(Expression<Func<OrganizationMemberPoco, bool>> predicate);

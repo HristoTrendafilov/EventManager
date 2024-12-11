@@ -196,6 +196,9 @@ namespace EventManager.DAL
 		[Nullable]
 		[Column(Name = "created_on_date_time")]
 		public virtual DateTime? CreatedOnDateTime { get; set; }
+
+		[Column(Name = "is_manager")]
+		public virtual bool IsManager { get; set; }
 	}
 
 	[Table(Name = "files")]
@@ -550,6 +553,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "user_full_name")]
 		public virtual string UserFullName { get; set; }
+
+		[Column(Name = "is_manager")]
+		public virtual bool IsManager { get; set; }
 	}
 
 	[Table(Name = "v_events")]

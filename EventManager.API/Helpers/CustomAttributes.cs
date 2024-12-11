@@ -99,4 +99,9 @@ namespace EventManager.API.Helpers
     public class GenerateZodSchemaAttribute : Attribute
     {
     }
+
+    [AttributeUsage(AttributeTargets.Property, Inherited = false)]
+    public class TypescriptOptional : Attribute
+    {
+    }
 }
