@@ -158,22 +158,6 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
                     <CustomInput label="Наименование" {...form.register('organizationName')} required />
                     <CustomTextArea label="Описание" {...form.register('organizationDescription')} rows={5} required />
                     <div className="card">
-                      <div className="card-header d-flex justify-content-between align-items-center">
-                        <h5>Мениджъри</h5>
-                        <button type="button" className="btn btn-success" onClick={showUserSelectModal}>
-                          Добави
-                        </button>
-                      </div>
-                      <div className="card-body">
-                        {managers.length > 0 &&
-                          managers.map((x) => (
-                            <OrganizationManagerCard key={x.userId} member={x} onDeleted={handleManagerDeleted} />
-                          ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="card">
                       <div className="card-header p-1 d-flex justify-content-center">
                         <CustomFileInputButton
                           {...form.register('organizationLogoFile')}
@@ -186,6 +170,22 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
                         <div className="d-flex h-200px">
                           <img alt="main" className="w-100 object-fit-contain" src={logo} />
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="card">
+                      <div className="card-header d-flex justify-content-between align-items-center">
+                        <h5>Мениджъри</h5>
+                        <button type="button" className="btn btn-success" onClick={showUserSelectModal}>
+                          Добави
+                        </button>
+                      </div>
+                      <div className="card-body mh-400px overflow-auto">
+                        {managers.length > 0 &&
+                          managers.map((x) => (
+                            <OrganizationManagerCard key={x.userId} member={x} onDeleted={handleManagerDeleted} />
+                          ))}
                       </div>
                     </div>
                   </div>

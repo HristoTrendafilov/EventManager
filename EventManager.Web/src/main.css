@@ -17,6 +17,10 @@
   object-position: center;
 }
 
+.object-pos-left {
+  object-position: left;
+}
+
 .unset-anchor {
   all: unset;
   cursor: pointer;
@@ -111,6 +115,26 @@ body,
 
 .mw-900px {
   max-width: 900px;
+}
+
+.mh-100px {
+  max-height: 100px;
+}
+
+.mh-200px {
+  max-height: 200px;
+}
+
+.mh-300px {
+  max-height: 300px;
+}
+
+.mh-400px {
+  max-height: 400px;
+}
+
+.mh-500px {
+  max-height: 500px;
 }
 
 .m-50auto {

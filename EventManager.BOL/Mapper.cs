@@ -24,7 +24,7 @@ namespace EventManager.BOL
                 var destinationProperty = destinationProperties
                     .FirstOrDefault(x => x.Name.Equals(sourceProperty.Name, StringComparison.CurrentCultureIgnoreCase));
 
-                if (destinationProperty != null)
+                if (destinationProperty != null && destinationProperty.CanWrite)
                 {
                     var value = sourceProperty.GetValue(source);
                     destinationProperty.SetValue(destination, value);
