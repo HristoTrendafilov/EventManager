@@ -9,6 +9,8 @@ using EventManager.API.Dto.Organization;
 using EventManager.API.Services.Shared;
 using EventManager.API.Dto.Event;
 using EventManager.BOL;
+using EventManager.DAL;
+using EventManager.API.Dto.User;
 
 namespace EventManager.API.Controllers
 {
@@ -108,22 +110,29 @@ namespace EventManager.API.Controllers
 
             var organizationToReturn = Mapper.CreateObject<OrganizationForUpdate>(organizationView);
 
-            var organizationManagersView = await _organizationService
+            var organizationManagers = await _organizationService
                 .GetAllOrganizationMembersViewAsync(x => x.OrganizationId == organizationId && x.IsManager);
-            organizationToReturn.OrganizationManagers = Mapper.CreateList<OrganizationUser>(organizationManagersView);
+
+            organizationToReturn.OrganizationManagers = Mapper.CreateList<UserPreview>(organizationManagers);
 
             return Ok(organizationToReturn);
         }
 
         [HttpGet("{organizationId}/members")]
-        public async Task<ActionResult> GetOrganizationMembers(long organizationId)
+        public async Task<ActionResult> GetOrganizationMembers(long organizationId, [FromQuery] long[] usersIds = null)
         {
             if (!await _organizationService.OrganizationExistsAsync(x => x.OrganizationId == organizationId))
             {
                 return NotFound();
             }
 
-            var members = await _organizationService.GetAllOrganizationMembersViewAsync(x => x.OrganizationId == organizationId);
+            var predicate = PredicateBuilder.True<VOrganizationMemberPoco>().And(x => x.OrganizationId == organizationId);
+            if (usersIds != null && usersIds.Length > 0)
+            {
+                predicate = predicate.And(x => usersIds.Contains(x.UserId));
+            }
+
+            var members = await _organizationService.GetAllOrganizationMembersViewAsync(predicate);
 
             return Ok(members);
         }

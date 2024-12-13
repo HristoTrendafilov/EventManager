@@ -116,7 +116,7 @@ namespace EventManager.API.Services.User
         {
             var userViewPoco = await _db.VUsers.FirstOrDefaultAsync(predicate);
             var userView = Mapper.CreateObject<UserView>(userViewPoco);
-            userView.ProfilePictureUrl = _fileService.CreatePublicFileUrl(userView.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
+            userView.UserProfilePictureUrl = _fileService.CreatePublicFileUrl(userView.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
 
             return userView;
         }
@@ -130,7 +130,7 @@ namespace EventManager.API.Services.User
             {
                 foreach (var user in usersView)
                 {
-                    user.ProfilePictureUrl = _fileService.CreatePublicFileUrl(user.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
+                    user.UserProfilePictureUrl = _fileService.CreatePublicFileUrl(user.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
                 }
             }
 

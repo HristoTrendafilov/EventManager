@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { addMembersToOrganization, getOrganizationMembers } from '~/Infrastructure/ApiRequests/organizations-requests';
-import type { OrganizationMemberView, OrganizationUser, UserSearch } from '~/Infrastructure/api-types';
+import type { OrganizationMemberView, UserSearch } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { Modal } from '~/Infrastructure/components/Modal/Modal';
 import { UserSelect } from '~/User/UserSelect';
@@ -47,12 +47,7 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
 
   const addMembers = useCallback(
     async (uesrs: UserSearch[]) => {
-      const organizationUsers: OrganizationUser[] = uesrs.map((x) => ({
-        userId: x.userId,
-        isManager: false,
-      }));
-
-      const response = await addMembersToOrganization(organizationId, { users: organizationUsers });
+      const response = await addMembersToOrganization(organizationId, { usersIds: uesrs.map((x) => x.userId) });
       if (!response.success) {
         closeUserSelectModal();
         setError(response.errorMessage);

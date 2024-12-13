@@ -7,6 +7,7 @@ import type {
   UserForUpdate,
   UserForWeb,
   UserLoginType,
+  UserPreview,
   UserSearch,
   UserSearchFilterType,
   UserUpdatePasswordType,
@@ -70,4 +71,11 @@ export function getUserOrganizationsSelect(userId: number) {
 
 export function searchUsers(filter: UserSearchFilterType) {
   return callApi<UserSearch[]>(`/users/search`, 'POST', JSON.stringify(filter));
+}
+
+export function getUsersPreview(usersIds: number[]) {
+  const params = new URLSearchParams();
+  usersIds.forEach((id) => params.append('usersIds', id.toString()));
+
+  return callApi<UserPreview[]>(`/users/preview?${params.toString()}`, 'GET');
 }

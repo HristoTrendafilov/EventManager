@@ -3,7 +3,7 @@
 namespace EventManager.API.Dto.User
 {
     [GenerateTypeScriptInterface]
-    public class UserSearch
+    public class UserPreview
     {
         public long UserId { get; set; }
         public string Username { get; set; }

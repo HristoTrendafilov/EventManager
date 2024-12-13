@@ -1,5 +1,5 @@
-﻿using EventManager.API.Helpers;
-using LinqToDB.Mapping;
+﻿using EventManager.API.Dto.User;
+using EventManager.API.Helpers;
 using Newtonsoft.Json;
 
 namespace EventManager.API.Dto.Organization
@@ -7,11 +7,15 @@ namespace EventManager.API.Dto.Organization
     [GenerateTypeScriptInterface]
     public class OrganizationForUpdate : OrganizationBaseForm
     {
+        public OrganizationForUpdate()
+        {
+            OrganizationManagers = new List<UserPreview>();
+        }
+
         public string OrganizationLogoUrl { get; set; }
 
-        public List<OrganizationUser> OrganizationManagers { get; set; }
-        [Nullable]
-        public override List<long> OrganizationManagersIds => OrganizationManagers?.Select(x => x.UserId).ToList();
+        public List<UserPreview> OrganizationManagers { get; set; }
+        public override List<long> OrganizationManagersIds => OrganizationManagers.Select(x => x.UserId).ToList();
 
         #region JsonIgnore
         [JsonIgnore]

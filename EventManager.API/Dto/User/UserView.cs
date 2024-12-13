@@ -22,7 +22,7 @@ namespace EventManager.API.Dto.User
         public List<RoleView> UserRoles { get; set; }
         public List<long> UserRolesIds => this.UserRoles.Select(x => x.RoleId).ToList();
 
-        public string ProfilePictureUrl { get; set; }
+        public string UserProfilePictureUrl { get; set; }
 
         #region JsonIgnore
         [JsonIgnore]

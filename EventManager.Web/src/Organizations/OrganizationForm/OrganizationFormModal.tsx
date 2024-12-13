@@ -5,12 +5,13 @@ import {
   getOrganizationForUpdate,
   updateOrganization,
 } from '~/Infrastructure/ApiRequests/organizations-requests';
+import { getUsersPreview } from '~/Infrastructure/ApiRequests/users-requests';
 import {
   type OrganizationBaseFormType,
   OrganizationNewSchema,
   OrganizationUpdateSchema,
-  type OrganizationUser,
   type OrganizationView,
+  type UserPreview,
   type UserSearch,
 } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
@@ -38,7 +39,7 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
   const { organizationId, onCreated, onUpdated, onCancel } = props;
   const [error, setError] = useState<string | undefined>();
   const [logo, setLogo] = useState<string | undefined>();
-  const [managers, setManagers] = useState<OrganizationUser[]>([]);
+  const [managers, setManagers] = useState<UserPreview[]>([]);
   const [userSelect, setUserSelect] = useState<boolean>(false);
 
   const { form } = useZodForm({
@@ -78,16 +79,16 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
   );
 
   const addManagers = useCallback(
-    (users: UserSearch[]) => {
+    async (users: UserSearch[]) => {
       closeUserSelectModal();
 
-      const newManagers: OrganizationUser[] = users.map((x) => ({
-        userId: x.userId,
-        userFullName: x.userFullName,
-        userProfilePictureUrl: x.profilePictureUrl,
-        username: x.username,
-        isManager: true,
-      }));
+      const newManagersResponse = await getUsersPreview(users.map((x) => x.userId));
+      if (!newManagersResponse.success) {
+        setError(newManagersResponse.errorMessage);
+        return;
+      }
+
+      const newManagers = newManagersResponse.data;
 
       setManagers([...newManagers, ...managers]);
       form.setValue(

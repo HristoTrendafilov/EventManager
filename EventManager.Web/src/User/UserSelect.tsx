@@ -105,7 +105,13 @@ export function UserSelect(props: UserSelectProps) {
                                   : ''
                               }`}
                             >
-                              <img src={x.profilePictureUrl} width={45} height={45} className="rounded-circle" alt="" />
+                              <img
+                                src={x.userProfilePictureUrl}
+                                width={45}
+                                height={45}
+                                className="rounded-circle"
+                                alt=""
+                              />
                               <div className="d-flex flex-column ms-2">
                                 <div className="fw-bold">{x.username}</div>
                                 <div className="small">{x.userFullName}</div>
@@ -125,7 +131,13 @@ export function UserSelect(props: UserSelectProps) {
                       selectedUsers.map((x) => (
                         <div key={x.userId} className="card mt-1">
                           <div className="card-body p-1 d-flex">
-                            <img src={x.profilePictureUrl} width={45} height={45} className="rounded-circle" alt="" />
+                            <img
+                              src={x.userProfilePictureUrl}
+                              width={45}
+                              height={45}
+                              className="rounded-circle"
+                              alt=""
+                            />
                             <div className="d-flex flex-column ms-2">
                               <div className="fw-bold">{x.username}</div>
                               <div className="small">{x.userFullName}</div>

@@ -42,6 +42,11 @@ export function deleteOrganizationMember(organizationId: number, userId: number)
   return callApi(`/organizations/${organizationId}/members?userId=${userId}`, 'DELETE');
 }
 
-export function getOrganizationMembers(organizationId: number) {
-  return callApi<OrganizationMemberView[]>(`/organizations/${organizationId}/members`, 'GET');
+export function getOrganizationMembers(organizationId: number, usersIds?: number[]) {
+  const params = new URLSearchParams();
+
+  if (usersIds && usersIds.length > 0) {
+    usersIds.forEach((id) => params.append('userIds', id.toString()));
+  }
+  return callApi<OrganizationMemberView[]>(`/organizations/${organizationId}/members?${params.toString()}`, 'GET');
 }

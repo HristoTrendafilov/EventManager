@@ -59,7 +59,7 @@ export function UserProfile() {
                         className="rounded-circle object-fit-cover"
                         height={200}
                         width={200}
-                        src={userView.profilePictureUrl}
+                        src={userView.userProfilePictureUrl}
                         alt="profile"
                       />
                     </button>
@@ -125,7 +125,7 @@ export function UserProfile() {
       {showGallery && userView && (
         <div>
           <ImageGalleryModal
-            items={[{ original: userView.profilePictureUrl }]}
+            items={[{ original: userView.userProfilePictureUrl }]}
             onCloseButtonClick={handleCloseGallery}
           />
         </div>

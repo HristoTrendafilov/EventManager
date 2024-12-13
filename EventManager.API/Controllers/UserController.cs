@@ -250,7 +250,7 @@ namespace EventManager.API.Controllers
                 WebSessionId = webSessionId,
                 IsAdmin = userRoles.Any(x => x.RoleId == (int)UserRole.Admin),
                 IsEventCreator = userRoles.Any(x => x.RoleId == (int)UserRole.EventCreator),
-                ProfilePictureUrl = user.ProfilePictureUrl,
+                ProfilePictureUrl = user.UserProfilePictureUrl,
             };
 
             return Ok(userForWeb);
@@ -438,6 +438,15 @@ namespace EventManager.API.Controllers
         {
             var usersView = await _userService.GetAllUsersViewAsync(x => x.Username.ToLower().StartsWith(filter.Username.ToLower()), true);
             var users = Mapper.CreateList<UserSearch>(usersView);
+
+            return Ok(users);
+        }
+
+        [HttpGet("preview")]
+        public async Task<ActionResult> GetUsersPreview([FromQuery] long[] usersIds)
+        {
+            var usersView = await _userService.GetAllUsersViewAsync(x => usersIds.Contains(x.UserId), true);
+            var users = Mapper.CreateList<UserPreview>(usersView);
 
             return Ok(users);
         }

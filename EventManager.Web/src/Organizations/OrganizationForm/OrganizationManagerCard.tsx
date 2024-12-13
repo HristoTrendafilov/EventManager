@@ -1,10 +1,10 @@
 import { useCallback, useState } from 'react';
 
-import type { OrganizationUser } from '~/Infrastructure/api-types';
+import type { UserPreview } from '~/Infrastructure/api-types';
 import { ConfirmModal } from '~/Infrastructure/components/ConfirmModal/ConfirmModal';
 
 interface OrganizationManagerCardProps {
-  member: OrganizationUser;
+  member: UserPreview;
   onDeleted: (userId: number) => void;
 }
 

@@ -30,18 +30,17 @@ namespace EventManager.API.Services.Organization
 
                 var organizationId = await _db.Organizations.X_CreateAsync(organization, currentUserId);
 
-                if (organization.OrganizationManagersIds != null)
+                foreach (var userId in organization.OrganizationManagersIds)
                 {
-                    var organizationMembers = new OrganizationMembersNew
+                    var organizationMember = new OrganizationMemberPoco
                     {
-                        Users = organization.OrganizationManagersIds.Select(x => new OrganizationUser
-                        {
-                            UserId = x,
-                            IsManager = true
-                        }).ToList()
+                        OrganizationId = organizationId,
+                        UserId = userId,
+                        CreatedOnDateTime = DateTime.Now,
+                        IsManager = true
                     };
 
-                    await AddMembersToOrganizationAsync(organizationId, organizationMembers, currentUserId);
+                    await _db.OrganizationsMembers.X_CreateAsync(organizationMember, currentUserId);
                 }
 
                 return organizationId;
@@ -156,28 +155,17 @@ namespace EventManager.API.Services.Organization
         {
             await _db.WithTransactionAsync(async () =>
             {
-                foreach (var user in members.Users)
+                foreach (var userId in members.UsersIds)
                 {
-                    var existingMember = await _db.OrganizationsMembers
-                        .FirstOrDefaultAsync(x => x.UserId == user.UserId && x.OrganizationId == organizationId);
-
-                    if (existingMember != null && user.IsManager)
+                    var organizationMember = new OrganizationMemberPoco
                     {
-                        existingMember.IsManager = true;
-                        await _db.OrganizationsMembers.X_UpdateAsync(existingMember.OrganizationMemberId, existingMember, currentUserId);
-                    }
-                    else
-                    {
-                        var organizationMember = new OrganizationMemberPoco
-                        {
-                            OrganizationId = organizationId,
-                            UserId = user.UserId,
-                            CreatedOnDateTime = DateTime.Now,
-                            IsManager = user.IsManager
-                        };
+                        OrganizationId = organizationId,
+                        UserId = userId,
+                        CreatedOnDateTime = DateTime.Now,
+                        IsManager = false
+                    };
 
-                        await _db.OrganizationsMembers.X_CreateAsync(organizationMember, currentUserId);
-                    }
+                    await _db.OrganizationsMembers.X_CreateAsync(organizationMember, currentUserId);
                 }
             });
         }
