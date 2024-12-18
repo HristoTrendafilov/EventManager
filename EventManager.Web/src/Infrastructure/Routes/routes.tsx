@@ -15,7 +15,7 @@ import { UsersRolesCatalog } from '~/User/AdminPanel/UsersRolesCatalog';
 import { EmailVerification } from '~/User/EmailVerification';
 import { Login } from '~/User/Login';
 import { Register } from '~/User/Register';
-import { UserProfile } from '~/User/UserProfile';
+import { UserProfile } from '~/User/UserProfile/UserProfile';
 import { UserUpdate } from '~/User/UserUpdate/UserUpdate';
 
 import { CustomRoutes } from './CustomRoutes';

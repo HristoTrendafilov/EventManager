@@ -59,46 +59,28 @@ export function UserUpdate() {
                   <div className="nav-buttons">
                     <button
                       type="button"
-                      className={`nav-button ${
-                        activeTab === 'profile' ? 'active' : ''
-                      }`}
+                      className={`nav-button ${activeTab === 'profile' ? 'active' : ''}`}
                       onClick={() => handleTabClick('profile')}
                     >
-                      <FontAwesomeIcon
-                        className="fa-fw me-2 fa-border"
-                        icon={faUser}
-                        size="xl"
-                      />
+                      <FontAwesomeIcon className="fa-fw me-2 fa-border" icon={faUser} size="xl" />
                       {UserUpdateTabNames.profile}
                     </button>
 
                     <button
                       type="button"
-                      className={`nav-button ${
-                        activeTab === 'settings' ? 'active' : ''
-                      }`}
+                      className={`nav-button ${activeTab === 'settings' ? 'active' : ''}`}
                       onClick={() => handleTabClick('settings')}
                     >
-                      <FontAwesomeIcon
-                        className="fa-fw me-2 fa-border"
-                        icon={faGear}
-                        size="xl"
-                      />
+                      <FontAwesomeIcon className="fa-fw me-2 fa-border" icon={faGear} size="xl" />
                       {UserUpdateTabNames.settings}
                     </button>
 
                     <button
                       type="button"
-                      className={`nav-button ${
-                        activeTab === 'security' ? 'active' : ''
-                      }`}
+                      className={`nav-button ${activeTab === 'security' ? 'active' : ''}`}
                       onClick={() => handleTabClick('security')}
                     >
-                      <FontAwesomeIcon
-                        className="fa-fw me-2 fa-border"
-                        icon={faShield}
-                        size="xl"
-                      />
+                      <FontAwesomeIcon className="fa-fw me-2 fa-border" icon={faShield} size="xl" />
                       {UserUpdateTabNames.security}
                     </button>
                   </div>
@@ -112,9 +94,7 @@ export function UserUpdate() {
                 <ul className="nav nav-tabs card-header-tabs nav-gap-x-1">
                   <li className="nav-item">
                     <FontAwesomeIcon
-                      className={`nav-link fs-2 ${
-                        activeTab === 'profile' ? 'active' : ''
-                      }`}
+                      className={`nav-link fs-2 ${activeTab === 'profile' ? 'active' : ''}`}
                       icon={faUser}
                       size="3x"
                       onClick={() => handleTabClick('profile')}
@@ -122,9 +102,7 @@ export function UserUpdate() {
                   </li>
                   <li className="nav-item">
                     <FontAwesomeIcon
-                      className={`nav-link fs-2 ${
-                        activeTab === 'settings' ? 'active' : ''
-                      }`}
+                      className={`nav-link fs-2 ${activeTab === 'settings' ? 'active' : ''}`}
                       icon={faGear}
                       size="3x"
                       onClick={() => handleTabClick('settings')}
@@ -132,9 +110,7 @@ export function UserUpdate() {
                   </li>
                   <li className="nav-item">
                     <FontAwesomeIcon
-                      className={`nav-link fs-2 ${
-                        activeTab === 'security' ? 'active' : ''
-                      }`}
+                      className={`nav-link fs-2 ${activeTab === 'security' ? 'active' : ''}`}
                       icon={faShield}
                       size="3x"
                       onClick={() => handleTabClick('security')}
@@ -147,22 +123,15 @@ export function UserUpdate() {
                   <UpdatePersonalData
                     user={user}
                     userId={Number(userId)}
-                    userProfilePicture={user.profilePictureUrl}
+                    userProfilePicture={user.userProfilePictureUrl}
                     onUserUpdate={loadUser}
                   />
                 )}
                 {user && activeTab === 'settings' && (
-                  <UserAccountSettings
-                    userId={Number(userId)}
-                    username={user.username}
-                    onUserUpdate={loadUser}
-                  />
+                  <UserAccountSettings userId={Number(userId)} username={user.username} onUserUpdate={loadUser} />
                 )}
                 {user && activeTab === 'security' && (
-                  <UserSecurity
-                    userId={Number(userId)}
-                    lastActiveWebSessions={user.webSessions}
-                  />
+                  <UserSecurity userId={Number(userId)} lastActiveWebSessions={user.webSessions} />
                 )}
               </div>
             </div>

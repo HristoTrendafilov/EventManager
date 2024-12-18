@@ -38,7 +38,7 @@ export interface UserForUpdate {
   userFirstName: string;
   userSecondName: string | null;
   userLastName: string;
-  profilePictureUrl: string;
+  userProfilePictureUrl: string;
   regionId: number;
   userPhoneNumber: string | null;
   userShortDescription: string | null;
