@@ -27,12 +27,12 @@ namespace EventManager.DAL
 		public IQueryable<VOrganizationSubscriptionPoco> VOrganizationsSubscriptions => DataExtensions.GetTable<VOrganizationSubscriptionPoco>(this);
 		public IQueryable<VExceptionPoco> VExceptions => DataExtensions.GetTable<VExceptionPoco>(this);
 		public IQueryable<VWebSessionPoco> VWebSessions => DataExtensions.GetTable<VWebSessionPoco>(this);
+		public IQueryable<VUserEventPoco> VUsersEvents => DataExtensions.GetTable<VUserEventPoco>(this);
 		public IQueryable<VCrudLogPoco> VCrudLogs => DataExtensions.GetTable<VCrudLogPoco>(this);
 		public IQueryable<VOrganizationMemberPoco> VOrganizationsMembers => DataExtensions.GetTable<VOrganizationMemberPoco>(this);
 		public IQueryable<VEventPoco> VEvents => DataExtensions.GetTable<VEventPoco>(this);
 		public IQueryable<VOrganizationPoco> VOrganizations => DataExtensions.GetTable<VOrganizationPoco>(this);
-		public IQueryable<VUserEventPoco> VUsersEvents => DataExtensions.GetTable<VUserEventPoco>(this);
-		public IQueryable<VUserPoco> VUsers => DataExtensions.GetTable<VUserPoco>(this);
 		public IQueryable<VEventImagePoco> VEventImages => DataExtensions.GetTable<VEventImagePoco>(this);
+		public IQueryable<VUserPoco> VUsers => DataExtensions.GetTable<VUserPoco>(this);
 	}
 }

@@ -20,6 +20,7 @@ using EventManager.API.Dto.User.Role;
 using EventManager.API.BackgroundServices;
 using EventManager.API.Services.FileStorage;
 using EventManager.API.Services.Organization;
+using EventManager.API.Dto.Event;
 
 namespace EventManager.API.Controllers
 {
@@ -449,6 +450,24 @@ namespace EventManager.API.Controllers
             var users = Mapper.CreateList<UserPreview>(usersView);
 
             return Ok(users);
+        }
+
+        [HttpGet("{userId}/events")]
+        public async Task<ActionResult> GetUserEventsSubscription(long userId, string eventType)
+        {
+            var events = new List<UserProfileEvent>();
+
+            switch (eventType)
+            {
+                case "1":
+                    events = await _userService.GetUserEventsSubscriptions(userId);
+                    break;
+                case "2":
+                    events = await _userService.GetUserEventsCreated(userId);
+                    break;
+            }
+
+            return Ok(events);
         }
     }
 }

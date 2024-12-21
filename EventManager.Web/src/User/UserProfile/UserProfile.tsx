@@ -43,18 +43,27 @@ export function UserProfile() {
     setShowGallery(false);
   }, []);
 
-  const renderTabContent = useCallback(() => {
-    switch (selectedTab) {
-      case 'aboutMe':
-        return <ProfileAboutMe user={userView!} />;
-      case 'organization':
-        return <ProfileOrganizations />;
-      case 'events':
-        return <ProfileEvents />;
-      default:
-        return null;
-    }
-  }, [selectedTab, userView]);
+  const renderTabContent = useCallback(
+    () => (
+      <>
+        <div style={{ display: selectedTab === 'aboutMe' ? 'block' : 'none' }}>
+          <ProfileAboutMe user={userView!} />
+        </div>
+        <div style={{ display: selectedTab === 'organization' ? 'block' : 'none' }}>
+          <ProfileOrganizations />
+        </div>
+        <div style={{ display: selectedTab === 'events' ? 'block' : 'none' }}>
+          <ProfileEvents user={userView!} />
+        </div>
+      </>
+    ),
+    [selectedTab, userView]
+  );
+
+  const additionalTabs = [
+    { key: 'events', label: 'Събития' },
+    { key: 'organization', label: 'Организации' },
+  ];
 
   useEffect(() => {
     void fetchUserView();
@@ -85,7 +94,7 @@ export function UserProfile() {
                         className="rounded-circle"
                       />
                     </button>
-                    <div className="fs-4">{userView.username}</div>
+                    <div className="fs-4 fw-bold">{userView.username}</div>
                     <div className="text-muted text-center">
                       <p>{userView.userFullName}</p>
                     </div>
@@ -98,9 +107,13 @@ export function UserProfile() {
                     )}
                   </div>
                 </div>
-                <div className="col-sm-8 d-flex flex-column">
-                  <h4>Кратко описание</h4>
-                  <p className="text-muted mb-4">{userView.userShortDescription}</p>
+                <div className="col-sm-8 d-flex flex-column ps-md-4">
+                  <div>Помагам в:</div>
+                  <ul>
+                    {userView.regionsHelping.map((x) => (
+                      <li key={x.regionId}>{x.regionName}</li>
+                    ))}
+                  </ul>
 
                   <div className="text-muted mt-auto">
                     <div className="d-flex gap-2 mb-1">
@@ -127,8 +140,8 @@ export function UserProfile() {
             </div>
           </div>
 
-          <nav className="mt-3">
-            <div className="nav nav-tabs">
+          <ul className="nav nav-tabs mt-2">
+            <li className="nav-item">
               <button
                 type="button"
                 className={`nav-link ${selectedTab === 'aboutMe' ? 'active' : ''}`}
@@ -136,24 +149,40 @@ export function UserProfile() {
               >
                 За мен
               </button>
+            </li>
+            {additionalTabs.map((tab) => (
+              <li key={tab.key} className="nav-item tabs-lg-block">
+                <button
+                  type="button"
+                  className={`nav-link ${selectedTab === tab.key ? 'active' : ''}`}
+                  onClick={() => setSelectedTab(tab.key as UserTab)}
+                >
+                  {tab.label}
+                </button>
+              </li>
+            ))}
+            <li className="nav-item dropdown dropdown-lg-none">
               <button
                 type="button"
-                className={`nav-link ${selectedTab === 'organization' ? 'active' : ''}`}
-                onClick={() => setSelectedTab('organization')}
+                className="nav-link dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                Организации
+                Повече
               </button>
-              <button
-                type="button"
-                className={`nav-link ${selectedTab === 'events' ? 'active' : ''}`}
-                onClick={() => setSelectedTab('events')}
-              >
-                Събития
-              </button>
-            </div>
-          </nav>
+              <ul className="dropdown-menu">
+                {additionalTabs.map((tab) => (
+                  <li key={tab.key}>
+                    <button type="button" className="dropdown-item" onClick={() => setSelectedTab(tab.key as UserTab)}>
+                      {tab.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          </ul>
 
-          <div className="tab-content mt-1">{renderTabContent()}</div>
+          <div className="tab-content p-2">{renderTabContent()}</div>
         </section>
       )}
 

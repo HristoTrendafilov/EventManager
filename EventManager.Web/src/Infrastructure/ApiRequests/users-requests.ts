@@ -8,6 +8,7 @@ import type {
   UserForWeb,
   UserLoginType,
   UserPreview,
+  UserProfileEvent,
   UserSearch,
   UserSearchFilterType,
   UserUpdatePasswordType,
@@ -78,4 +79,8 @@ export function getUsersPreview(usersIds: number[]) {
   usersIds.forEach((id) => params.append('usersIds', id.toString()));
 
   return callApi<UserPreview[]>(`/users/preview?${params.toString()}`, 'GET');
+}
+
+export function getUserEventsSubscription(userId: number, eventType: string) {
+  return callApi<UserProfileEvent[]>(`/users/${userId}/events?eventType=${eventType}`, 'GET');
 }

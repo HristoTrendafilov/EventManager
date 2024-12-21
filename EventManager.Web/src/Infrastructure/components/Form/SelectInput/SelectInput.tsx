@@ -10,7 +10,7 @@ import './SelectInput.css';
 export type SelectInputProps = {
   name: string;
   label: string;
-  value: string | number | undefined;
+  value?: string | number | undefined;
   readonly?: boolean;
   isRequired?: boolean;
   options: SelectInputOption[];
@@ -21,25 +21,11 @@ export type SelectInputProps = {
 };
 
 export function SelectInput(props: SelectInputProps) {
-  const {
-    name,
-    label,
-    value,
-    readonly,
-    isRequired,
-    options,
-    placeholder,
-    loading,
-    error,
-    onChange,
-  } = props;
+  const { name, label, value, readonly, isRequired, options, placeholder, loading, error, onChange } = props;
 
   const id = useId();
 
-  const handleSelectionChange = (
-    newSelection: SingleValue<SelectInputOption>,
-    _: ActionMeta<SelectInputOption>
-  ) => {
+  const handleSelectionChange = (newSelection: SingleValue<SelectInputOption>, _: ActionMeta<SelectInputOption>) => {
     if (newSelection) {
       onChange(newSelection.value);
     }
@@ -64,10 +50,14 @@ export function SelectInput(props: SelectInputProps) {
         placeholder={<div>{placeholder ?? 'Избор...'}</div>}
         onChange={handleSelectionChange}
         styles={{
-          control: (baseStyles, _) => ({
+          control: (baseStyles, inputState) => ({
             ...baseStyles,
-            borderColor: 'var(--input-border-color)',
-            border: 'var(--input-border-color)',
+            border: inputState.isFocused ? '1px solid #0d6efd' : 'var(--input-border)',
+            boxShadow: 'none',
+            ':hover': {
+              borderColor: 'var(--input-border-color-focused)',
+              outline: 'var(--input-border-color-focused)',
+            },
           }),
         }}
       />

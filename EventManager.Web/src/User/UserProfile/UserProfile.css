@@ -12,3 +12,26 @@
     border-bottom: 1px solid rgb(197, 193, 193);
   }
 }
+
+/* Hide dropdown on larger screens */
+.dropdown-lg-none {
+  display: none;
+}
+
+/* Show dropdown on smaller screens */
+@media (max-width: 370px) {
+  .dropdown-lg-none {
+    display: block;
+  }
+}
+
+/* Hide additional tabs on smaller screens */
+.tabs-lg-block {
+  display: block;
+}
+
+@media (max-width: 370px) {
+  .tabs-lg-block {
+    display: none;
+  }
+}

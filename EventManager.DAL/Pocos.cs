@@ -493,6 +493,41 @@ namespace EventManager.DAL
 		public virtual string IpInfoLon { get; set; }
 	}
 
+	[Table(Name = "v_users_events")]
+	public class VUserEventPoco
+	{
+		[Column(Name = "user_event_id")]
+		public virtual long UserEventId { get; set; }
+
+		[Column(Name = "user_id")]
+		public virtual long UserId { get; set; }
+
+		[Column(Name = "user_subscribed_on_date_time")]
+		public virtual DateTime UserSubscribedOnDateTime { get; set; }
+
+		[Column(Name = "event_id")]
+		public virtual long EventId { get; set; }
+
+		[Column(Name = "username")]
+		public virtual string Username { get; set; }
+
+		[Column(Name = "user_profile_picture_relative_path")]
+		public virtual string UserProfilePictureRelativePath { get; set; }
+
+		[Column(Name = "event_name")]
+		public virtual string EventName { get; set; }
+
+		[Nullable]
+		[Column(Name = "event_description")]
+		public virtual string EventDescription { get; set; }
+
+		[Column(Name = "event_start_date_time")]
+		public virtual DateTime EventStartDateTime { get; set; }
+
+		[Column(Name = "main_image_relative_path")]
+		public virtual string MainImageRelativePath { get; set; }
+	}
+
 	[Table(Name = "v_crud_logs")]
 	public class VCrudLogPoco
 	{
@@ -634,26 +669,26 @@ namespace EventManager.DAL
 		public virtual string FileStorageRelativePath { get; set; }
 	}
 
-	[Table(Name = "v_users_events")]
-	public class VUserEventPoco
+	[Table(Name = "v_event_images")]
+	public class VEventImagePoco
 	{
-		[Column(Name = "user_event_id")]
-		public virtual long UserEventId { get; set; }
+		[Column(Name = "event_image_id")]
+		public virtual long EventImageId { get; set; }
 
-		[Column(Name = "user_id")]
-		public virtual long UserId { get; set; }
-
-		[Column(Name = "user_subscribed_on_date_time")]
-		public virtual DateTime UserSubscribedOnDateTime { get; set; }
+		[Column(Name = "event_image_is_main")]
+		public virtual bool EventImageIsMain { get; set; }
 
 		[Column(Name = "event_id")]
 		public virtual long EventId { get; set; }
 
-		[Column(Name = "username")]
-		public virtual string Username { get; set; }
+		[Column(Name = "file_id")]
+		public virtual long FileId { get; set; }
 
-		[Column(Name = "user_profile_picture_relative_path")]
-		public virtual string UserProfilePictureRelativePath { get; set; }
+		[Column(Name = "event_image_created_on_date_time")]
+		public virtual DateTime EventImageCreatedOnDateTime { get; set; }
+
+		[Column(Name = "file_storage_path")]
+		public virtual string FileStoragePath { get; set; }
 	}
 
 	[Table(Name = "v_users")]
@@ -714,28 +749,12 @@ namespace EventManager.DAL
 
 		[Column(Name = "user_profile_picture_relative_path")]
 		public virtual string UserProfilePictureRelativePath { get; set; }
-	}
 
-	[Table(Name = "v_event_images")]
-	public class VEventImagePoco
-	{
-		[Column(Name = "event_image_id")]
-		public virtual long EventImageId { get; set; }
+		[Column(Name = "is_event_manager")]
+		public virtual bool IsEventManager { get; set; }
 
-		[Column(Name = "event_image_is_main")]
-		public virtual bool EventImageIsMain { get; set; }
-
-		[Column(Name = "event_id")]
-		public virtual long EventId { get; set; }
-
-		[Column(Name = "file_id")]
-		public virtual long FileId { get; set; }
-
-		[Column(Name = "event_image_created_on_date_time")]
-		public virtual DateTime EventImageCreatedOnDateTime { get; set; }
-
-		[Column(Name = "file_storage_path")]
-		public virtual string FileStoragePath { get; set; }
+		[Column(Name = "is_organization_manager")]
+		public virtual bool IsOrganizationManager { get; set; }
 	}
 
 }

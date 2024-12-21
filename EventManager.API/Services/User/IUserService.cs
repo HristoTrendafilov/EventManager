@@ -2,6 +2,7 @@
 using EventManager.API.Dto.User;
 using System.Linq.Expressions;
 using EventManager.API.Dto.User.Role;
+using EventManager.API.Dto.Event;
 
 namespace EventManager.API.Services.User
 {
@@ -19,6 +20,10 @@ namespace EventManager.API.Services.User
         Task<List<RolePoco>> GetAllUserRolesAsync(long userId);
         Task<List<RolePoco>> GetAllRolesAsync(Expression<Func<RolePoco, bool>> predicate);
         Task SaveUserRoles(RoleBaseForm userClaim, long? currentUserId);
+
+        Task<List<UserProfileEvent>> GetUserEventsSubscriptions(long userId);
+        Task<List<UserProfileEvent>> GetUserEventsCreated(long userId);
+
         Task<List<RolePoco>> CacheGetOrAddUserRolesAsync(long userId);
         void CacheRemoveUserRoles(long userId);
     }

@@ -8,6 +8,7 @@ using EventManager.API.Dto.User.Role;
 using EventManager.API.Services.Cache;
 using EventManager.API.Services.WebSession;
 using EventManager.BOL;
+using EventManager.API.Dto.Event;
 
 namespace EventManager.API.Services.User
 {
@@ -214,6 +215,35 @@ namespace EventManager.API.Services.User
         public void CacheRemoveUserRoles(long userId)
         {
             _cacheService.Remove($"UserRoles_{userId}");
+        }
+
+        public async Task<List<UserProfileEvent>> GetUserEventsSubscriptions(long userId)
+        {
+            var events = await _db.VUsersEvents.Where(x => x.UserId == userId).ToListAsync();
+
+            var profileEvents = Mapper.CreateList<UserProfileEvent>(events);
+            foreach (var @event in profileEvents)
+            {
+                @event.MainImageUrl = _fileService.CreatePublicFileUrl(@event.MainImageRelativePath, FileService.NO_IMAGE_FILE);
+            }
+
+            return profileEvents.OrderByDescending(x => x.UserSubscribedOnDateTime).ToList();
+        }
+
+        public async Task<List<UserProfileEvent>> GetUserEventsCreated(long userId)
+        {
+            var events = await _db.VEvents
+                .Where(x => x.EventCreatedByUserId == userId)
+                .OrderByDescending(x => x.EventCreatedOnDateTime)
+                .ToListAsync();
+
+            var profileEvents = Mapper.CreateList<UserProfileEvent>(events);
+            foreach (var @event in profileEvents)
+            {
+                @event.MainImageUrl = _fileService.CreatePublicFileUrl(@event.MainImageRelativePath, FileService.NO_IMAGE_FILE);
+            }
+
+            return profileEvents;
         }
     }
 }

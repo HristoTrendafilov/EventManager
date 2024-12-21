@@ -63,6 +63,16 @@ export interface UserPreview {
   userProfilePictureUrl: string;
 }
 
+export interface UserProfileEvent {
+  eventId: number;
+  eventName: string;
+  eventDescription: string;
+  mainImageUrl: string;
+  mainImageRelativePath: string;
+  userSubscribedOnDateTime: Date;
+  eventCreatedOnDateTime: Date;
+}
+
 export interface UserSearch {
   userId: number;
   username: string;
@@ -99,6 +109,8 @@ export interface UserView {
   userFullName: string;
   regionName: string;
   userProfilePictureRelativePath: string;
+  isEventManager: boolean;
+  isOrganizationManager: boolean;
 }
 
 export interface RoleView {
@@ -199,6 +211,10 @@ export interface UserEventView {
   eventId: number;
   username: string;
   userProfilePictureRelativePath: string;
+  eventName: string;
+  eventDescription: string | null;
+  eventStartDateTime: Date;
+  mainImageRelativePath: string;
 }
 
 export interface CrudLogView {
