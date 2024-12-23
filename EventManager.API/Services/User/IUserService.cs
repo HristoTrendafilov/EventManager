@@ -26,5 +26,7 @@ namespace EventManager.API.Services.User
 
         Task<List<RolePoco>> CacheGetOrAddUserRolesAsync(long userId);
         void CacheRemoveUserRoles(long userId);
+        Task<List<UserProfileOrganization>> GetUserOrganizationSubscriptions(long userId);
+        Task<List<UserProfileOrganization>> GetUserOrganizationsManaged(long userId);
     }
 }

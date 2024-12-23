@@ -452,22 +452,40 @@ namespace EventManager.API.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{userId}/events")]
-        public async Task<ActionResult> GetUserEventsSubscription(long userId, string eventType)
+        [HttpGet("{userId}/profile/events")]
+        public async Task<ActionResult> GetUserEventsSubscription(long userId, UserProfileEventType type)
         {
             var events = new List<UserProfileEvent>();
 
-            switch (eventType)
+            switch (type)
             {
-                case "1":
+                case UserProfileEventType.Subscriptions:
                     events = await _userService.GetUserEventsSubscriptions(userId);
                     break;
-                case "2":
+                case UserProfileEventType.Created:
                     events = await _userService.GetUserEventsCreated(userId);
                     break;
             }
 
             return Ok(events);
+        }
+
+        [HttpGet("{userId}/profile/organizations")]
+        public async Task<ActionResult> GetUserEventsSubscription(long userId, UserProfileOrganizationType type)
+        {
+            var organizations = new List<UserProfileOrganization>();
+
+            switch (type)
+            {
+                case UserProfileOrganizationType.Subscriptions:
+                    organizations = await _userService.GetUserOrganizationSubscriptions(userId);
+                    break;
+                case UserProfileOrganizationType.Managed:
+                    organizations = await _userService.GetUserOrganizationsManaged(userId);
+                    break;
+            }
+
+            return Ok(organizations);
         }
     }
 }

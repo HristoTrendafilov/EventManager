@@ -416,6 +416,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "organization_name")]
 		public virtual string OrganizationName { get; set; }
+
+		[Column(Name = "organization_description")]
+		public virtual string OrganizationDescription { get; set; }
 	}
 
 	[Table(Name = "v_exceptions")]
@@ -591,6 +594,12 @@ namespace EventManager.DAL
 
 		[Column(Name = "is_manager")]
 		public virtual bool IsManager { get; set; }
+
+		[Column(Name = "organization_logo_relative_path")]
+		public virtual string OrganizationLogoRelativePath { get; set; }
+
+		[Column(Name = "organization_description")]
+		public virtual string OrganizationDescription { get; set; }
 	}
 
 	[Table(Name = "v_events")]

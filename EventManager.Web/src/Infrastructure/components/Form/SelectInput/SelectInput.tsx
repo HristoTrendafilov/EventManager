@@ -17,11 +17,13 @@ export type SelectInputProps = {
   placeholder?: string;
   loading: boolean;
   error?: string;
+  searchable?: boolean;
   onChange: (value: string) => void;
 };
 
 export function SelectInput(props: SelectInputProps) {
-  const { name, label, value, readonly, isRequired, options, placeholder, loading, error, onChange } = props;
+  const { name, label, value, readonly, isRequired, options, placeholder, loading, error, searchable, onChange } =
+    props;
 
   const id = useId();
 
@@ -44,9 +46,9 @@ export function SelectInput(props: SelectInputProps) {
         isDisabled={readonly || !!error}
         value={options.find((x) => x.value === value) ?? null}
         required={isRequired}
+        isSearchable={searchable}
         options={options}
         noOptionsMessage={() => 'Няма повече елементи за избор'}
-        isSearchable
         placeholder={<div>{placeholder ?? 'Избор...'}</div>}
         onChange={handleSelectionChange}
         styles={{

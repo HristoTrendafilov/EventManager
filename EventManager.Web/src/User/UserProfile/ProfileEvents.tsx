@@ -1,74 +1,74 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { getUserEventsSubscription } from '~/Infrastructure/ApiRequests/users-requests';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
-import type { UserProfileEvent, UserView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { SelectInput } from '~/Infrastructure/components/Form/SelectInput/SelectInput';
 import type { SelectInputOption } from '~/Infrastructure/components/Form/SelectInput/selectInputUtils';
 import { formatDateTime } from '~/Infrastructure/utils';
+import { UserProfileEventType } from '~/User/user-utils';
+
+import type { UserEventsOptions } from './UserProfile';
 
 interface ProfileEventsProps {
-  user: UserView;
+  userIsEventManager: boolean;
+  options: UserEventsOptions;
+  saveScrollPosition: () => void;
+  onInputChange: (value: string) => void;
+  restoreScrollPosition: () => void;
 }
 
 export function ProfileEvents(props: ProfileEventsProps) {
-  const { user } = props;
+  const { userIsEventManager, saveScrollPosition, onInputChange, options, restoreScrollPosition } = props;
+  const { events, error, type } = options;
 
-  const [error, setError] = useState<string | undefined>();
-  const [selectValue, setSelectValue] = useState<string>('1');
-  const [options, setOptions] = useState<SelectInputOption[]>([
-    { value: '1', label: 'Събития за които съм се записал' },
+  const [selectOptions, setSelectOptions] = useState<SelectInputOption[]>([
+    { value: UserProfileEventType.Subscriptions.toString(), label: 'Събития за които съм се записал' },
   ]);
-  const [events, setEvents] = useState<UserProfileEvent[]>([]);
-
-  const handleInputChange = useCallback(
-    async (value: string) => {
-      setError(undefined);
-      setSelectValue(value);
-
-      const response = await getUserEventsSubscription(user.userId, value);
-      if (!response.success) {
-        setError(response.errorMessage);
-        return;
-      }
-
-      setEvents(response.data);
-    },
-    [user.userId]
-  );
 
   useEffect(() => {
-    if (user.isEventManager) {
-      setOptions((prevOptions) => {
-        const optionExists = prevOptions.some((option) => option.value === '2');
+    if (userIsEventManager) {
+      setSelectOptions((prevOptions) => {
+        const optionExists = prevOptions.some((option) => option.value === UserProfileEventType.Created.toString());
         if (!optionExists) {
-          return [...prevOptions, { value: '2', label: 'Събития които съм създал' }];
+          return [
+            ...prevOptions,
+            { value: UserProfileEventType.Created.toString(), label: 'Събития които съм създал' },
+          ];
         }
         return prevOptions;
       });
     }
+  }, [userIsEventManager]);
 
-    void handleInputChange(selectValue);
-  }, [handleInputChange, selectValue, user.isEventManager]);
+  const loadInitial = useCallback(() => {
+    if (events.length === 0) {
+      onInputChange(options.type);
+      restoreScrollPosition();
+    }
+  }, [events.length, onInputChange, options.type, restoreScrollPosition]);
+
+  useEffect(() => {
+    void loadInitial();
+  }, [loadInitial]);
 
   return (
     <div>
       <SelectInput
         name="eventType"
         label="Тип"
-        options={options}
-        onChange={handleInputChange}
+        options={selectOptions}
+        onChange={onInputChange}
         loading={false}
-        value={selectValue}
+        searchable={false}
+        value={type}
       />
       {error && <ErrorMessage error={error} />}
 
       {events.length > 0 &&
         events.map((event) => (
           <div className="mb-2" key={event.eventId}>
-            <Link className="unset-anchor" to={CustomRoutes.eventsView(event.eventId)}>
+            <Link className="unset-anchor" to={CustomRoutes.eventsView(event.eventId)} onClick={saveScrollPosition}>
               <div className="card">
                 <div className="card-body">
                   <div className="row">
@@ -81,13 +81,15 @@ export function ProfileEvents(props: ProfileEventsProps) {
                       <div className="d-flex d-sm-block justify-content-center fs-5 fw-bold">{event.eventName}</div>
                       <hr className="m-1" />
                       <div className="clip-7-rows">{event.eventDescription}</div>
-                      {selectValue === '1' ? (
-                        <div>Записан на: {formatDateTime(event.userSubscribedOnDateTime)}</div>
-                      ) : (
-                        <div>Създаден на: {formatDateTime(event.eventCreatedOnDateTime)}</div>
-                      )}
                     </div>
                   </div>
+                </div>
+                <div className="card-footer">
+                  {type === UserProfileEventType.Subscriptions.toString() ? (
+                    <div>Записан на: {formatDateTime(event.userSubscribedOnDateTime)}</div>
+                  ) : (
+                    <div>Създаден на: {formatDateTime(event.eventCreatedOnDateTime)}</div>
+                  )}
                 </div>
               </div>
             </Link>

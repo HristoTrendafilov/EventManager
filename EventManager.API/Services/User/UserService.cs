@@ -245,5 +245,33 @@ namespace EventManager.API.Services.User
 
             return profileEvents;
         }
+
+        public async Task<List<UserProfileOrganization>> GetUserOrganizationSubscriptions(long userId)
+        {
+            var organizations = await _db.VOrganizationsSubscriptions.Where(x => x.UserId == userId).ToListAsync();
+
+            var profileOrganizations = Mapper.CreateList<UserProfileOrganization>(organizations);
+            foreach (var organization in profileOrganizations)
+            {
+                organization.OrganizationLogoUrl = _fileService.CreatePublicFileUrl(organization.OrganizationLogoRelativePath, FileService.NO_IMAGE_FILE);
+            }
+
+            return profileOrganizations.OrderByDescending(x => x.OrganizationSubscriptionCreatedOnDateTime).ToList();
+        }
+
+        public async Task<List<UserProfileOrganization>> GetUserOrganizationsManaged(long userId)
+        {
+            var organizations = await _db.VOrganizationsMembers
+                .Where(x => x.UserId == userId && x.IsManager)
+                .ToListAsync();
+
+            var profileOrganizations = Mapper.CreateList<UserProfileOrganization>(organizations);
+            foreach (var organization in profileOrganizations)
+            {
+                organization.OrganizationLogoUrl = _fileService.CreatePublicFileUrl(organization.OrganizationLogoRelativePath, FileService.NO_IMAGE_FILE);
+            }
+
+            return profileOrganizations;
+        }
     }
 }

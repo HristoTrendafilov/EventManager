@@ -9,6 +9,7 @@ import type {
   UserLoginType,
   UserPreview,
   UserProfileEvent,
+  UserProfileOrganization,
   UserSearch,
   UserSearchFilterType,
   UserUpdatePasswordType,
@@ -17,6 +18,7 @@ import type {
   UserVerifyEmail,
   UserView,
 } from '~/Infrastructure/api-types';
+import type { UserProfileEventType, UserProfileOrganizationType } from '~/User/user-utils';
 
 export function registerUser(user: FormData) {
   return callApi('/users', 'POST', user);
@@ -81,6 +83,10 @@ export function getUsersPreview(usersIds: number[]) {
   return callApi<UserPreview[]>(`/users/preview?${params.toString()}`, 'GET');
 }
 
-export function getUserEventsSubscription(userId: number, eventType: string) {
-  return callApi<UserProfileEvent[]>(`/users/${userId}/events?eventType=${eventType}`, 'GET');
+export function getUserProfileEvents(userId: number, type: UserProfileEventType) {
+  return callApi<UserProfileEvent[]>(`/users/${userId}/profile/events?type=${type}`, 'GET');
+}
+
+export function getUserProfileOrganizations(userId: number, type: UserProfileOrganizationType) {
+  return callApi<UserProfileOrganization[]>(`/users/${userId}/profile/organizations?type=${type}`, 'GET');
 }

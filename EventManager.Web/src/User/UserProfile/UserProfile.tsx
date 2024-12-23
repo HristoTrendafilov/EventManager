@@ -1,13 +1,19 @@
 import { faEnvelope, faHouse, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
-import { getUserView } from '~/Infrastructure/ApiRequests/users-requests';
+import {
+  getUserProfileEvents,
+  getUserProfileOrganizations,
+  getUserView,
+} from '~/Infrastructure/ApiRequests/users-requests';
+import { useScrollPosition } from '~/Infrastructure/CustomHooks/useScrollPosition';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
-import type { UserView } from '~/Infrastructure/api-types';
+import type { UserProfileEvent, UserProfileOrganization, UserView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { ImageGalleryModal } from '~/Infrastructure/components/ImageGalleryModal/ImageGalleryModal';
+import { UserProfileEventType, UserProfileOrganizationType } from '~/User/user-utils';
 
 import { ProfileAboutMe } from './ProfileAboutMe';
 import { ProfileEvents } from './ProfileEvents';
@@ -15,17 +21,51 @@ import { ProfileOrganizations } from './ProfileOrganizations';
 
 import './UserProfile.css';
 
-type UserTab = 'aboutMe' | 'organization' | 'events';
+export type UserTab = 'aboutMe' | 'organization' | 'events';
+
+interface UserAdditionalTab {
+  key: UserTab;
+  label: string;
+}
+
+export interface UserEventsOptions {
+  events: UserProfileEvent[];
+  type: string;
+  error: string | undefined;
+}
+
+export interface UserOrganizationsOptions {
+  organizations: UserProfileOrganization[];
+  type: string;
+  error: string | undefined;
+}
 
 export function UserProfile() {
+  const { userId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { saveScrollPosition, restoreScrollPosition } = useScrollPosition();
+
   const [userView, setUserView] = useState<UserView | undefined>();
   const [error, setError] = useState<string | undefined>();
-  const [selectedTab, setSelectedTab] = useState<UserTab>('aboutMe');
   const [showGallery, setShowGallery] = useState<boolean>(false);
 
-  const { userId } = useParams();
+  // Get the selected tab from the URL query parameter (default to 'aboutMe')
+  const selectedTab = (searchParams.get('tab') as UserTab) || 'aboutMe';
+  const selectedType = searchParams.get('type');
 
-  const fetchUserView = useCallback(async () => {
+  const [eventsOptions, setEventsOptions] = useState<UserEventsOptions>({
+    events: [],
+    type: selectedType || UserProfileEventType.Subscriptions.toString(),
+    error: undefined,
+  });
+
+  const [organizationsOptions, setOrganizationsOptions] = useState<UserOrganizationsOptions>({
+    organizations: [],
+    type: selectedType || UserProfileOrganizationType.Subscriptions.toString(),
+    error: undefined,
+  });
+
+  const loadUserView = useCallback(async () => {
     const userViewResponse = await getUserView(Number(userId));
     if (!userViewResponse.success) {
       setError(userViewResponse.errorMessage);
@@ -43,31 +83,105 @@ export function UserProfile() {
     setShowGallery(false);
   }, []);
 
-  const renderTabContent = useCallback(
-    () => (
-      <>
-        <div style={{ display: selectedTab === 'aboutMe' ? 'block' : 'none' }}>
-          <ProfileAboutMe user={userView!} />
-        </div>
-        <div style={{ display: selectedTab === 'organization' ? 'block' : 'none' }}>
-          <ProfileOrganizations />
-        </div>
-        <div style={{ display: selectedTab === 'events' ? 'block' : 'none' }}>
-          <ProfileEvents user={userView!} />
-        </div>
-      </>
-    ),
-    [selectedTab, userView]
+  const handleTabChange = useCallback(
+    (tab: UserTab) => {
+      // Create the newParams object with the correct type
+      const newParams: { tab: UserTab; type?: string } = { tab };
+
+      // Conditionally add the 'type' property if tab is 'events' or 'organization'
+      if (tab === 'events') {
+        newParams.type = eventsOptions.type;
+      } else if (tab === 'organization') {
+        newParams.type = organizationsOptions.type;
+      }
+
+      // Update the search parameters
+      setSearchParams(newParams);
+    },
+    [setSearchParams, eventsOptions.type, organizationsOptions.type]
   );
 
-  const additionalTabs = [
+  const handleEventTypeChange = useCallback(
+    async (type: string) => {
+      setEventsOptions((prevOptions) => ({ ...prevOptions, error: undefined }));
+
+      const response = await getUserProfileEvents(Number(userId), Number.parseInt(type, 10) as UserProfileEventType);
+      if (!response.success) {
+        setEventsOptions((prevOptions) => ({ ...prevOptions, error: response.errorMessage }));
+        return;
+      }
+
+      setSearchParams({ tab: selectedTab, type });
+      setEventsOptions({ events: response.data, type: type.toString(), error: undefined });
+    },
+    [selectedTab, setSearchParams, userId]
+  );
+
+  const handleOrganizationTypeChange = useCallback(
+    async (type: string) => {
+      setOrganizationsOptions((prevOptions) => ({ ...prevOptions, error: undefined }));
+
+      const response = await getUserProfileOrganizations(
+        Number(userId),
+        Number.parseInt(type, 10) as UserProfileOrganizationType
+      );
+      if (!response.success) {
+        setOrganizationsOptions((prevOptions) => ({ ...prevOptions, error: response.errorMessage }));
+        return;
+      }
+
+      setSearchParams({ tab: selectedTab, type });
+      setOrganizationsOptions({ organizations: response.data, type: type.toString(), error: undefined });
+    },
+    [selectedTab, setSearchParams, userId]
+  );
+
+  const renderTabContent = useCallback(() => {
+    switch (selectedTab) {
+      case 'aboutMe':
+        return <ProfileAboutMe user={userView!} />;
+      case 'organization':
+        return (
+          <ProfileOrganizations
+            userIsOrganizationManager={userView?.isOrganizationManager || false}
+            options={organizationsOptions}
+            saveScrollPosition={saveScrollPosition}
+            restoreScrollPosition={restoreScrollPosition}
+            onInputChange={handleOrganizationTypeChange}
+          />
+        );
+      case 'events':
+        return (
+          <ProfileEvents
+            userIsEventManager={userView?.isEventManager || false}
+            options={eventsOptions}
+            saveScrollPosition={saveScrollPosition}
+            restoreScrollPosition={restoreScrollPosition}
+            onInputChange={handleEventTypeChange}
+          />
+        );
+      default:
+        return null;
+    }
+  }, [
+    eventsOptions,
+    handleEventTypeChange,
+    handleOrganizationTypeChange,
+    organizationsOptions,
+    restoreScrollPosition,
+    saveScrollPosition,
+    selectedTab,
+    userView,
+  ]);
+
+  const additionalTabs: UserAdditionalTab[] = [
     { key: 'events', label: 'Събития' },
     { key: 'organization', label: 'Организации' },
   ];
 
   useEffect(() => {
-    void fetchUserView();
-  }, [fetchUserView]);
+    void loadUserView();
+  }, [loadUserView]);
 
   return (
     <div className="user-profile-wrapper mt-3">
@@ -145,7 +259,7 @@ export function UserProfile() {
               <button
                 type="button"
                 className={`nav-link ${selectedTab === 'aboutMe' ? 'active' : ''}`}
-                onClick={() => setSelectedTab('aboutMe')}
+                onClick={() => handleTabChange('aboutMe')}
               >
                 За мен
               </button>
@@ -155,7 +269,7 @@ export function UserProfile() {
                 <button
                   type="button"
                   className={`nav-link ${selectedTab === tab.key ? 'active' : ''}`}
-                  onClick={() => setSelectedTab(tab.key as UserTab)}
+                  onClick={() => handleTabChange(tab.key)}
                 >
                   {tab.label}
                 </button>
@@ -173,7 +287,7 @@ export function UserProfile() {
               <ul className="dropdown-menu">
                 {additionalTabs.map((tab) => (
                   <li key={tab.key}>
-                    <button type="button" className="dropdown-item" onClick={() => setSelectedTab(tab.key as UserTab)}>
+                    <button type="button" className="dropdown-item" onClick={() => handleTabChange(tab.key)}>
                       {tab.label}
                     </button>
                   </li>

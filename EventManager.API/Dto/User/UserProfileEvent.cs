@@ -13,4 +13,10 @@ namespace EventManager.API.Dto.User
         public DateTime UserSubscribedOnDateTime { get; set; }
         public DateTime EventCreatedOnDateTime { get; set; }
     }
+
+    public enum UserProfileEventType
+    {
+        Subscriptions = 1,
+        Created = 2
+    }
 }
