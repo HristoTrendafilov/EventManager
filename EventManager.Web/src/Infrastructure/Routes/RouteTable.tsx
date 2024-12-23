@@ -1,22 +1,16 @@
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Home } from '~/Home/Home';
-import {
-  type UserState,
-  userSelector,
-} from '~/Infrastructure/redux/user-slice';
+import { type UserState, userSelector } from '~/Infrastructure/redux/user-slice';
 import { NotFound } from '~/NotFound/NotFound';
 
 import { CustomRoutes } from './CustomRoutes';
 import { type RouteTable, table } from './routes';
 
-function canUserAccessComponent(
-  routeTable: RouteTable,
-  user: UserState
-): boolean {
+function canUserAccessComponent(routeTable: RouteTable, user: UserState): boolean {
   if (routeTable.location === CustomRoutes.usersLogin() && user.isLoggedIn) {
     return false;
   }
@@ -58,9 +52,14 @@ function UserAccessBoundary(props: UserAccessBoundaryProps) {
 
 function ScrollToTop() {
   const location = useLocation();
+  const prevPathname = useRef(location.pathname);
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to top when location changes
+    // Check if the pathname has changed (not search params)
+    if (location.pathname !== prevPathname.current) {
+      window.scrollTo(0, 0); // Scroll to top when path changes
+      prevPathname.current = location.pathname; // Update the reference to the new path
+    }
   }, [location]);
 
   return null; // Doesn't render anything

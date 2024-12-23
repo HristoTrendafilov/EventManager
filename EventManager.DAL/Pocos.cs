@@ -419,6 +419,9 @@ namespace EventManager.DAL
 
 		[Column(Name = "organization_description")]
 		public virtual string OrganizationDescription { get; set; }
+
+		[Column(Name = "organization_logo_relative_path")]
+		public virtual string OrganizationLogoRelativePath { get; set; }
 	}
 
 	[Table(Name = "v_exceptions")]

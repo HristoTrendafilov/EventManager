@@ -471,7 +471,7 @@ namespace EventManager.API.Controllers
         }
 
         [HttpGet("{userId}/profile/organizations")]
-        public async Task<ActionResult> GetUserEventsSubscription(long userId, UserProfileOrganizationType type)
+        public async Task<ActionResult> GetUserOrganizationsSubscription(long userId, UserProfileOrganizationType type)
         {
             var organizations = new List<UserProfileOrganization>();
 
