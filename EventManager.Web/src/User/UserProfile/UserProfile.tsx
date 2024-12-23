@@ -32,12 +32,14 @@ export interface UserEventsOptions {
   events: UserProfileEvent[];
   type: string;
   error: string | undefined;
+  loading: boolean;
 }
 
 export interface UserOrganizationsOptions {
   organizations: UserProfileOrganization[];
   type: string;
   error: string | undefined;
+  loading: boolean;
 }
 
 export function UserProfile() {
@@ -47,7 +49,7 @@ export function UserProfile() {
 
   const [userView, setUserView] = useState<UserView | undefined>();
   const [error, setError] = useState<string | undefined>();
-  const [showGallery, setShowGallery] = useState<boolean>(false);
+  const [gallery, setGallery] = useState<boolean>(false);
 
   // Get the selected tab from the URL query parameter (default to 'aboutMe')
   const selectedTab = (searchParams.get('tab') as UserTab) || 'aboutMe';
@@ -57,12 +59,14 @@ export function UserProfile() {
     events: [],
     type: selectedType || UserProfileEventType.Subscriptions.toString(),
     error: undefined,
+    loading: false,
   });
 
   const [organizationsOptions, setOrganizationsOptions] = useState<UserOrganizationsOptions>({
     organizations: [],
     type: selectedType || UserProfileOrganizationType.Subscriptions.toString(),
     error: undefined,
+    loading: false,
   });
 
   const loadUserView = useCallback(async () => {
@@ -75,12 +79,12 @@ export function UserProfile() {
     setUserView(userViewResponse.data);
   }, [userId]);
 
-  const handleShowGallery = useCallback(() => {
-    setShowGallery(true);
+  const showGallery = useCallback(() => {
+    setGallery(true);
   }, []);
 
-  const handleCloseGallery = useCallback(() => {
-    setShowGallery(false);
+  const closeGallery = useCallback(() => {
+    setGallery(false);
   }, []);
 
   const handleTabChange = useCallback(
@@ -103,37 +107,44 @@ export function UserProfile() {
 
   const handleEventTypeChange = useCallback(
     async (type: string) => {
-      setEventsOptions((prevOptions) => ({ ...prevOptions, error: undefined }));
+      setEventsOptions((prevOptions) => ({ ...prevOptions, error: undefined, loading: true }));
 
       const response = await getUserProfileEvents(Number(userId), Number.parseInt(type, 10) as UserProfileEventType);
       if (!response.success) {
-        setEventsOptions((prevOptions) => ({ ...prevOptions, error: response.errorMessage }));
+        setEventsOptions((prevOptions) => ({ ...prevOptions, error: response.errorMessage, loading: false }));
         return;
       }
 
       setSearchParams({ tab: selectedTab, type });
-      setEventsOptions({ events: response.data, type: type.toString(), error: undefined });
+      setEventsOptions({ events: response.data, type: type.toString(), error: undefined, loading: false });
+      restoreScrollPosition();
     },
-    [selectedTab, setSearchParams, userId]
+    [restoreScrollPosition, selectedTab, setSearchParams, userId]
   );
 
   const handleOrganizationTypeChange = useCallback(
     async (type: string) => {
-      setOrganizationsOptions((prevOptions) => ({ ...prevOptions, error: undefined }));
+      setOrganizationsOptions((prevOptions) => ({ ...prevOptions, error: undefined, loading: true }));
 
       const response = await getUserProfileOrganizations(
         Number(userId),
         Number.parseInt(type, 10) as UserProfileOrganizationType
       );
       if (!response.success) {
-        setOrganizationsOptions((prevOptions) => ({ ...prevOptions, error: response.errorMessage }));
+        setOrganizationsOptions((prevOptions) => ({ ...prevOptions, error: response.errorMessage, loading: false }));
         return;
       }
 
       setSearchParams({ tab: selectedTab, type });
-      setOrganizationsOptions({ organizations: response.data, type: type.toString(), error: undefined });
+      setOrganizationsOptions({
+        organizations: response.data,
+        type: type.toString(),
+        error: undefined,
+        loading: false,
+      });
+      restoreScrollPosition();
     },
-    [selectedTab, setSearchParams, userId]
+    [restoreScrollPosition, selectedTab, setSearchParams, userId]
   );
 
   const renderTabContent = useCallback(() => {
@@ -146,7 +157,6 @@ export function UserProfile() {
             userIsOrganizationManager={userView?.isOrganizationManager || false}
             options={organizationsOptions}
             saveScrollPosition={saveScrollPosition}
-            restoreScrollPosition={restoreScrollPosition}
             onInputChange={handleOrganizationTypeChange}
           />
         );
@@ -156,7 +166,6 @@ export function UserProfile() {
             userIsEventManager={userView?.isEventManager || false}
             options={eventsOptions}
             saveScrollPosition={saveScrollPosition}
-            restoreScrollPosition={restoreScrollPosition}
             onInputChange={handleEventTypeChange}
           />
         );
@@ -168,7 +177,6 @@ export function UserProfile() {
     handleEventTypeChange,
     handleOrganizationTypeChange,
     organizationsOptions,
-    restoreScrollPosition,
     saveScrollPosition,
     selectedTab,
     userView,
@@ -198,7 +206,7 @@ export function UserProfile() {
                       type="button"
                       className="unset-btn d-flex justify-content-center"
                       aria-label="Open gallery"
-                      onClick={handleShowGallery}
+                      onClick={showGallery}
                     >
                       <img
                         src={userView.userProfilePictureUrl}
@@ -300,13 +308,8 @@ export function UserProfile() {
         </section>
       )}
 
-      {showGallery && userView && (
-        <div>
-          <ImageGalleryModal
-            items={[{ original: userView.userProfilePictureUrl }]}
-            onCloseButtonClick={handleCloseGallery}
-          />
-        </div>
+      {gallery && userView && (
+        <ImageGalleryModal items={[{ original: userView.userProfilePictureUrl }]} onCloseButtonClick={closeGallery} />
       )}
     </div>
   );

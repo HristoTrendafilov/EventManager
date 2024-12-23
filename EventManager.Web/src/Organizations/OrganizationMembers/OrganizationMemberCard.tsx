@@ -39,18 +39,24 @@ export function OrganizationMemberCard(props: OrganizationMemberCardProps) {
 
   return (
     <div key={member.userId} className="card mb-1">
-      <div className="card-body p-1 d-flex">
+      <div className="card-body p-1 d-flex flex-grow-1 position-relative">
+        {member.isManager && (
+          <span className="position-absolute end-0 badge rounded-pill bg-primary fw-medium me-2">Мениджър</span>
+        )}
         <img src={member.userProfilePictureUrl} width={45} height={45} className="rounded-circle" alt="" />
         <div className="d-flex flex-column ms-2">
           <div className="fw-bold">{member.username}</div>
+
           <div className="small">{member.userFullName}</div>
-          <button
-            type="button"
-            className="btn btn-danger position-absolute end-0 me-2 mt-1 px-3"
-            onClick={showConfirmModal}
-          >
-            X
-          </button>
+          {!member.isManager && (
+            <button
+              type="button"
+              className="btn btn-danger position-absolute end-0 me-2 mt-1 px-3"
+              onClick={showConfirmModal}
+            >
+              X
+            </button>
+          )}
         </div>
       </div>
       {error && <ErrorMessage error={error} />}

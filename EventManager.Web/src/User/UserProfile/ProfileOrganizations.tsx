@@ -15,11 +15,10 @@ interface ProfileOrganizationsProps {
   options: UserOrganizationsOptions;
   saveScrollPosition: () => void;
   onInputChange: (value: string) => void;
-  restoreScrollPosition: () => void;
 }
 
 export function ProfileOrganizations(props: ProfileOrganizationsProps) {
-  const { userIsOrganizationManager, options, onInputChange, saveScrollPosition, restoreScrollPosition } = props;
+  const { userIsOrganizationManager, options, onInputChange, saveScrollPosition } = props;
   const { organizations, error, type } = options;
 
   const [selectOptions, setSelectOptions] = useState<SelectInputOption[]>([
@@ -46,9 +45,8 @@ export function ProfileOrganizations(props: ProfileOrganizationsProps) {
   const loadInitial = useCallback(() => {
     if (organizations.length === 0) {
       onInputChange(options.type);
-      restoreScrollPosition();
     }
-  }, [onInputChange, options.type, organizations.length, restoreScrollPosition]);
+  }, [onInputChange, options.type, organizations.length]);
 
   useEffect(() => {
     void loadInitial();

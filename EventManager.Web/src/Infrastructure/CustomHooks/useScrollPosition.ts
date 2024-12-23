@@ -18,7 +18,7 @@ export const useScrollPosition = () => {
     if (savedScrollPosition && prevPageKey === location.key) {
       setTimeout(() => {
         window.scrollTo(0, parseInt(savedScrollPosition, 10));
-      }, 50);
+      }, 100);
 
       sessionStorage.removeItem('scrollPosition');
     }

@@ -15,11 +15,10 @@ interface ProfileEventsProps {
   options: UserEventsOptions;
   saveScrollPosition: () => void;
   onInputChange: (value: string) => void;
-  restoreScrollPosition: () => void;
 }
 
 export function ProfileEvents(props: ProfileEventsProps) {
-  const { userIsEventManager, saveScrollPosition, onInputChange, options, restoreScrollPosition } = props;
+  const { userIsEventManager, saveScrollPosition, onInputChange, options } = props;
   const { events, error, type } = options;
 
   const [selectOptions, setSelectOptions] = useState<SelectInputOption[]>([
@@ -44,9 +43,8 @@ export function ProfileEvents(props: ProfileEventsProps) {
   const loadInitial = useCallback(() => {
     if (events.length === 0) {
       onInputChange(options.type);
-      restoreScrollPosition();
     }
-  }, [events.length, onInputChange, options.type, restoreScrollPosition]);
+  }, [events.length, onInputChange, options.type]);
 
   useEffect(() => {
     void loadInitial();
