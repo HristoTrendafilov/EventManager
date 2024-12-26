@@ -1,4 +1,5 @@
-﻿using EventManager.API.Dto.Organization;
+﻿using EventManager.API.Dto.Event;
+using EventManager.API.Dto.Organization;
 using EventManager.API.Dto.User;
 using EventManager.API.Helpers;
 using EventManager.API.Services.FileStorage;
@@ -250,6 +251,23 @@ namespace EventManager.API.Services.Organization
             var organizationsView = Mapper.CreateList<OrganizationView>(organizationsViewPoco);
 
             return organizationsView;
+        }
+
+        public async Task<List<EventView>> GetOrganizationEvents(long organizationId)
+        {
+            var eventsViewPoco = await _db.VEvents
+                .Where(x => x.OrganizationId == organizationId)
+                .OrderByDescending(x => x.EventCreatedOnDateTime)
+                .ToListAsync();
+
+            var eventsView = Mapper.CreateList<EventView>(eventsViewPoco);
+
+            foreach (var eventView in eventsView)
+            {
+                eventView.MainImageUrl = _fileService.CreatePublicFileUrl(eventView.MainImageRelativePath, FileService.NO_IMAGE_FILE);
+            }
+
+            return eventsView;
         }
     }
 }

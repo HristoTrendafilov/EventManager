@@ -1,5 +1,6 @@
 import { callApi } from '~/Infrastructure/api-client';
 import type {
+  EventView,
   OrganizationForUpdate,
   OrganizationMemberView,
   OrganizationMembersNew,
@@ -49,4 +50,8 @@ export function getOrganizationMembers(organizationId: number, usersIds?: number
     usersIds.forEach((id) => params.append('userIds', id.toString()));
   }
   return callApi<OrganizationMemberView[]>(`/organizations/${organizationId}/members?${params.toString()}`, 'GET');
+}
+
+export function getOrganizationEvents(organizationId: number) {
+  return callApi<EventView[]>(`/organizations/${organizationId}/events`, 'GET');
 }

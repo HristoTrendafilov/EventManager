@@ -169,6 +169,7 @@ export interface OrganizationView {
   organizationLogoUrl: string;
   isUserSubscribed: boolean;
   canEdit: boolean;
+  events: EventView[];
   organizationId: number;
   organizationName: string;
   organizationDescription: string;

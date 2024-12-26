@@ -1,4 +1,5 @@
-﻿using EventManager.API.Dto.Organization;
+﻿using EventManager.API.Dto.Event;
+using EventManager.API.Dto.Organization;
 using EventManager.DAL;
 using System.Linq.Expressions;
 
@@ -21,5 +22,6 @@ namespace EventManager.API.Services.Organization
         Task<bool> OrganizationSubscriptionExistsAsync(Expression<Func<OrganizationSubscriptionPoco, bool>> predicate);
         Task<List<OrganizationMemberView>> GetAllOrganizationMembersViewAsync(Expression<Func<VOrganizationMemberPoco, bool>> predicate);
         Task<List<OrganizationView>> GetUserOrganizationsAsync(long userId, bool includeDefault);
+        Task<List<EventView>> GetOrganizationEvents(long organizationId);
     }
 }

@@ -20,7 +20,6 @@ using EventManager.API.Dto.User.Role;
 using EventManager.API.BackgroundServices;
 using EventManager.API.Services.FileStorage;
 using EventManager.API.Services.Organization;
-using EventManager.API.Dto.Event;
 
 namespace EventManager.API.Controllers
 {

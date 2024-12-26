@@ -1,5 +1,4 @@
 ﻿using EventManager.API.Core;
-using EventManager.API.Dto;
 using EventManager.API.Helpers;
 using EventManager.API.Helpers.Extensions;
 using EventManager.API.Services.Organization;
@@ -7,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using EventManager.API.Dto.Organization;
 using EventManager.API.Services.Shared;
-using EventManager.API.Dto.Event;
 using EventManager.BOL;
 using EventManager.DAL;
 using EventManager.API.Dto.User;
@@ -50,6 +48,7 @@ namespace EventManager.API.Controllers
             organization.IsUserSubscribed = currentUserId.HasValue &&
                 await _organizationService.OrganizationSubscriptionExistsAsync(x => x.OrganizationId == organizationId
                                                                                 && x.UserId == currentUserId.Value);
+            organization.Events = await _organizationService.GetOrganizationEvents(organizationId);
 
             return Ok(organization);
         }
@@ -151,6 +150,11 @@ namespace EventManager.API.Controllers
             if (!await _organizationService.OrganizationMemberExists(x => x.UserId == userId && x.OrganizationId == organizationId))
             {
                 return BadRequest($"Не съществува членство на потребител с ID: {userId}");
+            }
+
+            if (!await _organizationService.OrganizationMemberExists(x => x.UserId == userId && x.IsManager))
+            {
+                return BadRequest($"Нямате право да изтривате мениджър на организация");
             }
 
             await _organizationService.DeleteOrganizationMember(userId, organizationId, User.X_CurrentUserId());
