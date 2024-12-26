@@ -27,9 +27,7 @@ const defaultValues: EventSearchFilterType = {
 export function EventSearch() {
   const [events, setEvents] = useState<EventView[]>([]);
   const [error, setError] = useState<string | undefined>();
-  const [pagination, setPagination] = useState<
-    PaginationMetadata | undefined
-  >();
+  const [pagination, setPagination] = useState<PaginationMetadata | undefined>();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -56,9 +54,7 @@ export function EventSearch() {
 
       const paginationHeader = response.headers.get('X-Pagination');
       if (paginationHeader) {
-        const paginationValue = JSON.parse(
-          paginationHeader
-        ) as PaginationMetadata;
+        const paginationValue = JSON.parse(paginationHeader) as PaginationMetadata;
         setPagination(paginationValue);
       }
 
@@ -77,18 +73,14 @@ export function EventSearch() {
       const queryParams = new URLSearchParams();
 
       // Dynamically iterate over the keys of `defaultValues`
-      (
-        Object.keys(defaultValues) as Array<keyof EventSearchFilterType>
-      ).forEach((key) => {
+      (Object.keys(defaultValues) as Array<keyof EventSearchFilterType>).forEach((key) => {
         const value = formValues[key]; // Access the value from form
         if (value) {
           queryParams.append(key, value.toString()); // Add key-value pairs dynamically
         }
       });
 
-      navigate(
-        `${CustomRoutes.eventsSearchPage(pageNumber)}?${queryParams.toString()}`
-      );
+      navigate(`${CustomRoutes.eventsSearchPage(pageNumber)}?${queryParams.toString()}`);
     },
     [form, navigate]
   );
@@ -128,10 +120,7 @@ export function EventSearch() {
             >
               <div className="accordion-body">
                 <CustomForm form={form} onSubmit={handleSubmit}>
-                  <CustomInput
-                    {...form.register('eventName')}
-                    label="Име на събитието"
-                  />
+                  <CustomInput {...form.register('eventName')} label="Име на събитието" />
                   <div className="d-flex justify-content-center">
                     <button type="submit" className="btn btn-primary w-200px">
                       Търси
@@ -143,22 +132,16 @@ export function EventSearch() {
           </div>
         </div>
         {error && <ErrorMessage error={error} />}
-        <div>
-          {events.length > 0 &&
-            events.map((x) => <EventSearchCard key={x.eventId} event={x} />)}
-        </div>
+        <div>{events.length > 0 && events.map((x) => <EventSearchCard key={x.eventId} event={x} />)}</div>
       </div>
 
       {pagination && (
         <nav aria-label="Page navigation" className="w-100">
           <ul className="pagination d-flex flex-wrap justify-content-center mt-4">
-            {/* Previous Button */}
             <li className="page-item">
               <button
                 type="button"
-                className={`page-link ${
-                  pagination.currentPage === 1 ? 'disabled' : ''
-                }`}
+                className={`page-link ${pagination.currentPage === 1 ? 'disabled' : ''}`}
                 onClick={() => navigateTo(pagination.currentPage - 1)}
                 aria-label="previous"
               >
@@ -170,17 +153,14 @@ export function EventSearch() {
             {Array.from({ length: pagination.totalPages }, (_, index) => {
               const pageX = index + 1;
               const isNearCurrentPage =
-                pageX === pagination.currentPage ||
-                Math.abs(pageX - pagination.currentPage) <= 2;
+                pageX === pagination.currentPage || Math.abs(pageX - pagination.currentPage) <= 2;
 
               if (isNearCurrentPage) {
                 return (
                   <li key={pageX} className="page-item">
                     <button
                       type="button"
-                      className={`page-link ${
-                        pagination.currentPage === pageX ? 'active' : ''
-                      }`}
+                      className={`page-link ${pagination.currentPage === pageX ? 'active' : ''}`}
                       onClick={() => navigateTo(pageX)}
                     >
                       {pageX}
@@ -196,11 +176,7 @@ export function EventSearch() {
             <li className="page-item">
               <button
                 type="button"
-                className={`page-link ${
-                  pagination.currentPage === pagination.totalPages
-                    ? 'disabled'
-                    : ''
-                }`}
+                className={`page-link ${pagination.currentPage === pagination.totalPages ? 'disabled' : ''}`}
                 onClick={() => navigateTo(pagination.currentPage + 1)}
                 aria-label="next"
               >

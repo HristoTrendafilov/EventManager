@@ -85,54 +85,52 @@ export function OrganizationsCatalog() {
   );
 
   return (
-    <div className="mw-900px m-50auto">
-      <div className="container">
-        <div className="card">
-          <h4 className="card-header d-flex justify-content-between align-items-center">
-            <div>Организации</div>
-            <button type="button" className="btn btn-success" onClick={() => showFormModal()}>
-              Нова организация
-            </button>
-          </h4>
-          <div className="card-body">
-            <TextInput
-              name="filterName"
-              label="Търси"
-              value={filter.organizationName}
-              onChange={handleFilterNameChange}
-            />
+    <div className="container mt-4 mw-900px">
+      <div className="card">
+        <h4 className="card-header _primary-bg-gradient-color text-white d-flex justify-content-between align-items-center">
+          <div>Организации</div>
+          <button type="button" className="btn btn-lime" onClick={() => showFormModal()}>
+            Нова организация
+          </button>
+        </h4>
+        <div className="card-body">
+          <TextInput
+            name="filterName"
+            label="Търси"
+            value={filter.organizationName}
+            onChange={handleFilterNameChange}
+          />
 
-            <hr />
+          <hr />
 
-            {displayedOrganizations.length > 0 ? (
-              displayedOrganizations.map((x) => (
-                <button
-                  className="unset-btn"
-                  type="button"
-                  aria-label="edit"
-                  onClick={() => showFormModal(x.organizationId)}
-                  key={x.organizationId}
-                >
-                  <div key={x.organizationId} className="card mb-2">
-                    <div className="card-body p-1">
-                      <div className="row">
-                        <div className="col-4">
-                          <div className="d-flex h-100px">
-                            <img src={x.organizationLogoUrl} className="w-100 object-fit-cover" alt="" />
-                          </div>
+          {displayedOrganizations.length > 0 ? (
+            displayedOrganizations.map((x) => (
+              <button
+                className="unset-btn"
+                type="button"
+                aria-label="edit"
+                onClick={() => showFormModal(x.organizationId)}
+                key={x.organizationId}
+              >
+                <div key={x.organizationId} className="card mb-2">
+                  <div className="card-body p-1">
+                    <div className="row">
+                      <div className="col-4">
+                        <div className="d-flex h-100px">
+                          <img src={x.organizationLogoUrl} className="w-100 object-fit-cover" alt="" />
                         </div>
-                        <div className="col-8">
-                          <h4>{x.organizationName}</h4>
-                        </div>
+                      </div>
+                      <div className="col-8">
+                        <h4>{x.organizationName}</h4>
                       </div>
                     </div>
                   </div>
-                </button>
-              ))
-            ) : (
-              <p>Няма намерени Организации</p>
-            )}
-          </div>
+                </div>
+              </button>
+            ))
+          ) : (
+            <p>Няма намерени Организации</p>
+          )}
         </div>
       </div>
 

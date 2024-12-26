@@ -1,13 +1,6 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  type ChangeEvent,
-  type ComponentProps,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import { type ChangeEvent, type ComponentProps, forwardRef, useCallback, useEffect, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import '~/Infrastructure/components/Form/SharedForm.css';
@@ -16,24 +9,22 @@ import '~/Infrastructure/components/Form/TextArea/TextArea.css';
 interface CustomTextAreaProps extends ComponentProps<'textarea'> {
   name: string;
   label: string;
+  addAsterisk?: boolean;
 }
 
-export const CustomTextArea = forwardRef<
-  HTMLTextAreaElement,
-  CustomTextAreaProps
->((props, ref) => {
-  const { name, label } = props;
+export const CustomTextArea = forwardRef<HTMLTextAreaElement, CustomTextAreaProps>((props, ref) => {
+  const { addAsterisk, ...restProps } = props;
 
   const { getFieldState, formState, setValue } = useFormContext();
-  const state = getFieldState(name, formState);
+  const state = getFieldState(props.name, formState);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLTextAreaElement>) => {
-      setValue(name, event.target.value);
+      setValue(props.name, event.target.value);
     },
-    [name, setValue]
+    [props.name, setValue]
   );
 
   useEffect(() => {
@@ -47,16 +38,11 @@ export const CustomTextArea = forwardRef<
 
   return (
     <div className="textarea-wrapper" ref={wrapperRef}>
-      <label className="textarea-label" htmlFor={name}>
-        {label}
+      <label className="textarea-label" htmlFor={props.name}>
+        {props.label}
+        {addAsterisk && <span className="text-danger">*</span>}
       </label>
-      <textarea
-        {...props}
-        ref={ref}
-        className="textarea-input"
-        id={name}
-        onChange={handleChange}
-      />
+      <textarea {...restProps} ref={ref} className="textarea-input" id={props.name} onChange={handleChange} />
       {state.error && (
         <p className="input-validation-error">
           <FontAwesomeIcon icon={faExclamationTriangle} />

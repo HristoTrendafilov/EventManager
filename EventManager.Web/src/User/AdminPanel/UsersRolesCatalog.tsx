@@ -1,15 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import {
-  getAllRoles,
-  getUsersForRoles,
-} from '~/Infrastructure/ApiRequests/users-requests';
-import {
-  RoleFilterSchema,
-  type RoleFilterType,
-  type RoleView,
-  type UserView,
-} from '~/Infrastructure/api-types';
+import { getAllRoles, getUsersForRoles } from '~/Infrastructure/ApiRequests/users-requests';
+import { RoleFilterSchema, type RoleFilterType, type RoleView, type UserView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
@@ -49,34 +41,25 @@ export function UsersRolesCatalog() {
   }, [loadRoles]);
 
   return (
-    <div className="container">
-      <div className="mw-800px m-70auto">
-        {error && <ErrorMessage error={error} />}
-        <div className="card">
-          <h4 className="card-header">Потребителски права</h4>
-          <div className="card-body">
-            <CustomForm form={form} onSubmit={handleFormSubmit}>
-              <div className="row">
-                <div className="col-md-8">
-                  <CustomInput
-                    {...form.register('username')}
-                    label="Потребителско име"
-                    required
-                  />
-                </div>
-                <div className="col-md-4">
-                  <button type="submit" className="btn btn-primary w-100">
-                    Търси
-                  </button>
-                </div>
+    <div className="container mw-700px mt-4">
+      {error && <ErrorMessage error={error} />}
+      <div className="card shadow">
+        <h4 className="card-header _primary-bg-gradient-color text-white">Потребителски права</h4>
+        <div className="card-body">
+          <CustomForm form={form} onSubmit={handleFormSubmit}>
+            <div className="row">
+              <div className="col-md-8">
+                <CustomInput {...form.register('username')} label="Потребителско име" required />
               </div>
-            </CustomForm>
-            <hr />
-            {users.length > 0 &&
-              users.map((x) => (
-                <UserRole key={x.userId} user={x} roles={roles} />
-              ))}
-          </div>
+              <div className="col-md-4">
+                <button type="submit" className="btn btn-primary w-100">
+                  Търси
+                </button>
+              </div>
+            </div>
+          </CustomForm>
+          <hr />
+          {users.length > 0 && users.map((x) => <UserRole key={x.userId} user={x} roles={roles} />)}
         </div>
       </div>
     </div>

@@ -114,11 +114,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
       <CustomForm form={form} onSubmit={handleSubmit}>
         <div className="row">
           <div className="profile-picture-wrapper">
-            <img
-              alt="profile"
-              className="profile-picture"
-              src={croppedImage || noUserLogo}
-            />
+            <img alt="profile" className="profile-picture" src={croppedImage || noUserLogo} />
           </div>
           <CustomFileInputButton
             {...form.register('profilePicture')}
@@ -129,43 +125,22 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           />
           <hr />
           <div className="col-lg-6">
-            <CustomTextArea
-              {...form.register('userShortDescription')}
-              label="Кратко описание"
-              rows={3}
-            />
-            <CustomInput
-              {...form.register('userPhoneNumber')}
-              label="Телефон"
-            />
+            <CustomTextArea {...form.register('userShortDescription')} label="Кратко описание" rows={3} />
+            <CustomInput {...form.register('userPhoneNumber')} label="Телефон" />
           </div>
           <div className="col-lg-6">
-            <CustomInput
-              {...form.register('userFirstName')}
-              label="Име"
-              required
-            />
+            <CustomInput {...form.register('userFirstName')} label="Име" addAsterisk />
             <CustomInput {...form.register('userSecondName')} label="Презиме" />
-            <CustomInput
-              {...form.register('userLastName')}
-              label="Фамилия"
-              required
-            />
+            <CustomInput {...form.register('userLastName')} label="Фамилия" addAsterisk />
           </div>
         </div>
 
-        <RegionSelect
-          {...form.register('regionId')}
-          label="Живея в"
-          isNumber
-          required
-          searchable={false}
-        />
+        <RegionSelect {...form.register('regionId')} label="Живея в" isNumber addAsterisk searchable={false} />
         <RegionMultiSelect
           {...form.register('userRegionsHelpingIds')}
           label="Искам да помагам в"
           isNumber
-          required
+          addAsterisk
           searchable={false}
         />
 

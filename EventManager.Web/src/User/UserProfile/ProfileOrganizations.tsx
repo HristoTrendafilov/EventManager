@@ -19,7 +19,7 @@ interface ProfileOrganizationsProps {
 
 export function ProfileOrganizations(props: ProfileOrganizationsProps) {
   const { userIsOrganizationManager, options, onInputChange, saveScrollPosition } = props;
-  const { organizations, error, type } = options;
+  const { organizations, error, type, hasLoadedOnce } = options;
 
   const [selectOptions, setSelectOptions] = useState<SelectInputOption[]>([
     { value: UserProfileOrganizationType.Subscriptions.toString(), label: 'Организации за които съм се записал' },
@@ -43,10 +43,10 @@ export function ProfileOrganizations(props: ProfileOrganizationsProps) {
   }, [userIsOrganizationManager]);
 
   const loadInitial = useCallback(() => {
-    if (organizations.length === 0) {
+    if (organizations.length === 0 && !hasLoadedOnce) {
       onInputChange(options.type);
     }
-  }, [onInputChange, options.type, organizations.length]);
+  }, [hasLoadedOnce, onInputChange, options.type, organizations.length]);
 
   useEffect(() => {
     void loadInitial();

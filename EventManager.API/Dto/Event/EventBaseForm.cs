@@ -16,6 +16,7 @@ namespace EventManager.API.Dto.Event
         [Range(1, long.MaxValue, ErrorMessage = "Регионът на събитието е задължителен.")]
         public virtual long RegionId { get; set; }
 
+        [Range(1, long.MaxValue, ErrorMessage = "Изберете организация или N/A.")]
         public virtual long OrganizationId { get; set; }
 
         [Nullable]

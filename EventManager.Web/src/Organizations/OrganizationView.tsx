@@ -92,7 +92,7 @@ export function OrganizationViewComponent() {
       {organization && (
         <div className="row g-3">
           <div className="col-md-4">
-            <div className="card">
+            <div className="card _primary-border shadow">
               <div className="card-header">
                 {organization.canEdit && (
                   <div className="position-absolute end-0 pe-3">
@@ -145,32 +145,26 @@ export function OrganizationViewComponent() {
             <h4>Събития, създадени от организацията</h4>
             <hr />
             {organization.events.length > 0 ? (
-              organization.events.map((event) => (
-                <div className="mb-2">
-                  <Link
-                    className="unset-anchor"
-                    to={CustomRoutes.eventsView(event.eventId)}
-                    onClick={saveScrollPosition}
-                  >
-                    <div className="card">
+              organization.events.map((x) => (
+                <div key={x.eventId} className="mb-2">
+                  <Link className="unset-anchor" to={CustomRoutes.eventsView(x.eventId)} onClick={saveScrollPosition}>
+                    <div className="card _primary-border shadow">
                       <div className="card-body">
                         <div className="row">
                           <div className="col-12 col-sm-4">
                             <div className="d-flex h-200px">
-                              <img className="object-fit-cover w-100" src={event.mainImageUrl} alt={event.eventName} />
+                              <img className="object-fit-cover w-100" src={x.mainImageUrl} alt={x.organizationName} />
                             </div>
                           </div>
                           <div className="col-12 col-sm-8">
-                            <div className="d-flex d-sm-block justify-content-center fs-5 fw-bold">
-                              {event.eventName}
-                            </div>
+                            <div className="d-flex d-sm-block justify-content-center fs-5 fw-bold">{x.eventName}</div>
                             <hr className="m-1" />
-                            <div className="clip-7-rows">{event.eventDescription}</div>
+                            <div className="clip-7-rows">{x.eventDescription}</div>
                           </div>
                         </div>
                       </div>
                       <div className="card-footer">
-                        <div>Създаден на: {formatDateTime(event.eventCreatedOnDateTime)}</div>
+                        <div>Създаден на: {formatDateTime(x.eventCreatedOnDateTime)}</div>
                       </div>
                     </div>
                   </Link>

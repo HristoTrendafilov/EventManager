@@ -1,15 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import {
-  createRegion,
-  getRegionForUpdate,
-  updateRegion,
-} from '~/Infrastructure/ApiRequests/regions-request';
-import {
-  RegionBaseFormSchema,
-  type RegionBaseFormType,
-  type RegionView,
-} from '~/Infrastructure/api-types';
+import { createRegion, getRegionForUpdate, updateRegion } from '~/Infrastructure/ApiRequests/regions-request';
+import { RegionBaseFormSchema, type RegionBaseFormType, type RegionView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
@@ -77,24 +69,16 @@ export function RegionModal(props: RegionModalProps) {
   return (
     <Modal onBackdropClick={onCancel}>
       <div className="container">
-        <div className="mw-500px m-70auto">
-          <div className="card mt-4">
-            <h3 className="card-header">
+        <div className="mw-500px m-50auto">
+          <div className="card _primary-border mt-4">
+            <h3 className="card-header _primary-bg-gradient-color text-white">
               {regionId ? `Редакция на регион (#${regionId})` : 'Нов регион'}
             </h3>
             <div className="card-body">
               <CustomForm form={form} onSubmit={handleFormSubmit}>
-                <CustomInput
-                  label="Наименование"
-                  {...form.register('regionName')}
-                  required
-                />
+                <CustomInput label="Наименование" {...form.register('regionName')} addAsterisk />
                 <div className="d-flex gap-2">
-                  <button
-                    type="button"
-                    className="btn btn-warning w-100"
-                    onClick={onCancel}
-                  >
+                  <button type="button" className="btn btn-warning w-100" onClick={onCancel}>
                     Изход
                   </button>
                   <button type="submit" className="btn btn-primary w-100">

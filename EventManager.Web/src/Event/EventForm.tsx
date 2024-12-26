@@ -28,7 +28,10 @@ export function Event() {
   const { eventId } = useParams();
   const navigate = useNavigate();
 
-  const { form } = useZodForm({ schema: EventBaseFormSchema });
+  const { form } = useZodForm({
+    schema: EventBaseFormSchema,
+    defaultValues: { regionId: 0, organizationId: 0 },
+  });
 
   const user = useSelector(userSelector);
 
@@ -101,19 +104,21 @@ export function Event() {
     <div className="event-wrapper">
       <div className="container">
         <div className="mw-800px m-50auto">
-          <div className="card">
-            <h3 className="card-header">{eventId ? `Редакция на събитие (#${eventId})` : 'Ново събитие'}</h3>
+          <div className="card shadow _primary-border">
+            <h3 className="card-header _primary-bg-gradient-color text-white">
+              {eventId ? `Редакция на събитие (#${eventId})` : 'Ново събитие'}
+            </h3>
 
             <div className="card-body">
               <CustomForm form={form} onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-md-6">
-                    <CustomInput {...form.register('eventName')} label="Наименование" required />
+                    <CustomInput {...form.register('eventName')} label="Наименование" addAsterisk />
                     <RegionSelect
                       {...form.register('regionId')}
                       label="Регион на събитието"
                       isNumber
-                      required
+                      addAsterisk
                       searchable={false}
                       clearable={false}
                     />
@@ -122,7 +127,7 @@ export function Event() {
                       userId={user.userId}
                       label="Организация"
                       isNumber
-                      required
+                      addAsterisk
                       setDefaultUserOrganization
                       searchable={false}
                       clearable={false}
@@ -131,7 +136,7 @@ export function Event() {
                       {...form.register('eventStartDateTime')}
                       label="Начало на събитието"
                       showTime
-                      required
+                      addAsterisk
                     />
                     <CustomDateInput
                       {...form.register('eventEndDateTime')}
@@ -157,7 +162,7 @@ export function Event() {
                     </div>
                   </div>
                   <div className="d-flex justify-content-center mt-3">
-                    <button type="submit" className="btn btn-primary w-200px">
+                    <button type="submit" className="btn btn-primary w-100">
                       {eventId ? 'Обнови' : 'Създай'}
                     </button>
                   </div>

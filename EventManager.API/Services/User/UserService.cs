@@ -116,6 +116,11 @@ namespace EventManager.API.Services.User
         public async Task<UserView> GetUserViewAsync(Expression<Func<VUserPoco, bool>> predicate)
         {
             var userViewPoco = await _db.VUsers.FirstOrDefaultAsync(predicate);
+            if (userViewPoco == null)
+            {
+                return null;
+            }
+
             var userView = Mapper.CreateObject<UserView>(userViewPoco);
             userView.UserProfilePictureUrl = _fileService.CreatePublicFileUrl(userView.UserProfilePictureRelativePath, FileService.NO_USER_LOGO);
 

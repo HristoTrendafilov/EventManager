@@ -1,12 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { saveUserRoles } from '~/Infrastructure/ApiRequests/users-requests';
-import {
-  RoleBaseFormSchema,
-  type RoleBaseFormType,
-  type RoleView,
-  type UserView,
-} from '~/Infrastructure/api-types';
+import { RoleBaseFormSchema, type RoleBaseFormType, type RoleView, type UserView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedForm';
@@ -35,9 +30,7 @@ export function UserRole(props: UserRoleProps) {
         return;
       }
 
-      toastService.success(
-        `Успешно променихте правата на потребител: ${user.username}`
-      );
+      toastService.success(`Успешно променихте правата на потребител: ${user.username}`);
     },
     [user.username]
   );
@@ -64,14 +57,10 @@ export function UserRole(props: UserRoleProps) {
                   <input
                     id={`${user.userId}_${x.roleId}`}
                     type="checkbox"
-                    checked={
-                      form.watch('rolesIds')?.includes(x.roleId) || false
-                    }
+                    checked={form.watch('rolesIds')?.includes(x.roleId) || false}
                     onChange={() => handleCheckboxChange(x.roleId)}
                   />
-                  <label htmlFor={`${user.userId}_${x.roleId}`}>
-                    {x.roleNameBg}
-                  </label>
+                  <label htmlFor={`${user.userId}_${x.roleId}`}>{x.roleNameBg}</label>
                 </div>
               ))}
             </div>

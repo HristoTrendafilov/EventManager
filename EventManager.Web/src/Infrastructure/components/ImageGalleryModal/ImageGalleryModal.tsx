@@ -18,23 +18,14 @@ export function ImageGalleryModal(props: ImageGalleryModalProps) {
       <div className="container">
         <div className="image-gallery-wrapper">
           <div className="card">
-            <div className="card-header d-flex justify-content-between align-items-center">
+            <div className="card-header _primary-bg-gradient-color text-white d-flex justify-content-between align-items-center">
               <h3>Галерия</h3>
-              <button
-                type="button"
-                className="btn btn-warning"
-                onClick={onCloseButtonClick}
-              >
+              <button type="button" className="btn btn-warning" onClick={onCloseButtonClick}>
                 Затвори
               </button>
             </div>
-            <div className="card-body p-1">
-              <ImageGallery
-                items={items}
-                startIndex={startIndex ?? 0}
-                showPlayButton={items.length > 1}
-                disableSwipe
-              />
+            <div className="card-body p-0">
+              <ImageGallery items={items} startIndex={startIndex ?? 0} showPlayButton={items.length > 1} disableSwipe />
             </div>
           </div>
         </div>

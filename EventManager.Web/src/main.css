@@ -7,10 +7,61 @@
 }
 
 :root {
-  --primary-color: linear-gradient(156.8deg, rgb(30, 144, 231) 27.1%, rgb(67, 101, 225) 77.8%);
+  --primary-color: rgb(30, 144, 231);
+  --primary-gradient-color: linear-gradient(156.8deg, rgb(30, 144, 231) 27.1%, rgb(67, 101, 225) 77.8%);
+  --secondary-color: rgb(255, 165, 0);
+  --tertiary-color: rgb(60, 179, 113);
+
   --input-border: 1px solid black;
   --input-border-color-focused: #0d6efd;
   --input-label-color: lightslategrey;
+}
+
+body {
+  background-image: url('~/asset/background.jpg');
+  background-size: cover; /* Ensures the image covers the entire background */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  background-position: center; /* Centers the image */
+}
+
+._primary-bg-color {
+  background: var(--primary-color);
+}
+
+._primary-bg-gradient-color {
+  background: var(--primary-gradient-color);
+}
+
+._secondary-bg-color {
+  background: var(--secondary-color);
+}
+
+.tertiary-bg-color {
+  background: var(--tertiary-color);
+}
+
+._primary-color {
+  color: var(--primary-color);
+}
+
+._secondary-color {
+  color: var(--secondary-color);
+}
+
+._tertiary-color {
+  color: var(--tertiary-color);
+}
+
+._primary-border {
+  border: 1px solid var(--primary-color);
+}
+
+._secondary-border {
+  border: 1px solid var(--secondary-color);
+}
+
+._tertiary-border {
+  border: 1px solid var(--tertiary-color);
 }
 
 .object-pos-center {
@@ -166,4 +217,13 @@ body,
   max-height: 9em;
   -webkit-line-clamp: 7;
   line-clamp: 7;
+}
+
+.btn-lime {
+  background-color: rgb(69, 240, 69);
+}
+
+.btn-lime:hover {
+  background-color: lime;
+  color: black;
 }

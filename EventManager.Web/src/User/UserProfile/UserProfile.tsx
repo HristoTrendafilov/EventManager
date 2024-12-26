@@ -30,6 +30,7 @@ interface UserAdditionalTab {
 
 export interface UserEventsOptions {
   events: UserProfileEvent[];
+  hasLoadedOnce: boolean;
   type: string;
   error: string | undefined;
   loading: boolean;
@@ -37,6 +38,7 @@ export interface UserEventsOptions {
 
 export interface UserOrganizationsOptions {
   organizations: UserProfileOrganization[];
+  hasLoadedOnce: boolean;
   type: string;
   error: string | undefined;
   loading: boolean;
@@ -57,6 +59,7 @@ export function UserProfile() {
 
   const [eventsOptions, setEventsOptions] = useState<UserEventsOptions>({
     events: [],
+    hasLoadedOnce: false,
     type: selectedType || UserProfileEventType.Subscriptions.toString(),
     error: undefined,
     loading: false,
@@ -64,6 +67,7 @@ export function UserProfile() {
 
   const [organizationsOptions, setOrganizationsOptions] = useState<UserOrganizationsOptions>({
     organizations: [],
+    hasLoadedOnce: false,
     type: selectedType || UserProfileOrganizationType.Subscriptions.toString(),
     error: undefined,
     loading: false,
@@ -116,7 +120,13 @@ export function UserProfile() {
       }
 
       setSearchParams({ tab: selectedTab, type });
-      setEventsOptions({ events: response.data, type: type.toString(), error: undefined, loading: false });
+      setEventsOptions({
+        events: response.data,
+        type: type.toString(),
+        error: undefined,
+        loading: false,
+        hasLoadedOnce: true,
+      });
       restoreScrollPosition();
     },
     [restoreScrollPosition, selectedTab, setSearchParams, userId]
@@ -141,6 +151,7 @@ export function UserProfile() {
         type: type.toString(),
         error: undefined,
         loading: false,
+        hasLoadedOnce: true,
       });
       restoreScrollPosition();
     },

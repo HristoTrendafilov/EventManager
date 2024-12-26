@@ -2,11 +2,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { type ComponentProps, forwardRef, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import Select, {
-  type ActionMeta,
-  type SelectInstance,
-  type SingleValue,
-} from 'react-select';
+import Select, { type ActionMeta, type SelectInstance, type SingleValue } from 'react-select';
 
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import '~/Infrastructure/components/Form/SelectInput/SelectInput.css';
@@ -23,12 +19,10 @@ export interface CustomSelectProps extends ComponentProps<'select'> {
   error?: string;
   readonly?: boolean;
   clearable?: boolean;
+  addAsterisk?: boolean;
 }
 
-export const CustomSelect = forwardRef<
-  SelectInstance<SelectInputOption>,
-  CustomSelectProps
->((props, ref) => {
+export const CustomSelect = forwardRef<SelectInstance<SelectInputOption>, CustomSelectProps>((props, ref) => {
   const {
     name,
     label,
@@ -42,6 +36,7 @@ export const CustomSelect = forwardRef<
     error,
     readonly,
     clearable,
+    addAsterisk,
   } = props;
   const { control, getFieldState } = useFormContext();
   const state = getFieldState(name);
@@ -61,6 +56,7 @@ export const CustomSelect = forwardRef<
     <div className="select-input-wrapper" ref={wrapperRef}>
       <label className="select-input-label" htmlFor={name}>
         {label}
+        {addAsterisk && <span className="text-danger">*</span>}
       </label>
       <Controller
         name={name}
@@ -88,20 +84,13 @@ export const CustomSelect = forwardRef<
             noOptionsMessage={() => 'Няма повече елементи за избор'}
             isSearchable={searchable}
             placeholder={<div>{placeholder ?? 'Избор...'}</div>}
-            onChange={(
-              newSelections: SingleValue<SelectInputOption>,
-              _: ActionMeta<SelectInputOption>
-            ) => {
-              field.onChange(
-                isNumber ? Number(newSelections?.value) : newSelections?.value
-              );
+            onChange={(newSelections: SingleValue<SelectInputOption>, _: ActionMeta<SelectInputOption>) => {
+              field.onChange(isNumber ? Number(newSelections?.value) : newSelections?.value);
             }}
             styles={{
               control: (baseStyles, inputState) => ({
                 ...baseStyles,
-                border: inputState.isFocused
-                  ? '1px solid #0d6efd'
-                  : 'var(--input-border)',
+                border: inputState.isFocused ? '1px solid #0d6efd' : 'var(--input-border)',
                 boxShadow: 'none',
                 ':hover': {
                   borderColor: 'var(--input-border-color-focused)',

@@ -1,66 +1,58 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  type ChangeEvent,
-  type ComponentProps,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-} from 'react';
+import { type ChangeEvent, type ComponentProps, forwardRef, useCallback, useEffect, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
-
-import '~/Infrastructure/components/Form/SharedForm.css';
-import '~/Infrastructure/components/Form/TextInput/TextInput.css';
 
 interface CustomInputProps extends ComponentProps<'input'> {
   name: string;
   label: string;
+  addAsterisk?: boolean;
 }
 
-export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
-  (props, ref) => {
-    const { getFieldState, formState, setValue } = useFormContext();
-    const state = getFieldState(props.name, formState);
+export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, ref) => {
+  const { getFieldState, formState, setValue } = useFormContext();
+  const state = getFieldState(props.name, formState);
 
-    const wrapperRef = useRef<HTMLDivElement>(null);
+  const { label, addAsterisk, ...inputProps } = props;
 
-    const handleChange = useCallback(
-      (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(props.name, event.target.value);
-      },
-      [props.name, setValue]
-    );
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-      if (state.error && wrapperRef.current) {
-        wrapperRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }
-    }, [state.error]);
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      setValue(props.name, event.target.value);
+    },
+    [props.name, setValue]
+  );
 
-    return (
-      <div className="text-input-wrapper" ref={wrapperRef}>
-        <label className="text-input-label" htmlFor={props.name}>
-          {props.label}
-        </label>
-        <input
-          {...props}
-          type={props.type || 'text'}
-          ref={ref}
-          className="text-input"
-          id={props.name}
-          onChange={handleChange}
-        />
-        {state.error && (
-          <p className="input-validation-error">
-            <FontAwesomeIcon icon={faExclamationTriangle} />
-            {state.error.message?.toString()}
-          </p>
-        )}
-      </div>
-    );
-  }
-);
+  useEffect(() => {
+    if (state.error && wrapperRef.current) {
+      wrapperRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [state.error]);
+
+  return (
+    <div className="text-input-wrapper" ref={wrapperRef}>
+      <label className="text-input-label" htmlFor={props.name}>
+        {label}
+        {addAsterisk && <span className="text-danger">*</span>}
+      </label>
+      <input
+        {...inputProps}
+        type={props.type || 'text'}
+        ref={ref}
+        className="text-input"
+        id={props.name}
+        onChange={handleChange}
+      />
+      {state.error && (
+        <p className="input-validation-error">
+          <FontAwesomeIcon icon={faExclamationTriangle} />
+          {state.error.message?.toString()}
+        </p>
+      )}
+    </div>
+  );
+});

@@ -146,17 +146,22 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
   return (
     <Modal onBackdropClick={onCancel}>
       <div className="container">
-        <div className="mw-800px m-70auto">
-          <div className="card mt-4">
-            <h3 className="card-header">
+        <div className="mw-800px m-50auto">
+          <div className="card mt-4 _primary-border">
+            <h3 className="card-header _primary-bg-gradient-color text-white">
               {organizationId ? `Редакция на организация (#${organizationId})` : 'Нова организация'}
             </h3>
             <div className="card-body">
               <CustomForm form={form} onSubmit={handleFormSubmit}>
                 <div className="row g-2">
                   <div className="col-md-6">
-                    <CustomInput label="Наименование" {...form.register('organizationName')} required />
-                    <CustomTextArea label="Описание" {...form.register('organizationDescription')} rows={5} required />
+                    <CustomInput label="Наименование" {...form.register('organizationName')} addAsterisk />
+                    <CustomTextArea
+                      label="Описание"
+                      {...form.register('organizationDescription')}
+                      rows={5}
+                      addAsterisk
+                    />
                     <div className="card">
                       <div className="card-header p-1 d-flex justify-content-center">
                         <CustomFileInputButton
@@ -175,9 +180,9 @@ export function OrganizationFormModal(props: OrganizationFormModalProps) {
                   </div>
                   <div className="col-md-6">
                     <div className="card">
-                      <div className="card-header d-flex justify-content-between align-items-center">
+                      <div className="card-header _primary-bg-gradient-color text-white d-flex justify-content-between align-items-center">
                         <h5>Мениджъри</h5>
-                        <button type="button" className="btn btn-success" onClick={showUserSelectModal}>
+                        <button type="button" className="btn btn-lime" onClick={showUserSelectModal}>
                           Добави
                         </button>
                       </div>

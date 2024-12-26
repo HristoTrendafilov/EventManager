@@ -1,10 +1,4 @@
-import {
-  type ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { getAllOrganizationsView } from '~/Infrastructure/ApiRequests/organizations-requests';
@@ -25,8 +19,7 @@ export function OrganizationsSearch() {
   const [organizations, setOrganizations] = useState<OrganizationView[]>([]);
 
   const [error, setError] = useState<string | undefined>();
-  const [filter, setFilter] =
-    useState<OrganizationsSearchFilter>(defaultValues);
+  const [filter, setFilter] = useState<OrganizationsSearchFilter>(defaultValues);
 
   const loadOrganizations = useCallback(async () => {
     const response = await getAllOrganizationsView();
@@ -46,9 +39,7 @@ export function OrganizationsSearch() {
     () =>
       organizations.filter((x) =>
         filter.organizationName
-          ? x.organizationName
-              .toLowerCase()
-              .includes(filter.organizationName.toLowerCase())
+          ? x.organizationName.toLowerCase().includes(filter.organizationName.toLowerCase())
           : true
       ),
     [organizations, filter.organizationName]
@@ -106,20 +97,14 @@ export function OrganizationsSearch() {
                   key={x.organizationId}
                   to={CustomRoutes.organizationsView(x.organizationId)}
                 >
-                  <div className="card h-100">
+                  <div className="card shadow _primary-border">
                     <div className="card-header">
                       <div className="d-flex h-200px">
-                        <img
-                          src={x.organizationLogoUrl}
-                          className="w-100 object-fit-cover"
-                          alt=""
-                        />
+                        <img src={x.organizationLogoUrl} className="w-100 object-fit-cover" alt="" />
                       </div>
                     </div>
                     <div className="card-body p-1">
-                      <h4 className="d-flex justify-content-center">
-                        {x.organizationName}
-                      </h4>
+                      <h4 className="d-flex justify-content-center">{x.organizationName}</h4>
                     </div>
                   </div>
                 </Link>

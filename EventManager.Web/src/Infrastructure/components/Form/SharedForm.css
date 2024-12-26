@@ -2,5 +2,5 @@
   display: flex;
   gap: 6px;
   color: red;
-  font-size: 0.9rem;
+  align-items: center;
 }

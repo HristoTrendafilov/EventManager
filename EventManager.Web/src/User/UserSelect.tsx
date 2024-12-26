@@ -69,9 +69,9 @@ export function UserSelect(props: UserSelectProps) {
     <Modal onBackdropClick={onClose}>
       <div className="container user-select-wrapper">
         <div className="mw-800px m-70auto">
-          <div className="card">
-            <div className="card-header d-flex justify-content-between">
-              <h4>Избор на потребител</h4>
+          <div className="card _primary-border">
+            <div className="card-header _primary-bg-gradient-color text-white d-flex justify-content-between">
+              <h3>Избор на потребител</h3>
               <button type="button" className="btn btn-warning" onClick={onClose}>
                 Затвори
               </button>

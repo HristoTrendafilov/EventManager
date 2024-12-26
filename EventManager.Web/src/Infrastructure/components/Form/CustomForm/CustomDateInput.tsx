@@ -1,14 +1,7 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { bg } from 'date-fns/locale';
-import {
-  type ComponentProps,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { type ComponentProps, forwardRef, useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -22,124 +15,104 @@ interface CustomDateInputProps extends ComponentProps<'input'> {
   showTime?: boolean;
   timeInterval?: number;
   nullable?: boolean;
+  addAsterisk?: boolean;
 }
 
-export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>(
-  (props, ref) => {
-    const { name, label, required, showTime, timeInterval, nullable } = props;
+export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>((props, ref) => {
+  const { name, label, required, showTime, timeInterval, nullable } = props;
 
-    const [open, setOpen] = useState<boolean>(false);
-    const [previousDate, setPreviousDate] = useState<Date | null>(null);
-    const [inputElement, setInputElement] = useState<HTMLInputElement | null>(
-      null
-    );
+  const [open, setOpen] = useState<boolean>(false);
+  const [previousDate, setPreviousDate] = useState<Date | null>(null);
 
-    const wrapperRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-    const { getFieldState, formState, control, setValue, clearErrors } =
-      useFormContext();
-    const state = getFieldState(name, formState);
+  const { getFieldState, formState, control, setValue } = useFormContext();
+  const state = getFieldState(name, formState);
 
-    const isTimeChanged = useCallback(
-      (prevDate: Date | null, newDate: Date) =>
-        prevDate &&
-        prevDate.toDateString() === newDate.toDateString() &&
-        prevDate.getTime() !== newDate.getTime(),
-      []
-    );
+  const isTimeChanged = useCallback(
+    (prevDate: Date | null, newDate: Date) =>
+      prevDate && prevDate.toDateString() === newDate.toDateString() && prevDate.getTime() !== newDate.getTime(),
+    []
+  );
 
-    const handleClearInput = useCallback(() => {
-      setValue(props.name, null);
-    }, [props.name, setValue]);
+  const handleClearInput = useCallback(() => {
+    setValue(props.name, null);
+  }, [props.name, setValue]);
 
-    useEffect(() => {
-      setInputElement(document.getElementById(name) as HTMLInputElement | null);
+  useEffect(() => {
+    if (state.error) {
+      wrapperRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [state.error, name]);
 
-      if (state.error && inputElement && !inputElement.value) {
-        clearErrors(name);
-        setOpen(true);
-        inputElement.focus();
+  return (
+    <>
+      <div className="date-input-wrapper" ref={wrapperRef}>
+        <label className="date-input-label" htmlFor={name}>
+          {label}
+          {props.addAsterisk && <span className="text-danger">*</span>}
+        </label>
+        <div className="date-input">
+          <Controller
+            control={control}
+            name={name}
+            render={({ field }) => (
+              <DatePicker
+                ref={ref}
+                onChange={(date) => {
+                  const formatted = formatToISO(date);
+                  field.onChange(formatted);
 
-        wrapperRef.current?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }
-    }, [inputElement, state.error, clearErrors, name]);
+                  if (!showTime) {
+                    setOpen(false);
 
-    return (
-      <>
-        <div className="date-input-wrapper" ref={wrapperRef}>
-          <label className="date-input-label" htmlFor={name}>
-            {label}
-          </label>
-          <div className="date-input">
-            <Controller
-              control={control}
-              name={name}
-              render={({ field }) => (
-                <DatePicker
-                  ref={ref}
-                  onChange={(date) => {
-                    const formatted = formatToISO(date);
-                    field.onChange(formatted);
+                    return;
+                  }
 
-                    if (!showTime) {
+                  if (date instanceof Date && !Number.isNaN(date.getTime())) {
+                    if (isTimeChanged(previousDate, date)) {
                       setOpen(false);
-
-                      return;
                     }
 
-                    if (date instanceof Date && !Number.isNaN(date.getTime())) {
-                      if (isTimeChanged(previousDate, date)) {
-                        setOpen(false);
-                      }
-
-                      setPreviousDate(date);
-                    }
-                  }}
-                  onInputClick={() => {
-                    setOpen(true);
-                  }}
-                  onClickOutside={() => setOpen(false)}
-                  id={name}
-                  showTimeSelect={showTime}
-                  selected={
-                    field.value ? new Date(field.value as string) : null
+                    setPreviousDate(date);
                   }
-                  dateFormat={
-                    showTime ? "d MMMM yyyy 'г.' HH:mm" : "d MMMM yyyy 'г.'"
-                  }
-                  locale={bg} // Set locale to Bulgarian
-                  timeFormat="HH:mm"
-                  timeIntervals={timeInterval ?? 30}
-                  showYearDropdown
-                  required={required}
-                  open={open}
-                  readOnly
-                />
-              )}
-            />
-            {nullable && (
-              <div className="clear-button-wrapper">
-                <button
-                  type="button"
-                  className="clear-button"
-                  onClick={handleClearInput}
-                >
-                  X
-                </button>
-              </div>
+                }}
+                onInputClick={() => {
+                  setOpen(true);
+                }}
+                onClickOutside={() => setOpen(false)}
+                id={name}
+                showTimeSelect={showTime}
+                selected={field.value ? new Date(field.value as string) : null}
+                dateFormat={showTime ? "d MMMM yyyy 'г.' HH:mm" : "d MMMM yyyy 'г.'"}
+                locale={bg} // Set locale to Bulgarian
+                timeFormat="HH:mm"
+                timeIntervals={timeInterval ?? 30}
+                showYearDropdown
+                required={required}
+                open={open}
+                readOnly
+              />
             )}
-          </div>
+          />
+          {nullable && (
+            <div className="clear-button-wrapper">
+              <button type="button" className="clear-button" onClick={handleClearInput}>
+                X
+              </button>
+            </div>
+          )}
         </div>
-        {state.error && state.error.message !== 'Invalid date' && (
-          <p className="input-validation-error mt-minus-10px">
-            <FontAwesomeIcon icon={faExclamationTriangle} />
-            {state.error.message?.toString()}
-          </p>
-        )}
-      </>
-    );
-  }
-);
+      </div>
+      {state.error && (
+        <p className="input-validation-error mt-minus-10px">
+          <FontAwesomeIcon icon={faExclamationTriangle} />
+          {state.error.message?.toString() === 'Invalid date' ? 'Изберете дата' : state.error.message?.toString()}
+        </p>
+      )}
+    </>
+  );
+});

@@ -19,7 +19,7 @@ interface ProfileEventsProps {
 
 export function ProfileEvents(props: ProfileEventsProps) {
   const { userIsEventManager, saveScrollPosition, onInputChange, options } = props;
-  const { events, error, type } = options;
+  const { events, error, type, hasLoadedOnce } = options;
 
   const [selectOptions, setSelectOptions] = useState<SelectInputOption[]>([
     { value: UserProfileEventType.Subscriptions.toString(), label: 'Събития за които съм се записал' },
@@ -41,10 +41,10 @@ export function ProfileEvents(props: ProfileEventsProps) {
   }, [userIsEventManager]);
 
   const loadInitial = useCallback(() => {
-    if (events.length === 0) {
+    if (events.length === 0 && !hasLoadedOnce) {
       onInputChange(options.type);
     }
-  }, [events.length, onInputChange, options.type]);
+  }, [events.length, hasLoadedOnce, onInputChange, options.type]);
 
   useEffect(() => {
     void loadInitial();

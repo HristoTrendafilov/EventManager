@@ -1,11 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { updateUserPassword } from '~/Infrastructure/ApiRequests/users-requests';
-import {
-  UserUpdatePasswordSchema,
-  type UserUpdatePasswordType,
-  type WebSessionView,
-} from '~/Infrastructure/api-types';
+import { UserUpdatePasswordSchema, type UserUpdatePasswordType, type WebSessionView } from '~/Infrastructure/api-types';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
 import { CustomInput } from '~/Infrastructure/components/Form/CustomForm/CustomInput';
@@ -55,19 +51,22 @@ export function UserSecurity(props: UserSecurityProps) {
           {...form.register('currentPassword')}
           label="Текуща парола"
           type="password"
-          required
+          addAsterisk
+          autoComplete="current-password"
         />
         <CustomInput
           {...form.register('newPassword')}
           label="Нова парола"
           type="password"
-          required
+          addAsterisk
+          autoComplete="new-password-repeated"
         />
         <CustomInput
           {...form.register('newPasswordRepeated')}
           label="Повторете нова парола"
           type="password"
-          required
+          addAsterisk
+          autoComplete="new-password-repeated"
         />
 
         <div className="d-flex justify-content-center mt-3">
@@ -79,9 +78,7 @@ export function UserSecurity(props: UserSecurityProps) {
       {error && <ErrorMessage error={error} />}
       <hr />
       <h4>Последно активни сесии</h4>
-      <p className="text-muted">
-        Това е лист от локации, от които сте влезли в последно време.
-      </p>
+      <p className="text-muted">Това е лист от локации, от които сте влезли в последно време.</p>
       {lastActiveWebSessions.length > 0 &&
         lastActiveWebSessions.map((x) => (
           <div key={x.webSessionId} className="card mb-2">
@@ -98,9 +95,7 @@ export function UserSecurity(props: UserSecurityProps) {
                 град: {x.ipInfoCity} ({x.ipInfoPostCode})
               </div>
               <div>регион: {x.ipInfoRegionName}</div>
-              <div className="d-flex justify-content-end">
-                {formatDateTime(x.webSessionCreatedOnDateTime)}
-              </div>
+              <div className="d-flex justify-content-end">{formatDateTime(x.webSessionCreatedOnDateTime)}</div>
             </div>
           </div>
         ))}

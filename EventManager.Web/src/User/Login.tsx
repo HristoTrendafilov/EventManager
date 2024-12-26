@@ -4,10 +4,7 @@ import { Link } from 'react-router-dom';
 
 import { loginUser } from '~/Infrastructure/ApiRequests/users-requests';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
-import {
-  UserLoginSchema,
-  type UserLoginType,
-} from '~/Infrastructure/api-types';
+import { UserLoginSchema, type UserLoginType } from '~/Infrastructure/api-types';
 import { SubmitButton } from '~/Infrastructure/components/Buttons/SubmitButton';
 import { ErrorMessage } from '~/Infrastructure/components/ErrorMessage/ErrorMessage';
 import { CustomForm } from '~/Infrastructure/components/Form/CustomForm/CustomForm';
@@ -41,37 +38,22 @@ export function Login() {
   );
 
   return (
-    <div className="mw-600px m-50auto">
-      <div className="container">
-        <div className="card">
-          <h2 className="card-header">Потребителски вход</h2>
-          <div className="card-body">
-            <CustomForm form={form} onSubmit={handleLogin}>
-              <CustomInput
-                {...form.register('username')}
-                label="Потребителско име"
-                required
-              />
-              <CustomInput
-                {...form.register('password')}
-                label="Парола"
-                type="password"
-                required
-              />
+    <div className="container mt-4 mw-700px">
+      <div className="card _primary-border shadow">
+        <h2 className="card-header _primary-bg-gradient-color text-white">Потребителски вход</h2>
+        <div className="card-body">
+          <CustomForm form={form} onSubmit={handleLogin}>
+            <CustomInput {...form.register('username')} label="Потребителско име" addAsterisk />
+            <CustomInput {...form.register('password')} label="Парола" type="password" addAsterisk />
 
-              <SubmitButton
-                text="Вход"
-                className="d-flex justify-content-center"
-                isSubmitting={isSubmitting}
-              />
-            </CustomForm>
-            {error && <ErrorMessage error={error} />}
-          </div>
+            <SubmitButton text="Вход" className="d-flex justify-content-center" isSubmitting={isSubmitting} />
+          </CustomForm>
+          {error && <ErrorMessage error={error} />}
         </div>
-        <div className="mt-1">
-          <span className="me-2">Все още нямате регистрация?</span>
-          <Link to={CustomRoutes.usersRegister()}>Регистрирай ме!</Link>
-        </div>
+      </div>
+      <div className="mt-1">
+        <span className="me-2">Все още нямате регистрация?</span>
+        <Link to={CustomRoutes.usersRegister()}>Регистрирай ме!</Link>
       </div>
     </div>
   );

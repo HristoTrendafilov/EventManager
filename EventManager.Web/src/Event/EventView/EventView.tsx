@@ -25,9 +25,7 @@ import './EventView.css';
 
 export function EventViewComponent() {
   const [error, setError] = useState<string | undefined>();
-  const [subscriptionError, setSubscriptionError] = useState<
-    string | undefined
-  >();
+  const [subscriptionError, setSubscriptionError] = useState<string | undefined>();
 
   const [event, setEvent] = useState<EventView | undefined>();
   const [isUserSubscribed, setIsUserSubscribed] = useState<boolean>(false);
@@ -80,9 +78,7 @@ export function EventViewComponent() {
     setIsUserSubscribed(false);
 
     setSubscribers((prevSubscribers) =>
-      prevSubscribers.filter(
-        (subscriber) => subscriber.userEventId !== response.data.primaryKey
-      )
+      prevSubscribers.filter((subscriber) => subscriber.userEventId !== response.data.primaryKey)
     );
     closeConfirmModal();
   }, [closeConfirmModal, eventId]);
@@ -120,21 +116,18 @@ export function EventViewComponent() {
 
           <div className="row g-2">
             <div className="col-lg-8">
-              <button className="unset-btn" type="button" onClick={showGallery}>
+              <button className="unset-btn shadow" type="button" onClick={showGallery}>
                 <div className="main-image-wrapper">
                   <img src={event.mainImageUrl} alt="main" />
                 </div>
               </button>
 
-              <div className="card mt-2">
-                <h4 className="card-header d-flex justify-content-between align-items-center">
+              <div className="card _primary-border mt-2 shadow">
+                <h4 className="card-header _primary-bg-gradient-color text-white d-flex justify-content-between align-items-center">
                   <div>Описание</div>
 
                   {event.canEdit && (
-                    <Link
-                      to={CustomRoutes.eventsUpdate(event.eventId)}
-                      className="btn btn-primary"
-                    >
+                    <Link to={CustomRoutes.eventsUpdate(event.eventId)} className="btn btn-warning">
                       Редакция
                     </Link>
                   )}
@@ -142,19 +135,11 @@ export function EventViewComponent() {
 
                 <div className="card-body">
                   <div>Начало: {formatDateTime(event.eventStartDateTime)}</div>
-                  <div>
-                    Край:{' '}
-                    {event.eventEndDateTime &&
-                      formatDateTime(event.eventEndDateTime)}
-                  </div>
+                  <div>Край: {event.eventEndDateTime && formatDateTime(event.eventEndDateTime)}</div>
                   <div>Регион: {event.regionName}</div>
                   <div>
                     Създаден от:{' '}
-                    <Link
-                      to={CustomRoutes.usersView(event.eventCreatedByUserId)}
-                    >
-                      {event.createdByUsername}
-                    </Link>
+                    <Link to={CustomRoutes.usersView(event.eventCreatedByUserId)}>{event.createdByUsername}</Link>
                   </div>
 
                   <hr />
@@ -165,8 +150,8 @@ export function EventViewComponent() {
             </div>
 
             <div className="col-lg-4">
-              <div className="card subscribers-card">
-                <div className="card-header">
+              <div className="card _primary-border subscribers-card shadow">
+                <div className="card-header _primary-bg-gradient-color text-white">
                   <div className="d-flex justify-content-between align-items-center">
                     <h5>Участници ({subscribers.length})</h5>
 
@@ -175,7 +160,7 @@ export function EventViewComponent() {
                         {!isUserSubscribed ? (
                           <button
                             type="button"
-                            className="btn btn-success"
+                            className="btn btn-lime"
                             onClick={subscribeUser}
                             disabled={event.eventHasEnded}
                           >
@@ -197,17 +182,12 @@ export function EventViewComponent() {
 
                   {!user.isLoggedIn && (
                     <div className="d-flex align-items-center gap-1">
-                      <FontAwesomeIcon icon={faInfoCircle} color="blue" />
-
-                      <div className="fst-italic">
-                        Моля, влезте в акаунта си, за да се запишете.
-                      </div>
+                      <FontAwesomeIcon icon={faInfoCircle} color="orange" />
+                      <div className="fst-italic">Моля, влезте в акаунта си, за да се запишете.</div>
                     </div>
                   )}
 
-                  {subscriptionError && (
-                    <ErrorMessage error={subscriptionError} />
-                  )}
+                  {subscriptionError && <ErrorMessage error={subscriptionError} />}
                 </div>
 
                 <div className="card-body p-2">
@@ -227,10 +207,7 @@ export function EventViewComponent() {
 
       {gallery && event && (
         <div>
-          <ImageGalleryModal
-            items={[{ original: event.mainImageUrl }]}
-            onCloseButtonClick={closeGallery}
-          />
+          <ImageGalleryModal items={[{ original: event.mainImageUrl }]} onCloseButtonClick={closeGallery} />
         </div>
       )}
 

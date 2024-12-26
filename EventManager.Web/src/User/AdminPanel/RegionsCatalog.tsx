@@ -1,10 +1,4 @@
-import {
-  type ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import { type ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { getRegions } from '~/Infrastructure/ApiRequests/regions-request';
 import type { RegionView } from '~/Infrastructure/api-types';
@@ -49,13 +43,10 @@ export function RegionsCatalog() {
     setRegions(response.data);
   }, []);
 
-  const handleFilterNameChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.target;
-      setFilter({ regionName: value });
-    },
-    []
-  );
+  const handleFilterNameChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setFilter({ regionName: value });
+  }, []);
 
   const handleOnCreated = useCallback(
     (region: RegionView) => {
@@ -68,9 +59,7 @@ export function RegionsCatalog() {
 
   const handleOnUpdated = useCallback(
     (region: RegionView) => {
-      const newRegions = regions.map((x) =>
-        x.regionId === region.regionId ? region : x
-      );
+      const newRegions = regions.map((x) => (x.regionId === region.regionId ? region : x));
 
       setRegions(newRegions);
       closeFormModal();
@@ -85,11 +74,7 @@ export function RegionsCatalog() {
   const displayedRegions = useMemo(
     () =>
       regions.filter((x) =>
-        filter.regionName
-          ? x.regionName
-              .toLowerCase()
-              .startsWith(filter.regionName.toLowerCase())
-          : true
+        filter.regionName ? x.regionName.toLowerCase().startsWith(filter.regionName.toLowerCase()) : true
       ),
     [regions, filter.regionName]
   );
@@ -97,24 +82,15 @@ export function RegionsCatalog() {
   return (
     <div className="mw-700px m-50auto">
       <div className="container">
-        <div className="card">
-          <h4 className="card-header d-flex justify-content-between align-items-center">
+        <div className="card shadow _primary-border">
+          <h4 className="card-header _primary-bg-gradient-color text-white d-flex justify-content-between align-items-center">
             <div>Региони</div>
-            <button
-              type="button"
-              className="btn btn-success"
-              onClick={() => showFormModal()}
-            >
+            <button type="button" className="btn btn-lime" onClick={() => showFormModal()}>
               Нов регион
             </button>
           </h4>
           <div className="card-body">
-            <TextInput
-              name="filterName"
-              label="Търси"
-              value={filter.regionName}
-              onChange={handleFilterNameChange}
-            />
+            <TextInput name="filterName" label="Търси" value={filter.regionName} onChange={handleFilterNameChange} />
 
             <hr />
 
@@ -123,12 +99,8 @@ export function RegionsCatalog() {
                 <div key={x.regionId} className="card mb-2">
                   <div className="card-body p-2">
                     <div className="row align-items-center">
-                      <div className="col-2 col-md-2 col-lg-1">
-                        #{x.regionId}
-                      </div>
-                      <div className="col-5 col-md-7 col-lg-8">
-                        {x.regionName}
-                      </div>
+                      <div className="col-2 col-md-2 col-lg-1">#{x.regionId}</div>
+                      <div className="col-5 col-md-7 col-lg-8">{x.regionName}</div>
                       <div className="col-5 col-md-3 col-lg-3">
                         <button
                           type="button"

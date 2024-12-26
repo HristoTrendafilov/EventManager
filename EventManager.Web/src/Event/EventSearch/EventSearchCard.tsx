@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 import type { EventView } from '~/Infrastructure/api-types';
 
-import './EventSearchCard.css';
-
 interface EventSearchCardProps {
   event: EventView;
 }
@@ -13,12 +11,12 @@ export function EventSearchCard(props: EventSearchCardProps) {
   const { event } = props;
 
   return (
-    <div className="event-search-card-wrapper mt-3">
-      <div className="container">
+    <div className="card shadow _primary-border my-3">
+      <div className="card-body">
         <Link to={CustomRoutes.eventsView(event.eventId)} className=" unset-anchor">
-          <div className="row border">
-            <div className="col-md-5 col-lg-3 p-0 d-flex justify-content-center bg-secondary-subtle">
-              <div className="d-flex" style={{ height: '215px' }}>
+          <div className="row">
+            <div className="col-md-5 col-lg-3">
+              <div className="d-flex h-200px">
                 <img className="object-fit-cover object-pos-center w-100" src={event.mainImageUrl} alt="main" />
               </div>
             </div>

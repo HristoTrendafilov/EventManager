@@ -2,14 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type UseFormProps, useForm } from 'react-hook-form';
 import type { TypeOf, ZodObject, ZodRawShape, ZodSchema } from 'zod';
 
-export interface UseZodFormProps<Z extends ZodSchema>
-  extends Exclude<UseFormProps<TypeOf<Z>>, 'resolver'> {
+export interface UseZodFormProps<Z extends ZodSchema> extends Exclude<UseFormProps<TypeOf<Z>>, 'resolver'> {
   schema: Z;
 }
 
-function getDefaultValuesFromSchema<T extends ZodObject<ZodRawShape>>(
-  schema: T
-) {
+function getDefaultValuesFromSchema<T extends ZodObject<ZodRawShape>>(schema: T) {
   const { shape } = schema; // Access shape safely since we know it's a ZodObject
   const defaultValues: Partial<Record<keyof T['shape'], null>> = {};
 
@@ -25,10 +22,7 @@ function getDefaultValuesFromSchema<T extends ZodObject<ZodRawShape>>(
   return defaultValues;
 }
 
-export const useZodForm = <Z extends ZodObject<ZodRawShape>>({
-  schema,
-  ...formProps
-}: UseZodFormProps<Z>) => {
+export const useZodForm = <Z extends ZodObject<ZodRawShape>>({ schema, ...formProps }: UseZodFormProps<Z>) => {
   const defaultValues = getDefaultValuesFromSchema(schema);
 
   const form = useForm({

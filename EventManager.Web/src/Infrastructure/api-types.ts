@@ -337,7 +337,7 @@ export const EventBaseFormSchema = z.object({
   eventName: z.string().min(1, { message: "Името на събитието е задължително." }),
   eventStartDateTime: z.coerce.date().refine(date => date >= new Date("1971-01-01") && date <= new Date("3000-01-01"), { message: "Дата на събитието е задължителна." }),
   regionId: z.number().int().min(1, { message: "Регионът на събитието е задължителен." }).max(9.223372036854776E+18, { message: "Регионът на събитието е задължителен." }),
-  organizationId: z.number().int(),
+  organizationId: z.number().int().min(1, { message: "Изберете организация или N/A." }).max(9.223372036854776E+18, { message: "Изберете организация или N/A." }),
   eventDescription: z.string().nullable(),
   eventEndDateTime: z.coerce.date().nullable(),
   mainImage: z.instanceof(FileList).nullable().refine(fileList => { if (fileList && fileList.length > 0) { return Array.from(fileList).every(file => file.size <= 1048576); } return true; }, { message: "Максималният размер за файл е 1MB" }),
