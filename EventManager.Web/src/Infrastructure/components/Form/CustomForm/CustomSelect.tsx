@@ -38,7 +38,7 @@ export const CustomSelect = forwardRef<SelectInstance<SelectInputOption>, Custom
     clearable,
     addAsterisk,
   } = props;
-  const { control, getFieldState } = useFormContext();
+  const { control, getFieldState, getValues, setValue } = useFormContext();
   const state = getFieldState(name);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -51,6 +51,13 @@ export const CustomSelect = forwardRef<SelectInstance<SelectInputOption>, Custom
       });
     }
   }, [state.error]);
+
+  useEffect(() => {
+    const currentValue = getValues(name) as number | string | undefined;
+    if (!currentValue) {
+      setValue(name, isNumber ? 0 : '');
+    }
+  }, [name, getValues, isNumber, setValue]);
 
   return (
     <div className="select-input-wrapper" ref={wrapperRef}>
@@ -71,15 +78,13 @@ export const CustomSelect = forwardRef<SelectInstance<SelectInputOption>, Custom
             isDisabled={disabled}
             isClearable={clearable}
             openMenuOnClick={!readonly}
-            value={
-              options.find((x) => {
-                if (isNumber) {
-                  return Number(x.value) === Number(field.value);
-                }
+            value={options.find((x) => {
+              if (isNumber) {
+                return Number(x.value) === Number(field.value);
+              }
 
-                return x.value === field.value;
-              }) ?? null
-            }
+              return x.value === field.value;
+            })}
             options={options}
             noOptionsMessage={() => 'Няма повече елементи за избор'}
             isSearchable={searchable}

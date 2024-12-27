@@ -20,9 +20,7 @@ export function RegionModal(props: RegionModalProps) {
 
   const [error, setError] = useState<string | undefined>();
 
-  const { form } = useZodForm({
-    schema: RegionBaseFormSchema,
-  });
+  const { form } = useZodForm({ schema: RegionBaseFormSchema });
 
   const handleFormSubmit = useCallback(
     async (regionForm: RegionBaseFormType) => {

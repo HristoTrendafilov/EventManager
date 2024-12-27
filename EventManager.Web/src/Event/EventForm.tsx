@@ -28,10 +28,7 @@ export function Event() {
   const { eventId } = useParams();
   const navigate = useNavigate();
 
-  const { form } = useZodForm({
-    schema: EventBaseFormSchema,
-    defaultValues: { regionId: 0, organizationId: 0 },
-  });
+  const { form } = useZodForm({ schema: EventBaseFormSchema });
 
   const user = useSelector(userSelector);
 
@@ -102,79 +99,72 @@ export function Event() {
 
   return (
     <div className="event-wrapper">
-      <div className="container">
-        <div className="mw-800px m-50auto">
-          <div className="card shadow _primary-border">
-            <h3 className="card-header _primary-bg-gradient-color text-white">
-              {eventId ? `Редакция на събитие (#${eventId})` : 'Ново събитие'}
-            </h3>
+      <div className="container mt-4 mw-800px">
+        <div className="card shadow _primary-border">
+          <h3 className="card-header _primary-bg-gradient-color text-white">
+            {eventId ? `Редакция на събитие (#${eventId})` : 'Ново събитие'}
+          </h3>
 
-            <div className="card-body">
-              <CustomForm form={form} onSubmit={handleSubmit}>
-                <div className="row">
-                  <div className="col-md-6">
-                    <CustomInput {...form.register('eventName')} label="Наименование" addAsterisk />
-                    <RegionSelect
-                      {...form.register('regionId')}
-                      label="Регион на събитието"
-                      isNumber
-                      addAsterisk
-                      searchable={false}
-                      clearable={false}
-                    />
-                    <OrganizationSelect
-                      {...form.register('organizationId')}
-                      userId={user.userId}
-                      label="Организация"
-                      isNumber
-                      addAsterisk
-                      setDefaultUserOrganization
-                      searchable={false}
-                      clearable={false}
-                    />
-                    <CustomDateInput
-                      {...form.register('eventStartDateTime')}
-                      label="Начало на събитието"
-                      showTime
-                      addAsterisk
-                    />
-                    <CustomDateInput
-                      {...form.register('eventEndDateTime')}
-                      label="Край на събитието"
-                      showTime
-                      nullable
-                    />
-                    <CustomTextArea {...form.register('eventDescription')} label="Описание" rows={8} />
-                  </div>
-                  <div className="col-md-6">
-                    <div className="card">
-                      <div className="card-header p-1 d-flex justify-content-center">
-                        <CustomFileInputButton
-                          {...form.register('mainImage')}
-                          label="Главна снимка"
-                          fileType={FileInputTypeEnum.Images}
-                          onFileChosen={onMainImageChosen}
-                        />
-                      </div>
-                      <div className="card-body p-1 main-image-wrapper">
-                        <img alt="main" className="w-100 object-fit-contain" src={mainImage} />
-                      </div>
+          <div className="card-body">
+            <CustomForm form={form} onSubmit={handleSubmit}>
+              <div className="row">
+                <div className="col-md-6">
+                  <CustomInput {...form.register('eventName')} label="Наименование" addAsterisk />
+                  <RegionSelect
+                    {...form.register('regionId')}
+                    label="Регион на събитието"
+                    isNumber
+                    addAsterisk
+                    searchable={false}
+                    clearable={false}
+                  />
+                  <OrganizationSelect
+                    {...form.register('organizationId')}
+                    userId={user.userId}
+                    label="Организация"
+                    isNumber
+                    addAsterisk
+                    setDefaultUserOrganization
+                    searchable={false}
+                    clearable={false}
+                  />
+                  <CustomDateInput
+                    {...form.register('eventStartDateTime')}
+                    label="Начало на събитието"
+                    showTime
+                    addAsterisk
+                  />
+                  <CustomDateInput {...form.register('eventEndDateTime')} label="Край на събитието" showTime nullable />
+                  <CustomTextArea {...form.register('eventDescription')} label="Описание" rows={8} />
+                </div>
+                <div className="col-md-6">
+                  <div className="card">
+                    <div className="card-header p-1 d-flex justify-content-center">
+                      <CustomFileInputButton
+                        {...form.register('mainImage')}
+                        label="Главна снимка"
+                        fileType={FileInputTypeEnum.Images}
+                        onFileChosen={onMainImageChosen}
+                      />
+                    </div>
+                    <div className="card-body p-1 main-image-wrapper">
+                      <img alt="main" className="w-100 object-fit-contain" src={mainImage} />
                     </div>
                   </div>
-                  <div className="d-flex justify-content-center mt-3">
-                    <button type="submit" className="btn btn-primary w-100">
-                      {eventId ? 'Обнови' : 'Създай'}
-                    </button>
-                  </div>
                 </div>
-              </CustomForm>
-            </div>
-            {error && (
-              <div className="card-footer">
-                <ErrorMessage error={error} />
+                <div className="d-flex justify-content-center mt-3">
+                  <button type="submit" className="btn btn-primary w-100">
+                    {eventId ? 'Обнови' : 'Създай'}
+                  </button>
+                </div>
               </div>
-            )}
+            </CustomForm>
           </div>
+          {error && (
+            <div className="card-footer">
+              <ErrorMessage error={error} />
+            </div>
+          )}
         </div>
       </div>
     </div>

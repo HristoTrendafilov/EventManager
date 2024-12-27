@@ -77,3 +77,17 @@
 .date-input-wrapper .clear-button:hover {
   color: red;
 }
+
+.date-input-wrapper .highlight-weekend {
+  background-color: #fce4ec; /* Light pink background */
+  color: #d32f2f; /* Red text */
+}
+
+.date-input-wrapper .highlight-weekend:hover {
+  background-color: #f8bbd0; /* Darker pink on hover */
+}
+
+.react-datepicker__day--weekend.react-datepicker__day--selected {
+  background-color: #d9534f !important; /* Highlighted darker for selected weekends */
+  color: white;
+}

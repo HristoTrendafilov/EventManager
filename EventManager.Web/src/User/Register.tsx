@@ -27,10 +27,7 @@ export function Register() {
 
   const navigate = useNavigate();
 
-  const { form } = useZodForm({
-    schema: UserNewSchema,
-    defaultValues: { regionId: 0, userRegionsHelpingIds: [] },
-  });
+  const { form } = useZodForm({ schema: UserNewSchema });
 
   const handleRegister = useCallback(
     async (user: UserNewType) => {

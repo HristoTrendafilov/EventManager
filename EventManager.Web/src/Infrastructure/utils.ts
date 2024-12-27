@@ -36,20 +36,14 @@ export function formatDateTime(date: Date | string): string {
 
 export const formatToISO = (date: Date | null): string => {
   if (date) {
-    const localDate = new Date(
-      date.getTime() - date.getTimezoneOffset() * 60000
-    );
+    const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
     return localDate.toISOString().slice(0, 16);
   }
 
   return '';
 };
 
-function appendToFormData<T extends object>(
-  formData: FormData,
-  obj: T,
-  parentKey?: string
-): void {
+function appendToFormData<T extends object>(formData: FormData, obj: T, parentKey?: string): void {
   Object.entries(obj).forEach(([key, value]) => {
     const formKey = parentKey ? `${parentKey}[${key}]` : key; // Construct the key
 
@@ -114,3 +108,20 @@ export const urlToFileList = async (url: string): Promise<FileList> => {
   dataTransfer.items.add(file);
   return dataTransfer.files;
 };
+
+export function setUrlSearchParams(params: Record<string, string | null | undefined>): void {
+  const url = new URL(window.location.href);
+  for (const [key, value] of Object.entries(params)) {
+    if (!value) {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, value);
+    }
+  }
+  window.history.replaceState({}, '', url.toString());
+}
+
+export function getUrlSearchParam(key: string): string | null {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(key);
+}

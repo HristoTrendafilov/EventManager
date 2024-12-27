@@ -1,6 +1,6 @@
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { type ComponentProps, forwardRef, useEffect, useRef, useState } from 'react';
+import { type ComponentProps, forwardRef, useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import Select, { type ActionMeta, type MultiValue, type SelectInstance, type SingleValue } from 'react-select';
 
@@ -20,50 +20,40 @@ export interface CustomMultiSelectProps extends ComponentProps<'select'> {
   addAsterisk?: boolean;
 }
 
-export const CustomMultiSelect = forwardRef<SelectInstance<SelectInputOption>, CustomMultiSelectProps>((props, ref) => {
-  const {
-    name,
-    label,
-    loading,
-    placeholder,
-    options,
-    disabled,
-    isNumber = false,
-    searchable,
-    error,
-    readonly,
-    addAsterisk,
-  } = props;
-  const { control, getFieldState } = useFormContext();
-  const state = getFieldState(name);
+interface FormValues {
+  userRegionsHelpingIds: number[]; // or string[] if using strings
+  // Add other fields here as needed
+  [key: string]: unknown; // Fallback for dynamic fields
+}
 
-  const [menuIsOpen, setMenuIsOpen] = useState<boolean>(false);
-  const [inputElement, setInputElement] = useState<HTMLElement | null>(null);
+export const CustomMultiSelect = forwardRef<SelectInstance<SelectInputOption>, CustomMultiSelectProps>((props, ref) => {
+  const { name, label, loading, placeholder, options, disabled, isNumber = false, searchable, error, readonly } = props;
+  const { control, getFieldState, setValue, getValues } = useFormContext();
+  const state = getFieldState(name);
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    setInputElement(document.getElementById(name));
+    if (state.error && wrapperRef.current) {
+      wrapperRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [state.error]);
 
-    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
-        setMenuIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    document.addEventListener('touchstart', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.removeEventListener('touchstart', handleClickOutside);
-    };
-  }, [name]);
+  useEffect(() => {
+    const currentValue = getValues(name) as FormValues[keyof FormValues];
+    if (!currentValue) {
+      setValue(name, []);
+    }
+  }, [name, setValue, getValues]);
 
   return (
     <div className="select-input-wrapper" ref={wrapperRef}>
       <label className="select-input-label" htmlFor={name}>
         {label}
-        {addAsterisk && <span className="text-danger">*</span>}
+        {props.addAsterisk && <span className="text-danger">*</span>}
       </label>
       <Controller
         name={name}
@@ -76,17 +66,15 @@ export const CustomMultiSelect = forwardRef<SelectInstance<SelectInputOption>, C
             name={name}
             isClearable={!readonly}
             openMenuOnClick={!readonly}
-            required={props.required}
             isLoading={loading}
-            menuIsOpen={menuIsOpen}
             blurInputOnSelect={false}
             isDisabled={disabled}
             value={options.filter((x) => {
               if (isNumber) {
-                return (field.value as number[])?.includes(Number(x.value)) ?? null;
+                return (field.value as number[])?.includes(Number(x.value));
               }
 
-              return (field.value as string[])?.includes(x.value) ?? null;
+              return (field.value as string[])?.includes(x.value);
             })}
             options={options}
             closeMenuOnSelect={false}
@@ -97,19 +85,9 @@ export const CustomMultiSelect = forwardRef<SelectInstance<SelectInputOption>, C
               newValue: MultiValue<SelectInputOption> | SingleValue<SelectInputOption>,
               _: ActionMeta<SelectInputOption>
             ) => {
-              const newSelections = newValue as SelectInputOption[];
+              const newSelections = newValue ? (newValue as SelectInputOption[]) : [];
               field.onChange(newSelections.map((selection) => (isNumber ? Number(selection.value) : selection.value)));
-
-              if (!searchable && inputElement) {
-                inputElement.blur();
-              }
             }}
-            onMenuOpen={() => {
-              if (!searchable && inputElement) {
-                inputElement.blur();
-              }
-            }}
-            onFocus={() => setMenuIsOpen(true)}
             styles={{
               control: (baseStyles, inputState) => ({
                 ...baseStyles,

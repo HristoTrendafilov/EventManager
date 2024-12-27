@@ -91,6 +91,7 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>((pro
                 locale={bg} // Set locale to Bulgarian
                 timeFormat="HH:mm"
                 timeIntervals={timeInterval ?? 30}
+                dayClassName={(date) => (date.getDay() === 0 || date.getDay() === 6 ? 'highlight-weekend' : '')}
                 showYearDropdown
                 required={required}
                 open={open}
