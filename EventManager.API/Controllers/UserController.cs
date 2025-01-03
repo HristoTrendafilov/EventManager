@@ -400,28 +400,21 @@ namespace EventManager.API.Controllers
 
         [Authorize]
         [Role(UserRole.Admin)]
-        [HttpPost("roles/filter")]
-        public async Task<ActionResult> GetUsersForRoles(RoleFilter filter)
+        [HttpGet("{userId}/roles")]
+        public async Task<ActionResult> GetUserRoles(long userId)
         {
-            var predicate = PredicateBuilder.True<VUserPoco>();
-
-            if (!string.IsNullOrWhiteSpace(filter.Username))
+            var userView = await _userService.GetUserViewAsync(x => x.UserId == userId);
+            if (userView == null)
             {
-                predicate = predicate.And(x => x.Username.StartsWith(filter.Username, StringComparison.CurrentCultureIgnoreCase));
+                return NotFound();
             }
 
-            var usersViewPoco = await _userService.GetAllUsersViewAsync(predicate, false);
-            var usersView = Mapper.CreateList<UserView>(usersViewPoco);
+            var roles = await _userService.GetAllUserRolesAsync(userId);
+            var rolesView = Mapper.CreateList<RoleView>(roles);
 
-            foreach (var user in usersView)
-            {
-                var roles = await _userService.GetAllUserRolesAsync(user.UserId);
-                var rolesView = Mapper.CreateList<RoleView>(roles);
-
-                user.UserRoles = rolesView;
-            }
-
-            return Ok(usersView);
+            userView.UserRoles = rolesView;
+ 
+            return Ok(userView);
         }
 
         [HttpGet("{userId}/organizations/select")]

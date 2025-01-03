@@ -1,12 +1,10 @@
 ﻿using EventManager.API.Helpers;
+using EventManager.DAL;
 
 namespace EventManager.API.Dto.User.Role
 {
     [GenerateTypeScriptInterface]
-    public class RoleView
+    public class RoleView : RolePoco
     {
-        public long RoleId { get; set; }
-        public string RoleName { get; set; }
-        public string RoleNameBg { get; set; }
     }
 }

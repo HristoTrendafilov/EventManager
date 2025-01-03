@@ -62,7 +62,7 @@ export function OrganizationsSearch() {
 
   useEffect(() => {
     handleSearch(form.getValues());
-  }, [form, handleSearch, organizations]);
+  }, [form, handleSearch]);
 
   return (
     <div className="container mt-4">

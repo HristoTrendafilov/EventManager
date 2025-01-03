@@ -2,7 +2,6 @@ import { callApi } from '~/Infrastructure/api-client';
 import type {
   OrganizationView,
   RoleBaseFormType,
-  RoleFilterType,
   RoleView,
   UserForUpdate,
   UserForWeb,
@@ -36,8 +35,8 @@ export function getAllRoles() {
   return callApi<RoleView[]>(`/users/roles`, 'GET');
 }
 
-export function getUsersForRoles(filter: RoleFilterType) {
-  return callApi<UserView[]>(`/users/roles/filter`, 'POST', JSON.stringify(filter));
+export function getUserRoles(userId: number) {
+  return callApi<UserView>(`/users/${userId}/roles`, 'GET');
 }
 
 export function saveUserRoles(userRole: RoleBaseFormType) {

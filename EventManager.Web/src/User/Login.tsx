@@ -38,13 +38,19 @@ export function Login() {
   );
 
   return (
-    <div className="container mt-4 mw-700px">
+    <div className="container my-4 mw-700px">
       <div className="card _primary-border shadow">
         <h2 className="card-header _primary-bg-gradient-color text-white">Потребителски вход</h2>
         <div className="card-body">
           <CustomForm form={form} onSubmit={handleLogin}>
             <CustomInput {...form.register('username')} label="Потребителско име" addAsterisk />
-            <CustomInput {...form.register('password')} label="Парола" type="password" addAsterisk />
+            <CustomInput
+              {...form.register('password')}
+              label="Парола"
+              type="password"
+              addAsterisk
+              autoComplete="password"
+            />
 
             <SubmitButton text="Вход" className="d-flex justify-content-center" isSubmitting={isSubmitting} />
           </CustomForm>

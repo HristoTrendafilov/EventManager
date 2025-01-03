@@ -13,11 +13,12 @@ import './UserSelect.css';
 interface UserSelectProps {
   onClose: () => void;
   onSelected: (users: UserSearch[]) => void;
-  alreadySelectedUsersIds?: number[];
+  isSingleSelect?: boolean;
+  alreadySelectedUsersIds?: number[] | undefined;
 }
 
 export function UserSelect(props: UserSelectProps) {
-  const { onClose, onSelected, alreadySelectedUsersIds } = props;
+  const { onClose, onSelected, isSingleSelect, alreadySelectedUsersIds } = props;
 
   const [users, setUsers] = useState<UserSearch[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<UserSearch[]>([]);
@@ -39,6 +40,11 @@ export function UserSelect(props: UserSelectProps) {
 
   const handleUserAddClick = useCallback(
     (user: UserSearch) => {
+      if (isSingleSelect) {
+        setSelectedUsers([user]);
+        return;
+      }
+
       if (
         !selectedUsers.some((selectedUser) => selectedUser.userId === user.userId) &&
         !alreadySelectedUsersIds?.includes(user.userId)
@@ -46,7 +52,7 @@ export function UserSelect(props: UserSelectProps) {
         setSelectedUsers([user, ...selectedUsers]);
       }
     },
-    [alreadySelectedUsersIds, selectedUsers]
+    [alreadySelectedUsersIds, isSingleSelect, selectedUsers]
   );
 
   const handleUserRemoveClick = useCallback(
@@ -76,18 +82,26 @@ export function UserSelect(props: UserSelectProps) {
                 Затвори
               </button>
             </div>
-            <div className="card-body">
-              <div className="row g-3">
-                <div className="col-md-6">
-                  <CustomForm form={form} onSubmit={handleSubmit}>
-                    <CustomInput {...form.register('username')} label="Потребителско име" required />
+            <div className="card-body users-body">
+              <CustomForm form={form} onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-md-8">
+                    <CustomInput {...form.register('username')} label="Потребителско име" />
+                  </div>
+                  <div className="col-md-4">
                     <button type="submit" className="btn btn-primary w-100">
                       Търси
                     </button>
-                  </CustomForm>
+                  </div>
+                </div>
+              </CustomForm>
+              <hr />
+
+              <div className="row g-3">
+                <div className={`col-md-${isSingleSelect ? '12' : '6'}`}>
                   {error && <ErrorMessage error={error} />}
                   {users.length > 0 && (
-                    <div className="users-body">
+                    <div>
                       {users.map((x) => (
                         <button
                           key={x.userId}
@@ -123,40 +137,43 @@ export function UserSelect(props: UserSelectProps) {
                     </div>
                   )}
                 </div>
-                <div className="col-md-6">
-                  <h4>Избрани потребители</h4>
-                  <hr className="m-2" />
-                  <div className="selected-users-body">
-                    {selectedUsers.length > 0 &&
-                      selectedUsers.map((x) => (
-                        <div key={x.userId} className="card mt-1">
-                          <div className="card-body p-1 d-flex">
-                            <img
-                              src={x.userProfilePictureUrl}
-                              width={45}
-                              height={45}
-                              className="rounded-circle"
-                              alt=""
-                            />
-                            <div className="d-flex flex-column ms-2">
-                              <div className="fw-bold">{x.username}</div>
-                              <div className="small">{x.userFullName}</div>
+                {!isSingleSelect && (
+                  <div className="col-md-6">
+                    <h4>Избрани потребители</h4>
+                    <hr className="m-2" />
+                    <div className="selected-users-body">
+                      {selectedUsers.length > 0 &&
+                        selectedUsers.map((x) => (
+                          <div key={x.userId} className="card mt-1">
+                            <div className="card-body p-1 d-flex">
+                              <img
+                                src={x.userProfilePictureUrl}
+                                width={45}
+                                height={45}
+                                className="rounded-circle"
+                                alt=""
+                              />
+                              <div className="d-flex flex-column ms-2">
+                                <div className="fw-bold">{x.username}</div>
+                                <div className="small">{x.userFullName}</div>
+                              </div>
+                              <button
+                                type="button"
+                                className="btn btn-danger position-absolute end-0 me-2 mt-1 px-3"
+                                onClick={() => handleUserRemoveClick(x)}
+                              >
+                                X
+                              </button>
                             </div>
-                            <button
-                              type="button"
-                              className="btn btn-danger position-absolute end-0 me-2 mt-1 px-3"
-                              onClick={() => handleUserRemoveClick(x)}
-                            >
-                              X
-                            </button>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
-              {selectError && <ErrorMessage error={selectError} />}
             </div>
+
+            {selectError && <ErrorMessage error={selectError} />}
 
             <div className="card-footer d-flex gap-3">
               <button type="button" className="btn btn-primary w-100" onClick={handleConfirm}>

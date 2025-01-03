@@ -46,8 +46,8 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
   );
 
   const addMembers = useCallback(
-    async (uesrs: UserSearch[]) => {
-      const response = await addMembersToOrganization(organizationId, { usersIds: uesrs.map((x) => x.userId) });
+    async (users: UserSearch[]) => {
+      const response = await addMembersToOrganization(organizationId, { usersIds: users.map((x) => x.userId) });
       if (!response.success) {
         closeUserSelectModal();
         setError(response.errorMessage);
