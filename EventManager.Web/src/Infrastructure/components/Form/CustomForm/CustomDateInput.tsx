@@ -22,6 +22,7 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>((pro
   const { name, label, required, showTime, timeInterval, nullable } = props;
 
   const [open, setOpen] = useState<boolean>(false);
+  const [shouldSetOpen, setShouldSetOpen] = useState<boolean>(true);
   const [previousDate, setPreviousDate] = useState<Date | null>(null);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -40,8 +41,11 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>((pro
   }, [props.name, setValue]);
 
   const handleInputClick = useCallback(() => {
-    setOpen(!open);
-  }, [open]);
+    if (shouldSetOpen) {
+      setOpen(!open);
+    }
+    setShouldSetOpen(true);
+  }, [open, shouldSetOpen]);
 
   useEffect(() => {
     if (state.error) {
@@ -84,6 +88,11 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>((pro
                   }
                 }}
                 onInputClick={handleInputClick}
+                onClickOutside={() => {
+                  setShouldSetOpen(false);
+                  setOpen(false);
+                  setShouldSetOpen(true);
+                }}
                 id={name}
                 showTimeSelect={showTime}
                 selected={field.value ? new Date(field.value as string) : null}
