@@ -126,7 +126,7 @@ export function UpdatePersonalData(props: UpdatePersonalDataProps) {
           <hr />
           <div className="col-lg-6">
             <CustomTextArea {...form.register('userShortDescription')} label="Кратко описание" rows={3} />
-            <CustomInput {...form.register('userPhoneNumber')} label="Телефон" />
+            <CustomInput {...form.register('userPhoneNumber')} label="Телефон" type="number" />
           </div>
           <div className="col-lg-6">
             <CustomInput {...form.register('userFirstName')} label="Име" addAsterisk />

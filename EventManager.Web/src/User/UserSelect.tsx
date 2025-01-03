@@ -176,11 +176,11 @@ export function UserSelect(props: UserSelectProps) {
             {selectError && <ErrorMessage error={selectError} />}
 
             <div className="card-footer d-flex gap-3">
-              <button type="button" className="btn btn-primary w-100" onClick={handleConfirm}>
-                Избор
-              </button>
               <button type="button" className="btn btn-warning w-100" onClick={onClose}>
                 Изход
+              </button>
+              <button type="button" className="btn btn-primary w-100" onClick={handleConfirm}>
+                Избор
               </button>
             </div>
           </div>

@@ -126,6 +126,7 @@ export interface RoleView {
   roleId: number;
   roleName: string;
   roleNameBg: string;
+  roleCreatedOnDateTime: Date;
 }
 
 export interface RegionForUpdate {
@@ -307,11 +308,6 @@ export const RoleBaseFormSchema = z.object({
 });
 export type RoleBaseFormType = z.infer<typeof RoleBaseFormSchema>;
 
-export const RoleFilterSchema = z.object({
-  username: z.string().min(1, { message: 'Моля, въведете потребителско име' }),
-});
-export type RoleFilterType = z.infer<typeof RoleFilterSchema>;
-
 export const RegionBaseFormSchema = z.object({
   regionName: z.string().min(1, { message: 'Името на региона е задължително.' }),
 });
@@ -396,11 +392,6 @@ export type EventBaseFormType = z.infer<typeof EventBaseFormSchema>;
 
 export const EventSearchFilterSchema = z.object({
   eventName: z.string().nullable(),
-  pageSize: z
-    .number()
-    .int()
-    .min(0, { message: 'Размерът на страниците трябва да е по-голям от 0' })
-    .max(2147483647, { message: 'Размерът на страниците трябва да е по-голям от 0' }),
 });
 export type EventSearchFilterType = z.infer<typeof EventSearchFilterSchema>;
 

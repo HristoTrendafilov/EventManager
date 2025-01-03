@@ -273,7 +273,7 @@ export function UserProfile() {
             </div>
           </div>
 
-          <ul className="nav nav-tabs mt-2">
+          <ul className="nav nav-tabs mt-2 bg-light">
             <li className="nav-item">
               <button
                 type="button"

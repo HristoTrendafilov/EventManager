@@ -5,15 +5,16 @@ import type { EventView } from '~/Infrastructure/api-types';
 
 interface EventSearchCardProps {
   event: EventView;
+  saveScrollPosition: () => void;
 }
 
 export function EventSearchCard(props: EventSearchCardProps) {
-  const { event } = props;
+  const { event, saveScrollPosition } = props;
 
   return (
     <div className="card shadow _primary-border my-3">
       <div className="card-body">
-        <Link to={CustomRoutes.eventsView(event.eventId)} className=" unset-anchor">
+        <Link to={CustomRoutes.eventsView(event.eventId)} className=" unset-anchor" onClick={saveScrollPosition}>
           <div className="row">
             <div className="col-md-5 col-lg-3">
               <div className="d-flex h-200px">

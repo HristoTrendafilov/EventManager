@@ -14,21 +14,13 @@ export function ConfirmModal(props: ConfirmModalProps) {
       <div className="container">
         <div className="mw-500px m-70auto">
           <div className="card">
-            <h3 className="card-header">Потвърждение</h3>
+            <h3 className="card-header _primary-bg-gradient-color text-white">Потвърждение</h3>
             <div className="card-body">{message}</div>
             <div className="card-footer d-flex gap-3">
-              <button
-                type="button"
-                className="btn btn-warning w-100"
-                onClick={onCancel}
-              >
+              <button type="button" className="btn btn-warning w-100" onClick={onCancel}>
                 Отказ
               </button>
-              <button
-                type="button"
-                className="btn btn-success w-100"
-                onClick={onConfirm}
-              >
+              <button type="button" className="btn btn-success w-100" onClick={onConfirm}>
                 Потвърждавам
               </button>
             </div>

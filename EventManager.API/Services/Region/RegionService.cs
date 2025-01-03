@@ -31,7 +31,7 @@ namespace EventManager.API.Services.Region
 
         public Task<List<RegionPoco>> GetAllRegionsAsync(Expression<Func<RegionPoco, bool>> predicate)
         {
-            return _db.Regions.Where(predicate).ToListAsync();
+            return _db.Regions.Where(predicate).OrderBy(x => x.RegionName).ToListAsync();
         }
 
         public Task<RegionPoco> GetRegionAsync(Expression<Func<RegionPoco, bool>> predicate)

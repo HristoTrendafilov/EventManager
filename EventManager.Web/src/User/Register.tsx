@@ -96,9 +96,6 @@ export function Register() {
     },
     [croppedImage, selectedImage]
   );
-  /* eslint-disable no-console */
-  console.log(form.watch());
-  /* eslint-enable no-console */
 
   return (
     <div className="container my-3">
@@ -158,19 +155,12 @@ export function Register() {
                 <div className="card _primary-border shadow">
                   <h4 className="card-header _primary-bg-gradient-color  text-white">Локации</h4>
                   <div className="card-body">
-                    <RegionSelect
-                      {...form.register('regionId')}
-                      label="Живея в"
-                      isNumber
-                      searchable={false}
-                      addAsterisk
-                    />
+                    <RegionSelect {...form.register('regionId')} label="Живея в" isNumber addAsterisk />
                     <RegionMultiSelect
                       {...form.register('userRegionsHelpingIds')}
                       label="Искам да помагам в"
                       isNumber
                       addAsterisk
-                      searchable={false}
                     />
                   </div>
                 </div>

@@ -61,17 +61,19 @@ export function OrganizationsSearch() {
   }, [loadOrganizations]);
 
   useEffect(() => {
-    handleSearch(form.getValues());
+    if (form.getValues().organizationName) {
+      handleSearch(form.getValues());
+    }
   }, [form, handleSearch]);
 
   return (
-    <div className="container mt-4">
+    <div className="container my-4">
       <div className="card shadow">
         <div className="card-body">
           <CustomForm form={form} onSubmit={handleSearch}>
             <div className="row">
               <div className="col-sm-9">
-                <CustomInput {...form.register('organizationName')} label="Име на организацията" />
+                <CustomInput {...form.register('organizationName')} label="Име на организацията" addAsterisk />
               </div>
               <div className="col-sm-3">
                 <button type="submit" className="btn btn-primary w-100">

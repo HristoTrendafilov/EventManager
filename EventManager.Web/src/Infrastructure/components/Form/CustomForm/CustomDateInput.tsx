@@ -39,6 +39,10 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>((pro
     setValue(props.name, null);
   }, [props.name, setValue]);
 
+  const handleInputClick = useCallback(() => {
+    setOpen(!open);
+  }, [open]);
+
   useEffect(() => {
     if (state.error) {
       wrapperRef.current?.scrollIntoView({
@@ -68,7 +72,6 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>((pro
 
                   if (!showTime) {
                     setOpen(false);
-
                     return;
                   }
 
@@ -80,10 +83,7 @@ export const CustomDateInput = forwardRef<DatePicker, CustomDateInputProps>((pro
                     setPreviousDate(date);
                   }
                 }}
-                onInputClick={() => {
-                  setOpen(true);
-                }}
-                onClickOutside={() => setOpen(false)}
+                onInputClick={handleInputClick}
                 id={name}
                 showTimeSelect={showTime}
                 selected={field.value ? new Date(field.value as string) : null}

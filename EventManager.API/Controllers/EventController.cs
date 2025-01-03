@@ -63,19 +63,15 @@ namespace EventManager.API.Controllers
         [HttpPost("search/{pageNumber}")]
         public async Task<ActionResult> GetPaginationEvents(int pageNumber, EventSearchFilter filter)
         {
-            if (filter.PageSize > _maxEventsPageCount)
-            {
-                filter.PageSize = _maxEventsPageCount;
-            }
-
             var predicate = PredicateBuilder.True<VEventPoco>();
 
             if (!string.IsNullOrWhiteSpace(filter.EventName))
             {
-                predicate = predicate.And(x => x.EventName.StartsWith(filter.EventName) || x.EventName.Contains(filter.EventName));
+                predicate = predicate.And(x => x.EventName.StartsWith(filter.EventName, StringComparison.CurrentCultureIgnoreCase) ||
+                    x.EventName.Contains(filter.EventName, StringComparison.CurrentCultureIgnoreCase));
             }
 
-            var (events, paginationMetadata) = await _eventService.GetPaginationEventsAsync(predicate, pageNumber, filter.PageSize);
+            var (events, paginationMetadata) = await _eventService.GetPaginationEventsAsync(predicate, pageNumber, _maxEventsPageCount);
 
             Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(paginationMetadata, new JsonSerializerSettings
             {

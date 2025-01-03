@@ -69,7 +69,7 @@ export function OrganizationMembers(props: OrganizationMembersProps) {
       <div className="container">
         <div className="mw-500px m-70auto">
           <div className="card">
-            <div className="card-header d-flex justify-content-between align-items-center">
+            <div className="card-header d-flex justify-content-between align-items-center _primary-bg-gradient-color text-white">
               <h4>Участници</h4>
               <button type="button" className="btn btn-warning" onClick={onClose}>
                 Затвори

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
 
 import { getEventSearch } from '~/Infrastructure/ApiRequests/events-requests';
+import { useScrollPosition } from '~/Infrastructure/CustomHooks/useScrollPosition';
 import { CustomRoutes } from '~/Infrastructure/Routes/CustomRoutes';
 import {
   EventSearchFilterSchema,
@@ -19,33 +20,27 @@ import { useZodForm } from '~/Infrastructure/components/Form/CustomForm/UseZedFo
 
 import { EventSearchCard } from './EventSearchCard';
 
-const defaultValues: EventSearchFilterType = {
-  eventName: '',
-  pageSize: 10,
-};
-
 export function EventSearch() {
   const [events, setEvents] = useState<EventView[]>([]);
   const [error, setError] = useState<string | undefined>();
   const [pagination, setPagination] = useState<PaginationMetadata | undefined>();
+
+  const { saveScrollPosition, restoreScrollPosition } = useScrollPosition();
 
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { page } = useParams();
   const { form } = useZodForm({
     schema: EventSearchFilterSchema,
-    defaultValues: page
-      ? {
-          eventName: searchParams.get('eventName'),
-        }
-      : defaultValues,
+    defaultValues: {
+      eventName: searchParams.get('eventName'),
+    },
   });
 
   const loadEvents = useCallback(
     async (pageNumber: number) => {
       const response = await getEventSearch(pageNumber, {
         eventName: searchParams.get('eventName'),
-        pageSize: Number(searchParams.get('pageSize')),
       });
       if (!response.success) {
         setError(response.errorMessage);
@@ -59,7 +54,6 @@ export function EventSearch() {
       }
 
       setEvents(response.data);
-
       window.scrollTo({ top: 0, behavior: 'instant' });
     },
     [searchParams]
@@ -73,7 +67,7 @@ export function EventSearch() {
       const queryParams = new URLSearchParams();
 
       // Dynamically iterate over the keys of `defaultValues`
-      (Object.keys(defaultValues) as Array<keyof EventSearchFilterType>).forEach((key) => {
+      (Object.keys(formValues) as Array<keyof EventSearchFilterType>).forEach((key) => {
         const value = formValues[key]; // Access the value from form
         if (value) {
           queryParams.append(key, value.toString()); // Add key-value pairs dynamically
@@ -92,47 +86,34 @@ export function EventSearch() {
   useEffect(() => {
     if (page) {
       void loadEvents(Number(page));
+      restoreScrollPosition();
     }
-  }, [loadEvents, page]);
+  }, [loadEvents, page, restoreScrollPosition]);
 
   return (
     <div className="event-search-wrapper mt-3">
       <div className="container">
-        <div className="accordion" id="accordionExample">
-          <div className="accordion-item">
-            <div className="accordion-header" id="headingOne">
-              <button
-                className="accordion-button"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#collapseOne"
-                aria-expanded="true"
-                aria-controls="collapseOne"
-              >
-                Филтър
-              </button>
-            </div>
-            <div
-              id="collapseOne"
-              className="accordion-collapse collapse show"
-              aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample"
-            >
-              <div className="accordion-body">
-                <CustomForm form={form} onSubmit={handleSubmit}>
+        <div className="card shadow">
+          <div className="card-body">
+            <CustomForm form={form} onSubmit={handleSubmit}>
+              <div className="row">
+                <div className="col-sm-9">
                   <CustomInput {...form.register('eventName')} label="Име на събитието" />
-                  <div className="d-flex justify-content-center">
-                    <button type="submit" className="btn btn-primary w-200px">
-                      Търси
-                    </button>
-                  </div>
-                </CustomForm>
+                </div>
+                <div className="col-sm-3">
+                  <button type="submit" className="btn btn-primary w-100">
+                    Търси
+                  </button>
+                </div>
               </div>
-            </div>
+            </CustomForm>
           </div>
         </div>
         {error && <ErrorMessage error={error} />}
-        <div>{events.length > 0 && events.map((x) => <EventSearchCard key={x.eventId} event={x} />)}</div>
+        <div>
+          {events.length > 0 &&
+            events.map((x) => <EventSearchCard key={x.eventId} event={x} saveScrollPosition={saveScrollPosition} />)}
+        </div>
       </div>
 
       {pagination && (
